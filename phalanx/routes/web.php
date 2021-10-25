@@ -24,3 +24,11 @@ Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name
 // 通知
 Route::resource('/notification', App\Http\Controllers\NotificationController::class);
 Route::get('/people_list', [App\Http\Controllers\NotificationController::class, 'pepple_list'])->name('people_list');
+
+// ユーザーマスター
+Route::prefix('users')->group(function () {
+    // 見た目確認
+    Route::get('/', function () {
+        return view('user_master_index');
+    });
+});
