@@ -31,4 +31,7 @@ Route::prefix('users')->group(function () {
     Route::get('/', function () {
         return view('user_master_index');
     });
+    Route::get('/create', function () {
+        return view('user_master_create');
+    });
 });
