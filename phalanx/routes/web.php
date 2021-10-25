@@ -24,3 +24,9 @@ Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name
 // 通知
 Route::resource('/notification', App\Http\Controllers\NotificationController::class);
 Route::get('/people_list', [App\Http\Controllers\NotificationController::class, 'pepple_list'])->name('people_list');
+
+// 体験・見学申込管理
+Route::resource('trial_application_manage', App\Http\Controllers\TrialApplicationManageController::class);
+
+// 体験・見学申込フォーム
+Route::resource('trial_application_form', App\Http\Controllers\TrialApplicationFormController::class);
