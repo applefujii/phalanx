@@ -16,11 +16,11 @@ class CreateChatRoomsTable extends Migration
         Schema::create('chat_rooms', function (Blueprint $table) {
             $table->id();
             $table->string("room_title", 100);
-            $table->foreignId("office_id");
-            $table->foreignId("user_id")->nullable()->default(null);
-            $table->foreignId("create_user_id");
-            $table->foreignId("update_user_id");
-            $table->foreignId("delete_user_id")->nullable()->default(null);
+            $table->unsignedBigInteger("office_id");
+            $table->unsignedBigInteger("user_id")->nullable()->default(null);
+            $table->unsignedBigInteger("create_user_id");
+            $table->unsignedBigInteger("update_user_id");
+            $table->unsignedBigInteger("delete_user_id")->nullable()->default(null);
             $table->dateTime("created_at");
             $table->dateTime("updated_at");
             $table->dateTime("deleted_at")->nullable()->default(null);
