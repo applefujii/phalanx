@@ -33,6 +33,6 @@ class Chat_room extends Model
      * 関連する事業所マスタのデータを取得
      */
     public function offices() {
-        return $this->belongsTo("App\Models\Office");
+        return $this->belongsTo(Office::class);
     }
 }
