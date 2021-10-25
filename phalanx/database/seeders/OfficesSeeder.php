@@ -1,4 +1,9 @@
 <?php
+/**
+ * 事業所マスタのシーダー
+ * 
+ * @author Fumio Mochizuki
+ */
 
 namespace Database\Seeders;
 

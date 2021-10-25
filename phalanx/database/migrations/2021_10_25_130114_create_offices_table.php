@@ -1,4 +1,9 @@
 <?php
+/**
+ * 事業所マスタのマイグレーション
+ * 
+ * @author Fumio Mochizuki
+ */
 
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;

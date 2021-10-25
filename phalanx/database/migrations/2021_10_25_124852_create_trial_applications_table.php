@@ -1,4 +1,9 @@
 <?php
+/**
+ * 体験・見学申込テーブルのマイグレーション
+ * 
+ * @author Fumio Mochizuki
+ */
 
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
