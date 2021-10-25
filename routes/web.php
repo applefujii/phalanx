@@ -30,3 +30,14 @@ Route::resource('trial_application_manage', App\Http\Controllers\TrialApplicatio
 
 // 体験・見学申込フォーム
 Route::resource('trial_application_form', App\Http\Controllers\TrialApplicationFormController::class);
+
+// ユーザーマスター
+Route::prefix('users')->group(function () {
+    // 見た目確認
+    Route::get('/', function () {
+        return view('user_master_index');
+    });
+    Route::get('/create', function () {
+        return view('user_master_create');
+    });
+});
