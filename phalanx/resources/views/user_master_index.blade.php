@@ -10,8 +10,8 @@
     <form>
         <div class="form-group">
             <div class="row justify-content-start mx-auto my-2">
-                <label for="user-type" style="width: 100px;" class="text-md-left">ユーザー種別</label>
-                <select id="user-type" style="width: 100px;" class="form-select">
+                <label for="user_type" style="width: 100px;" class="text-md-left">ユーザー種別</label>
+                <select id="user_type" style="width: 100px;" class="form-select">
                     <option value="" selected>条件なし</option>
                     <option value="1">職員</option>
                     <option value="2">利用者</option>
