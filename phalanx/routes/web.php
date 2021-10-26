@@ -44,4 +44,7 @@ Route::prefix('users')->group(function () {
     Route::get('/create', function () {
         return view('user_master_create');
     });
+    Route::get('/edit', function () {
+        return view('user_master_edit');
+    });
 });
