@@ -18,7 +18,7 @@ class TrialApplicationFormController extends Controller
      */
     public function index()
     {
-        return view('trial_application/create');
+        return view('trial_application/form');
     }
 
     /**
@@ -30,5 +30,15 @@ class TrialApplicationFormController extends Controller
     public function store(Request $request)
     {
         //
+    }
+
+    /**
+     * Show the form for creating a new resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function finish()
+    {
+        return view('trial_application/finish');
     }
 }
