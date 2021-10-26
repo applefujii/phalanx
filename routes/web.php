@@ -26,10 +26,14 @@ Route::resource('/notification', App\Http\Controllers\NotificationController::cl
 Route::get('/people_list', [App\Http\Controllers\NotificationController::class, 'pepple_list'])->name('people_list');
 
 // 体験・見学申込管理
-Route::resource('trial_application_manage', App\Http\Controllers\TrialApplicationManageController::class);
+Route::resource('/trial_application_manage', App\Http\Controllers\TrialApplicationManageController::class);
+Route::get('/trial_application_manage/check/{id}', [App\Http\Controllers\TrialApplicationManageController::class, 'check'])->name('trial_application_manage.check');
+Route::put('/trial_application_manage/check_update/{id}', [App\Http\Controllers\TrialApplicationManageController::class, 'check_update'])->name('trial_application_manage.check_update');
 
 // 体験・見学申込フォーム
-Route::resource('trial_application_form', App\Http\Controllers\TrialApplicationFormController::class);
+Route::get('/trial_application_form', [App\Http\Controllers\TrialApplicationFormController::class, 'form'])->name('trial_application_form.form');
+Route::post('/trial_application_form', [App\Http\Controllers\TrialApplicationFormController::class, 'store'])->name('trial_application_form.store');
+Route::get('/trial_application_form/finish', [App\Http\Controllers\TrialApplicationFormController::class, 'finish'])->name('trial_application_form.finish');
 
 // ユーザーマスター
 Route::prefix('users')->group(function () {
