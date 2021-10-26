@@ -1,7 +1,7 @@
 <?php
 
 /**
- * チャットテキストテーブルのモデル
+ * チャットルーム-ユーザー中間テーブルのモデル
  * 
  * @author Kakeru Kusada
  */
@@ -11,7 +11,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Chat_text extends Model
+class Chat_room__User extends Model
 {
     use HasFactory;
 
@@ -20,7 +20,7 @@ class Chat_text extends Model
      * 
      * @var string
      */
-    protected $table = "chat_texts";
+    protected $table = "chat_room__user";
 
     /**
      * タイムスタンプを更新するかどうかの指示
@@ -44,9 +44,9 @@ class Chat_text extends Model
     }
 
     /**
-     * 関連するチャットルーム-ユーザー中間テーブルのデータの取得
+     * 関連するチャットテキストのデータの取得
      */
-    public function chat_room__user() {
-        return $this->hasMany(Chat_room__User::class);
+    public function chat_text() {
+        return $this->belongsTo(Chat_text::class);
     }
 }
