@@ -31,6 +31,7 @@ return array(
     'App\\Http\\Requests\\TrialApplicationRequest' => $baseDir . '/app/Http/Requests/TrialApplicationRequest.php',
     'App\\Http\\Requests\\TrialApplicationSearchRequest' => $baseDir . '/app/Http/Requests/TrialApplicationSearchRequest.php',
     'App\\Models\\Chat_room' => $baseDir . '/app/Models/Chat_room.php',
+    'App\\Models\\Chat_room__User' => $baseDir . '/app/Models/Chat_room__User.php',
     'App\\Models\\Chat_text' => $baseDir . '/app/Models/Chat_text.php',
     'App\\Models\\Office' => $baseDir . '/app/Models/Office.php',
     'App\\Models\\TrialApplication' => $baseDir . '/app/Models/TrialApplication.php',

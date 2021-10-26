@@ -8,7 +8,6 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Models\User;
 use App\Models\Office;
 use App\Models\TrialApplication;
 use Illuminate\Support\Facades\Auth;
@@ -44,6 +43,7 @@ class TrialApplicationManageController extends Controller
                 });
             })
             ->orderByDesc('created_at')
+            ->orderByDesc('desired_date')
             ->orderBy('office_id')
             ->paginate(config('const.pagination'));
         
