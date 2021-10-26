@@ -580,6 +580,7 @@ class ComposerStaticInita49c9cbc1d5ec09d45825b69309bed52
         'App\\Http\\Requests\\TrialApplicationRequest' => __DIR__ . '/../..' . '/app/Http/Requests/TrialApplicationRequest.php',
         'App\\Http\\Requests\\TrialApplicationSearchRequest' => __DIR__ . '/../..' . '/app/Http/Requests/TrialApplicationSearchRequest.php',
         'App\\Models\\Chat_room' => __DIR__ . '/../..' . '/app/Models/Chat_room.php',
+        'App\\Models\\Chat_room__User' => __DIR__ . '/../..' . '/app/Models/Chat_room__User.php',
         'App\\Models\\Chat_text' => __DIR__ . '/../..' . '/app/Models/Chat_text.php',
         'App\\Models\\Office' => __DIR__ . '/../..' . '/app/Models/Office.php',
         'App\\Models\\TrialApplication' => __DIR__ . '/../..' . '/app/Models/TrialApplication.php',
