@@ -32,7 +32,7 @@ class Chat_room extends Model
     /**
      * 関連する事業所マスタのデータを取得
      */
-    public function offices() {
+    public function office() {
         return $this->belongsTo(Office::class);
     }
 
@@ -46,14 +46,14 @@ class Chat_room extends Model
     /**
      * 関連するユーザーマスタのデータを取得
      */
-    public function users() {
+    public function user() {
         return $this->belongsTo(User::class);
     }
 
     /**
      * 関連するチャットテキストのデータを取得
      */
-    public function chat_text() {
+    public function chat_texts() {
         return $this->hasMany(Chat_text::class);
     }
 }
