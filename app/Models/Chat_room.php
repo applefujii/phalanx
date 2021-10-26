@@ -35,4 +35,25 @@ class Chat_room extends Model
     public function offices() {
         return $this->belongsTo(Office::class);
     }
+
+    /**
+     * 関連するチャットルーム-ユーザーテーブルのデータを取得
+     */
+    public function chat_room__user() {
+        return $this->hasMany(Chat_room__User::class);
+    }
+
+    /**
+     * 関連するユーザーマスタのデータを取得
+     */
+    public function users() {
+        return $this->belongsTo(User::class);
+    }
+
+    /**
+     * 関連するチャットテキストのデータを取得
+     */
+    public function chat_text() {
+        return $this->hasMany(Chat_text::class);
+    }
 }
