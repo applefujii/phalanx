@@ -34,15 +34,20 @@ class TrialApplicationManageController extends Controller
         $trial_applications = TrialApplication::when($office_id, function ($query) use ($office_id) {
                 return $query->where('office_id', $office_id);
             })
-            ->when($check_done, function ($query) {
-                return $query->where('is_checked', true);
+            
+            ->where(function($query) use($check_done, $check_yet) {
+                $query->when($check_done, function ($query) {
+                    return $query->orWhere('is_checked', true);
+                });
+                $query->when($check_yet, function ($query) {
+                    return $query->orWhere('is_checked', false);
+                });
             })
-            ->when($check_yet, function ($query) {
-                return $query->where('is_checked', false);
-            })
+            ->orderByDesc('created_at')
+            ->orderBy('office_id')
             ->paginate(config('const.pagination'));
         
-        $offices = Office::whereNotNull('deleted_at')->get();
+        $offices = Office::whereNull('deleted_at')->orderBy('sort')->get();
 
         return view('trial_application/index', compact("offices", "office_id", "check_done", "check_yet", "trial_applications"));
     }

@@ -26,9 +26,9 @@ Route::resource('/notification', App\Http\Controllers\NotificationController::cl
 Route::get('/people_list', [App\Http\Controllers\NotificationController::class, 'pepple_list'])->name('people_list');
 
 // 体験・見学申込管理
-Route::resource('/trial_application_manage', App\Http\Controllers\TrialApplicationManageController::class);
 Route::get('/trial_application_manage/check/{id}', [App\Http\Controllers\TrialApplicationManageController::class, 'check'])->name('trial_application_manage.check');
 Route::put('/trial_application_manage/check_update/{id}', [App\Http\Controllers\TrialApplicationManageController::class, 'check_update'])->name('trial_application_manage.check_update');
+Route::resource('/trial_application_manage', App\Http\Controllers\TrialApplicationManageController::class);
 
 // 体験・見学申込フォーム
 Route::get('/trial_application_form', [App\Http\Controllers\TrialApplicationFormController::class, 'form'])->name('trial_application_form.form');

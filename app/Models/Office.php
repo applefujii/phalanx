@@ -26,5 +26,6 @@ class Office extends Model
      *
      * @var bool
      */
+    
     public $timestamps = false;
 }

@@ -33,6 +33,6 @@ class TrialApplication extends Model
      */
     public function office()
     {
-        return $this->belongsTo('App\Office');
+        return $this->belongsTo('App\Models\Office');
     }
 }
