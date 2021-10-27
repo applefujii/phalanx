@@ -13,8 +13,9 @@
                 <label for="user_type" style="width: 100px;" class="text-md-left">ユーザー種別</label>
                 <select id="user_type" name="user_type" style="width: 100px;" class="form-select">
                     <option value="" selected>条件なし</option>
-                    <option value="1">職員</option>
-                    <option value="2">利用者</option>
+                    @foreach ($user_types as $user_type)
+                        <option value="{{ $user_type->id }}">{{ $user_type->alias }}</option>
+                    @endforeach
                 </select>
                 <div class="col2"></div>
             </div>
@@ -22,9 +23,9 @@
                 <label for="office" style="width: 100px;" class="text-md-left">事業所</label>
                 <select id="office" name="office" style="width: 100px;" class="form-select">
                     <option value="" selected>条件なし</option>
-                    <option value="1">アップル梅田</option>
-                    <option value="2">ミント大阪</option>
-                    <option value="3">メイプル関西</option>
+                    @foreach ($offices as $office)
+                        <option value="{{ $office->id }}">{{ $office->office_name }}</option>
+                    @endforeach
                 </select>
                 <input type="submit" style="margin-left: 50px;" class="text-md-right" value="絞り込み">
             </div>
