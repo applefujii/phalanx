@@ -43,6 +43,22 @@ class ChatRoomController extends Controller
         //chat_roomsテーブルのidと$idが一致するデータを取得
         $chatRoom = Chat_room::where("id", $id)->first();
 
-        //
+        //存在しないidを参照したとき残りの処理を飛ばす
+        if($chatroom != null) {
+        
+            //ログイン中のユーザーのidを取得
+            $userId = Auth::id();
+
+            //ログイン中のユーザーがチャットルームに参加しているかどうかの判断
+            $join = $chatRoom->chat_room__user()->where("user_id", $userId)->first();
+
+            //参加している場合のみ表示する
+            if($join != null) {
+                return view("chat_room.index", compact("chatRoom"));
+            }
+        }
+
+        //表示される条件を満たしてなかった場合indexにリダイレクトする
+        return redirect()->route("chat_rooms.index");
     }
 }
