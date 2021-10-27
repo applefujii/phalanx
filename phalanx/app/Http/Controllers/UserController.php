@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use App\Models\user;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use App\Models\Office;
+use App\Models\UserType;
 
 class UserController extends Controller
 {
@@ -25,7 +27,10 @@ class UserController extends Controller
             return ($office === '' || $user->office_id == $office) && ($user_type === '' || $user->user_type_id == $user_type);
         });
 
-        return view("user_master_index", compact('users', 'office', 'user_type'));
+        $offices = Office::orderBy('id', 'asc')->get();
+        $user_types = UserType::orderBy('id', 'asc')->get();
+
+        return view("user_master_index", compact('users', 'offices', 'user_types'));
     }
 
     /**
