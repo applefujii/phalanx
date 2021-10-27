@@ -48,3 +48,7 @@ Route::prefix('users')->group(function () {
         return view('user_master_edit');
     });
 });
+
+// チャットルーム
+Route::get('/chat_room', [App\Http\Controllers\ChatRoomController::class, "index"])->name("chat_rooms.index");
+Route::get("/chat_room/{id}", [App\Http\Controllers\ChatRoomController::class, "show"])->name("chat_rooms.show");
