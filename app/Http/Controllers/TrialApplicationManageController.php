@@ -8,6 +8,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Crypt;
 use App\Models\Office;
 use App\Models\TrialApplication;
 use Illuminate\Support\Facades\Auth;
@@ -30,10 +31,10 @@ class TrialApplicationManageController extends Controller
         $check_done = $request->input('check_done');
         $check_yet = $request->input('check_yet');
 
-        $trial_applications = TrialApplication::when($office_id, function ($query) use ($office_id) {
+        $trial_applications = TrialApplication::whereNull('deleted_at')
+            ->when($office_id, function ($query) use ($office_id) {
                 return $query->where('office_id', $office_id);
             })
-            
             ->where(function($query) use($check_done, $check_yet) {
                 $query->when($check_done, function ($query) {
                     return $query->orWhere('is_checked', true);
@@ -42,14 +43,15 @@ class TrialApplicationManageController extends Controller
                     return $query->orWhere('is_checked', false);
                 });
             })
+            ->orderBy('is_checked')
             ->orderByDesc('created_at')
-            ->orderByDesc('desired_date')
+            ->orderBy('desired_date')
             ->orderBy('office_id')
             ->paginate(config('const.pagination'));
         
         $offices = Office::whereNull('deleted_at')->orderBy('sort')->get();
 
-        return view('trial_application/index', compact("offices", "office_id", "check_done", "check_yet", "trial_applications"));
+        return view('trial_application_manage/index', compact('offices', 'office_id', 'check_done', 'check_yet', 'trial_applications'));
     }
 
     /**
@@ -60,7 +62,10 @@ class TrialApplicationManageController extends Controller
      */
     public function edit($id)
     {
-        return view('trial_application/edit');
+        $trial_application = TrialApplication::findOrFail($id);
+
+        $offices = Office::whereNull('deleted_at')->orderBy('sort')->get();
+        return view('trial_application_manage/edit', compact('offices', 'trial_application'));
     }
 
     /**
@@ -72,7 +77,19 @@ class TrialApplicationManageController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        $now = Carbon::now();
+        $trial_application = TrialApplication::findOrFail($id);
+        
+        $trial_application->name = Crypt::encryptString($request->input('name'));
+        $trial_application->name_kana = Crypt::encryptString($request->input('name_kana'));
+        $trial_application->office_id = $request->input('office_id');
+        $trial_application->desired_date = $request->input('desired_date');
+        $trial_application->email = Crypt::encryptString($request->input('email'));
+        $trial_application->phone_number = Crypt::encryptString($request->input('phone_number'));
+        // $trial_application->update_user_id = Auth::user()->id;
+        $trial_application->updated_at = $now->isoFormat('YYYY-MM-DD');
+        $trial_application->save();
+        return redirect()->route('trial_application_manage.index');
     }
 
     /**
@@ -83,7 +100,14 @@ class TrialApplicationManageController extends Controller
      */
     public function destroy($id)
     {
-        //
+        $now = Carbon::now();
+        $trial_application = TrialApplication::findOrFail($id);
+
+        // $trial_application->update_user_id = Auth::user()->id;
+        // $trial_application->delete_user_id = Auth::user()->id;
+        $trial_application->deleted_at = $now->isoFormat('YYYY-MM-DD');
+        $trial_application->save();
+        return redirect()->route('trial_application_manage.index');
     }
 
     /**
@@ -94,7 +118,10 @@ class TrialApplicationManageController extends Controller
      */
     public function check($id)
     {
-        return view('trial_application/check');
+        $trial_application = TrialApplication::findOrFail($id);
+
+        $offices = Office::whereNull('deleted_at')->orderBy('sort')->get();
+        return view('trial_application_manage/check', compact('offices', 'trial_application'));
     }
 
     /**
@@ -106,6 +133,13 @@ class TrialApplicationManageController extends Controller
      */
     public function check_update(Request $request, $id)
     {
-        //
+        $now = Carbon::now();
+        $trial_application = TrialApplication::findOrFail($id);
+
+        $trial_application->is_checked = !$trial_application->is_checked;
+        // $trial_application->update_user_id = Auth::user()->id;
+        $trial_application->updated_at = $now->isoFormat('YYYY-MM-DD');
+        $trial_application->save();
+        return redirect()->route('trial_application_manage.index');
     }
 }

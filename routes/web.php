@@ -27,11 +27,11 @@ Route::get('/people_list', [App\Http\Controllers\NotificationController::class, 
 
 // 体験・見学申込管理
 Route::get('/trial_application_manage/{id}/check', [App\Http\Controllers\TrialApplicationManageController::class, 'check'])->name('trial_application_manage.check');
-Route::put('/trial_application_manage/{id}/check_update', [App\Http\Controllers\TrialApplicationManageController::class, 'check_update'])->name('trial_application_manage.check_update');
-Route::resource('/trial_application_manage', App\Http\Controllers\TrialApplicationManageController::class);
+Route::patch('/trial_application_manage/{id}/check', [App\Http\Controllers\TrialApplicationManageController::class, 'check_update'])->name('trial_application_manage.check_update');
+Route::resource('/trial_application_manage', App\Http\Controllers\TrialApplicationManageController::class, ['only' => ['index','edit','update','destroy']]);
 
 // 体験・見学申込フォーム
-Route::get('/trial_application_form', [App\Http\Controllers\TrialApplicationFormController::class, 'form'])->name('trial_application_form.form');
+Route::get('/trial_application_form', [App\Http\Controllers\TrialApplicationFormController::class, 'index'])->name('trial_application_form.index');
 Route::post('/trial_application_form', [App\Http\Controllers\TrialApplicationFormController::class, 'store'])->name('trial_application_form.store');
 Route::get('/trial_application_form/finish', [App\Http\Controllers\TrialApplicationFormController::class, 'finish'])->name('trial_application_form.finish');
 
