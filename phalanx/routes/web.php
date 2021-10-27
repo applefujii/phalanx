@@ -36,7 +36,7 @@ Route::post('/trial_application_form', [App\Http\Controllers\TrialApplicationFor
 Route::get('/trial_application_form/finish', [App\Http\Controllers\TrialApplicationFormController::class, 'finish'])->name('trial_application_form.finish');
 
 // ユーザーマスター
-Route::resource('user', App\Http\Controllers\UserController::class)->only(['index']);
+Route::resource('user', App\Http\Controllers\UserController::class)->only(['index', 'create', 'index']);
 
 // チャットルーム
 Route::get('/chat_room', [App\Http\Controllers\ChatRoomController::class, "index"])->name("chat_rooms.index");
