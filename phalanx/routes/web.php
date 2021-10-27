@@ -36,18 +36,7 @@ Route::post('/trial_application_form', [App\Http\Controllers\TrialApplicationFor
 Route::get('/trial_application_form/finish', [App\Http\Controllers\TrialApplicationFormController::class, 'finish'])->name('trial_application_form.finish');
 
 // ユーザーマスター
-Route::prefix('users')->group(function () {
-    // 見た目確認
-    Route::get('/', function () {
-        return view('user_master_index');
-    });
-    Route::get('/create', function () {
-        return view('user_master_create');
-    });
-    Route::get('/edit', function () {
-        return view('user_master_edit');
-    });
-});
+Route::resource('user', App\Http\Controllers\UserController::class)->only(['index']);
 
 // チャットルーム
 Route::get('/chat_room', [App\Http\Controllers\ChatRoomController::class, "index"])->name("chat_rooms.index");

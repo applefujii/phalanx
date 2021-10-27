@@ -7,11 +7,11 @@
 
 <div class="container">
     <h3>ユーザーマスター　一覧</h3>
-    <form>
+    <form method="get" action="{{ route('user.index') }}">
         <div class="form-group">
             <div class="row justify-content-start mx-auto my-2">
                 <label for="user_type" style="width: 100px;" class="text-md-left">ユーザー種別</label>
-                <select id="user_type" style="width: 100px;" class="form-select">
+                <select id="user_type" name="user_type" style="width: 100px;" class="form-select">
                     <option value="" selected>条件なし</option>
                     <option value="1">職員</option>
                     <option value="2">利用者</option>
@@ -20,7 +20,7 @@
             </div>
             <div class="row justify-content-start mx-auto my-2">
                 <label for="office" style="width: 100px;" class="text-md-left">事業所</label>
-                <select id="office" style="width: 100px;" class="form-select">
+                <select id="office" name="office" style="width: 100px;" class="form-select">
                     <option value="" selected>条件なし</option>
                     <option value="1">アップル梅田</option>
                     <option value="2">ミント大阪</option>
@@ -36,14 +36,11 @@
             <tr><th>氏名</th><th>ユーザー種別</th><th>事業所</th><th>操作</th></tr>
         </thead>
         <tbody>
-            <tr><td>氏名</td><td>ユーザー種別</td><td>事業所</td><td><a href="#" type="button" class="btn btn-primary" style="margin: auto 10px;">編集</a><form style="display: inline;"><input hidden value="1"><input type="submit" value="削除" class="btn btn-danger"></form></td></tr>
-            <tr><td>氏名</td><td>ユーザー種別</td><td>事業所</td><td><a href="#" type="button" class="btn btn-primary" style="margin: auto 10px;">編集</a><form style="display: inline;"><input hidden value="2"><input type="submit" value="削除" class="btn btn-danger"></form></td></tr>
-            <tr><td>氏名</td><td>ユーザー種別</td><td>事業所</td><td><a href="#" type="button" class="btn btn-primary" style="margin: auto 10px;">編集</a><form style="display: inline;"><input hidden value="3"><input type="submit" value="削除" class="btn btn-danger"></form></td></tr>
-            <tr><td>氏名</td><td>ユーザー種別</td><td>事業所</td><td>操作</td></tr>
-            <tr><td>氏名</td><td>ユーザー種別</td><td>事業所</td><td>操作</td></tr>
-            <tr><td>氏名</td><td>ユーザー種別</td><td>事業所</td><td>操作</td></tr>
-            <tr><td>氏名</td><td>ユーザー種別</td><td>事業所</td><td>操作</td></tr>
+            @foreach($users as $user)
+                <tr><td>{{ $user->name }}</td><td>{{ $user->user_type->alias }}</td><td>{{ $user->office->office_name }}</td><td><a href="#" type="button" class="btn btn-primary" style="margin: auto 10px;">編集</a><form style="display: inline;"><input hidden value="1"><input type="submit" value="削除" class="btn btn-danger"></form></td></tr>
+            @endforeach
         </tbody>
     </table>
+
 </div>
 @endsection
