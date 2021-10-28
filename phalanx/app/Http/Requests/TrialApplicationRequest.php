@@ -4,6 +4,7 @@ namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
+use App\Rules\HolidayRule;
 
 class TrialApplicationRequest extends FormRequest
 {
@@ -43,6 +44,7 @@ class TrialApplicationRequest extends FormRequest
             'desired_date' => [
                 'required',
                 'date',
+                new HolidayRule(),
             ],
             'email' => [
                 'required',
