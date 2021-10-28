@@ -15,6 +15,21 @@ class DatabaseSeeder extends Seeder
     {
         // \App\Models\User::factory(10)->create();
         $this->call(OfficesSeeder::class);// 事業所マスタ
+        $this->call(UserTypesSeeder::class);
         \App\Models\TrialApplication::factory(50)->create();
+        foreach ([1, 2, 3] as $office_id) { // テスト用
+            \App\Models\User::factory(6)->create([
+                'user_type_id' => 1,
+                'office_id' => $office_id,
+            ]); // 職員
+            \App\Models\User::factory(20)->create([
+                'user_type_id' => 2,
+                'office_id' => $office_id,
+            ]); // 通所者
+            \App\Models\User::factory(2)->create([
+                'user_type_id' => 3,
+                'office_id' => $office_id,
+            ]); // 体験者
+        }
     }
 }
