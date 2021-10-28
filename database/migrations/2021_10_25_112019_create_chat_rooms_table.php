@@ -16,6 +16,7 @@ class CreateChatRoomsTable extends Migration
         Schema::create('chat_rooms', function (Blueprint $table) {
             $table->id();
             $table->string("room_title", 100);
+            $table->unsignedSmallInteger("distinction_number");
             $table->unsignedBigInteger("office_id");
             $table->unsignedBigInteger("user_id")->nullable()->default(null);
             $table->unsignedBigInteger("create_user_id");
