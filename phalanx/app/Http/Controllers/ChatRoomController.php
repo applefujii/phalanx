@@ -12,6 +12,8 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Chat_room;
 use App\Models\Chat_room__User;
+use App\Models\Office;
+use App\Models\User;
 use Illuminate\Support\Facades\Auth;
 
 class ChatRoomController extends Controller
@@ -33,7 +35,17 @@ class ChatRoomController extends Controller
 
         //ログイン中のユーザーが職員かどうかの判別(職員のuser_type_idを1と仮定)
         if($user->user_type_id == 1) {
-            
+
+            //利用者対職員の個人チャットを取得
+            $userRooms = Chat_room::where("distinction_number", 3)->whereNotNull("deleted_at")->get();
+
+            //ログイン中のユーザーが参加している部屋一覧を取得
+            $joinRooms = Chat_room__User::where("user_id", $user->id)->whereNull("deleted_at")->chat_room()->whereNull("deleted_at")->orderBy("user_id", "desc")->get();
+
+            //事業所一覧を取得
+            $offices = Office::whereNull("deleted_at")->orderBy("sort")->get();
+
+            return view("chat_room.index", compact("userRooms", "joinRooms", "offices"));
         }
 
         //chat_roomsテーブルのuser_idが$userIdと一致するものを検索
@@ -62,9 +74,12 @@ class ChatRoomController extends Controller
             if($join != null) {
 
                 //ログイン中のユーザーが参加している部屋一覧を取得
-                $chatRooms = Chat_room__User::where("user_id", $userId)->whereNull("deleted_at")->chat_rooms()->whereNull("deleted_at")->orderBy("user_id", "desc");
+                $joinRooms = Chat_room__User::where("user_id", $userId)->whereNull("deleted_at")->chat_rooms()->whereNull("deleted_at")->orderBy("user_id", "desc")->get();
 
-                return view("chat_room.index", compact("chatRoom", "chatRooms"));
+                //事業所一覧を取得
+                $offices = Office::whereNull("deleted_at")->orderBy("sort")->get();
+
+                return view("chat_room.show", compact("chatRoom", "joinRooms", "offices"));
             }
         }
 
@@ -73,17 +88,24 @@ class ChatRoomController extends Controller
     }
 
     /**
-     * チャットルームの一覧表示
+     * チャットルームの作成
      */
-    public function list() {
-        //ログインしているユーザーデータ取得
+    public function create() {
+        //
         $user = Auth::user();
+        
+        //ログイン中のユーザーが職員かどうかの判別(職員のuser_type_idを1と仮定)
+        if($user->user_type_id != 1) {
 
-        //ログインしているユーザーが職員でなければindexにリダイレクト(職員のuser_type_idを1と仮定)
-        if($user->user_tyape_id == 1) {
+            //職員でなければindexにリダイレクト
             return redirect()->route("chat_rooms.index");
         }
 
-        
+        //必要なユーザーと事業所のデータを取得
+        $users = User::whereNull("deleted_at")->get();
+
+        $offices = Office::whereNull("deleted_at")->orderBy("sort")->get();
+
+        return view("chat_room.create", compact("users", "offices"));
     }
 }
