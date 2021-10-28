@@ -4,7 +4,7 @@
 <!--=============
     先に見た目だけ
 ===============-->
-
+{{ old('office') }}
 <div class="container">
     <h3>ユーザーマスター　一覧</h3>
     <form method="get" action="{{ route('user.index') }}">
@@ -12,9 +12,9 @@
             <div class="row justify-content-start mx-auto my-2">
                 <label for="user_type" style="width: 100px;" class="text-md-left">ユーザー種別</label>
                 <select id="user_type" name="user_type" style="width: 100px;" class="form-select">
-                    <option value="" selected>条件なし</option>
+                    <option value="" @if($filter_user_type_id === '') selected @endif>条件なし</option>
                     @foreach ($user_types as $user_type)
-                        <option value="{{ $user_type->id }}">{{ $user_type->alias }}</option>
+                        <option value="{{ $user_type->id }}" @if($filter_user_type_id == $user_type->id) selected @endif>{{ $user_type->alias }}</option>
                     @endforeach
                 </select>
                 <div class="col2"></div>
@@ -22,9 +22,9 @@
             <div class="row justify-content-start mx-auto my-2">
                 <label for="office" style="width: 100px;" class="text-md-left">事業所</label>
                 <select id="office" name="office" style="width: 100px;" class="form-select">
-                    <option value="" selected>条件なし</option>
+                    <option value="" @if($filter_office_id === '') selected @endif>条件なし</option>
                     @foreach ($offices as $office)
-                        <option value="{{ $office->id }}">{{ $office->office_name }}</option>
+                        <option value="{{ $office->id }}" @if($filter_office_id == $office->id) selected @endif>{{ $office->office_name }}</option>
                     @endforeach
                 </select>
                 <input type="submit" style="margin-left: 50px;" class="text-md-right" value="絞り込み">
@@ -42,6 +42,8 @@
             @endforeach
         </tbody>
     </table>
+
+    {{ $users->links('pagination::bootstrap-4') }}
 
 </div>
 @endsection
