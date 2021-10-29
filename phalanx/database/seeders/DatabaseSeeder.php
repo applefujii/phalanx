@@ -15,6 +15,7 @@ class DatabaseSeeder extends Seeder
     {
         // \App\Models\User::factory(10)->create();
         $this->call(OfficesSeeder::class);// 事業所マスタ
+        $this->call(NotificationsSeeder::class);// 通知テーブル
         \App\Models\TrialApplication::factory(50)->create();
     }
 }
