@@ -10,6 +10,7 @@ use App\Models\UserType;
 
 class UserController extends Controller
 {
+
     /**
      * Display a listing of the resource.
      *
@@ -17,20 +18,23 @@ class UserController extends Controller
      */
     public function index(Request $request)
     {
-        $users = User::factory()->count(100)->make();
-        $office = $request->input('office', '');
-        $office ??= '';
-        $user_type = $request->input('user_type', '');
-        $user_type ??= '';
-
-        $users = $users->filter(function ($user) use ($office, $user_type){
-            return ($office === '' || $user->office_id == $office) && ($user_type === '' || $user->user_type_id == $user_type);
-        });
-
+        $filter_office_id = $request->input('office', '');
+        $filter_office_id ??= '';
+        $filter_user_type_id = $request->input('user_type', '');
+        $filter_user_type_id ??= '';
+        $users_query = User::query();
+        if ($filter_office_id !== '') {
+            $users_query->where('office_id', '=', $filter_office_id);
+        }
+        if ($filter_user_type_id !== '') {
+            $users_query->where('user_type_id', '=', $filter_user_type_id);
+        }
         $offices = Office::orderBy('id', 'asc')->get();
         $user_types = UserType::orderBy('id', 'asc')->get();
 
-        return view("user_master_index", compact('users', 'offices', 'user_types'));
+        $users = $users_query->orderBy('id', 'asc')->paginate(25);
+
+        return view("user_master_index", compact('users', 'offices', 'user_types', 'filter_office_id', 'filter_user_type_id'));
     }
 
     /**
