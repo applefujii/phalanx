@@ -44,7 +44,7 @@ Route::get('/aptitude_question_form_maple', [App\Http\Controllers\AptitudeQuesti
 Route::resource('/aptitude_question_manage', App\Http\Controllers\AptitudeQuestionManageController::class)->only(['index','create','store','edit','update','destroy']);
 
 // ユーザーマスター
-Route::resource('user', App\Http\Controllers\UserController::class)->only(['index', 'create', 'index']);
+Route::resource('user', App\Http\Controllers\UserController::class)->only(['index', 'create', 'store', 'edit', 'update', 'destroy']);
 
 // チャットルーム
 Route::get('/chat_room', [App\Http\Controllers\ChatRoomController::class, "index"])->name("chat_rooms.index");
