@@ -18,7 +18,7 @@ class DatabaseSeeder extends Seeder
         \App\Models\TrialApplication::factory(50)->create();// 体験・見学申込
         $this->call(AptitudeQuestionsSeeder::class);// 適性診断質問
         $this->call(UserTypesSeeder::class);
-        $this->call(NotificationsSeeder::class);// 通知テーブル
+        $this->call(NotificationsSeeder::class);// 予定通知テーブル
         \App\Models\TrialApplication::factory(50)->create();
         foreach ([3, 2, 1] as $office_id) { // テスト用
             \App\Models\User::factory(20)->create([

@@ -42,23 +42,7 @@ class NotificationController extends Controller
 
         $offices = Office::orderBy('id', 'asc')->get();
         $user_types = UserType::orderBy('id', 'asc')->get();
-        /*
-        $filter_office_id = $request->input('office', '');
-        $filter_office_id ??= '';
-        $filter_user_type_id = $request->input('user_type', '');
-        $filter_user_type_id ??= '';
-        $users_query = User::query();
-        if ($filter_office_id !== '') {
-            $users_query->where('office_id', '=', $filter_office_id);
-        }
-        if ($filter_user_type_id !== '') {
-            $users_query->where('user_type_id', '=', $filter_user_type_id);
-        }
-        $offices = Office::orderBy('id', 'asc')->get();
-        $user_types = UserType::orderBy('id', 'asc')->get();
 
-        $users = $users_query->orderBy('id', 'asc')->paginate(25);
-        */
         return view('notification_index',compact('notifications', 'offices', 'user_types', 'filter_office_id', 'filter_user_type_id'));
     }
 

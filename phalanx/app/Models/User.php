@@ -24,8 +24,10 @@ class User extends Authenticatable
         'office_id',
         'login_name',
         'password',
+        'create_user_id',
         'update_user_id',
         'delete_user_id',
+        'created_at',
         'updated_at',
         'deleted_at',
     ];
