@@ -153,6 +153,12 @@ return [
         'desired_date' => '体験・見学希望日',
         'email' => 'メールアドレス',
         'phone_number' => '電話番号',
+
+        // ユーザーマスター追加
+        'user_type_id' => 'ユーザー種別',
+        'name_katakana' => '氏名（カナ）',
+        'login_name' => 'ログイン名',
+        'password' => 'パスワード'
     ]
 
 ];

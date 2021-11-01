@@ -49,3 +49,7 @@ Route::resource('user', App\Http\Controllers\UserController::class)->only(['inde
 // チャットルーム
 Route::get('/chat_room', [App\Http\Controllers\ChatRoomController::class, "index"])->name("chat_rooms.index");
 Route::get("/chat_room/{id}", [App\Http\Controllers\ChatRoomController::class, "show"])->name("chat_rooms.show");
+
+// API
+Route::get('/api/v1.0/get/user', [App\Http\Controllers\APIController::class, "ApiGetUserList"]);
+Route::get('/api/v1.0/get/office', [App\Http\Controllers\APIController::class, "ApiGetOfficeList"]);
