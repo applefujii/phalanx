@@ -22,6 +22,7 @@ class OfficesSeeder extends Seeder
         DB::table('offices')->insert([
             [
                 'office_name' => 'アップル梅田',
+                'en_office_name' => 'apple',
                 'sort' => 10,
                 'create_user_id' => 1,
                 'update_user_id' => 1,
@@ -30,6 +31,7 @@ class OfficesSeeder extends Seeder
             ],
             [
                 'office_name' => 'ミント大阪',
+                'en_office_name' => 'mint',
                 'sort' => 20,
                 'create_user_id' => 1,
                 'update_user_id' => 1,
@@ -38,6 +40,7 @@ class OfficesSeeder extends Seeder
             ],
             [
                 'office_name' => 'メープル関西',
+                'en_office_name' => 'maple',
                 'sort' => 30,
                 'create_user_id' => 1,
                 'update_user_id' => 1,
