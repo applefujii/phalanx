@@ -4,6 +4,9 @@ namespace App\Http\Controllers;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use App\Models\Notification;
+use App\Models\Office;
+use App\Models\UserType;
 
 class NotificationController extends Controller
 {
@@ -22,9 +25,41 @@ class NotificationController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index( Request $request )
     {
         //
+        $filter_office_id = $request->input('office', '');
+        $filter_office_id ??= '';
+        $filter_user_type_id = $request->input('user_type', '');
+        $filter_user_type_id ??= '';
+
+        $query = Notification::query();
+        if ($filter_office_id !== '')
+            $query->where('office_id', '=', $filter_office_id);
+        if ($filter_user_type_id !== '')
+            $query->where('user_type_id', '=', $filter_user_type_id);
+        $notifications = $query->orderBy('id', 'asc')->paginate(25);
+
+        $offices = Office::orderBy('id', 'asc')->get();
+        $user_types = UserType::orderBy('id', 'asc')->get();
+        /*
+        $filter_office_id = $request->input('office', '');
+        $filter_office_id ??= '';
+        $filter_user_type_id = $request->input('user_type', '');
+        $filter_user_type_id ??= '';
+        $users_query = User::query();
+        if ($filter_office_id !== '') {
+            $users_query->where('office_id', '=', $filter_office_id);
+        }
+        if ($filter_user_type_id !== '') {
+            $users_query->where('user_type_id', '=', $filter_user_type_id);
+        }
+        $offices = Office::orderBy('id', 'asc')->get();
+        $user_types = UserType::orderBy('id', 'asc')->get();
+
+        $users = $users_query->orderBy('id', 'asc')->paginate(25);
+        */
+        return view('notification_index',compact('notifications', 'offices', 'user_types', 'filter_office_id', 'filter_user_type_id'));
     }
 
     /**
