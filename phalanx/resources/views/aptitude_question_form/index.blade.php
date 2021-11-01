@@ -6,16 +6,17 @@
     <div class="card-body">
         <form action="{{ route('aptitude_question_form.calculate') }}" method="post">
             @csrf
+
+            @foreach (config('const.category') as $category_key => $category_value)
+            <p>{{ $category_key }}</p>
             <div class="table-responsive">
                 <table class="table table-bordered table-hover table-striped blue_table member_table">
-                    <thead>
-                        <tr>
-                            <th>質問</th>
-                            <th>選択肢</th>
-                        </tr>
-                    </thead>
                     <tbody>
                         @foreach ($aptitude_questions as $aptitude_question)
+                        <input type="hidden" name="score_apple[{{ $aptitude_question->id }}]" value="{{ $aptitude_question->score_apple }}">
+                        <input type="hidden" name="score_mint[{{ $aptitude_question->id }}]" value="{{ $aptitude_question->score_mint }}">
+                        <input type="hidden" name="score_maple[{{ $aptitude_question->id }}]" value="{{ $aptitude_question->score_maple }}">
+                        @if ($aptitude_question->category == $category_value)
                         <tr>
                             <td>{{ $aptitude_question->question }}</td>
                             <td>
@@ -33,10 +34,13 @@
                                 </div>
                             </td>
                         </tr>
+                        @endif
                         @endforeach
                     </tbody>
                 </table>
             </div>
+            @endforeach
+
             <div class="form-group">
                 <button class="btn btn-primary" type="submit">結果を見る</button>
             </div>
