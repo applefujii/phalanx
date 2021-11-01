@@ -19,30 +19,30 @@ class OfficesSeeder extends Seeder
      */
     public function run()
     {
-        DB::table("offices")->insert([
+        DB::table('offices')->insert([
             [
-                "office_name" => "アップル梅田",
-                "sort" => 10,
-                "create_user_id" => 1,
-                "update_user_id" => 1,
-                "updated_at" => "2021-04-01 12:34:56",
-                "created_at" => "2021-04-01 12:34:56",
+                'office_name' => 'アップル梅田',
+                'sort' => 10,
+                'create_user_id' => 1,
+                'update_user_id' => 1,
+                'updated_at' => '2021-04-01 12:34:56',
+                'created_at' => '2021-04-01 12:34:56',
             ],
             [
-                "office_name" => "ミント大阪",
-                "sort" => 20,
-                "create_user_id" => 1,
-                "update_user_id" => 1,
-                "updated_at" => "2021-04-01 12:34:56",
-                "created_at" => "2021-04-01 12:34:56",
+                'office_name' => 'ミント大阪',
+                'sort' => 20,
+                'create_user_id' => 1,
+                'update_user_id' => 1,
+                'updated_at' => '2021-04-01 12:34:56',
+                'created_at' => '2021-04-01 12:34:56',
             ],
             [
-                "office_name" => "メープル関西",
-                "sort" => 30,
-                "create_user_id" => 1,
-                "update_user_id" => 1,
-                "updated_at" => "2021-04-01 12:34:56",
-                "created_at" => "2021-04-01 12:34:56",
+                'office_name' => 'メープル関西',
+                'sort' => 30,
+                'create_user_id' => 1,
+                'update_user_id' => 1,
+                'updated_at' => '2021-04-01 12:34:56',
+                'created_at' => '2021-04-01 12:34:56',
             ],
         ]);
     }

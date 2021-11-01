@@ -29,9 +29,9 @@ class CreateTrialApplicationsTable extends Migration
             $table->boolean('is_checked')->default(false);
             $table->unsignedBigInteger('update_user_id')->nullable()->default(null);
             $table->unsignedBigInteger('delete_user_id')->nullable()->default(null);
-            $table->dateTime("created_at");
-            $table->dateTime("updated_at");
-            $table->dateTime("deleted_at")->nullable()->default(null);
+            $table->dateTime('created_at');
+            $table->dateTime('updated_at');
+            $table->dateTime('deleted_at')->nullable()->default(null);
         });
     }
 

@@ -29,10 +29,10 @@ class UserController extends Controller
         if ($filter_user_type_id !== '') {
             $users_query->where('user_type_id', '=', $filter_user_type_id);
         }
-        $offices = Office::orderBy('id', 'asc')->get();
+        $offices = Office::orderBy('sort', 'asc')->get();
         $user_types = UserType::orderBy('id', 'asc')->get();
 
-        $users = $users_query->orderBy('id', 'asc')->paginate(25);
+        $users = $users_query->join('offices', 'users.office_id', '=', 'offices.id')->join('user_types', 'users.user_type_id', '=', 'user_types.id')->orderBy('user_types.id', 'asc')->orderBy('offices.sort', 'asc')->orderBy('users.id', 'asc')->paginate(25);
 
         return view("user_master_index", compact('users', 'offices', 'user_types', 'filter_office_id', 'filter_user_type_id'));
     }
@@ -44,7 +44,7 @@ class UserController extends Controller
      */
     public function create()
     {
-        //
+        return view("user_master_create");
     }
 
     /**
@@ -100,6 +100,7 @@ class UserController extends Controller
      */
     public function destroy(user $user)
     {
-        //
+        $user->delete();
+        return redirect()->route('user.index');
     }
 }
