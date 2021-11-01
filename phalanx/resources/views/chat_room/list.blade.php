@@ -6,7 +6,7 @@
         <button class="btn btn-info" type="submit">新規作成</button>
     </form>
     <div class="table-responsive">
-        <table class="table table-striped">
+        <table class="table table-striped table-bordered border-white">
             <thead class="thead-info">
                 <tr>
                     <th>ルーム名</th>
