@@ -21,6 +21,7 @@ class CreateOfficesTable extends Migration
         Schema::create('offices', function (Blueprint $table) {
             $table->id();
             $table->string('office_name', 255);
+            $table->string('en_office_name', 255);
             $table->unsignedBigInteger('sort');
             $table->unsignedBigInteger('create_user_id');
             $table->unsignedBigInteger('update_user_id');

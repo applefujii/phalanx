@@ -156,6 +156,12 @@ return [
         // 適性診断
         'questions' => '質問',
         'questions.*' => '質問',
+
+        // ユーザーマスター追加
+        'user_type_id' => 'ユーザー種別',
+        'name_katakana' => '氏名（カナ）',
+        'login_name' => 'ログイン名',
+        'password' => 'パスワード'
     ]
 
 ];

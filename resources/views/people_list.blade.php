@@ -213,67 +213,67 @@
         //チェックされている人のID
         var checkList = [];
         var office = [
-            { Id : 2, EnName : "apple", Name : "アップル梅田" },
-            { Id : 3, EnName : "mint", Name : "ミント大阪" },
-            { Id : 4, EnName : "maple", Name : "メープル関西" },
-            { Id : 1, EnName : "experience", Name : "体験" }
+            { id : 1, en_office_name : "apple", office_name : "アップル梅田" },
+            { id : 2, en_office_name : "mint", office_name : "ミント大阪" },
+            { id : 3, en_office_name : "maple", office_name : "メープル関西" },
+            { id : 0, en_office_name : "experience", office_name : "体験" }
         ];
         var myOffice = "maple";
         var targetUserType;
         var people = [
-            { Id : 1, Name : "梅田太郎", officeId : 2, user_type_id : 2 },
-            { Id : 2, Name : "いいいいい", officeId : 2, user_type_id : 2  },
-            { Id : 3, Name : "ううううう", officeId : 2, user_type_id : 2  },
-            { Id : 4, Name : "えええええ", officeId : 2, user_type_id : 2  },
-            { Id : 5, Name : "おおおおお", officeId : 2, user_type_id : 2  },
-            { Id : 6, Name : "かかかかか", officeId : 2, user_type_id : 2  },
-            { Id : 7, Name : "ききききき", officeId : 2, user_type_id : 2  },
-            { Id : 8, Name : "くくくくく", officeId : 2, user_type_id : 2  },
-            { Id : 9, Name : "けけけけけ", officeId : 2, user_type_id : 2  },
-            { Id : 10, Name : "こここここ", officeId : 2, user_type_id : 2  },
-            { Id : 11, Name : "さささささ", officeId : 2, user_type_id : 2  },
-            { Id : 12, Name : "アップル職員1", officeId : 2, user_type_id : 1  },
-            { Id : 13, Name : "アップル職員2", officeId : 2, user_type_id : 1  },
+            { id : 1, name : "梅田太郎", office_id : 2, user_type_id : 2 },
+            { id : 2, name : "いいいいい", office_id : 2, user_type_id : 2  },
+            { id : 3, name : "ううううう", office_id : 2, user_type_id : 2  },
+            { id : 4, name : "えええええ", office_id : 2, user_type_id : 2  },
+            { id : 5, name : "おおおおお", office_id : 2, user_type_id : 2  },
+            { id : 6, name : "かかかかか", office_id : 2, user_type_id : 2  },
+            { id : 7, name : "ききききき", office_id : 2, user_type_id : 2  },
+            { id : 8, name : "くくくくく", office_id : 2, user_type_id : 2  },
+            { id : 9, name : "けけけけけ", office_id : 2, user_type_id : 2  },
+            { id : 10, name : "こここここ", office_id : 2, user_type_id : 2  },
+            { id : 11, name : "さささささ", office_id : 2, user_type_id : 2  },
+            { id : 12, name : "アップル職員1", office_id : 2, user_type_id : 1  },
+            { id : 13, name : "アップル職員2", office_id : 2, user_type_id : 1  },
             
-            { Id : 14, Name : "ミント二郎", officeId : 3, user_type_id : 2  },
-            { Id : 15, Name : "いいいいい", officeId : 3, user_type_id : 2  },
-            { Id : 16, Name : "ううううう", officeId : 3, user_type_id : 2  },
-            { Id : 17, Name : "えええええ", officeId : 3, user_type_id : 2  },
-            { Id : 18, Name : "おおおおお", officeId : 3, user_type_id : 2  },
-            { Id : 19, Name : "かかかかか", officeId : 3, user_type_id : 2  },
-            { Id : 20, Name : "ききききき", officeId : 3, user_type_id : 2  },
-            { Id : 21, Name : "くくくくく", officeId : 3, user_type_id : 2  },
-            { Id : 22, Name : "けけけけけ", officeId : 3, user_type_id : 2  },
-            { Id : 23, Name : "こここここ", officeId : 3, user_type_id : 2  },
-            { Id : 24, Name : "さささささ", officeId : 3, user_type_id : 2  },
-            { Id : 25, Name : "ミント職員3", officeId : 3, user_type_id : 1  },
-            { Id : 26, Name : "ミント職員4", officeId : 3, user_type_id : 1  },
+            { id : 14, name : "ミント二郎", office_id : 3, user_type_id : 2  },
+            { id : 15, name : "いいいいい", office_id : 3, user_type_id : 2  },
+            { id : 16, name : "ううううう", office_id : 3, user_type_id : 2  },
+            { id : 17, name : "えええええ", office_id : 3, user_type_id : 2  },
+            { id : 18, name : "おおおおお", office_id : 3, user_type_id : 2  },
+            { id : 19, name : "かかかかか", office_id : 3, user_type_id : 2  },
+            { id : 20, name : "ききききき", office_id : 3, user_type_id : 2  },
+            { id : 21, name : "くくくくく", office_id : 3, user_type_id : 2  },
+            { id : 22, name : "けけけけけ", office_id : 3, user_type_id : 2  },
+            { id : 23, name : "こここここ", office_id : 3, user_type_id : 2  },
+            { id : 24, name : "さささささ", office_id : 3, user_type_id : 2  },
+            { id : 25, name : "ミント職員3", office_id : 3, user_type_id : 1  },
+            { id : 26, name : "ミント職員4", office_id : 3, user_type_id : 1  },
             
-            { Id : 27, Name : "メープル三郎", officeId : 4, user_type_id : 2  },
-            { Id : 28, Name : "いいいいい", officeId : 4, user_type_id : 2  },
-            { Id : 29, Name : "ううううう", officeId : 4, user_type_id : 2  },
-            { Id : 30, Name : "えええええ", officeId : 4, user_type_id : 2  },
-            { Id : 31, Name : "おおおおお", officeId : 4, user_type_id : 2  },
-            { Id : 32, Name : "かかかかか", officeId : 4, user_type_id : 2  },
-            { Id : 33, Name : "ききききき", officeId : 4, user_type_id : 2  },
-            { Id : 34, Name : "くくくくく", officeId : 4, user_type_id : 2  },
-            { Id : 35, Name : "けけけけけ", officeId : 4, user_type_id : 2  },
-            { Id : 36, Name : "こここここ", officeId : 4, user_type_id : 2  },
-            { Id : 37, Name : "さささささ", officeId : 4, user_type_id : 2  },
-            { Id : 38, Name : "メープル職員5", officeId : 4, user_type_id : 1  },
-            { Id : 39, Name : "メープル職員6", officeId : 4, user_type_id : 1  },
+            { id : 27, name : "メープル三郎", office_id : 4, user_type_id : 2  },
+            { id : 28, name : "いいいいい", office_id : 4, user_type_id : 2  },
+            { id : 29, name : "ううううう", office_id : 4, user_type_id : 2  },
+            { id : 30, name : "えええええ", office_id : 4, user_type_id : 2  },
+            { id : 31, name : "おおおおお", office_id : 4, user_type_id : 2  },
+            { id : 32, name : "かかかかか", office_id : 4, user_type_id : 2  },
+            { id : 33, name : "ききききき", office_id : 4, user_type_id : 2  },
+            { id : 34, name : "くくくくく", office_id : 4, user_type_id : 2  },
+            { id : 35, name : "けけけけけ", office_id : 4, user_type_id : 2  },
+            { id : 36, name : "こここここ", office_id : 4, user_type_id : 2  },
+            { id : 37, name : "さささささ", office_id : 4, user_type_id : 2  },
+            { id : 38, name : "メープル職員5", office_id : 4, user_type_id : 1  },
+            { id : 39, name : "メープル職員6", office_id : 4, user_type_id : 1  },
             
-            { Id : 40, Name : "体験さん", officeId : 1, user_type_id : 2  },
-            { Id : 41, Name : "いいいいい", officeId : 1, user_type_id : 2  },
-            { Id : 42, Name : "ううううう", officeId : 1, user_type_id : 2  },
-            { Id : 43, Name : "えええええ", officeId : 1, user_type_id : 2  },
-            { Id : 44, Name : "おおおおお", officeId : 1, user_type_id : 2  },
-            { Id : 45, Name : "かかかかか", officeId : 1, user_type_id : 2  },
-            { Id : 46, Name : "ききききき", officeId : 1, user_type_id : 2  },
-            { Id : 47, Name : "くくくくく", officeId : 1, user_type_id : 2  },
-            { Id : 48, Name : "けけけけけ", officeId : 1, user_type_id : 2  },
-            { Id : 49, Name : "こここここ", officeId : 1, user_type_id : 2  },
-            { Id : 50, Name : "さささささ", officeId : 1, user_type_id : 2  },
+            { id : 40, name : "体験さん", office_id : 1, user_type_id : 2  },
+            { id : 41, name : "いいいいい", office_id : 1, user_type_id : 2  },
+            { id : 42, name : "ううううう", office_id : 1, user_type_id : 2  },
+            { id : 43, name : "えええええ", office_id : 1, user_type_id : 2  },
+            { id : 44, name : "おおおおお", office_id : 1, user_type_id : 2  },
+            { id : 45, name : "かかかかか", office_id : 1, user_type_id : 2  },
+            { id : 46, name : "ききききき", office_id : 1, user_type_id : 2  },
+            { id : 47, name : "くくくくく", office_id : 1, user_type_id : 2  },
+            { id : 48, name : "けけけけけ", office_id : 1, user_type_id : 2  },
+            { id : 49, name : "こここここ", office_id : 1, user_type_id : 2  },
+            { id : 50, name : "さささささ", office_id : 1, user_type_id : 2  },
         ];
         officeHtml = '\
             <div class="order-[OrderNo]">\n\
@@ -293,7 +293,36 @@
 
         //読み込まれたタイミングで実行
         $(function(){
-            //-- ※APIからメンバー情報を取得
+            //-- APIからメンバー情報を取得
+            $.ajax({
+                type: "GET",
+                url: "./api/v1.0/get/user", // 送り先
+                data: {},   // 渡したいデータをオブジェクトで渡す
+                dataType : "json",  // データ形式を指定
+                scriptCharset: 'utf-8'  // 文字コードを指定
+            })
+            .done( function(param){     // paramに処理後のデータが入って戻ってくる
+                    people = param; // 帰ってきたら実行する処理
+                })
+            .fail( function(XMLHttpRequest, textStatus, errorThrown){   // エラーが起きた時はこちらが実行される
+                    console.log(XMLHttpRequest);    // エラー内容表示
+            });
+
+            //-- APIから事業所情報を取得
+            $.ajax({
+                type: "GET",
+                url: "./api/v1.0/get/office",
+                data: {},
+                dataType : "json",
+                scriptCharset: 'utf-8'
+            })
+            .done( function(param){
+                    office = param;
+                    office.push({ id : 0, en_office_name : "experience", office_name : "体験" });
+                })
+            .fail( function(XMLHttpRequest, textStatus, errorThrown){
+                    console.log(XMLHttpRequest);
+            });
 
             //-- ※checkListにチェックされている人のIDを代入
             checkList.push(5);
@@ -395,10 +424,10 @@
             insertOffice.empty();
             $.each(office, function(index, element){
                 //-- 各種置換
-                let st = officeHtml.replace(/\[EnName\]/g, element.EnName);
-                st = st.replace(/\[Name\]/g, element.Name);
+                let st = officeHtml.replace(/\[EnName\]/g, element.en_office_name);
+                st = st.replace(/\[Name\]/g, element.office_name);
                 // 自分の事務所を
-                if( element.EnName == myOffice) {
+                if( element.en_office_name == myOffice) {
                     // 表示順を最上に、初期状態を展開に
                     st = st.replace(/\[OrderNo\]/g, "0");
                     st = st.replace(/fa-chevron-down/g, "fa-chevron-up");
@@ -408,7 +437,7 @@
 
                 insertOffice.append(st);
 
-                let insertPeople = $('.insert-' + element.EnName);
+                let insertPeople = $('.insert-' + element.en_office_name);
                 let count = 0, countAll = 0;
                 let nest;
                 let fAllCheck = true;
@@ -416,17 +445,17 @@
                 insertPeople.empty();
                 $.each(people, function(index2, element2){
                     let cc = count % oneColumnNumber;
-                    if(element2.officeId == element.Id) {
+                    if(element2.office_id == element.id) {
                         //-- targetUserTypeに一致するものを表示させる
                         if( element2.user_type_id == targetUserType ) {
                             if(cc == 0) {
                                 nest = $(peopleHtmlNest);
                                 fNotClose = true;
                             }
-                            let st2 = peopleHtml.replace(/\[EnName\]/g, element.EnName);
-                            st2 = st2.replace(/\[PeopleId\]/g, element2.Id);
-                            st2 = st2.replace(/\[PeopleName\]/g, element2.Name);
-                            if( checkList.includes(element2.Id) ) {
+                            let st2 = peopleHtml.replace(/\[EnName\]/g, element.en_office_name);
+                            st2 = st2.replace(/\[PeopleId\]/g, element2.id);
+                            st2 = st2.replace(/\[PeopleName\]/g, element2.name);
+                            if( checkList.includes(element2.id) ) {
                                 st2 = st2.replace(/(?<=<input type="checkbox".*?check-individual[^>]*)(?=>)/g, " checked");
                             } else {
                                 fAllCheck = false;
@@ -450,7 +479,7 @@
 
                 // 1つ以上項目があって、全てにチェックが付いていたら全チェックをcheckedにする
                 if( countAll > 0 )
-                    $('#' + element.EnName + '-all-check').prop('checked', fAllCheck);
+                    $('#' + element.en_office_name + '-all-check').prop('checked', fAllCheck);
             });
         }
 
