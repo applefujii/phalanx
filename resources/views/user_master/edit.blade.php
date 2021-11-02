@@ -66,6 +66,8 @@
                             <strong>{{ $message }}</strong>
                         </span>
                     @enderror
+                    <span class="information">半角英数字または_(アンダースコア)が使用できます<span><br />
+                    <span class="information">3字以上 30字以内で入力してください。</span>
                 </div>
                 <div class="form-col">
                     <label for="password" class="text-md-left form-element">パスワード</label><br />
@@ -75,6 +77,8 @@
                             <strong>{{ $message }}</strong>
                         </span>
                     @enderror
+                    <span class="information">半角英数字記号が使用できます</span><br />
+                    <span class="information">8字以上 30字以内で入力してください。</span>
                 </div>
                 <div class="form-col">
                     <label for="password-confirm" class="text-md-left form-element">パスワード（再入力）</label><br />
