@@ -35,7 +35,6 @@
                 <div style="width: 33%">
                     <label for="user_typeid" style="width: 100px;" class="text-md-left">ユーザー種別</label><br />
                     <select id="user_typeid" style="width: 100px;" class="form-control @error('user_type_id') is-invalid @enderror" name="user_type_id" required>
-                        <option value="" selected>条件なし</option>
                         @foreach ($user_types as $user_type)
                             <option value="{{ $user_type->id }}" @if ($user_type->id == old('user_type_id', $user->user_type_id)) selected @endif>{{ $user_type->alias }}</option>
                         @endforeach
@@ -49,7 +48,6 @@
                 <div style="width: 33%">
                     <label for="office_id" style="width: 100px;" class="text-md-left">事業所</label><br />
                     <select id="office_id" style="width: 100px;" class="form-control @error('office_id') is-invalid @enderror" name="office_id" required>
-                        <option value="" selected>条件なし</option>
                         @foreach ($offices as $office)
                             <option value="{{ $office->id }}" @if ($office->id == old('office_id', $user->office_id)) selected @endif>{{ $office->office_name }}</option>
                         @endforeach
