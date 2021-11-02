@@ -1,18 +1,6 @@
-@extends('layouts.app')
+@extends('aptitude_question_form.result.common')
 
-@section('content')
-<div class="container">
-    <div class="row justify-content-center">
-        <div class="col-md-8">
-            <div class="card">
-                <div class="card-header">ミント</div>
-
-                <div class="card-body">
-                    <div class="text-center">
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
+@section('office_name', 'ミント大阪')
+@section('trial_form')
+<a class="btn btn-outline-primary" role="button" href="{{ route('trial_application_form.index',['office_id' => 2]) }}">体験・見学申し込みへ</a>
 @endsection

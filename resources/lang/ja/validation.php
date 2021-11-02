@@ -153,6 +153,9 @@ return [
         'desired_date' => '体験・見学希望日',
         'email' => 'メールアドレス',
         'phone_number' => '電話番号',
+        // 適性診断
+        'questions' => '質問',
+        'questions.*' => '質問',
 
         // ユーザーマスター追加
         'user_type_id' => 'ユーザー種別',
