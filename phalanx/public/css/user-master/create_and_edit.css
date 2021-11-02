@@ -7,5 +7,14 @@
 }
 
 .back-button {
-    margin-left: 200px;
+    margin-left: 30px;
+}
+
+.information {
+    font-size: 10%;
+    max-width: 90%;
+}
+
+.btn {
+    width: 100px;
 }
