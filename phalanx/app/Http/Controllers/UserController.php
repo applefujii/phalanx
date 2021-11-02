@@ -39,7 +39,7 @@ class UserController extends Controller
 
         $users = $users_query->join('offices', 'users.office_id', '=', 'offices.id')->join('user_types', 'users.user_type_id', '=', 'user_types.id')->orderBy('user_types.id', 'asc')->orderBy('offices.sort', 'asc')->orderBy('users.id', 'asc')->select('users.id', 'users.name', 'users.user_type_id', 'users.office_id')->paginate(25);
 
-        return view("user_master_index", compact('users', 'offices', 'user_types', 'filter_office_id', 'filter_user_type_id'));
+        return view("user_master.index", compact('users', 'offices', 'user_types', 'filter_office_id', 'filter_user_type_id'));
     }
 
     /**
@@ -51,7 +51,7 @@ class UserController extends Controller
     {
         $offices = Office::orderBy('sort', 'asc')->get();
         $user_types = UserType::orderBy('id', 'asc')->get();
-        return view("user_master_create", compact('offices', 'user_types'));
+        return view("user_master.create", compact('offices', 'user_types'));
     }
 
     /**
@@ -86,7 +86,7 @@ class UserController extends Controller
     {
         $offices = Office::orderBy('sort', 'asc')->get();
         $user_types = UserType::orderBy('id', 'asc')->get();
-        return view("user_master_edit", compact('user', 'offices', 'user_types'));
+        return view("user_master.edit", compact('user', 'offices', 'user_types'));
     }
 
     /**
