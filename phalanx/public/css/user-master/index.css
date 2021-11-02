@@ -1,0 +1,58 @@
+.label {
+    width: 100px;
+}
+
+.form-select {
+    width: 100px;
+}
+
+.filter-button {
+    margin-left: 50px;
+}
+
+.btn {
+    margin: 10px;
+}
+
+.table-header {
+    font-size: 120%;
+    background-color: MidnightBlue;
+    color: white;
+}
+
+.table-header-username {
+    width: 30%;
+}
+
+.table-header-usertype{
+    width: 25%;
+}
+
+.table-header-office {
+    width: 25%;
+}
+
+.table-header-action {
+    width: 20%;
+}
+
+.table-body-action {
+    text-align: center;
+}
+
+.edit-button {
+    margin-right: 13%;
+    max-width: 30%;
+    min-width: 40px;
+    display: inline;
+}
+
+.delete-form {
+    display: inline;
+}
+
+.delete-button {
+    max-width: 30%;
+    min-width: 40px;
+    white-space: normal;
+}
