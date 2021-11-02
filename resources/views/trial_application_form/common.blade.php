@@ -43,7 +43,7 @@
                             <label for="office_id">事業所</label>
                             <select id="office_id" class="form-control @error('office_id') is-invalid @enderror" name="office_id">
                                 @foreach ($offices as $office)
-                                    <option value="{{ $office->id }}" @if ($office->id == old('office_id', $trial_application->office_id ?? "")) selected @endif>{{ $office->office_name }}</option>
+                                    <option value="{{ $office->id }}" @if ($office->id == old('office_id', $office_id ?? $trial_application->office_id ?? "")) selected @endif>{{ $office->office_name }}</option>
                                 @endforeach
                             </select>
                             @error('office_id')

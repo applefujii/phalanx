@@ -7,6 +7,8 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\Models\AptitudeQuestion;
+use Carbon\Carbon;
 
 class AptitudeQuestionManageController extends Controller
 {
@@ -17,7 +19,8 @@ class AptitudeQuestionManageController extends Controller
      */
     public function index()
     {
-        //
+        $aptitude_questions = AptitudeQuestion::whereNull('deleted_at')->orderBy('sort')->get();
+        return view('aptitude_question_manage/index', compact('aptitude_questions'));
     }
 
     /**
