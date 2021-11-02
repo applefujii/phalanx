@@ -19,8 +19,17 @@ class User extends Authenticatable
      */
     protected $fillable = [
         'name',
-        'email',
+        'name_katakana',
+        'user_type_id',
+        'office_id',
+        'login_name',
         'password',
+        'create_user_id',
+        'update_user_id',
+        'delete_user_id',
+        'created_at',
+        'updated_at',
+        'deleted_at',
     ];
 
     /**
@@ -38,7 +47,13 @@ class User extends Authenticatable
      *
      * @var array
      */
-    protected $casts = [
-        'email_verified_at' => 'datetime',
-    ];
+    protected $casts = [];
+
+    public function user_type() {
+        return $this->belongsTo(UserType::class);
+    }
+
+    public function office() {
+        return $this->belongsTo(Office::class);
+    }
 }

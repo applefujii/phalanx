@@ -77,7 +77,7 @@
                         <td>{{ $application_date->isoFormat('YYYY年MM月DD日 (ddd)') }}</td>
                         <td>{{ $trial_application->office->office_name }}</td>
                         <td>{{ $desired_date->isoFormat('YYYY年MM月DD日 (ddd)') }}</td>
-                        <td>{{ $trial_application->name }}</td>
+                        <td>{{ Illuminate\Support\Facades\Crypt::decryptString($trial_application->name) }}</td>
                         <td>
                             @if ($trial_application->is_checked)
                                 済
@@ -85,10 +85,14 @@
                                 未
                             @endif
                         </td>
-                        <td>
-                            <a class="btn btn-outline-primary" role="button" href="{{ route('trial_application_manage.check', $trial_application->id) }}">確認</a>
-                            <a class="btn btn-outline-primary" role="button" href="{{ route('trial_application_manage.edit', $trial_application->id) }}">修正</a>
-                            <a class="btn btn-outline-primary" role="button" href="{{ route('trial_application_manage.destroy', $trial_application->id) }}">削除</a>
+                        <td class="form-row">
+                            <a class="btn btn-primary" role="button" href="{{ route('trial_application_manage.check', $trial_application->id) }}">確認</a>
+                            <a class="btn btn-primary" role="button" href="{{ route('trial_application_manage.edit', $trial_application->id) }}">編集</a>
+                            <form action="{{ route('trial_application_manage.destroy', $trial_application->id) }}" method="post">
+                                @method('DELETE')
+                                @csrf
+                                <button class="btn btn-primary" type="submit">削除</button>
+                            </form>
                         </td>
                     </tr>
                     @endforeach

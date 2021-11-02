@@ -27,24 +27,29 @@ Route::get('/people_list', [App\Http\Controllers\NotificationController::class, 
 
 // 体験・見学申込管理
 Route::get('/trial_application_manage/{id}/check', [App\Http\Controllers\TrialApplicationManageController::class, 'check'])->name('trial_application_manage.check');
-Route::put('/trial_application_manage/{id}/check_update', [App\Http\Controllers\TrialApplicationManageController::class, 'check_update'])->name('trial_application_manage.check_update');
-Route::resource('/trial_application_manage', App\Http\Controllers\TrialApplicationManageController::class);
+Route::patch('/trial_application_manage/{id}/check', [App\Http\Controllers\TrialApplicationManageController::class, 'check_update'])->name('trial_application_manage.check_update');
+Route::resource('/trial_application_manage', App\Http\Controllers\TrialApplicationManageController::class)->only(['index','edit','update','destroy']);
 
 // 体験・見学申込フォーム
-Route::get('/trial_application_form', [App\Http\Controllers\TrialApplicationFormController::class, 'form'])->name('trial_application_form.form');
+Route::get('/trial_application_form', [App\Http\Controllers\TrialApplicationFormController::class, 'index'])->name('trial_application_form.index');
 Route::post('/trial_application_form', [App\Http\Controllers\TrialApplicationFormController::class, 'store'])->name('trial_application_form.store');
 Route::get('/trial_application_form/finish', [App\Http\Controllers\TrialApplicationFormController::class, 'finish'])->name('trial_application_form.finish');
 
+// 適性診断
+Route::get('/aptitude_question_form', [App\Http\Controllers\AptitudeQuestionFormController::class, 'index'])->name('aptitude_question_form.index');
+Route::post('/aptitude_question_form', [App\Http\Controllers\AptitudeQuestionFormController::class, 'calculate'])->name('aptitude_question_form.calculate');
+Route::get('/aptitude_question_form_apple', [App\Http\Controllers\AptitudeQuestionFormController::class, 'apple'])->name('aptitude_question_form.apple');
+Route::get('/aptitude_question_form_mint', [App\Http\Controllers\AptitudeQuestionFormController::class, 'mint'])->name('aptitude_question_form.mint');
+Route::get('/aptitude_question_form_maple', [App\Http\Controllers\AptitudeQuestionFormController::class, 'maple'])->name('aptitude_question_form.maple');
+Route::resource('/aptitude_question_manage', App\Http\Controllers\AptitudeQuestionManageController::class)->only(['index','create','store','edit','update','destroy']);
+
 // ユーザーマスター
-Route::prefix('users')->group(function () {
-    // 見た目確認
-    Route::get('/', function () {
-        return view('user_master_index');
-    });
-    Route::get('/create', function () {
-        return view('user_master_create');
-    });
-    Route::get('/edit', function () {
-        return view('user_master_edit');
-    });
-});
+Route::resource('user', App\Http\Controllers\UserController::class)->only(['index', 'create', 'store', 'edit', 'update', 'destroy']);
+
+// チャットルーム
+Route::get('/chat_room', [App\Http\Controllers\ChatRoomController::class, "index"])->name("chat_rooms.index");
+Route::get("/chat_room/{id}", [App\Http\Controllers\ChatRoomController::class, "show"])->name("chat_rooms.show");
+
+// API
+Route::get('/api/v1.0/get/user', [App\Http\Controllers\APIController::class, "ApiGetUserList"]);
+Route::get('/api/v1.0/get/office', [App\Http\Controllers\APIController::class, "ApiGetOfficeList"]);
