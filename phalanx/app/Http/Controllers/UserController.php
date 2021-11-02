@@ -7,6 +7,10 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Office;
 use App\Models\UserType;
+use App\Http\Requests\EditUserRequest;
+use Illuminate\Support\Facades\Auth;
+use Carbon\Carbon;
+use Illuminate\Support\Facades\Hash;
 
 class UserController extends Controller
 {
@@ -23,6 +27,7 @@ class UserController extends Controller
         $filter_user_type_id = $request->input('user_type', '');
         $filter_user_type_id ??= '';
         $users_query = User::query();
+        $users_query->whereNull('users.deleted_at');
         if ($filter_office_id !== '') {
             $users_query->where('office_id', '=', $filter_office_id);
         }
@@ -32,9 +37,9 @@ class UserController extends Controller
         $offices = Office::orderBy('sort', 'asc')->get();
         $user_types = UserType::orderBy('id', 'asc')->get();
 
-        $users = $users_query->join('offices', 'users.office_id', '=', 'offices.id')->join('user_types', 'users.user_type_id', '=', 'user_types.id')->orderBy('user_types.id', 'asc')->orderBy('offices.sort', 'asc')->orderBy('users.id', 'asc')->paginate(25);
+        $users = $users_query->join('offices', 'users.office_id', '=', 'offices.id')->join('user_types', 'users.user_type_id', '=', 'user_types.id')->orderBy('user_types.id', 'asc')->orderBy('offices.sort', 'asc')->orderBy('users.id', 'asc')->select('users.id', 'users.name', 'users.user_type_id', 'users.office_id')->paginate(25);
 
-        return view("user_master_index", compact('users', 'offices', 'user_types', 'filter_office_id', 'filter_user_type_id'));
+        return view("user_master.index", compact('users', 'offices', 'user_types', 'filter_office_id', 'filter_user_type_id'));
     }
 
     /**
@@ -44,7 +49,9 @@ class UserController extends Controller
      */
     public function create()
     {
-        return view("user_master_create");
+        $offices = Office::orderBy('sort', 'asc')->get();
+        $user_types = UserType::orderBy('id', 'asc')->get();
+        return view("user_master.create", compact('offices', 'user_types'));
     }
 
     /**
@@ -77,7 +84,9 @@ class UserController extends Controller
      */
     public function edit(user $user)
     {
-        //
+        $offices = Office::orderBy('sort', 'asc')->get();
+        $user_types = UserType::orderBy('id', 'asc')->get();
+        return view("user_master.edit", compact('user', 'offices', 'user_types'));
     }
 
     /**
@@ -87,9 +96,14 @@ class UserController extends Controller
      * @param  \App\Models\user  $user
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, user $user)
+    public function update(EditUserRequest $request, user $user)
     {
-        //
+        $validated = $request->validated();
+        $user->fill(array_merge($validated, ['password' => Hash::make($request->password)]));
+        $now = Carbon::now();
+        $user->fill(['update_user_id' => Auth::id(), 'updated_at' => $now->isoFormat('YYYY-MM-DD')]);
+        $user->save();
+        return redirect()->route('user.index');
     }
 
     /**
@@ -100,7 +114,8 @@ class UserController extends Controller
      */
     public function destroy(user $user)
     {
-        $user->delete();
+        $now = Carbon::now();
+        $user->fill(['delete_user_id' => Auth::id(), 'deleted_at' => $now->isoFormat('YYYY-MM-DD')])->save();
         return redirect()->route('user.index');
     }
 }

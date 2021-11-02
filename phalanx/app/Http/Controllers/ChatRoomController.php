@@ -106,7 +106,7 @@ class ChatRoomController extends Controller
         //表示する部屋の一覧を取得
         $chatRooms = Chat_room::where("distinction_number", 4)->whereNull("deleted_at")
             ->join("offices", "chat_rooms.office_id", "=", "offices.id")->orderBy("offices.sort")
-                ->orderBy("chat_rooms.room_title")->get("chat_rooms.*");
+                ->orderBy("chat_rooms.room_title")->get("chat_rooms.*")->pagenate(10);
 
         return view("chat_room.list", compact("chatRooms"));
     }

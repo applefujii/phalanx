@@ -1,49 +1,35 @@
 <?php
+/**
+ * 事業所マスタのコントローラー
+ *
+ * @author Yubaru Nozato
+ */
+
 
 namespace App\Http\Controllers;
 
 use App\Http\Controllers\Controller;
-use Illuminate\Http\Request;
-use App\Models\Notification;
 use App\Models\Office;
-use App\Models\UserType;
+use Illuminate\Http\Request;
 
-class NotificationController extends Controller
+class OfficeController extends Controller
 {
-    /**
-     * Create a new controller instance.
-     *
-     * @return void
+     /**
+     * コンストラクタ
      */
-    public function __construct()
-    {
-        // $this->middleware('auth');
-    }
-
+    
+    
     /**
      * Display a listing of the resource.
      *
      * @return \Illuminate\Http\Response
      */
-    public function index( Request $request )
+    public function index()
     {
-        //
-        $filter_office_id = $request->input('office', '');
-        $filter_office_id ??= '';
-        $filter_user_type_id = $request->input('user_type', '');
-        $filter_user_type_id ??= '';
-
-        $query = Notification::query();
-        if ($filter_office_id !== '')
-            $query->where('office_id', '=', $filter_office_id);
-        if ($filter_user_type_id !== '')
-            $query->where('user_type_id', '=', $filter_user_type_id);
-        $notifications = $query->orderBy('id', 'asc')->paginate(25);
-
-        $offices = Office::orderBy('id', 'asc')->get();
-        $user_types = UserType::orderBy('id', 'asc')->get();
-
-        return view('notification_index',compact('notifications', 'offices', 'user_types', 'filter_office_id', 'filter_user_type_id'));
+        $offices = Office::orderBy("id")->get();
+        return view("office_index",$offices);                //bladeファイルへ接続
+        /* $offices = offices::orderBy("id")->get();
+        return view("office.index", compact("offices")); */
     }
 
     /**
@@ -110,11 +96,5 @@ class NotificationController extends Controller
     public function destroy($id)
     {
         //
-    }
-
-    public function pepple_list()
-    {
-        //
-        return view('people_list');
     }
 }
