@@ -5,6 +5,7 @@ namespace Database\Factories;
 use App\Models\TrialApplication;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Support\Str;
+use Illuminate\Support\Facades\Crypt;
 
 class TrialApplicationFactory extends Factory
 {
@@ -24,13 +25,13 @@ class TrialApplicationFactory extends Factory
     {
         $dateTime = $this->faker->dateTimeBetween($startDate = '-2 months', $endDate = 'now')->format('Y-m-d');
         return [
-            'name' => $this->faker->name,
-            'name_kana' => $this->faker->kanaName,
+            'name' => Crypt::encryptString($this->faker->name),
+            'name_kana' => Crypt::encryptString($this->faker->kanaName),
             'office_id' => $this->faker->randomElement($array = [1,2,3]),
             'desired_date' => $this->faker->dateTimeBetween($startDate = 'now', $endDate = '+2 months')->format('Y-m-d'),
             'is_checked' => $this->faker->randomElement($array = [true, false]),
-            'email' => $this->faker->safeEmail,
-            'phone_number' => $this->faker->phoneNumber,
+            'email' => Crypt::encryptString($this->faker->safeEmail),
+            'phone_number' => Crypt::encryptString($this->faker->phoneNumber),
             'created_at' => $dateTime,
             'updated_at' => $dateTime,
         ];

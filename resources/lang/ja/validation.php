@@ -146,7 +146,19 @@ return [
     */
 
     'attributes' => [
-        
-    ],
+        // 体験・見学申込
+        'name' => '氏名',
+        'name_kana' => '氏名（カナ）',
+        'office_id' => '事業所',
+        'desired_date' => '体験・見学希望日',
+        'email' => 'メールアドレス',
+        'phone_number' => '電話番号',
+
+        // ユーザーマスター追加
+        'user_type_id' => 'ユーザー種別',
+        'name_katakana' => '氏名（カナ）',
+        'login_name' => 'ログイン名',
+        'password' => 'パスワード'
+    ]
 
 ];

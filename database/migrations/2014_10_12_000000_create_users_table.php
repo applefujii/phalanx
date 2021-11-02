@@ -15,12 +15,19 @@ class CreateUsersTable extends Migration
     {
         Schema::create('users', function (Blueprint $table) {
             $table->id();
-            $table->string('name');
-            $table->string('email')->unique();
-            $table->timestamp('email_verified_at')->nullable();
-            $table->string('password');
+            $table->unsignedBigInteger("user_type_id");
+            $table->unsignedBigInteger("office_id");
+            $table->string('name', 255);
+            $table->string('name_katakana', 255);
+            $table->string('login_name', 30);
+            $table->string('password', 255);
             $table->rememberToken();
-            $table->timestamps();
+            $table->unsignedBigInteger("create_user_id");
+            $table->unsignedBigInteger("update_user_id");
+            $table->unsignedBigInteger("delete_user_id")->nullable()->default(null);
+            $table->dateTime("created_at");
+            $table->dateTime("updated_at");
+            $table->dateTime("deleted_at")->nullable()->default(null);
         });
     }
 

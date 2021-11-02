@@ -4,6 +4,7 @@ namespace Database\Factories;
 
 use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
 
 class UserFactory extends Factory
@@ -22,26 +23,19 @@ class UserFactory extends Factory
      */
     public function definition()
     {
+        $dateTime = $this->faker->dateTimeBetween($startDate = '-2 months', $endDate = 'now')->format('Y-m-d');
         return [
-            'name' => $this->faker->name(),
-            'email' => $this->faker->unique()->safeEmail(),
-            'email_verified_at' => now(),
-            'password' => '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', // password
+            'user_type_id' => $this->faker->randomElement($array = [1,2,3]),
+            'office_id' => $this->faker->randomElement($array = [1,2,3]),
+            'name' => $this->faker->name('ja_JP'),
+            'name_katakana' => $this->faker->kanaName,
+            'login_name' => $this->faker->unique()->lexify('??????????'),
+            'password' => Hash::make('password'), // password
             'remember_token' => Str::random(10),
+            'create_user_id' => 1,
+            'update_user_id' => 1,
+            'created_at' => $dateTime,
+            'updated_at' => $dateTime,
         ];
-    }
-
-    /**
-     * Indicate that the model's email address should be unverified.
-     *
-     * @return \Illuminate\Database\Eloquent\Factories\Factory
-     */
-    public function unverified()
-    {
-        return $this->state(function (array $attributes) {
-            return [
-                'email_verified_at' => null,
-            ];
-        });
     }
 }

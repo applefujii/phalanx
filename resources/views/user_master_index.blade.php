@@ -4,46 +4,46 @@
 <!--=============
     先に見た目だけ
 ===============-->
-
+{{ old('office') }}
 <div class="container">
     <h3>ユーザーマスター　一覧</h3>
-    <form>
+    <form method="get" action="{{ route('user.index') }}">
         <div class="form-group">
             <div class="row justify-content-start mx-auto my-2">
                 <label for="user_type" style="width: 100px;" class="text-md-left">ユーザー種別</label>
-                <select id="user_type" style="width: 100px;" class="form-select">
-                    <option value="" selected>条件なし</option>
-                    <option value="1">職員</option>
-                    <option value="2">利用者</option>
+                <select id="user_type" name="user_type" style="width: 100px;" class="form-select">
+                    <option value="" @if($filter_user_type_id === '') selected @endif>条件なし</option>
+                    @foreach ($user_types as $user_type)
+                        <option value="{{ $user_type->id }}" @if($filter_user_type_id == $user_type->id) selected @endif>{{ $user_type->alias }}</option>
+                    @endforeach
                 </select>
                 <div class="col2"></div>
             </div>
             <div class="row justify-content-start mx-auto my-2">
                 <label for="office" style="width: 100px;" class="text-md-left">事業所</label>
-                <select id="office" style="width: 100px;" class="form-select">
-                    <option value="" selected>条件なし</option>
-                    <option value="1">アップル梅田</option>
-                    <option value="2">ミント大阪</option>
-                    <option value="3">メイプル関西</option>
+                <select id="office" name="office" style="width: 100px;" class="form-select">
+                    <option value="" @if($filter_office_id === '') selected @endif>条件なし</option>
+                    @foreach ($offices as $office)
+                        <option value="{{ $office->id }}" @if($filter_office_id == $office->id) selected @endif>{{ $office->office_name }}</option>
+                    @endforeach
                 </select>
                 <input type="submit" style="margin-left: 50px;" class="text-md-right" value="絞り込み">
             </div>
         </div>
     </form>
-    <a href="#" type="button" class="btn btn-primary" style="margin: 10px;">新規作成</a>
-    <table class="table table-striped table-bordered">
+    <a href="{{ route('user.create') }}" type="button" class="btn btn-primary" style="margin: 10px;">新規作成</a>
+    <table class="table table-striped table-bordered table-sm">
         <thead>
-            <tr><th>氏名</th><th>ユーザー種別</th><th>事業所</th><th>操作</th></tr>
+            <tr style="font-size: 120%; background-color: MidnightBlue ; color: white;"><th style="width: 30%">氏名</th><th style="width: 25%">ユーザー種別</th><th style="width: 25%">事業所</th><th style="width: 20%">操作</th></tr>
         </thead>
         <tbody>
-            <tr><td>氏名</td><td>ユーザー種別</td><td>事業所</td><td><a href="#" type="button" class="btn btn-primary" style="margin: auto 10px;">編集</a><form style="display: inline;"><input hidden value="1"><input type="submit" value="削除" class="btn btn-danger"></form></td></tr>
-            <tr><td>氏名</td><td>ユーザー種別</td><td>事業所</td><td><a href="#" type="button" class="btn btn-primary" style="margin: auto 10px;">編集</a><form style="display: inline;"><input hidden value="2"><input type="submit" value="削除" class="btn btn-danger"></form></td></tr>
-            <tr><td>氏名</td><td>ユーザー種別</td><td>事業所</td><td><a href="#" type="button" class="btn btn-primary" style="margin: auto 10px;">編集</a><form style="display: inline;"><input hidden value="3"><input type="submit" value="削除" class="btn btn-danger"></form></td></tr>
-            <tr><td>氏名</td><td>ユーザー種別</td><td>事業所</td><td>操作</td></tr>
-            <tr><td>氏名</td><td>ユーザー種別</td><td>事業所</td><td>操作</td></tr>
-            <tr><td>氏名</td><td>ユーザー種別</td><td>事業所</td><td>操作</td></tr>
-            <tr><td>氏名</td><td>ユーザー種別</td><td>事業所</td><td>操作</td></tr>
+            @foreach($users as $user)
+                <tr><td>{{ $user->name }}</td><td>{{ $user->user_type->alias }}</td><td>{{ $user->office->office_name }}</td><td><div style="text-align: center"><a href="{{ route('user.edit', $user->id) }}" type="button" class="btn btn-primary" style="margin-right: 13%; max-width: 30%; min-width: 40px; display: inline;">編集</a><form method="post" action="{{ route('user.destroy', $user->id) }}" style="display: inline;"> @csrf @method('DELETE') <input type="submit" value="削除" class="btn btn-danger" style="max-width: 30%; min-width: 40px; white-space: normal;"></form></td></tr>
+            @endforeach
         </tbody>
     </table>
+
+    {{ $users->links('pagination::bootstrap-4') }}
+
 </div>
 @endsection
