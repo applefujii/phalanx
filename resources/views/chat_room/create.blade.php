@@ -46,12 +46,24 @@
             </div>
         </div>
         <div class="row">
-            <div class="col-sm-auto">
-                <button type="button" class="btn btn-info" data-bs-toggle="modal" data-bs-target="#peopleListModal" data-target-group="staff">メンバー選択（職員）</button>
+            <div class="row">
+                <div class="col-sm-auto">
+                    <button type="button" class="btn btn-info" data-bs-toggle="modal" data-bs-target="#peopleListModal" data-target-group="staff">メンバー選択（職員）</button>
+                </div>
+                <div class="col-sm-auto">
+                    <button type="button" class="btn btn-info" data-bs-toggle="modal" data-bs-target="#peopleListModal" data-target-group="user">メンバー選択（利用者）</button>
+                </div>
             </div>
-            <div class="col-sm-auto">
-                <button type="button" class="btn btn-info" data-bs-toggle="modal" data-bs-target="#peopleListModal" data-target-group="user">メンバー選択（利用者）</button>
-            </div>
+            <!-- モーダルの中身を渡すときのキーをcheckBoxと仮定 -->
+            @if ($errors->has("checkBox"))
+                <div class="row">
+                    <ul style="list-style: none">
+                        @foreach ($errors->get("checkBox") as $error)
+                            <li class="text-danger">{{ $error }}</li>
+                        @endforeach
+                    </ul>
+                </div>
+            @endif
         </div>
         <div class="row">
             <button class="btn btn-primary" type="submit">更新</button>
