@@ -19,6 +19,12 @@ use Carbon\Carbon;
 
 class TrialApplicationManageController extends Controller
 {
+    // ログイン認証
+    public function __construct()
+    {
+        $this->middleware('auth');
+    }
+
     /**
      * Display a listing of the resource.
      *
@@ -86,7 +92,7 @@ class TrialApplicationManageController extends Controller
         $trial_application->desired_date = $request->input('desired_date');
         $trial_application->email = Crypt::encryptString($request->input('email'));
         $trial_application->phone_number = Crypt::encryptString($request->input('phone_number'));
-        // $trial_application->update_user_id = Auth::user()->id;
+        $trial_application->update_user_id = Auth::user()->id;
         $trial_application->updated_at = $now->isoFormat('YYYY-MM-DD');
         $trial_application->save();
         return redirect()->route('trial_application_manage.index');
@@ -103,8 +109,8 @@ class TrialApplicationManageController extends Controller
         $now = Carbon::now();
         $trial_application = TrialApplication::findOrFail($id);
 
-        // $trial_application->update_user_id = Auth::user()->id;
-        // $trial_application->delete_user_id = Auth::user()->id;
+        $trial_application->update_user_id = Auth::user()->id;
+        $trial_application->delete_user_id = Auth::user()->id;
         $trial_application->deleted_at = $now->isoFormat('YYYY-MM-DD');
         $trial_application->save();
         return redirect()->route('trial_application_manage.index');
@@ -137,7 +143,7 @@ class TrialApplicationManageController extends Controller
         $trial_application = TrialApplication::findOrFail($id);
 
         $trial_application->is_checked = !$trial_application->is_checked;
-        // $trial_application->update_user_id = Auth::user()->id;
+        $trial_application->update_user_id = Auth::user()->id;
         $trial_application->updated_at = $now->isoFormat('YYYY-MM-DD');
         $trial_application->save();
         return redirect()->route('trial_application_manage.index');

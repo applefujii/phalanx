@@ -175,7 +175,7 @@ class AptitudeQuestionsSeeder extends Seeder
             [
                 'question' => 'IT業界に興味がある',
                 'sort' => 150,
-                'score_apple' => 10000,
+                'score_apple' => 'F',
                 'score_mint' => 0,
                 'score_maple' => 0,
                 'create_user_id' => 1,
@@ -210,7 +210,7 @@ class AptitudeQuestionsSeeder extends Seeder
                 'sort' => 180,
                 'score_apple' => 0,
                 'score_mint' => 0,
-                'score_maple' => 10000,
+                'score_maple' => 'F',
                 'create_user_id' => 1,
                 'update_user_id' => 1,
                 'updated_at' => '2021-04-01 12:34:56',
