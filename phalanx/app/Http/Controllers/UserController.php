@@ -27,7 +27,6 @@ class UserController extends Controller
         $filter_user_type_id = $request->input('user_type', '');
         $filter_user_type_id ??= '';
         $users_query = User::query();
-        $users_query->whereNull('users.deleted_at');
         if ($filter_office_id !== '') {
             $users_query->where('office_id', '=', $filter_office_id);
         }

@@ -43,7 +43,7 @@ class NotificationController extends Controller
         $offices = Office::orderBy('id', 'asc')->get();
         $user_types = UserType::orderBy('id', 'asc')->get();
 
-        return view('notification_index',compact('notifications', 'offices', 'user_types', 'filter_office_id', 'filter_user_type_id'));
+        return view('notification.index',compact('notifications', 'offices', 'user_types', 'filter_office_id', 'filter_user_type_id'));
     }
 
     /**
