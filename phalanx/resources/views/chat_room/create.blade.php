@@ -1,5 +1,6 @@
 @extends('layout.app')
 @section('content')
+<link href="https://use.fontawesome.com/releases/v5.6.1/css/all.css" rel="stylesheet">
 <h3 class="page_title">チャットルーム管理　新規作成</h3>
 <div class="container-md">
     <form action="{{ route('chat_rooms.store') }}" method="post">
@@ -45,35 +46,29 @@
             </div>
         </div>
         <div class="row">
-            <div class="col-sm-auto">
-                <button type="button" class="btn btn-info" data-bs-toggle="modal" data-bs-target="#staffModal">メンバー選択（職員）</button>
+            <div class="row">
+                <div class="col-sm-auto">
+                    <button type="button" class="btn btn-info" data-bs-toggle="modal" data-bs-target="#peopleListModal" data-target-group="staff">メンバー選択（職員）</button>
+                </div>
+                <div class="col-sm-auto">
+                    <button type="button" class="btn btn-info" data-bs-toggle="modal" data-bs-target="#peopleListModal" data-target-group="user">メンバー選択（利用者）</button>
+                </div>
             </div>
-            <div class="col-sm-auto">
-                <button type="button" class="btn btn-info" data-bs-toggle="modal" data-bs-target="#usersModal">メンバー選択（利用者）</button>
-            </div>
+            <!-- モーダルの中身を渡すときのキーをcheckBoxと仮定 -->
+            @if ($errors->has("checkBox"))
+                <div class="row">
+                    <ul style="list-style: none">
+                        @foreach ($errors->get("checkBox") as $error)
+                            <li class="text-danger">{{ $error }}</li>
+                        @endforeach
+                    </ul>
+                </div>
+            @endif
         </div>
         <div class="row">
             <button class="btn btn-primary" type="submit">更新</button>
         </div>
     </form>
-    <div class="moal fade" id="staffModal" tabindex="-1" aria-labelledby="staffModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-scrollable">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id=staffModalLabel>職員一覧</h5>
-                </div>
-                <div class="modal-body">
-
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">キャンセル</button>
-                    <button class="btn btn-primary">選択</button>
-                </div>
-            </div>
-        </div>
-    </div>
-    <div class="moal fade" id="usersModal" tabindex="-1" aria-labelledby="usersModalLabel" aria-hidden="true">
-        
-    </div>
+    @include("component.people_list")
 </div>
 @endsection

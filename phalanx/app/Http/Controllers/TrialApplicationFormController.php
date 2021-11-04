@@ -24,10 +24,12 @@ class TrialApplicationFormController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
         $offices = Office::whereNull('deleted_at')->orderBy('sort')->get();
-        return view('trial_application_form/form', compact('offices'));
+        // office_idは適性診断画面から渡される
+        $office_id = $request->input('office_id');
+        return view('trial_application_form/form', compact('offices', 'office_id'));
     }
 
     /**
