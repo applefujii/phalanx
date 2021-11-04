@@ -27,7 +27,7 @@ class OfficeController extends Controller
     public function index()
     {
         $offices = Office::orderBy("id")->get();
-        return view("office_index",$offices);                //bladeファイルへ接続
+        return view("office_index",compact("offices"));                //bladeファイルへ接続
         /* $offices = offices::orderBy("id")->get();
         return view("office.index", compact("offices")); */
     }

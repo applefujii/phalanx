@@ -46,6 +46,9 @@ Route::resource('/aptitude_question_manage', App\Http\Controllers\AptitudeQuesti
 // ユーザーマスター
 Route::resource('user', App\Http\Controllers\UserController::class)->only(['index', 'create', 'store', 'edit', 'update', 'destroy']);
 
+// 事業所マスター
+Route::resource('office', App\Http\Controllers\OfficeController::class)->only(['index', 'create', 'store', 'edit', 'update', 'destroy']);
+
 // チャットルーム
 Route::resource("chat_room", [App\Http\Controllers\ChatRoomController::class]);
 Route::get("/chat_room/list", [App\Http\Controllers\ChatRoomController::class, "list"])->name("chat_rooms.list");
