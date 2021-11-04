@@ -1,0 +1,22 @@
+/* @author Yubaru Nozato */
+
+.navbar{
+    color: #FFFFFF;
+    text-align: left!important;
+}
+
+.mypage{
+    height: 35px;
+    top: -60px;
+    left:980px;
+    position:relative;
+}
+
+.list{
+    text-align:left;
+}
+
+.table{
+    border-collapse: collapse;
+    table-layout:   auto;
+}

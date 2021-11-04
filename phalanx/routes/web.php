@@ -13,13 +13,11 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/', function () {
-    return view('welcome');
-});
+Route::get('/', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
 
 Auth::routes();
 
-Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
+/* Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home'); */
 
 // 通知
 Route::resource('/notification', App\Http\Controllers\NotificationController::class);
@@ -49,10 +47,28 @@ Route::resource('/aptitude_question_manage', App\Http\Controllers\AptitudeQuesti
 // ユーザーマスター
 Route::resource('user', App\Http\Controllers\UserController::class)->only(['index', 'create', 'store', 'edit', 'update', 'destroy']);
 
-// チャットルーム
-Route::get('/chat_room', [App\Http\Controllers\ChatRoomController::class, "index"])->name("chat_rooms.index");
-Route::get("/chat_room/{id}", [App\Http\Controllers\ChatRoomController::class, "show"])->name("chat_rooms.show");
+// 事業所マスター
+Route::resource('office', App\Http\Controllers\OfficeController::class)->only(['index', 'create', 'store', 'edit', 'update', 'destroy']);
 
-// API
-Route::get('/api/v1.0/get/user', [App\Http\Controllers\APIController::class, "ApiGetUserList"]);
-Route::get('/api/v1.0/get/office', [App\Http\Controllers\APIController::class, "ApiGetOfficeList"]);
+// チャットルーム
+Route::get("/chat_room/list", [App\Http\Controllers\ChatRoomController::class, "list"])->name("chat_room.list");
+Route::resource("chat_room", App\Http\Controllers\ChatRoomController::class);
+
+
+
+//////////// API /////////////////////////////////
+// ユーザー
+Route::POST('/api/v1.0/get/users', [App\Http\Controllers\APIController::class, "ApiGetUsers"]);
+// 事業所
+Route::POST('/api/v1.0/get/offices', [App\Http\Controllers\APIController::class, "ApiGetOffices"]);
+
+// 予定通知
+Route::POST('/api/v1.0/get/notifications', [App\Http\Controllers\APIController::class, "ApiGetNotifications"]);
+Route::POST('/api/v1.0/set/notifications', [App\Http\Controllers\APIController::class, "ApiStoreNotifications"]);
+Route::PUT('/api/v1.0/set/notifications', [App\Http\Controllers\APIController::class, "ApiUpdateNotifications"]);
+Route::DELETE('/api/v1.0/set/notifications', [App\Http\Controllers\APIController::class, "ApiDeleteNotifications"]);
+
+//URI例。取得系はget、登録系はset。
+// /api/v1.0/get/users
+// /api/v1.0/get/offices
+// /api/v1.0/set/users

@@ -43,7 +43,7 @@ class NotificationController extends Controller
         $offices = Office::orderBy('id', 'asc')->get();
         $user_types = UserType::orderBy('id', 'asc')->get();
 
-        return view('notification_index',compact('notifications', 'offices', 'user_types', 'filter_office_id', 'filter_user_type_id'));
+        return view('notification.index',compact('notifications', 'offices', 'user_types', 'filter_office_id', 'filter_user_type_id'));
     }
 
     /**
@@ -64,7 +64,19 @@ class NotificationController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $dt = new \DateTime( "now" );
+        $notifications = Notification::create([
+            'content' => $request->content,
+            'start_at' => $request->start_at,
+            'end_at' => $request->end_at,
+            'is_all_day' => $request->is_all_day,
+            'create_user_id' => 1,
+            'update_user_id' => 1,
+            'created_at' => $dt->format('Y-m-d H:i:s'),
+            'updated_at' => $dt->format('Y-m-d H:i:s')
+        ]);
+
+        return redirect()->route("notification.index", $parameters = [], $status = 302, $headers = []);
     }
 
     /**
@@ -98,7 +110,17 @@ class NotificationController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        $dt = new \DateTime( "now" );
+        $notifications = Notification::where("id", $id)->update([
+            'content' => $request->content,
+            'start_at' => $request->start_at,
+            'end_at' => $request->end_at,
+            'is_all_day' => $request->is_all_day,
+            'update_user_id' => 1,
+            'updated_at' => $dt->format('Y-m-d H:i:s')
+        ]);
+
+        return redirect()->route("notification.index", $parameters = [], $status = 302, $headers = []);
     }
 
     /**
@@ -109,7 +131,13 @@ class NotificationController extends Controller
      */
     public function destroy($id)
     {
-        //
+        $dt = new \DateTime( "now" );
+        $notifications = Notification::where("id", $id)->update([
+            'delete_user_id' => 1,
+            'deleted_at' => $dt->format('Y-m-d H:i:s')
+        ]);
+
+        return redirect()->route("notification.index", $parameters = [], $status = 302, $headers = []);
     }
 
     public function pepple_list()
