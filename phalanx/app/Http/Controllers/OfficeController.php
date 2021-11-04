@@ -39,7 +39,8 @@ class OfficeController extends Controller
      */
     public function create()
     {
-        return view("office_create");
+        $offices = Office::orderBy("id")->get();
+        return view("office_create",compact("offices"));
     }
 
     /**
