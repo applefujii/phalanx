@@ -188,4 +188,33 @@ class ChatRoomController extends Controller
 
         return redirect()->route("chat_room.list");
     }
+
+    /**
+     * チャットルームの編集
+     */
+    public function edit($id) {
+        //ログイン中のユーザーデータを取得
+        $user = Auth::user();
+        
+        //ログイン中のユーザーが職員かどうかの判別(職員のuser_type_idを1と仮定)
+        if($user->user_type_id != 1) {
+
+            //職員でなければindexにリダイレクト
+            return redirect()->route("chat_room.index");
+        }
+
+        //編集するチャットルームのデータを取得
+        $chatRoom = Chat_room::where("id", $id)->whereNull("deleted_at")->first();
+
+        //存在しないチャットルームを編集しようとした時listにリダイレクト
+        if($chatRoom == null) {
+            return redirect()->route("chat_room.list");
+        }
+
+        //必要なユーザーと事業所のデータを取得
+        $users = User::whereNull("deleted_at")->get();
+        $offices = Office::whereNull("deleted_at")->orderBy("sort")->get();
+
+        return view("chat_room.edit", compact("chatRoom", "users", "offices"));
+    }
 }
