@@ -8,6 +8,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\AptitudeQuestion;
+use App\Http\Requests\AptitudeQuestionFormRequest;
 use Carbon\Carbon;
 
 class AptitudeQuestionFormController extends Controller
@@ -19,7 +20,7 @@ class AptitudeQuestionFormController extends Controller
      */
     public function index()
     {
-        $aptitude_questions = AptitudeQuestion::whereNull('deleted_at')->orderBy('category')->orderBy('sort')->get();
+        $aptitude_questions = AptitudeQuestion::whereNull('deleted_at')->orderBy('sort')->get();
         return view('aptitude_question_form/index', compact('aptitude_questions'));
     }
 
@@ -28,28 +29,29 @@ class AptitudeQuestionFormController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function calculate(Request $request)
+    public function calculate(AptitudeQuestionFormRequest $request)
     {
-        $question = $request->input('question');
-        $score_apple = $request->input('score_apple');
-        $score_mint = $request->input('score_mint');
-        $score_maple = $request->input('score_maple');
+        // dd($request->toArray());
+        $questions = $request->input('questions');
+        $score_apples = $request->input('score_apples');
+        $score_mints = $request->input('score_mints');
+        $score_maples = $request->input('score_maples');
 
         $total_score_apple = 0;
         $total_score_mint = 0;
         $total_score_maple = 0;
 
-        foreach ($question as $id => $value) {
-            $total_score_apple += $value * $score_apple[$id];
-            $total_score_mint += $value * $score_mint[$id];
-            $total_score_maple += $value * $score_maple[$id];
+        foreach ($questions as $id => $value) {
+            $total_score_apple += $value * $score_apples[$id];
+            $total_score_mint += $value * $score_mints[$id];
+            $total_score_maple += $value * $score_maples[$id];
         }
 
         logger("apple:" . $total_score_apple . " mint:" . $total_score_mint . " maple:" . $total_score_maple);
 
         if ($total_score_maple > $total_score_mint && $total_score_maple > $total_score_apple) {
             return redirect()->route('aptitude_question_form.maple');
-        } else if ($total_score_mint >= $total_score_apple) {
+        } else if ($total_score_mint >= $total_score_maple && $total_score_mint > $total_score_apple) {
             return redirect()->route('aptitude_question_form.mint');
         } else {
             return redirect()->route('aptitude_question_form.apple');

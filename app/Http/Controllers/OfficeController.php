@@ -1,17 +1,24 @@
 <?php
 /**
- * 適性診断質問管理のコントローラー
- * 
- * @author Fumio Mochizuki
+ * 事業所マスタのコントローラー
+ *
+ * @author Yubaru Nozato
  */
+
+
 namespace App\Http\Controllers;
 
+use App\Http\Controllers\Controller;
+use App\Models\Office;
 use Illuminate\Http\Request;
-use App\Models\AptitudeQuestion;
-use Carbon\Carbon;
 
-class AptitudeQuestionManageController extends Controller
+class OfficeController extends Controller
 {
+     /**
+     * コンストラクタ
+     */
+    
+    
     /**
      * Display a listing of the resource.
      *
@@ -19,8 +26,10 @@ class AptitudeQuestionManageController extends Controller
      */
     public function index()
     {
-        $aptitude_questions = AptitudeQuestion::whereNull('deleted_at')->orderBy('sort')->get();
-        return view('aptitude_question_manage/index', compact('aptitude_questions'));
+        $offices = Office::orderBy("id")->get();
+        return view("office_index",compact("offices"));                //bladeファイルへ接続
+        /* $offices = offices::orderBy("id")->get();
+        return view("office.index", compact("offices")); */
     }
 
     /**

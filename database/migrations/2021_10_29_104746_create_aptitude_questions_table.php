@@ -15,7 +15,6 @@ class CreateAptitudeQuestionsTable extends Migration
     {
         Schema::create('aptitude_questions', function (Blueprint $table) {
             $table->id();
-            $table->unsignedTinyInteger('category');
             $table->string('question', 255);
             $table->unsignedInteger('sort');
             $table->integer('score_apple');
