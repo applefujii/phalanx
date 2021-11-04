@@ -29,9 +29,37 @@
 <nav class="navbar navbar-light bg-dark  ml-auto">
   <b>タイトル</b>
 </nav><br>
+<div class="container">
+    <h3>事業所マスタ　新規登録</h3><br>
+    <form method="POST" action="{{ route('register') }}">
+        @csrf
 
-<b>事業所マスタ　新規登録</b><br>
-事業所名&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp表示順<br>
+        <div class="form-group">
+            <div class="row justify-content-start mx-auto my-4">
+                <div class="form-col">
+                    <label for="name" class="text-md-left form-element">事業所名</label><br />
+                    <input type="text" id="name" class="form-control form-element @error('name') is-invalid @enderror" name="name" value="{{ old('name') }}" required autofocus>
+                    @error('name')
+                        <span class="invalid-feedback" role="alert">
+                            <strong>{{ $message }}</strong>
+                        </span>
+                    @enderror
+                </div>
+                <div class="form-col">
+                    <label for="name_katakana" class="text-md-left form-element">表示順</label><br />
+                    <input type="text" id="name_katakana" class="form-control form-element @error('name_katakana') is-invalid @enderror" name="name_katakana" value="{{ old('name_katakana') }}" required>
+                    @error('name_katakana')
+                        <span class="invalid-feedback" role="alert">
+                            <strong>{{ $message }}</strong>
+                        </span>
+                    @enderror
+                </div>
+            </div>
+
+
+        <input type="submit" class="btn btn-primary mr-3" value="登録"><a href="{{ route('user.index') }}" class="btn btn-secondary back-button">戻る</a>
+    </form>
+</div>
 
 
 @endsection
