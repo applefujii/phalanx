@@ -31,8 +31,10 @@
 <button type="button" class="mypage btn btn-warning">マイページ</button>
 <b class="list float-left">&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp事業所マスタ　一覧</b><br>
 
-&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp<button type="button" href="{{ route('office.create') }}"　class="btn btn-primary">新規作成</button><br> <!--エラー-->
+&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp<!-- <button type="button" href="{{ route('office.create') }}"　class="btn btn-primary">新規作成</button><br> --> <!--エラー-->
 &nbsp
+
+<a href="{{ route('office.create') }}" type="button" class="btn btn-primary">新規作成</a>
 
 <div class="container">
   <div class="row">
