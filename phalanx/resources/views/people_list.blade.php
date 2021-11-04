@@ -291,12 +291,19 @@
         peopleHtml = '<p><input type="checkbox" class="[EnName] check-individual" data-people-id="[PeopleId]" data-group="[EnName]"> [PeopleName]</p>';
 
 
-        //読み込まれたタイミングで実行
+        //-- 読み込まれたタイミングで実行
         $(function(){
+            // ajaxの規定値を設定
+            $.ajaxSetup({
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                }
+            });
+
             //-- APIからメンバー情報を取得
             $.ajax({
-                type: "GET",
-                url: "./api/v1.0/get/user", // 送り先
+                type: "POST",
+                url: "./api/v1.0/get/users", // 送り先
                 data: {},   // 渡したいデータをオブジェクトで渡す
                 dataType : "json",  // データ形式を指定
                 scriptCharset: 'utf-8'  // 文字コードを指定
@@ -310,8 +317,8 @@
 
             //-- APIから事業所情報を取得
             $.ajax({
-                type: "GET",
-                url: "./api/v1.0/get/office",
+                type: "POST",
+                url: "./api/v1.0/get/offices",
                 data: {},
                 dataType : "json",
                 scriptCharset: 'utf-8'
@@ -322,6 +329,21 @@
                 })
             .fail( function(XMLHttpRequest, textStatus, errorThrown){
                     console.log(XMLHttpRequest);
+            });
+
+            // ※APIのテスト
+            $.ajax({
+                type: "POST",
+                url: "./api/v1.0/get/users", // 送り先
+                data: { id : 1 },   // 渡したいデータをオブジェクトで渡す
+                dataType : "json",  // データ形式を指定
+                scriptCharset: 'utf-8'  // 文字コードを指定
+            })
+            .done( function(param){     // paramに処理後のデータが入って戻ってくる
+                console.log(param);
+                })
+            .fail( function(XMLHttpRequest, textStatus, errorThrown){   // エラーが起きた時はこちらが実行される
+                    console.log(XMLHttpRequest);    // エラー内容表示
             });
 
             //-- ※checkListにチェックされている人のIDを代入
