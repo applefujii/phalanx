@@ -8,6 +8,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\AptitudeQuestion;
+use App\Http\Requests\AptitudeQuestionManageRequest;
 use Carbon\Carbon;
 
 class AptitudeQuestionManageController extends Controller
@@ -30,7 +31,7 @@ class AptitudeQuestionManageController extends Controller
      */
     public function create()
     {
-        //
+        return view('aptitude_question_manage/create');
     }
 
     /**
@@ -39,20 +40,21 @@ class AptitudeQuestionManageController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(AptitudeQuestionManageRequest $request)
     {
-        //
-    }
+        $now = Carbon::now();
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function show($id)
-    {
-        //
+        $aptitude_question = new AptitudeQuestion();
+        $aptitude_question->question = $request->input('question');
+        $aptitude_question->sort = $request->input('sort');
+        $aptitude_question->score_apple = $request->input('score_apple');
+        $aptitude_question->score_mint = $request->input('score_mint');
+        $aptitude_question->score_maple = $request->input('score_maple');
+        $aptitude_question->created_at = $now->isoFormat('YYYY-MM-DD');
+        $aptitude_question->updated_at = $now->isoFormat('YYYY-MM-DD');
+        $aptitude_question->save();
+
+        return redirect()->route('aptitude_question_manage.index');
     }
 
     /**
@@ -61,9 +63,10 @@ class AptitudeQuestionManageController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit($id)
+    public function edit()
     {
-        //
+        $aptitude_questions = AptitudeQuestion::whereNull('deleted_at')->orderBy('sort')->get();
+        return view('aptitude_question_manage/edit', compact('aptitude_questions'));
     }
 
     /**
@@ -73,7 +76,7 @@ class AptitudeQuestionManageController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(AptitudeQuestionManageRequest $request)
     {
         //
     }
