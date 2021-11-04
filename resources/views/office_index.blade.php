@@ -1,6 +1,8 @@
 @extends('layouts.app')
 @section('content')
 
+<!--@author Yubaru Nozato-->
+
 <!DOCTYPE html>
 <html lang="ja">
 <head>
@@ -17,7 +19,7 @@
   <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery.tablesorter/2.31.0/js/jquery.tablesorter.min.js"></script>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jquery.tablesorter/2.31.0/css/theme.default.min.css">
   <!-- <link rel="stylesheet" href="office.css"> -->
-  <link href="{{asset('/css/office.css')}}" rel="stylesheet">
+  <link href="{{asset('/css/office.css?202111041116')}}" rel="stylesheet">
 </head>
 
 <body>
@@ -29,7 +31,7 @@
 <button type="button" class="mypage btn btn-warning">マイページ</button>
 <b class="list float-left">&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp事業所マスタ　一覧</b><br>
 
-&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp<button type="button" class="btn btn-primary">新規作成</button><br>
+&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp<button type="button" href="{{ route('office.create') }}"　class="btn btn-primary">新規作成</button><br> <!--エラー-->
 &nbsp
 
 <div class="container">
@@ -48,8 +50,8 @@
 
   <tr>
   @foreach ($offices as $office)
-    <td style="width: 40%">{{ $office->office_name }}</td>
-    <td style="width: 30%">{{ $office->sort }}</td>
+    <td class="text-center" style="width: 40%">{{ $office->office_name }}</td>
+    <td class="text-center" style="width: 30%">{{ $office->sort }}</td>
     <td class="text-center" style="width: 30%"><button type="button" class="btn btn-primary">編集</button>
     <button type="button" class="btn btn-primary">削除</button></td>
   </tr>
