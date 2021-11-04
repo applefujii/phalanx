@@ -6,13 +6,13 @@
     <form action="{{ route('chat_room.store') }}" method="post" class="mt-3">
         @csrf
         <div class="row">
-            <div class="col-sm mt-3 ml-3 mr-3">
+            <div class="col-sm mt-3 mx-3">
                 <div class="row">
                     <label for="roomTitle">ルーム名</label>
                     <input type="text" class="form-control" id="roomTitle" name="room_title" value="{{ old('room_title') }}">
                 </div>
                 @if ($errors->has("room_title"))
-                    <div class="row mt-1">
+                    <div class="row mt-2">
                         <ul style="list-style: none">
                             @foreach ($errors->get("room_title") as $error)
                                 <li class="text-danger">{{ $error }}</li>
@@ -34,10 +34,10 @@
                         @endforeach
                     </select>
                 </div>
-                @if ($errors->has("room_title"))
-                    <div class="row mt-1">
+                @if ($errors->has("office_id"))
+                    <div class="row mt-2">
                         <ul style="list-style: none">
-                            @foreach ($errors->get("room_title") as $error)
+                            @foreach ($errors->get("office_id") as $error)
                                 <li class="text-danger">{{ $error }}</li>
                             @endforeach
                         </ul>
@@ -46,7 +46,7 @@
             </div>
         </div>
         <div class="row ml-0">
-            <div class="row">
+            <div class="row w-100">
                 <div class="col-sm-auto mt-3">
                     <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#peopleListModal" data-target-group="staff">メンバー選択（職員）</button>
                 </div>
@@ -56,7 +56,7 @@
             </div>
             <!-- モーダルの中身を渡すときのキーをcheckBoxと仮定 -->
             @if ($errors->has("checkBox"))
-                <div class="row mt-1">
+                <div class="row mt-2">
                     <ul style="list-style: none">
                         @foreach ($errors->get("checkBox") as $error)
                             <li class="text-danger">{{ $error }}</li>
