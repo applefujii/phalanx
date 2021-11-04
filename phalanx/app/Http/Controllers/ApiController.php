@@ -35,7 +35,7 @@ class ApiController extends Controller
 
     /**
      * ユーザー 取得
-     * @param array $request 検索条件[id, office_id, user_type_id]
+     * @param array $request 検索条件[id, office_id, user_type_id, sort]
      * @return json 取得したユーザー
      */
     public function ApiGetUsers( Request $request )
@@ -49,6 +49,16 @@ class ApiController extends Controller
         $filter_user_type_id = $request->input('user_type_id', '');
         if ($filter_user_type_id != ""  &&  !is_array($filter_user_type_id))
             $filter_user_type_id = compact("filter_user_type_id");
+        $sort = "";
+        $t_sort = $request->input('sort', '');
+        if ($t_sort != ""){
+            $sort = [[]];
+            if(!is_array($t_sort)) $sort = compact("t_sort");
+            foreach( $t_sort as $s ){
+                preg_match("/^-/i", $s);
+                preg_replace("/^-/i", "", $s);
+            }
+        }
 
         $query = User::whereNull('deleted_at');
         if ($filter_user_id !== '')
@@ -59,7 +69,7 @@ class ApiController extends Controller
 
         if ($filter_user_type_id !== '')
             $query->whereIn('user_type_id', '=', $filter_user_type_id);
-            
+
         $users = $query->orderBy('id', 'asc')->get();
 
         return json_encode($users);
@@ -76,11 +86,12 @@ class ApiController extends Controller
     public function ApiGetOffices( Request $request )
     {
         $filter_office_id = $request->input('id', '');
-        $filter_office_id ??= '';
+        if ($filter_office_id != ""  &&  !is_array($filter_office_id))
+        $filter_office_idd = compact("filter_office_id");
 
         $query = Office::whereNull('deleted_at');
         if ($filter_office_id !== '')
-            $query->where('id', '=', $filter_office_id);
+            $query->whereIn('id', $filter_office_id);
         $offices = $query->orderBy('id', 'asc')->get();
 
         return json_encode($offices);
@@ -98,11 +109,12 @@ class ApiController extends Controller
     public function ApiGetNotifications( Request $request )
     {
         $filter_notification_id = $request->input('id', '');
-        $filter_notification_id ??= '';
+        if ($filter_notification_id != ""  &&  !is_array($filter_notification_id))
+        $filter_notification_id = compact("filter_notification_id");
 
         $query = Notification::whereNull('deleted_at');
         if ($filter_notification_id !== '')
-            $query->where('id', '=', $filter_notification_id);
+            $query->whereIn('id', $filter_notification_id);
         $notifications = $query->orderBy('id', 'asc')->get();
 
         return json_encode($notifications);
