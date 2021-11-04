@@ -24,7 +24,7 @@ class ChatRoomController extends Controller
      */
     public function __construct() {
         //ログインしているかどうかの判断
-        $this->middleware("auth");
+        //$this->middleware("auth");
     }
 
     /**
@@ -117,14 +117,14 @@ class ChatRoomController extends Controller
      */
     public function create() {
         //ログイン中のユーザーデータを取得
-        $user = Auth::user();
+        //$user = Auth::user();
         
         //ログイン中のユーザーが職員かどうかの判別(職員のuser_type_idを1と仮定)
-        if($user->user_type_id != 1) {
+        //if($user->user_type_id != 1) {
 
             //職員でなければindexにリダイレクト
-            return redirect()->route("chat_rooms.index");
-        }
+            //return redirect()->route("chat_rooms.index");
+        //}
 
         //必要なユーザーと事業所のデータを取得
         $users = User::whereNull("deleted_at")->get();
