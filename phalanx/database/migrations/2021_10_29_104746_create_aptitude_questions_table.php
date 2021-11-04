@@ -17,9 +17,9 @@ class CreateAptitudeQuestionsTable extends Migration
             $table->id();
             $table->string('question', 255);
             $table->unsignedInteger('sort');
-            $table->integer('score_apple');
-            $table->integer('score_mint');
-            $table->integer('score_maple');
+            $table->string('score_apple', 10);
+            $table->string('score_mint', 10);
+            $table->string('score_maple', 10);
             $table->unsignedBigInteger('create_user_id');
             $table->unsignedBigInteger('update_user_id');
             $table->unsignedBigInteger('delete_user_id')->nullable()->default(null);
