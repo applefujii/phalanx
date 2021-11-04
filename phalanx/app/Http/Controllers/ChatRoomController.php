@@ -15,6 +15,7 @@ use App\Models\Chat_room__User;
 use App\Models\Office;
 use App\Models\User;
 use Illuminate\Support\Facades\Auth;
+use App\Https\Requests\ChatRoomRequest;
 
 class ChatRoomController extends Controller
 {
@@ -23,7 +24,7 @@ class ChatRoomController extends Controller
      */
     public function __construct() {
         //ログインしているかどうかの判断
-        $this->middleware("auth");
+        //$this->middleware("auth");
     }
 
     /**
@@ -63,7 +64,7 @@ class ChatRoomController extends Controller
         $chatRoom = Chat_room::where("id", $id)->whereNull("deleted_at")->first();
 
         //存在しないidを参照したとき残りの処理を飛ばす
-        if($chatroom != null) {
+        if($chatRoom != null) {
         
             //ログイン中のユーザーのidを取得
             $userId = Auth::id();
@@ -116,6 +117,28 @@ class ChatRoomController extends Controller
      */
     public function create() {
         //ログイン中のユーザーデータを取得
+        //$user = Auth::user();
+        
+        //ログイン中のユーザーが職員かどうかの判別(職員のuser_type_idを1と仮定)
+        //if($user->user_type_id != 1) {
+
+            //職員でなければindexにリダイレクト
+            //return redirect()->route("chat_rooms.index");
+        //}
+
+        //必要なユーザーと事業所のデータを取得
+        $users = User::whereNull("deleted_at")->get();
+
+        $offices = Office::whereNull("deleted_at")->orderBy("sort")->get();
+
+        return view("chat_room.create", compact("users", "offices"));
+    }
+
+    /**
+     * チャットルーム作成の実行部分
+     */
+    public function store(ChatRoomRequest $request) {
+        //ログイン中のユーザーデータを取得
         $user = Auth::user();
         
         //ログイン中のユーザーが職員かどうかの判別(職員のuser_type_idを1と仮定)
@@ -125,11 +148,32 @@ class ChatRoomController extends Controller
             return redirect()->route("chat_rooms.index");
         }
 
-        //必要なユーザーと事業所のデータを取得
-        $users = User::whereNull("deleted_at")->get();
+        //各種リクエストのデータを取得
+        $roomTitle = $request->input("room_title");
+        $officeId = $request->input("office_id");
+        $joinUsersId = $request->input("checkBox");
 
-        $offices = Office::whereNull("deleted_at")->orderBy("sort")->get();
+        //現在時刻を取得
+        $now = new DateTime("now");
+        $now = $now->format("Y-m-d H:i:s");
 
-        return view("chat_room.create", compact("users", "offices"));
+        //Chat_roomインスタンスを作成、各種データを挿入後登録
+        $chatRoom = new Chat_room();
+        $chatRoom->room_title = $roomTitle;
+        $chatRoom->distinction_number = 4;
+        $chatRoom->office_id = $officeId;
+        $chatRoom->create_user_id = $user->id;
+        $chatRoom->update_user_id = $user->id;
+        $chatRoom->created_at = $now;
+        $chatRoom->updated_at = $now;
+        $chatRoom->save();
+
+        //今作成したチャットルームのidを取得
+        $lastChatRoomId = Chat_room::select("id")->last();
+
+        //チャット参加者ごとにチャットルーム-ユーザー中間テーブルのデータを作成
+        foreach($joinUsersId as $joinUserId) {
+            
+        }
     }
 }
