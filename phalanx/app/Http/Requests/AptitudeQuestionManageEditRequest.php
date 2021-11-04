@@ -4,7 +4,7 @@ namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class AptitudeQuestionManageRequest extends FormRequest
+class AptitudeQuestionManageEditRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -47,30 +47,7 @@ class AptitudeQuestionManageRequest extends FormRequest
                 'regex:/^[0-9F-]+$/u',
                 'max:6',
             ],
-
-            "question" => [
-                'required_',
-            ],
-            "sort" => [
-                'required',
-                'numeric',
-                'digits_between:0,99999',
-            ],
-            "score_apple" => [
-                'required',
-                'regex:/^[0-9F-]+$/u',
-                'max:6',
-            ],
-            "score_mint" => [
-                'required',
-                'regex:/^[0-9F-]+$/u',
-                'max:6',
-            ],
-            "score_maple" => [
-                'required',
-                'regex:/^[0-9F-]+$/u',
-                'max:6',
-            ],
         ];
     }
 }
+

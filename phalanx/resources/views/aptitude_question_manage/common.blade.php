@@ -2,6 +2,16 @@
 @section('content')
 <h3 class="page_title">適性診断管理　@yield('title')</h3>
 <div class="card">
+    @if ($errors->any())
+    <div class="alert alert-danger w-100">
+        <span>入力に誤りがあります。</span>
+        <ul>
+            @foreach ($errors->all() as $error)
+                <li>{{ $error }}</li>
+            @endforeach
+        </ul>
+    </div>
+    @endif
     <div class="card-header"></div>
     <div class="card-body">
         @yield('form_upper')
