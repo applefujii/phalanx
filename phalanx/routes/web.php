@@ -51,7 +51,7 @@ Route::resource('office', App\Http\Controllers\OfficeController::class)->only(['
 
 // チャットルーム
 Route::resource("chat_room", App\Http\Controllers\ChatRoomController::class);
-Route::get("/chat_room/list", [App\Http\Controllers\ChatRoomController::class, "list"])->name("chat_rooms.list");
+Route::get("/chat_room/list", [App\Http\Controllers\ChatRoomController::class, "list"])->name("chat_room.list");
 
 // API
 Route::get('/api/v1.0/get/user', [App\Http\Controllers\APIController::class, "ApiGetUserList"]);
