@@ -70,7 +70,7 @@ class TestUsersSeeder extends Seeder
             [
                 'user_type_id' => 2,
                 'office_id' => 2,
-                'name' => 'ミント大阪　通所者員',
+                'name' => 'ミント大阪　通所者',
                 'name_katakana' => 'ミントオオサカ　通所者',
                 'login_name' => 'mint_user',
                 'password' => Hash::make('password'), // password
