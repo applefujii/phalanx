@@ -37,7 +37,7 @@
         </thead>
         <tbody>
             @foreach($users as $user)
-                <tr><td>{{ $user->name }}</td><td>{{ $user->user_type->alias }}</td><td>{{ $user->office->office_name }}</td><td><div class="table-body-action"><a href="{{ route('user.edit', $user->id) }}" type="button" class="btn btn-primary edit-button">編集</a><form method="post" action="{{ route('user.destroy', $user->id) }}" class="delete-form"> @csrf @method('DELETE') <input type="submit" value="削除" class="btn btn-danger delete-button"></form></td></tr>
+                <tr><td>{{ $user->name }}</td><td>{{ $user->user_type->alias }}</td><td>{{ $user->office->office_name }}</td><td><div class="table-body-action"><a href="{{ route('user.edit', $user->id) }}" type="button" class="btn btn-sm btn-primary edit-button">編集</a><form method="post" action="{{ route('user.destroy', $user->id) }}" class="delete-form"> @csrf @method('DELETE') <input type="submit" value="削除" class="btn btn-sm btn-danger delete-button"></form></td></tr>
             @endforeach
         </tbody>
     </table>
