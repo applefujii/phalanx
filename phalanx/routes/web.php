@@ -48,8 +48,8 @@ Route::resource('user', App\Http\Controllers\UserController::class)->only(['inde
 Route::resource('office', App\Http\Controllers\OfficeController::class)->only(['index', 'create', 'store', 'edit', 'update', 'destroy']);
 
 // チャットルーム
-Route::resource("chat_room", App\Http\Controllers\ChatRoomController::class);
 Route::get("/chat_room/list", [App\Http\Controllers\ChatRoomController::class, "list"])->name("chat_room.list");
+Route::resource("chat_room", App\Http\Controllers\ChatRoomController::class);
 
 
 

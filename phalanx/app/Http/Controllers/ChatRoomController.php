@@ -53,7 +53,7 @@ class ChatRoomController extends Controller
         //chat_roomsテーブルのuser_idが$userIdと一致するものを検索
         $chatRoom = Chat_room::where("user_id", $user->id)->first();
 
-        return redirect()->route("chat_rooms.show", $chatRoom->id);
+        return redirect()->route("chat_room.show", $chatRoom->id);
     }
 
     /**
@@ -87,7 +87,7 @@ class ChatRoomController extends Controller
         }
 
         //表示される条件を満たしてなかった場合indexにリダイレクトする
-        return redirect()->route("chat_rooms.index");
+        return redirect()->route("chat_room.index");
     }
 
     /**
@@ -101,15 +101,17 @@ class ChatRoomController extends Controller
         if($user->user_type_id != 1) {
 
             //職員でなければindexにリダイレクト
-            return redirect()->route("chat_rooms.index");
+            return redirect()->route("chat_room.index");
         }
 
         //表示する部屋の一覧を取得
-        $chatRooms = Chat_room::where("distinction_number", 4)->whereNull("deleted_at")
+        $chatRooms = Chat_room::where("distinction_number", 4)->whereNull("offices.deleted_at")->whereNull("chat_rooms.deleted_at")
             ->join("offices", "chat_rooms.office_id", "=", "offices.id")->orderBy("offices.sort")
-                ->orderBy("chat_rooms.room_title")->get("chat_rooms.*")->pagenate(10);
+                ->orderBy("chat_rooms.room_title")->paginate(10);
 
-        return view("chat_room.list", compact("chatRooms"));
+        // $chatRooms = Chat_room::where("distinction_number", 4)->whereNull("deleted_at")->orderBy("room_title")->paginate(10);
+
+        return view("chat_room/list", compact("chatRooms"));
     }
 
     /**
@@ -123,7 +125,7 @@ class ChatRoomController extends Controller
         if($user->user_type_id != 1) {
 
             //職員でなければindexにリダイレクト
-            return redirect()->route("chat_rooms.index");
+            return redirect()->route("chat_room.index");
         }
 
         //必要なユーザーと事業所のデータを取得
@@ -145,7 +147,7 @@ class ChatRoomController extends Controller
         if($user->user_type_id != 1) {
 
             //職員でなければindexにリダイレクト
-            return redirect()->route("chat_rooms.index");
+            return redirect()->route("chat_room.index");
         }
 
         //各種リクエストのデータを取得
