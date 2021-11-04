@@ -1,7 +1,7 @@
 @extends('layouts.app')
 @section('content')
-<h3 class="page_title">チャットルーム管理　一覧</h3>
 <div class="container-md">
+    <h3 class="page_title">チャットルーム管理　一覧</h3>
     <form action="{{ route('chat_room.create') }}" method="GET">
         <button class="btn btn-info" type="submit">新規作成</button>
     </form>
