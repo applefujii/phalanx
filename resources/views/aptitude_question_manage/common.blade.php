@@ -1,6 +1,6 @@
 @extends('layouts.app')
 @section('content')
-<h3 class="page_title">適性診断管理　@yield('title')</h3>
+<h3 class="page_title">適性診断質問管理　@yield('title')</h3>
 <div class="card">
     @if ($errors->any())
     <div class="alert alert-danger w-100">
