@@ -84,7 +84,7 @@
 @section('form_under')
     <div class="form-group">
         <button class="btn btn-primary" type="submit">登録</button>
-        @yield('back_button')
+        <a class="btn btn-outline-primary" role="button" href="{{ route('aptitude_question_manage.index') }}">一覧に戻る</a>
     </div>
 </form>
 @endsection

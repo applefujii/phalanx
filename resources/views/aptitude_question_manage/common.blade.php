@@ -5,11 +5,6 @@
     @if ($errors->any())
     <div class="alert alert-danger w-100">
         <span>入力に誤りがあります。</span>
-        <ul>
-            @foreach ($errors->all() as $error)
-                <li>{{ $error }}</li>
-            @endforeach
-        </ul>
     </div>
     @endif
     <div class="card-header"></div>
@@ -38,9 +33,6 @@
                 </table>
             </div>
             @yield('form_under')
-        <p>
-            <a class="btn btn-outline-primary" role="button" href="{{ route('home') }}">メニュー</a>
-        </p>
     </div>
 </div>
 @endsection
