@@ -14,7 +14,7 @@ use Carbon\Carbon;
 class AptitudeQuestionFormController extends Controller
 {
     /**
-     * Display a listing of the resource.
+     * 質問フォーム画面
      *
      * @return \Illuminate\Http\Response
      */
@@ -25,14 +25,14 @@ class AptitudeQuestionFormController extends Controller
     }
 
     /**
-     * Show the form for creating a new resource.
+     * 回答を集計して結果を表示
      *
      * @return \Illuminate\Http\Response
      */
     public function calculate(AptitudeQuestionFormRequest $request)
     {
         // dd($request->toArray());
-        $questions = $request->input('questions');
+        $answers = $request->input('answers');
         $score_apples = $request->input('score_apples');
         $score_mints = $request->input('score_mints');
         $score_maples = $request->input('score_maples');
@@ -40,16 +40,42 @@ class AptitudeQuestionFormController extends Controller
         $total_score_apple = 0;
         $total_score_mint = 0;
         $total_score_maple = 0;
+        $fixed = '';
 
-        foreach ($questions as $id => $value) {
-            $total_score_apple += $value * $score_apples[$id];
-            $total_score_mint += $value * $score_mints[$id];
-            $total_score_maple += $value * $score_maples[$id];
+        foreach ($answers as $id => $value) {
+            if ($score_apples[$id] === 'F') {
+                if ($value === "1") {
+                    $fixed = 'apple';
+                }
+            }else if ($score_mints[$id] === 'F') {
+                if ($value === "1") {
+                    if ($fixed === '' || $fixed === 'maple') {
+                        $fixed = 'mint';
+                    }
+                }
+            }else if ($score_maples[$id] === 'F') {
+                if ($value === "1") {
+                    if ($fixed === '') {
+                        $fixed = 'maple';
+                    }
+                }
+            } else {
+                $total_score_apple += $value * $score_apples[$id];
+                $total_score_mint += $value * $score_mints[$id];
+                $total_score_maple += $value * $score_maples[$id];
+            }
         }
 
-        logger("apple:" . $total_score_apple . " mint:" . $total_score_mint . " maple:" . $total_score_maple);
+        logger("apple:" . $total_score_apple . " mint:" . $total_score_mint . " maple:" . $total_score_maple . " fixed:" . $fixed);
 
-        if ($total_score_maple > $total_score_mint && $total_score_maple > $total_score_apple) {
+        if ($fixed === 'apple') {
+            return redirect()->route('aptitude_question_form.apple');
+        } else if ($fixed === 'mint') {
+            return redirect()->route('aptitude_question_form.mint');
+        } else if ($fixed === 'maple') {
+            return redirect()->route('aptitude_question_form.maple');
+            
+        } else if ($total_score_maple > $total_score_mint && $total_score_maple > $total_score_apple) {
             return redirect()->route('aptitude_question_form.maple');
         } else if ($total_score_mint >= $total_score_maple && $total_score_mint > $total_score_apple) {
             return redirect()->route('aptitude_question_form.mint');
@@ -59,7 +85,7 @@ class AptitudeQuestionFormController extends Controller
     }
 
     /**
-     * Display a listing of the resource.
+     * アップル梅田
      *
      * @return \Illuminate\Http\Response
      */
@@ -69,7 +95,7 @@ class AptitudeQuestionFormController extends Controller
     }
 
     /**
-     * Display a listing of the resource.
+     * ミント大阪
      *
      * @return \Illuminate\Http\Response
      */
@@ -79,7 +105,7 @@ class AptitudeQuestionFormController extends Controller
     }
 
     /**
-     * Display a listing of the resource.
+     * メープル関西
      *
      * @return \Illuminate\Http\Response
      */

@@ -41,8 +41,9 @@ class ChatRoomController extends Controller
             $userRooms = Chat_room::where("distinction_number", 3)->where("office_id", $user->office_id)->whereNotNull("deleted_at")->get();
 
             //ログイン中のユーザーが参加している部屋一覧を取得
-            $joinRooms = Chat_room__User::where("user_id", $user->id)->whereNull("deleted_at")->chat_room()
-                ->whereIn("distinction_number", [0, 1, 2])->whereNull("deleted_at")->orderBy("user_id", "desc")->get();
+            $joinRooms = Chat_room::join("chat_room__user", "chat_rooms.id", "=", "chat_room__user.chat_room_id")
+                ->where("chat_room__user.user_id", $user->id)->whereNull("chat_rooms.deleted_at")->whereNull("chat_room__user.deleted_at")
+                    ->whereIn("chat_rooms.distinction_number", [0, 1, 2])->get();
 
             //事業所一覧を取得
             $offices = Office::whereNull("deleted_at")->orderBy("sort")->get();
@@ -175,7 +176,88 @@ class ChatRoomController extends Controller
 
         //チャット参加者ごとにチャットルーム-ユーザー中間テーブルのデータを作成
         foreach($joinUsersId as $joinUserId) {
-            
+            $chatRoomUser = new Chat_room__User();
+            $chatRoomUser->chat_room_id = $lastChatRoomId;
+            $chatRoomUser->user_id = $joinUserId;
+            $chatRoomUser->create_user_id = $user->id;
+            $chatRoomUser->update_user_id = $user->id;
+            $chatRoomUser->created_at = $now;
+            $chatRoomUser->updated_at = $now;
+            $chatRoomUser->save();
         }
+
+        return redirect()->route("chat_room.list");
+    }
+
+    /**
+     * チャットルームの編集
+     */
+    public function edit($id) {
+        //ログイン中のユーザーデータを取得
+        $user = Auth::user();
+        
+        //ログイン中のユーザーが職員かどうかの判別(職員のuser_type_idを1と仮定)
+        if($user->user_type_id != 1) {
+
+            //職員でなければindexにリダイレクト
+            return redirect()->route("chat_room.index");
+        }
+
+        //編集するチャットルームのデータを取得
+        $chatRoom = Chat_room::where("id", $id)->whereNull("deleted_at")->first();
+
+        //存在しないチャットルームを編集しようとした時listにリダイレクト
+        if($chatRoom == null) {
+            return redirect()->route("chat_room.list");
+        }
+
+        //必要なユーザーと事業所のデータを取得
+        $users = User::whereNull("deleted_at")->get();
+        $offices = Office::whereNull("deleted_at")->orderBy("sort")->get();
+
+        return view("chat_room.edit", compact("chatRoom", "users", "offices"));
+    }
+
+    /**
+     * チャットルーム編集の実行部分
+     */
+    public function update(ChatRoomRequest $request, $id) {
+        //ログイン中のユーザーデータを取得
+        $user = Auth::user();
+        
+        //ログイン中のユーザーが職員かどうかの判別(職員のuser_type_idを1と仮定)
+        if($user->user_type_id != 1) {
+
+            //職員でなければindexにリダイレクト
+            return redirect()->route("chat_room.index");
+        }
+
+        //編集するチャットルームのデータを取得
+        $chatRoom = Chat_room::where("id", $id)->whereNull("deleted_at")->first();
+
+        //存在しないチャットルームを編集しようとした時listにリダイレクト
+        if($chatRoom == null) {
+            return redirect()->route("chat_room.list");
+        }
+
+        //各種リクエストのデータを取得
+        $roomTitle = $request->input("room_title");
+        $officeId = $request->input("office_id");
+        $joinUsersId = $request->input("checkBox");
+
+        //現在時刻を取得
+        $now = new DateTime("now");
+        $now = $now->format("Y-m-d H:i:s");
+
+        //取得したデータを用いて各種データを更新
+        $chatRoom->room_title = $roomTitle;
+        $chatRoom->office_id = $officeId;
+        $chatRoom->update_user_id = $user->id;
+        $chatRoom->updated_at = $now;
+        $chatRoom->save();
+
+        $chatRoomUsers = Chat_room__User::where("id", $id)->whereNull("deleted_at")->whereNotIn("user_id", $joinUsersId)->get();
+
+        return redirect()->route("chat_room.list");
     }
 }
