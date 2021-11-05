@@ -19,8 +19,14 @@ use Carbon\Carbon;
 
 class TrialApplicationManageController extends Controller
 {
+    // ログイン認証
+    public function __construct()
+    {
+        $this->middleware('auth');
+    }
+
     /**
-     * Display a listing of the resource.
+     * 一覧画面
      *
      * @param  \App\Http\Requests\TrialApplicationSearchRequest  $request
      * @return \Illuminate\Http\Response
@@ -55,7 +61,7 @@ class TrialApplicationManageController extends Controller
     }
 
     /**
-     * Show the form for editing the specified resource.
+     * 編集画面
      *
      * @param  int  $id
      * @return \Illuminate\Http\Response
@@ -69,13 +75,13 @@ class TrialApplicationManageController extends Controller
     }
 
     /**
-     * Update the specified resource in storage.
+     * 編集画面の内容をDBに保存
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param  \App\Http\Requests\TrialApplicationRequest  $request
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(TrialApplicationRequest $request, $id)
     {
         $now = Carbon::now();
         $trial_application = TrialApplication::findOrFail($id);
@@ -86,14 +92,14 @@ class TrialApplicationManageController extends Controller
         $trial_application->desired_date = $request->input('desired_date');
         $trial_application->email = Crypt::encryptString($request->input('email'));
         $trial_application->phone_number = Crypt::encryptString($request->input('phone_number'));
-        // $trial_application->update_user_id = Auth::user()->id;
+        $trial_application->update_user_id = Auth::user()->id;
         $trial_application->updated_at = $now->isoFormat('YYYY-MM-DD');
         $trial_application->save();
         return redirect()->route('trial_application_manage.index');
     }
 
     /**
-     * Remove the specified resource from storage.
+     * DBから論理削除
      *
      * @param  int  $id
      * @return \Illuminate\Http\Response
@@ -103,15 +109,15 @@ class TrialApplicationManageController extends Controller
         $now = Carbon::now();
         $trial_application = TrialApplication::findOrFail($id);
 
-        // $trial_application->update_user_id = Auth::user()->id;
-        // $trial_application->delete_user_id = Auth::user()->id;
+        $trial_application->update_user_id = Auth::user()->id;
+        $trial_application->delete_user_id = Auth::user()->id;
         $trial_application->deleted_at = $now->isoFormat('YYYY-MM-DD');
         $trial_application->save();
         return redirect()->route('trial_application_manage.index');
     }
 
     /**
-     * Display the specified resource.
+     * 確認画面
      *
      * @param  int  $id
      * @return \Illuminate\Http\Response
@@ -125,7 +131,7 @@ class TrialApplicationManageController extends Controller
     }
 
     /**
-     * Update the specified resource in storage.
+     * DBに確認済という結果を保存または確認未に戻す
      *
      * @param  \Illuminate\Http\Request  $request
      * @param  int  $id
@@ -137,7 +143,7 @@ class TrialApplicationManageController extends Controller
         $trial_application = TrialApplication::findOrFail($id);
 
         $trial_application->is_checked = !$trial_application->is_checked;
-        // $trial_application->update_user_id = Auth::user()->id;
+        $trial_application->update_user_id = Auth::user()->id;
         $trial_application->updated_at = $now->isoFormat('YYYY-MM-DD');
         $trial_application->save();
         return redirect()->route('trial_application_manage.index');

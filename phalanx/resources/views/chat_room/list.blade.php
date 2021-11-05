@@ -2,16 +2,16 @@
 @section('content')
 <div class="container-md">
     <h3 class="page_title">チャットルーム管理　一覧</h3>
-    <form action="{{ route('chat_room.create') }}" method="GET">
-        <button class="btn btn-info" type="submit">新規作成</button>
+    <form action="{{ route('chat_room.create') }}" method="GET" class="mt-3">
+        <button class="btn btn-primary my-3" type="submit">新規作成</button>
     </form>
-    <div class="table-responsive">
+    <div class="table-responsive mt-3">
         <table class="table table-striped table-bordered border-white">
-            <thead class="thead-info">
-                <tr>
-                    <th>ルーム名</th>
-                    <th>事業所</th>
-                    <th>操作</th>
+            <thead class="bg-primary text-white">
+                <tr class="text-center">
+                    <th class="col-3">ルーム名</th>
+                    <th class="col-3">事業所</th>
+                    <th class="col-6">操作</th>
                 </tr>
             </thead>
             <tbody>
@@ -20,8 +20,8 @@
                         <td>{{ $chatRoom->room_title }}</td>
                         <td>{{ $chatRoom->office->office_name }}</td>
                         <td>
-                            <div class="row">
-                                <div class="col mr-2">
+                            <div class="row gx-2 text-center">
+                                <div class="col">
                                     <form action="{{ route('chat_room.edit', $chatRoom->id) }}" method="GET">
                                         <button class="btn btn-primary" type="submit">編集</button>
                                     </form>
