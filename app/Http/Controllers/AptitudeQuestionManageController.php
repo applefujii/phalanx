@@ -23,7 +23,7 @@ class AptitudeQuestionManageController extends Controller
     }
     
     /**
-     * Display a listing of the resource.
+     * 一覧画面
      *
      * @return \Illuminate\Http\Response
      */
@@ -34,7 +34,7 @@ class AptitudeQuestionManageController extends Controller
     }
 
     /**
-     * Show the form for creating a new resource.
+     * 新規登録画面
      *
      * @return \Illuminate\Http\Response
      */
@@ -44,9 +44,9 @@ class AptitudeQuestionManageController extends Controller
     }
 
     /**
-     * Store a newly created resource in storage.
+     * 新規登録画面の内容をDBに保存
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param  \App\Http\Requests\AptitudeQuestionManageCreateRequest  $request
      * @return \Illuminate\Http\Response
      */
     public function store(AptitudeQuestionManageCreateRequest $request)
@@ -69,9 +69,8 @@ class AptitudeQuestionManageController extends Controller
     }
 
     /**
-     * Show the form for editing the specified resource.
+     * 一括編集画面
      *
-     * @param  int  $id
      * @return \Illuminate\Http\Response
      */
     public function edit()
@@ -81,10 +80,9 @@ class AptitudeQuestionManageController extends Controller
     }
 
     /**
-     * Update the specified resource in storage.
+     * 一括編集画面の内容をDBに保存
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
+     * @param  \App\Http\Requests\AptitudeQuestionManageEditRequest  $request
      * @return \Illuminate\Http\Response
      */
     public function update(AptitudeQuestionManageEditRequest $request)
@@ -112,7 +110,7 @@ class AptitudeQuestionManageController extends Controller
     }
 
     /**
-     * Remove the specified resource from storage.
+     * 質問をDBから削除
      *
      * @param  int  $id
      * @return \Illuminate\Http\Response
