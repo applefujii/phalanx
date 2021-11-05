@@ -5,11 +5,10 @@
     <div class="row justify-content-center">
         <div class="col-md-8">
             <div class="card">
-                <div class="card-header">@yield('office_name')</div>
+                <div class="card-header">あなたにおすすめの事業所は、@yield('office_name')です！</div>
 
                 <div class="card-body">
-                    <div class="text-center">
-                    </div>
+                    @yield('contents')
                 </div>
                 
                 <p>
