@@ -26,7 +26,7 @@ class TrialApplicationManageController extends Controller
     }
 
     /**
-     * Display a listing of the resource.
+     * 一覧画面
      *
      * @param  \App\Http\Requests\TrialApplicationSearchRequest  $request
      * @return \Illuminate\Http\Response
@@ -61,7 +61,7 @@ class TrialApplicationManageController extends Controller
     }
 
     /**
-     * Show the form for editing the specified resource.
+     * 編集画面
      *
      * @param  int  $id
      * @return \Illuminate\Http\Response
@@ -75,13 +75,13 @@ class TrialApplicationManageController extends Controller
     }
 
     /**
-     * Update the specified resource in storage.
+     * 編集画面の内容をDBに保存
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param  \App\Http\Requests\TrialApplicationRequest  $request
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(TrialApplicationRequest $request, $id)
     {
         $now = Carbon::now();
         $trial_application = TrialApplication::findOrFail($id);
@@ -99,7 +99,7 @@ class TrialApplicationManageController extends Controller
     }
 
     /**
-     * Remove the specified resource from storage.
+     * DBから論理削除
      *
      * @param  int  $id
      * @return \Illuminate\Http\Response
@@ -117,7 +117,7 @@ class TrialApplicationManageController extends Controller
     }
 
     /**
-     * Display the specified resource.
+     * 確認画面
      *
      * @param  int  $id
      * @return \Illuminate\Http\Response
@@ -131,7 +131,7 @@ class TrialApplicationManageController extends Controller
     }
 
     /**
-     * Update the specified resource in storage.
+     * DBに確認済という結果を保存または確認未に戻す
      *
      * @param  \Illuminate\Http\Request  $request
      * @param  int  $id
