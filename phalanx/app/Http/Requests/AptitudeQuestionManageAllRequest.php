@@ -4,7 +4,7 @@ namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class AptitudeQuestionManageEditRequest extends FormRequest
+class AptitudeQuestionManageAllRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -48,6 +48,20 @@ class AptitudeQuestionManageEditRequest extends FormRequest
                 'regex:/^[0-9F-]+$/u',
                 'max:6',
             ],
+        ];
+    }
+
+    /**
+     * 定義済みバリデーションルールのエラーメッセージ取得
+     *
+     * @return array
+     */
+    public function messages()
+    {
+        return [
+            'score_apples.*.regex' => ':attributeは半角数字の整数かFを入力してください。',
+            'score_mints.*.regex' => ':attributeは半角数字の整数かFを入力してください。',
+            'score_maples.*.regex' => ':attributeは半角数字の整数かFを入力してください。',
         ];
     }
 }
