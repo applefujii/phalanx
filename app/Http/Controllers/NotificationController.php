@@ -53,7 +53,7 @@ class NotificationController extends Controller
      */
     public function create()
     {
-        //
+        return view('notification.create');
     }
 
     /**
@@ -98,7 +98,8 @@ class NotificationController extends Controller
      */
     public function edit($id)
     {
-        //
+        $notification = Notification::where("id", $id)->first();
+        return view("notification.edit", compact("notification"));
     }
 
     /**
