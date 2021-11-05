@@ -9,6 +9,10 @@
     @endif
     <div class="card-header"></div>
     <div class="card-body">
+        {{-- <div>
+            <p>※点数に『F』を指定すると、回答が『はい』の場合、合計点数に関わらず、その事業所に確定されます。</p>
+            <p>　点数が空欄の場合は0点と判断されます。</p>
+        </div> --}}
         @yield('form_upper')
             <div class="table-responsive">
                 <table class="table table-bordered table-hover table-striped blue_table member_table">
