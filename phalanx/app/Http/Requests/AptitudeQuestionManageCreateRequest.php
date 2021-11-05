@@ -30,20 +30,21 @@ class AptitudeQuestionManageCreateRequest extends FormRequest
             "sort" => [
                 'required',
                 'numeric',
-                'digits_between:0,99999',
+                'max:999',
+                'min:0',
             ],
             "score_apple" => [
-                'required',
+                'nullable',
                 'regex:/^[0-9F-]+$/u',
                 'max:6',
             ],
             "score_mint" => [
-                'required',
+                'nullable',
                 'regex:/^[0-9F-]+$/u',
                 'max:6',
             ],
             "score_maple" => [
-                'required',
+                'nullable',
                 'regex:/^[0-9F-]+$/u',
                 'max:6',
             ],

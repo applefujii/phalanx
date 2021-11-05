@@ -32,7 +32,7 @@ class AptitudeQuestionFormController extends Controller
     public function calculate(AptitudeQuestionFormRequest $request)
     {
         // dd($request->toArray());
-        $questions = $request->input('questions');
+        $answers = $request->input('answers');
         $score_apples = $request->input('score_apples');
         $score_mints = $request->input('score_mints');
         $score_maples = $request->input('score_maples');
@@ -42,7 +42,7 @@ class AptitudeQuestionFormController extends Controller
         $total_score_maple = 0;
         $fixed = '';
 
-        foreach ($questions as $id => $value) {
+        foreach ($answers as $id => $value) {
             if ($score_apples[$id] === 'F') {
                 if ($value === "1") {
                     $fixed = 'apple';
