@@ -11,7 +11,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Chat_text extends Model
+class ChatText extends Model
 {
     use HasFactory;
 
@@ -33,7 +33,7 @@ class Chat_text extends Model
      * 関連するチャットルームのデータの取得
      */
     public function chat_room() {
-        return $this->belongsTo(Chat_room::class);
+        return $this->belongsTo(ChatRoom::class);
     }
 
     /**
@@ -47,6 +47,6 @@ class Chat_text extends Model
      * 関連するチャットルーム-ユーザー中間テーブルのデータの取得
      */
     public function chat_room__user() {
-        return $this->hasMany(Chat_room__User::class);
+        return $this->hasMany(ChatRoom__User::class);
     }
 }
