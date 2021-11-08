@@ -31,6 +31,7 @@
         <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#peopleListModal" data-target-group="staff">
             職員
         </button>
+
     
         <!-- Modal -->
         <div id="peopleListModal" class="modal" tabindex="-1" role="dialog" aria-labelledby="peopleListModalLabel" aria-hidden="true">
@@ -303,7 +304,7 @@
             //-- APIからメンバー情報を取得
             $.ajax({
                 type: "POST",
-                url: "./api/v1.0/get/users", // 送り先
+                url: "./api/v1.0/get/users.json", // 送り先
                 data: {},   // 渡したいデータをオブジェクトで渡す
                 dataType : "json",  // データ形式を指定
                 scriptCharset: 'utf-8'  // 文字コードを指定
@@ -318,7 +319,7 @@
             //-- APIから事業所情報を取得
             $.ajax({
                 type: "POST",
-                url: "./api/v1.0/get/offices",
+                url: "./api/v1.0/get/offices.json",
                 data: {},
                 dataType : "json",
                 scriptCharset: 'utf-8'
@@ -334,8 +335,14 @@
             // ※APIのテスト
             $.ajax({
                 type: "POST",
-                url: "./api/v1.0/get/users", // 送り先
-                data: { id : 1 },   // 渡したいデータをオブジェクトで渡す
+                url: "./api/v1.0/set/notifications.json", // 送り先
+                data: {
+                    records : [
+                        { content : "複数登録1", start_at :"2022/01/01 00:00:00" , end_at : "2022/01/01 00:00:00", is_all_day : "0" },
+                        { content : "複数登録2", start_at :"2022/01/01 00:00:00" , end_at : "2022/01/01 00:00:00", is_all_day : "1" },
+                        { content : "複数登録3", start_at :"2022/01/01 00:00:00" , end_at : "2022/01/01 00:00:00", is_all_day : "0" }
+                    ]
+                 },   // 渡したいデータをオブジェクトで渡す
                 dataType : "json",  // データ形式を指定
                 scriptCharset: 'utf-8'  // 文字コードを指定
             })
@@ -345,6 +352,20 @@
             .fail( function(XMLHttpRequest, textStatus, errorThrown){   // エラーが起きた時はこちらが実行される
                     console.log(XMLHttpRequest);    // エラー内容表示
             });
+
+            // $.ajax({
+            //     type: "POST",
+            //     url: "./api/v1.0/get/notifications.json", // 送り先
+            //     data: {},   // 渡したいデータをオブジェクトで渡す
+            //     dataType : "json",  // データ形式を指定
+            //     scriptCharset: 'utf-8'  // 文字コードを指定
+            // })
+            // .done( function(param){     // paramに処理後のデータが入って戻ってくる
+            //         console.log(param); // 帰ってきたら実行する処理
+            //     })
+            // .fail( function(XMLHttpRequest, textStatus, errorThrown){   // エラーが起きた時はこちらが実行される
+            //         console.log(XMLHttpRequest);    // エラー内容表示
+            // });
 
             //-- ※checkListにチェックされている人のIDを代入
             checkList.push(5);
