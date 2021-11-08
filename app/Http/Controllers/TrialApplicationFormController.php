@@ -51,8 +51,8 @@ class TrialApplicationFormController extends Controller
         $trial_application->desired_date = $request->input('desired_date');
         $trial_application->email = Crypt::encryptString($request->input('email'));
         $trial_application->phone_number = Crypt::encryptString($request->input('phone_number'));
-        $trial_application->created_at = $now->isoFormat('YYYY-MM-DD');
-        $trial_application->updated_at = $now->isoFormat('YYYY-MM-DD');
+        $trial_application->created_at = $now->isoFormat('YYYY-MM-DD HH:mm:ss');
+        $trial_application->updated_at = $now->isoFormat('YYYY-MM-DD HH:mm:ss');
         $trial_application->save();
 
         return redirect()->route('trial_application_form.finish');
