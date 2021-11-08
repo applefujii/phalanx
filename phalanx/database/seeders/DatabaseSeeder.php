@@ -20,8 +20,8 @@ class DatabaseSeeder extends Seeder
         $this->call(UserTypesSeeder::class);
         $this->call(NotificationsSeeder::class);// 予定通知テーブル
         $this->call(TestUsersSeeder::class);// ログインテスト用ユーザー
-        \App\Models\Chat_room::factory(50)->create();// チャットルーム
-        \App\Models\Chat_text::factory(50)->create();// チャットテキスト
+        \App\Models\ChatRoom::factory(50)->create();// チャットルーム
+        \App\Models\ChatText::factory(50)->create();// チャットテキスト
         foreach ([3, 2, 1] as $office_id) { // テスト用
             \App\Models\User::factory(20)->create([
                 'user_type_id' => 2,
