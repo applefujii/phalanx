@@ -19,10 +19,10 @@ use Carbon\Carbon;
 
 class TrialApplicationManageController extends Controller
 {
-    // ログイン認証
+    // 権限チェック
     public function __construct()
     {
-        $this->middleware('auth');
+        $this->middleware('staff');// 職員
     }
 
     /**
