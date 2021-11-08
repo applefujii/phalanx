@@ -10,8 +10,8 @@ namespace App\Http\Controllers;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-use App\Models\Chat_room;
-use App\Models\Chat_room__User;
+use App\Models\ChatRoom;
+use App\Models\ChatRoom__User;
 use App\Models\Office;
 use App\Models\User;
 use Illuminate\Support\Facades\Auth;
@@ -38,10 +38,10 @@ class ChatRoomController extends Controller
         if($user->user_type_id == 1) {
 
             //利用者対職員の個人チャットを取得
-            $userRooms = Chat_room::where("distinction_number", 3)->where("office_id", $user->office_id)->whereNotNull("deleted_at")->get();
+            $userRooms = ChatRoom::where("distinction_number", 3)->where("office_id", $user->office_id)->whereNotNull("deleted_at")->get();
 
             //ログイン中のユーザーが参加している部屋一覧を取得
-            $joinRooms = Chat_room::join("chat_room__user", "chat_rooms.id", "=", "chat_room__user.chat_room_id")
+            $joinRooms = ChatRoom::join("chat_room__user", "chat_rooms.id", "=", "chat_room__user.chat_room_id")
                 ->where("chat_room__user.user_id", $user->id)->whereNull("chat_rooms.deleted_at")->whereNull("chat_room__user.deleted_at")
                     ->whereIn("chat_rooms.distinction_number", [0, 1, 2])->get();
 
@@ -52,7 +52,7 @@ class ChatRoomController extends Controller
         }
 
         //chat_roomsテーブルのuser_idが$userIdと一致するものを検索
-        $chatRoom = Chat_room::where("user_id", $user->id)->first();
+        $chatRoom = ChatRoom::where("user_id", $user->id)->first();
 
         return redirect()->route("chat_room.show", $chatRoom->id);
     }
@@ -62,7 +62,7 @@ class ChatRoomController extends Controller
      */
     public function show($id) {
         //chat_roomsテーブルのidと$idが一致するデータを取得
-        $chatRoom = Chat_room::where("id", $id)->whereNull("deleted_at")->first();
+        $chatRoom = ChatRoom::where("id", $id)->whereNull("deleted_at")->first();
 
         //存在しないidを参照したとき残りの処理を飛ばす
         if($chatRoom != null) {
@@ -77,7 +77,7 @@ class ChatRoomController extends Controller
             if($join != null) {
 
                 //ログイン中のユーザーが参加している部屋一覧を取得
-                $joinRooms = Chat_room__User::where("user_id", $userId)->whereNull("deleted_at")->chat_rooms()
+                $joinRooms = ChatRoom__User::where("user_id", $userId)->whereNull("deleted_at")->chat_rooms()
                     ->whereNull("deleted_at")->orderBy("user_id", "desc")->get();
 
                 //事業所一覧を取得
@@ -106,7 +106,7 @@ class ChatRoomController extends Controller
         }
 
         //表示する部屋の一覧を取得
-        $chatRooms = Chat_room::where("distinction_number", 4)->whereNull("offices.deleted_at")->whereNull("chat_rooms.deleted_at")
+        $chatRooms = ChatRoom::where("distinction_number", 4)->whereNull("offices.deleted_at")->whereNull("chat_rooms.deleted_at")
             ->join("offices", "chat_rooms.office_id", "=", "offices.id")->orderBy("offices.sort")
                 ->orderBy("chat_rooms.room_title")->paginate(10);
 
@@ -161,7 +161,7 @@ class ChatRoomController extends Controller
         $now = $now->format("Y-m-d H:i:s");
 
         //Chat_roomインスタンスを作成、各種データを挿入後登録
-        $chatRoom = new Chat_room();
+        $chatRoom = new ChatRoom();
         $chatRoom->room_title = $roomTitle;
         $chatRoom->distinction_number = 4;
         $chatRoom->office_id = $officeId;
@@ -173,7 +173,7 @@ class ChatRoomController extends Controller
 
         //チャット参加者ごとにチャットルーム-ユーザー中間テーブルのデータを作成
         foreach($joinUsersId as $joinUserId) {
-            $chatRoomUser = new Chat_room__User();
+            $chatRoomUser = new ChatRoom__User();
             $chatRoomUser->chat_room_id = $chatRoom->id;
             $chatRoomUser->user_id = $joinUserId;
             $chatRoomUser->create_user_id = $user->id;
@@ -201,7 +201,7 @@ class ChatRoomController extends Controller
         }
 
         //編集するチャットルームのデータを取得
-        $chatRoom = Chat_room::where("id", $id)->whereNull("deleted_at")->first();
+        $chatRoom = ChatRoom::where("id", $id)->whereNull("deleted_at")->first();
 
         //存在しないチャットルームを編集しようとした時listにリダイレクト
         if($chatRoom == null) {
@@ -230,7 +230,7 @@ class ChatRoomController extends Controller
         }
 
         //編集するチャットルームのデータを取得
-        $chatRoom = Chat_room::where("id", $id)->whereNull("deleted_at")->first();
+        $chatRoom = ChatRoom::where("id", $id)->whereNull("deleted_at")->first();
 
         //存在しないチャットルームを編集しようとした時listにリダイレクト
         if(is_null($chatRoom)) {
@@ -254,7 +254,7 @@ class ChatRoomController extends Controller
         $chatRoom->save();
 
         //$joinUsersIdを用いて変更後に参加者となっていないユーザーの中間テーブルを取得し、データを削除
-        $chatRoomUsers = Chat_room__User::where("chat_room_id", $id)->whereNull("deleted_at")->whereNotIn("user_id", $joinUsersId)->get();
+        $chatRoomUsers = ChatRoom__User::where("chat_room_id", $id)->whereNull("deleted_at")->whereNotIn("user_id", $joinUsersId)->get();
         foreach($chatRoomUsers as $chatRoomUser) {
             $chatRoomUser->delete_user_id = $user->id;
             $chatRoomUser->deleted_at = $now;
@@ -263,11 +263,11 @@ class ChatRoomController extends Controller
 
         //変更された参加者とルームを結びつける中間テーブルのデータがすでにあるかどうかを判別
         foreach($joinUsersId as $joinUserId) {
-            $serch = Chat_room__User::whereNull("deleted_at")->where("chat_room_id", $id)->where("user_id", $joinUserId)->first();
+            $serch = ChatRoom__User::whereNull("deleted_at")->where("chat_room_id", $id)->where("user_id", $joinUserId)->first();
 
             //中間テーブルにデータがまだない場合のみ作成
             if(is_null($serch)) {
-                $chatRoomUser = new Chat_room__User();
+                $chatRoomUser = new ChatRoom__User();
                 $chatRoomUser->chat_room_id = $id;
                 $chatRoomUser->user_id = $joinUserId;
                 $chatRoomUser->create_user_id = $user->id;
@@ -296,7 +296,7 @@ class ChatRoomController extends Controller
         }
 
         //削除するチャットルームのデータを取得
-        $chatRoom = Chat_room::where("id", $id)->whereNull("deleted_at")->first();
+        $chatRoom = ChatRoom::where("id", $id)->whereNull("deleted_at")->first();
 
         //存在しないチャットルームを削除しようとした時listにリダイレクト
         if(is_null($chatRoom)) {
@@ -313,7 +313,7 @@ class ChatRoomController extends Controller
         $chatRoom->save();
 
         //削除するチャットルーム-ユーザー中間テーブルのデータを取得
-        $chatRoomUsers = Chat_room__User::where("chat_room_id", $id)->whereNull("deleted_at")->get();
+        $chatRoomUsers = ChatRoom__User::where("chat_room_id", $id)->whereNull("deleted_at")->get();
 
         //削除するデータがある場合のみ削除を実行
         if(isset($chatRoomUsers)) {
