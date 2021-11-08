@@ -20,8 +20,9 @@ use Carbon\Carbon;
 class TrialApplicationFormController extends Controller
 {
     /**
-     * Show the form for creating a new resource.
+     * 申込フォーム
      *
+     * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
     public function index(Request $request)
@@ -33,7 +34,7 @@ class TrialApplicationFormController extends Controller
     }
 
     /**
-     * Store a newly created resource in storage.
+     * 申込フォームの内容をDBに保存
      *
      * @param  \App\Http\Requests\TrialApplicationSearchRequest  $request
      * @return \Illuminate\Http\Response
@@ -58,7 +59,7 @@ class TrialApplicationFormController extends Controller
     }
 
     /**
-     * Show the form for creating a new resource.
+     * 申込が完了しました画面
      *
      * @return \Illuminate\Http\Response
      */
