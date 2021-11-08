@@ -10,8 +10,9 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Http\Requests\ChatTextRequest;
-use App\Models\Chat_room;
-use App\Models\Chat_room__User;
+use App\Models\ChatRoom;
+use App\Models\ChatText;
+use App\Models\ChatRoom__User;
 use App\Models\Office;
 use App\Models\User;
 use Illuminate\Support\Facades\Auth;
@@ -34,9 +35,10 @@ class ChatController extends Controller
      */
     public function index($id)
     {
-        $chat_texts = Chat_room::whereNull('deleted_at')->findOrFail($id)->chat_texts()->orderBy('created_at')->get();
+        $chat_room = ChatRoom::whereNull('deleted_at')->findOrFail($id);
+        $chat_texts = $chat_room->chat_texts()->orderBy('created_at')->get();
         
-        return view('chat/index', compact('chat_texts'));
+        return view('chat/index', compact('chat_room', 'chat_texts'));
     }
 
     /**
@@ -45,22 +47,20 @@ class ChatController extends Controller
      * @param  \App\Http\Requests\ChatTextRequest  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(ChatTextRequest $request, $id)
+    public function store(ChatTextRequest $request, $chat_room_id)
     {
         $now = Carbon::now();
-        $desired_date = new Carbon($request->input('desired_date'));
 
-        $trial_application = new TrialApplication();
-        $trial_application->name = Crypt::encryptString($request->input('name'));
-        $trial_application->name_kana = Crypt::encryptString($request->input('name_kana'));
-        $trial_application->office_id = $request->input('office_id');
-        $trial_application->desired_date = $request->input('desired_date');
-        $trial_application->email = Crypt::encryptString($request->input('email'));
-        $trial_application->phone_number = Crypt::encryptString($request->input('phone_number'));
-        $trial_application->created_at = $now->isoFormat('YYYY-MM-DD');
-        $trial_application->updated_at = $now->isoFormat('YYYY-MM-DD');
-        $trial_application->save();
+        $chat_text = new ChatText();
+        $chat_text->chat_text = $request->input('chat_text');
+        $chat_text->chat_room_id = $chat_room_id;
+        $chat_text->user_id = Auth::user()->id;
+        $chat_text->create_user_id = Auth::user()->id;
+        $chat_text->update_user_id = Auth::user()->id;
+        $chat_text->created_at = $now->isoFormat('YYYY-MM-DD HH:mm:ss');
+        $chat_text->updated_at = $now->isoFormat('YYYY-MM-DD HH:mm:ss');
+        $chat_text->save();
 
-        return redirect()->route('chat.index', $id);
+        return redirect()->route('chat.index', $chat_room_id);
     }
 }
