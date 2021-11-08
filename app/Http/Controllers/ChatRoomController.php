@@ -256,7 +256,30 @@ class ChatRoomController extends Controller
         $chatRoom->updated_at = $now;
         $chatRoom->save();
 
-        $chatRoomUsers = Chat_room__User::where("id", $id)->whereNull("deleted_at")->whereNotIn("user_id", $joinUsersId)->get();
+        //$joinUsersIdを用いて変更後に参加者となっていないユーザーの中間テーブルを取得し、データを削除
+        $chatRoomUsers = Chat_room__User::where("chat_room_id", $id)->whereNull("deleted_at")->whereNotIn("user_id", $joinUsersId)->get();
+        foreach($chatRoomUsers as $chatRoomUser) {
+            $chatRoomUser->delete_user_id = $user->id;
+            $chatRoomUser->deleted_at = $now;
+            $chatRoomUser->save();
+        }
+
+        //変更された参加者とルームを結びつける中間テーブルのデータがすでにあるかどうかを判別
+        foreach($joinUsersId as $joinUserId) {
+            $serch = Chat_room__User::whereNull("deleted_at")->where("chat_room_id", $id)->where("user_id", $joinUserId)->first();
+
+            //中間テーブルにデータがまだない場合のみ作成
+            if(is_null($serch)) {
+                $chatRoomUser = new Chat_room__User();
+                $chatRoomUser->chat_room_id = $id;
+                $chatRoomUser->user_id = $joinUserId;
+                $chatRoomUser->create_user_id = $user->id;
+                $chatRoomUser->update_user_id = $user->id;
+                $chatRoomUser->created_at = $now;
+                $chatRoomUser->updated_at = $now;
+                $chatRoomUser->save();
+            }
+        }
 
         return redirect()->route("chat_room.list");
     }
