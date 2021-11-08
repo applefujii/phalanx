@@ -58,17 +58,17 @@ Route::resource("chat_room", App\Http\Controllers\ChatRoomController::class);
 
 //////////// API /////////////////////////////////
 // ユーザー
-Route::POST('/api/v1.0/get/users', [App\Http\Controllers\APIController::class, "ApiGetUsers"]);
+Route::POST('/api/v1.0/get/users.json', [App\Http\Controllers\APIController::class, "ApiGetUsers"]);
 // 事業所
-Route::POST('/api/v1.0/get/offices', [App\Http\Controllers\APIController::class, "ApiGetOffices"]);
+Route::POST('/api/v1.0/get/offices.json', [App\Http\Controllers\APIController::class, "ApiGetOffices"]);
 
 // 予定通知
-Route::POST('/api/v1.0/get/notifications', [App\Http\Controllers\APIController::class, "ApiGetNotifications"]);
-Route::POST('/api/v1.0/set/notifications', [App\Http\Controllers\APIController::class, "ApiStoreNotifications"]);
-Route::PUT('/api/v1.0/set/notifications', [App\Http\Controllers\APIController::class, "ApiUpdateNotifications"]);
-Route::DELETE('/api/v1.0/set/notifications', [App\Http\Controllers\APIController::class, "ApiDeleteNotifications"]);
+Route::POST('/api/v1.0/get/notifications.json', [App\Http\Controllers\APIController::class, "ApiGetNotifications"]);
+Route::POST('/api/v1.0/set/notifications.json', [App\Http\Controllers\APIController::class, "ApiStoreNotifications"]);
+Route::PUT('/api/v1.0/set/notifications.json', [App\Http\Controllers\APIController::class, "ApiUpdateNotifications"]);
+Route::DELETE('/api/v1.0/set/notifications.json', [App\Http\Controllers\APIController::class, "ApiDeleteNotifications"]);
 
 //URI例。取得系はget、登録系はset。
-// /api/v1.0/get/users
-// /api/v1.0/get/offices
-// /api/v1.0/set/users
+// /api/v1.0/get/users.json
+// /api/v1.0/get/offices.json
+// /api/v1.0/set/users.json

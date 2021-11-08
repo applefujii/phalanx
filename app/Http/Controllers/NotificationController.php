@@ -5,8 +5,11 @@ namespace App\Http\Controllers;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Notification;
+use App\Models\Notification__User;
 use App\Models\Office;
 use App\Models\UserType;
+
+use Illuminate\Support\Facades\Auth;
 
 class NotificationController extends Controller
 {
@@ -17,7 +20,7 @@ class NotificationController extends Controller
      */
     public function __construct()
     {
-        // $this->middleware('auth');
+        $this->middleware('auth');
     }
 
     /**
@@ -64,19 +67,32 @@ class NotificationController extends Controller
      */
     public function store(Request $request)
     {
+        $id = $this->storeDetail($request);
+
+        return redirect()->route("notification.index", $parameters = [], $status = 302, $headers = []);
+    }
+
+    /**
+     * Store a newly created resource in storage.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
+     */
+    public function storeDetail(Request $request)
+    {
         $dt = new \DateTime( "now" );
         $notifications = Notification::create([
             'content' => $request->content,
             'start_at' => $request->start_at,
             'end_at' => $request->end_at,
             'is_all_day' => $request->is_all_day,
-            'create_user_id' => 1,
-            'update_user_id' => 1,
+            'create_user_id' => Auth::user()->id,
+            'update_user_id' => Auth::user()->id,
             'created_at' => $dt->format('Y-m-d H:i:s'),
             'updated_at' => $dt->format('Y-m-d H:i:s')
         ]);
 
-        return redirect()->route("notification.index", $parameters = [], $status = 302, $headers = []);
+        return $notifications->id;
     }
 
     /**
@@ -116,7 +132,7 @@ class NotificationController extends Controller
             'start_at' => $request->start_at,
             'end_at' => $request->end_at,
             'is_all_day' => $request->is_all_day,
-            'update_user_id' => 1,
+            'update_user_id' => Auth::user()->id,
             'updated_at' => $dt->format('Y-m-d H:i:s')
         ]);
 
@@ -133,12 +149,50 @@ class NotificationController extends Controller
     {
         $dt = new \DateTime( "now" );
         $notifications = Notification::where("id", $id)->update([
-            'delete_user_id' => 1,
+            'delete_user_id' => Auth::user()->id,
             'deleted_at' => $dt->format('Y-m-d H:i:s')
         ]);
 
         return redirect()->route("notification.index", $parameters = [], $status = 302, $headers = []);
     }
+
+
+    //--------------------- リレーション notification__user ----------------------
+
+    /**
+     * @return \Illuminate\Http\Response
+     */
+    public function notification__user_store(Request $request)
+    {
+        $dt = new \DateTime( "now" );
+        $notifications = Notification__User::create([
+            'notification_id' => $request->notification_id,
+            'user_id' => $request->user_id,
+            'create_user_id' => 1,
+            'update_user_id' => 1,
+            'created_at' => $dt->format('Y-m-d H:i:s'),
+            'updated_at' => $dt->format('Y-m-d H:i:s')
+        ]);
+
+        return;
+    }
+
+    /**
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function notification__user_destroy($id)
+    {
+        $dt = new \DateTime( "now" );
+        $notifications = Notification__User::where("id", $id)->update([
+            'delete_user_id' => 1,
+            'deleted_at' => $dt->format('Y-m-d H:i:s')
+        ]);
+
+        return;
+    }
+
+    //--------------------- ※テスト用 ----------------------
 
     public function pepple_list()
     {
