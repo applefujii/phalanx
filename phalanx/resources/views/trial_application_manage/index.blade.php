@@ -85,7 +85,8 @@
                                 未
                             @endif
                         </td>
-                        <td class="form-row">
+                        <td>
+                            <div class="form-row">
                             <a class="btn btn-primary" role="button" href="{{ route('trial_application_manage.check', $trial_application->id) }}">確認</a>
                             <a class="btn btn-primary" role="button" href="{{ route('trial_application_manage.edit', $trial_application->id) }}">編集</a>
                             <form action="{{ route('trial_application_manage.destroy', $trial_application->id) }}" method="post">
@@ -93,6 +94,7 @@
                                 @csrf
                                 <button class="btn btn-primary" type="submit">削除</button>
                             </form>
+                            </div>
                         </td>
                     </tr>
                     @endforeach

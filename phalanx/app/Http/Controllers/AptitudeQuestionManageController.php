@@ -10,20 +10,20 @@ use Illuminate\Http\Request;
 use App\Models\AptitudeQuestion;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
-use App\Http\Requests\AptitudeQuestionManageCreateRequest;
-use App\Http\Requests\AptitudeQuestionManageEditRequest;
+use App\Http\Requests\AptitudeQuestionManageRequest;
+use App\Http\Requests\AptitudeQuestionManageAllRequest;
 use Carbon\Carbon;
 
 class AptitudeQuestionManageController extends Controller
 {
-    // ログイン認証
+    // 権限チェック
     public function __construct()
     {
-        $this->middleware('auth');
+        $this->middleware('staff');// 職員
     }
     
     /**
-     * Display a listing of the resource.
+     * 一覧画面
      *
      * @return \Illuminate\Http\Response
      */
@@ -34,7 +34,7 @@ class AptitudeQuestionManageController extends Controller
     }
 
     /**
-     * Show the form for creating a new resource.
+     * 新規登録画面
      *
      * @return \Illuminate\Http\Response
      */
@@ -44,12 +44,12 @@ class AptitudeQuestionManageController extends Controller
     }
 
     /**
-     * Store a newly created resource in storage.
+     * 新規登録画面の内容をDBに保存
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param  \App\Http\Requests\AptitudeQuestionManageRequest  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(AptitudeQuestionManageCreateRequest $request)
+    public function store(AptitudeQuestionManageRequest $request)
     {
         $now = Carbon::now();
 
@@ -69,25 +69,57 @@ class AptitudeQuestionManageController extends Controller
     }
 
     /**
-     * Show the form for editing the specified resource.
+     * 編集画面
      *
-     * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit()
+    public function edit($id)
     {
-        $aptitude_questions = AptitudeQuestion::whereNull('deleted_at')->orderBy('sort')->get();
-        return view('aptitude_question_manage/edit', compact('aptitude_questions'));
+        $aptitude_question = AptitudeQuestion::whereNull('deleted_at')->findOrFail($id);
+        return view('aptitude_question_manage/edit', compact('aptitude_question'));
     }
 
     /**
-     * Update the specified resource in storage.
+     * 編集画面の内容をDBに保存
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
+     * @param  \App\Http\Requests\AptitudeQuestionManageRequest  $request
      * @return \Illuminate\Http\Response
      */
-    public function update(AptitudeQuestionManageEditRequest $request)
+    public function update(AptitudeQuestionManageRequest $request, $id)
+    {
+        $now = Carbon::now();
+        $aptitude_question = AptitudeQuestion::findOrFail($id);
+        
+        $aptitude_question->question = $request->input('question');
+        $aptitude_question->sort = $request->input('sort');
+        $aptitude_question->score_apple = $request->input('score_apple');
+        $aptitude_question->score_mint = $request->input('score_mint');
+        $aptitude_question->score_maple = $request->input('score_maple');
+        $aptitude_question->update_user_id = Auth::user()->id;
+        $aptitude_question->updated_at = $now->isoFormat('YYYY-MM-DD');
+        $aptitude_question->save();
+
+        return redirect()->route('aptitude_question_manage.index');
+    }
+
+    /**
+     * 一括編集画面
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function edit_all()
+    {
+        $aptitude_questions = AptitudeQuestion::whereNull('deleted_at')->orderBy('sort')->get();
+        return view('aptitude_question_manage/edit_all', compact('aptitude_questions'));
+    }
+
+    /**
+     * 一括編集画面の内容をDBに保存
+     *
+     * @param  \App\Http\Requests\AptitudeQuestionManageAllRequest  $request
+     * @return \Illuminate\Http\Response
+     */
+    public function update_all(AptitudeQuestionManageAllRequest $request)
     {
         $now = Carbon::now();
         $questions = $request->input('questions');
@@ -112,7 +144,7 @@ class AptitudeQuestionManageController extends Controller
     }
 
     /**
-     * Remove the specified resource from storage.
+     * 質問をDBから削除
      *
      * @param  int  $id
      * @return \Illuminate\Http\Response

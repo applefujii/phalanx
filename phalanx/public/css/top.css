@@ -1,0 +1,17 @@
+.navbar{
+    color: #FFFFFF;
+    text-align: left!important;
+}
+
+.login{
+    /* width: 150px;
+	height: 150px; */
+    height: 35px;
+    top: -70px;
+    left:1175px;
+    position:relative;
+}
+
+.sp{
+    font-size: 25px;
+}
