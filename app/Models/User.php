@@ -46,6 +46,14 @@ class User extends Authenticatable
     ];
 
     /**
+     * The attributes that are gureded
+     * @var array
+     */
+    protected $guarded = [
+        'user_type_id'
+    ];
+
+    /**
      * The attributes that should be cast.
      *
      * @var array

@@ -13,11 +13,11 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
+Route::get('/', [App\Http\Controllers\TopController::class, 'index'])->name('top');
 
 Auth::routes();
 
-/* Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home'); */
+Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
 
 // 通知
 Route::resource('/notification', App\Http\Controllers\NotificationController::class);
@@ -33,22 +33,26 @@ Route::get('/trial_application_form', [App\Http\Controllers\TrialApplicationForm
 Route::post('/trial_application_form', [App\Http\Controllers\TrialApplicationFormController::class, 'store'])->name('trial_application_form.store');
 Route::get('/trial_application_form/finish', [App\Http\Controllers\TrialApplicationFormController::class, 'finish'])->name('trial_application_form.finish');
 
-// 適性診断
+// 適性診断 フォーム
 Route::get('/aptitude_question_form', [App\Http\Controllers\AptitudeQuestionFormController::class, 'index'])->name('aptitude_question_form.index');
 Route::post('/aptitude_question_form', [App\Http\Controllers\AptitudeQuestionFormController::class, 'calculate'])->name('aptitude_question_form.calculate');
 Route::get('/aptitude_question_form_apple', [App\Http\Controllers\AptitudeQuestionFormController::class, 'apple'])->name('aptitude_question_form.apple');
 Route::get('/aptitude_question_form_mint', [App\Http\Controllers\AptitudeQuestionFormController::class, 'mint'])->name('aptitude_question_form.mint');
 Route::get('/aptitude_question_form_maple', [App\Http\Controllers\AptitudeQuestionFormController::class, 'maple'])->name('aptitude_question_form.maple');
 
-Route::get('/aptitude_question_manage/edit', [App\Http\Controllers\AptitudeQuestionManageController::class, 'edit'])->name('aptitude_question_manage.edit');
-Route::patch('/aptitude_question_manage/edit', [App\Http\Controllers\AptitudeQuestionManageController::class, 'update'])->name('aptitude_question_manage.update');
-Route::resource('/aptitude_question_manage', App\Http\Controllers\AptitudeQuestionManageController::class)->only(['index','create','store','destroy']);
+// 適性診断 質問管理
+Route::get('/aptitude_question_manage/edit_all', [App\Http\Controllers\AptitudeQuestionManageController::class, 'edit_all'])->name('aptitude_question_manage.edit_all');
+Route::patch('/aptitude_question_manage/edit_all', [App\Http\Controllers\AptitudeQuestionManageController::class, 'update_all'])->name('aptitude_question_manage.update_all');
+Route::resource('/aptitude_question_manage', App\Http\Controllers\AptitudeQuestionManageController::class)->only(['index','edit','update','create','store','destroy']);
 
 // ユーザーマスター
 Route::resource('user', App\Http\Controllers\UserController::class)->only(['index', 'create', 'store', 'edit', 'update', 'destroy']);
 
 // 事業所マスター
 Route::resource('office', App\Http\Controllers\OfficeController::class)->only(['index', 'create', 'store', 'edit', 'update', 'destroy']);
+
+//ログイン後の利用者の画面（仮）
+Route::get("/user_page", [App\Http\Controllers\UserpageController::class, "index"])->name("user_page");
 
 // チャットルーム
 Route::get("/chat_room/list", [App\Http\Controllers\ChatRoomController::class, "list"])->name("chat_room.list");
@@ -58,17 +62,17 @@ Route::resource("chat_room", App\Http\Controllers\ChatRoomController::class);
 
 //////////// API /////////////////////////////////
 // ユーザー
-Route::POST('/api/v1.0/get/users', [App\Http\Controllers\APIController::class, "ApiGetUsers"]);
+Route::POST('/api/v1.0/get/users.json', [App\Http\Controllers\APIController::class, "ApiGetUsers"]);
 // 事業所
-Route::POST('/api/v1.0/get/offices', [App\Http\Controllers\APIController::class, "ApiGetOffices"]);
+Route::POST('/api/v1.0/get/offices.json', [App\Http\Controllers\APIController::class, "ApiGetOffices"]);
 
 // 予定通知
-Route::POST('/api/v1.0/get/notifications', [App\Http\Controllers\APIController::class, "ApiGetNotifications"]);
-Route::POST('/api/v1.0/set/notifications', [App\Http\Controllers\APIController::class, "ApiStoreNotifications"]);
-Route::PUT('/api/v1.0/set/notifications', [App\Http\Controllers\APIController::class, "ApiUpdateNotifications"]);
-Route::DELETE('/api/v1.0/set/notifications', [App\Http\Controllers\APIController::class, "ApiDeleteNotifications"]);
+Route::POST('/api/v1.0/get/notifications.json', [App\Http\Controllers\APIController::class, "ApiGetNotifications"]);
+Route::POST('/api/v1.0/set/notifications.json', [App\Http\Controllers\APIController::class, "ApiStoreNotifications"]);
+Route::PUT('/api/v1.0/set/notifications.json', [App\Http\Controllers\APIController::class, "ApiUpdateNotifications"]);
+Route::DELETE('/api/v1.0/set/notifications.json', [App\Http\Controllers\APIController::class, "ApiDeleteNotifications"]);
 
 //URI例。取得系はget、登録系はset。
-// /api/v1.0/get/users
-// /api/v1.0/get/offices
-// /api/v1.0/set/users
+// /api/v1.0/get/users.json
+// /api/v1.0/get/offices.json
+// /api/v1.0/set/users.json

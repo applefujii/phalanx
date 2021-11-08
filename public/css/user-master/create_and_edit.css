@@ -11,7 +11,7 @@
     overflow-wrap: normal;
 }
 
-.information {
+.information, .invalid-feedback {
     max-width: 200px;
 }
 

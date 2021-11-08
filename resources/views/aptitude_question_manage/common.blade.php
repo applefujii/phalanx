@@ -1,19 +1,18 @@
 @extends('layouts.app')
 @section('content')
-<h3 class="page_title">適性診断管理　@yield('title')</h3>
+<h3 class="page_title">適性診断質問管理　@yield('title')</h3>
 <div class="card">
     @if ($errors->any())
     <div class="alert alert-danger w-100">
         <span>入力に誤りがあります。</span>
-        <ul>
-            @foreach ($errors->all() as $error)
-                <li>{{ $error }}</li>
-            @endforeach
-        </ul>
     </div>
     @endif
     <div class="card-header"></div>
     <div class="card-body">
+        {{-- <div>
+            <p>※点数に『F』を指定すると、回答が『はい』の場合、合計点数に関わらず、その事業所に確定されます。</p>
+            <p>　点数が空欄の場合は0点と判断されます。</p>
+        </div> --}}
         @yield('form_upper')
             <div class="table-responsive">
                 <table class="table table-bordered table-hover table-striped blue_table member_table">
@@ -38,9 +37,6 @@
                 </table>
             </div>
             @yield('form_under')
-        <p>
-            <a class="btn btn-outline-primary" role="button" href="{{ route('home') }}">メニュー</a>
-        </p>
     </div>
 </div>
 @endsection
