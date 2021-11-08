@@ -153,9 +153,25 @@ return [
         'desired_date' => '体験・見学希望日',
         'email' => 'メールアドレス',
         'phone_number' => '電話番号',
+
         // 適性診断
-        'questions' => '質問',
-        'questions.*' => '質問',
+        'answers' => '回答',
+        'answers.*' => '回答',
+        'question' => '質問文',
+        'questions' => '質問文',
+        'questions.*' => '質問文',
+        'sort' => '表示順',
+        'sorts' => '表示順',
+        'sorts.*' => '表示順',
+        'score_apple' => '点数',
+        'score_apples' => '点数',
+        'score_apples.*' => '点数',
+        'score_mint' => '点数',
+        'score_mints' => '点数',
+        'score_mints.*' => '点数',
+        'score_maple' => '点数',
+        'score_maples' => '点数',
+        'score_maples.*' => '点数',
 
         // ユーザーマスター追加
         'user_type_id' => 'ユーザー種別',

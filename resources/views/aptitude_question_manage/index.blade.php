@@ -3,8 +3,8 @@
 
 @section('form_upper')
 <p>
-    <a class="btn btn-outline-primary" role="button" href="{{ route('aptitude_question_manage.create') }}">新規作成</a>
-    <a class="btn btn-outline-primary" role="button" href="{{ route('aptitude_question_manage.edit') }}">一括編集</a>
+    <a class="btn btn-primary" role="button" href="{{ route('aptitude_question_manage.create') }}">新規作成</a>
+    <a class="btn btn-primary" role="button" href="{{ route('aptitude_question_manage.edit_all') }}">一括編集</a>
 </p>
 @endsection
 
@@ -17,11 +17,14 @@
     <td>{{ $aptitude_question->score_mint }}</td>
     <td>{{ $aptitude_question->score_maple }}</td>
     <td>
+        <div class="form-row">
+        <a class="btn btn-primary" role="button" href="{{ route('aptitude_question_manage.edit', $aptitude_question->id) }}">編集</a>
         <form action="{{ route('aptitude_question_manage.destroy', $aptitude_question->id) }}" method="post">
             @method('DELETE')
             @csrf
             <button class="btn btn-primary" type="submit">削除</button>
         </form>
+        </div>
     </td>
 </tr>
 @endforeach

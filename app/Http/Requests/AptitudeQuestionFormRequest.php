@@ -24,12 +24,12 @@ class AptitudeQuestionFormRequest extends FormRequest
     protected function prepareForValidation()
     {
         $score_apples = $this->score_apples;
-        $questions = array();
+        $answers = array();
         foreach ($score_apples as $id => $value) {
-            $questions += array($id => $this->questions[$id] ?? null);
+            $answers += array($id => $this->answers[$id] ?? null);
         }
         $this->merge([
-            'questions' => $questions,
+            'answers' => $answers,
         ]);
     }
 
@@ -41,8 +41,8 @@ class AptitudeQuestionFormRequest extends FormRequest
     public function rules()
     {
         return [
-            'questions'    => 'required|array',
-            "questions.*" => [
+            'answers'    => 'required|array',
+            "answers.*" => [
                 'required',
                 Rule::in(config('const.option')),
             ],
@@ -57,7 +57,7 @@ class AptitudeQuestionFormRequest extends FormRequest
     public function messages()
     {
         return [
-            'questions.*.required' => 'いずれかを選択してください。',
+            'answers.*.required' => 'いずれかを選択してください。',
         ];
     }
 }
