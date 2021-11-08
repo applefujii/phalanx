@@ -61,8 +61,8 @@ class AptitudeQuestionManageController extends Controller
         $aptitude_question->score_maple = $request->input('score_maple');
         $aptitude_question->create_user_id = Auth::user()->id;
         $aptitude_question->update_user_id = Auth::user()->id;
-        $aptitude_question->created_at = $now->isoFormat('YYYY-MM-DD');
-        $aptitude_question->updated_at = $now->isoFormat('YYYY-MM-DD');
+        $aptitude_question->created_at = $now->isoFormat('YYYY-MM-DD HH:mm:ss');
+        $aptitude_question->updated_at = $now->isoFormat('YYYY-MM-DD HH:mm:ss');
         $aptitude_question->save();
 
         return redirect()->route('aptitude_question_manage.index');
@@ -96,7 +96,7 @@ class AptitudeQuestionManageController extends Controller
         $aptitude_question->score_mint = $request->input('score_mint');
         $aptitude_question->score_maple = $request->input('score_maple');
         $aptitude_question->update_user_id = Auth::user()->id;
-        $aptitude_question->updated_at = $now->isoFormat('YYYY-MM-DD');
+        $aptitude_question->updated_at = $now->isoFormat('YYYY-MM-DD HH:mm:ss');
         $aptitude_question->save();
 
         return redirect()->route('aptitude_question_manage.index');
@@ -137,7 +137,7 @@ class AptitudeQuestionManageController extends Controller
             $aptitude_question->score_mint = $score_mints[$id];
             $aptitude_question->score_maple = $score_maples[$id];
             $aptitude_question->update_user_id = Auth::user()->id;
-            $aptitude_question->updated_at = $now->isoFormat('YYYY-MM-DD');
+            $aptitude_question->updated_at = $now->isoFormat('YYYY-MM-DD HH:mm:ss');
             $aptitude_question->save();
         }
         return redirect()->route('aptitude_question_manage.index');
@@ -157,7 +157,7 @@ class AptitudeQuestionManageController extends Controller
 
         $aptitude_question->update_user_id = Auth::user()->id;
         $aptitude_question->delete_user_id = Auth::user()->id;
-        $aptitude_question->deleted_at = $now->isoFormat('YYYY-MM-DD');
+        $aptitude_question->deleted_at = $now->isoFormat('YYYY-MM-DD HH:mm:ss');
         $aptitude_question->save();
         return redirect()->route('aptitude_question_manage.index');
     }
