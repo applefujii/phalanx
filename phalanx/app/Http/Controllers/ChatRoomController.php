@@ -171,13 +171,10 @@ class ChatRoomController extends Controller
         $chatRoom->updated_at = $now;
         $chatRoom->save();
 
-        //今作成したチャットルームのidを取得
-        $lastChatRoomId = Chat_room::select("id")->last();
-
         //チャット参加者ごとにチャットルーム-ユーザー中間テーブルのデータを作成
         foreach($joinUsersId as $joinUserId) {
             $chatRoomUser = new Chat_room__User();
-            $chatRoomUser->chat_room_id = $lastChatRoomId;
+            $chatRoomUser->chat_room_id = $chatRoom->id;
             $chatRoomUser->user_id = $joinUserId;
             $chatRoomUser->create_user_id = $user->id;
             $chatRoomUser->update_user_id = $user->id;
@@ -236,7 +233,7 @@ class ChatRoomController extends Controller
         $chatRoom = Chat_room::where("id", $id)->whereNull("deleted_at")->first();
 
         //存在しないチャットルームを編集しようとした時listにリダイレクト
-        if($chatRoom == null) {
+        if(is_null($chatRoom)) {
             return redirect()->route("chat_room.list");
         }
 
@@ -277,6 +274,52 @@ class ChatRoomController extends Controller
                 $chatRoomUser->update_user_id = $user->id;
                 $chatRoomUser->created_at = $now;
                 $chatRoomUser->updated_at = $now;
+                $chatRoomUser->save();
+            }
+        }
+
+        return redirect()->route("chat_room.list");
+    }
+
+    /**
+     * チャットルーム削除の実行部分
+     */
+    public function destroy($id) {
+        //ログイン中のユーザーデータを取得
+        $user = Auth::user();
+        
+        //ログイン中のユーザーが職員かどうかの判別(職員のuser_type_idを1と仮定)
+        if($user->user_type_id != 1) {
+
+            //職員でなければindexにリダイレクト
+            return redirect()->route("chat_room.index");
+        }
+
+        //削除するチャットルームのデータを取得
+        $chatRoom = Chat_room::where("id", $id)->whereNull("deleted_at")->first();
+
+        //存在しないチャットルームを削除しようとした時listにリダイレクト
+        if(is_null($chatRoom)) {
+            return redirect()->route("chat_room.list");
+        }
+
+        //現在時刻を取得
+        $now = new DateTime("now");
+        $now = $now->format("Y-m-d H:i:s");
+
+        //チャットルームテーブルのデータの削除を実行
+        $chatRoom->update_user_id = $user->id;
+        $chatRoom->updated_at = $now;
+        $chatRoom->save();
+
+        //削除するチャットルーム-ユーザー中間テーブルのデータを取得
+        $chatRoomUsers = Chat_room__User::where("chat_room_id", $id)->whereNull("deleted_at")->get();
+
+        //削除するデータがある場合のみ削除を実行
+        if(isset($chatRoomUsers)) {
+            foreach($chatRoomUsers as $chatRoomUser) {
+                $chatRoomUser->delete_user_id = $user->id;
+                $chatRoomUser->deleted_at = $now;
                 $chatRoomUser->save();
             }
         }
