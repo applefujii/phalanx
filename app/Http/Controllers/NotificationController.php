@@ -20,7 +20,7 @@ class NotificationController extends Controller
      */
     public function __construct()
     {
-        $this->middleware('auth');
+        $this->middleware('staff');
     }
 
     /**
@@ -158,7 +158,7 @@ class NotificationController extends Controller
     }
 
 
-    //--------------------- リレーション notification__user ----------------------
+    //--------------------- リレーションテーブル操作 notification__user ----------------------
 
     /**
      * @return \Illuminate\Http\Response
@@ -169,8 +169,8 @@ class NotificationController extends Controller
         $notifications = Notification__User::create([
             'notification_id' => $request->notification_id,
             'user_id' => $request->user_id,
-            'create_user_id' => 1,
-            'update_user_id' => 1,
+            'create_user_id' => Auth::user()->id,
+            'update_user_id' => Auth::user()->id,
             'created_at' => $dt->format('Y-m-d H:i:s'),
             'updated_at' => $dt->format('Y-m-d H:i:s')
         ]);
@@ -186,7 +186,7 @@ class NotificationController extends Controller
     {
         $dt = new \DateTime( "now" );
         $notifications = Notification__User::where("id", $id)->update([
-            'delete_user_id' => 1,
+            'delete_user_id' => Auth::user()->id,
             'deleted_at' => $dt->format('Y-m-d H:i:s')
         ]);
 

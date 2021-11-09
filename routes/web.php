@@ -61,6 +61,7 @@ Route::resource("chat_room", App\Http\Controllers\ChatRoomController::class);
 
 
 //////////// API /////////////////////////////////
+
 // ユーザー
 Route::POST('/api/v1.0/get/users.json', [App\Http\Controllers\APIController::class, "ApiGetUsers"]);
 // 事業所
