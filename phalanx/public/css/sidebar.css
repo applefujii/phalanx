@@ -1,5 +1,5 @@
-main {
-    padding-top: 0rem;
+#app main {
+    padding-top: 0rem !important;
 }
 
 .top {
