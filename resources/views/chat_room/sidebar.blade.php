@@ -1,9 +1,13 @@
 <?php
-//渡された$joinRoomsを職員全体とそれ以外で分ける
-$group = $joinRooms->where("distinction_number", 0)->first();
-$notGroupRooms = $joinRooms->whereIn("distinction_number", [1, 2, 3, 4])->get();
-
-
+//$chatRoomが渡されているとき参加者の情報を取得
+if(isset($chatRoom)) {
+    $chatRoomUsers = $chatRoom->chat_room__user->whereNull("deleted_at");
+    $officers = [];
+    $users = [];
+    foreach($chatRoomUsers as $chatRoomUser) {
+        
+    }
+}
 ?>
 
 @extends('layouts.app')
@@ -19,7 +23,7 @@ $notGroupRooms = $joinRooms->whereIn("distinction_number", [1, 2, 3, 4])->get();
             <div class="row">
                 @if (isset($group))
                     <div class="row">
-                        <p>グループ</p>
+                        <p>リテラル</p>
                         <ul style="list-style: none">
                             <li><a href="{{ route("chat_room.show", $group->id) }}">全職員</a></li>
                         </ul>
@@ -30,7 +34,7 @@ $notGroupRooms = $joinRooms->whereIn("distinction_number", [1, 2, 3, 4])->get();
                         <div class="row">
                             <p>{{ $office->office_name }}</p>
                             <ul>
-                                @foreach ($notGroupRooms as $joinRoom)
+                                @foreach ($joinRooms as $joinRoom)
                                     @if ($joinRoom->office_id == $office->id)
                                         <li>
                                             @if ($joinRoom->distinction_number == 4)
@@ -57,7 +61,7 @@ $notGroupRooms = $joinRooms->whereIn("distinction_number", [1, 2, 3, 4])->get();
                                 <div class="row">
                                     <p>{{ $office->office_name }}</p>
                                     <ul>
-                                        @foreach ($notGroupRooms as $joinRoom)
+                                        @foreach ($joinRooms as $joinRoom)
                                             @if ($joinRoom->office_id == $office->id)
                                                 <li>
                                                     @if ($joinRoom->distinction_number == 4)
