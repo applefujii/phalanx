@@ -37,7 +37,7 @@ class ChatController extends Controller
     {
         $chat_room = ChatRoom::whereNull('deleted_at')->findOrFail($id);
         $chat_texts = $chat_room->chat_texts()->orderBy('created_at')->get();
-        
+
         return view('chat/index', compact('chat_room', 'chat_texts'));
     }
 
