@@ -1,7 +1,10 @@
 {
     "/js/app.js": "/js/app.js",
     "/css/app.css": "/css/app.css",
-    "/css/notification/create_and_edit.css": "/css/notification/create_and_edit.css",
     "/css/user-master/create_and_edit.css": "/css/user-master/create_and_edit.css",
-    "/css/user-master/index.css": "/css/user-master/index.css"
+    "/css/user-master/index.css": "/css/user-master/index.css",
+    "/css/index-table.css": "/css/index-table.css",
+    "/css/notification/create_and_edit.css": "/css/notification/create_and_edit.css",
+    "/css/notification/index.css": "/css/notification/index.css",
+    "/css/trial-application-manager/index.css": "/css/trial-application-manager/index.css"
 }

@@ -63,6 +63,7 @@ Route::get('/chat/{id}', [App\Http\Controllers\ChatController::class, 'index'])-
 Route::post('/chat/{id}', [App\Http\Controllers\ChatController::class, 'store'])->name('chat.store');
 
 //////////// API /////////////////////////////////
+
 // ユーザー
 Route::POST('/api/v1.0/get/users.json', [App\Http\Controllers\APIController::class, "ApiGetUsers"]);
 // 事業所
