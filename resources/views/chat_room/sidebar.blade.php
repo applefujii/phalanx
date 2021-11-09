@@ -15,15 +15,16 @@ if(isset($chatRoom)) {
 
 @section('css')
 <link href="{{ asset('css/sidebar.css') }}" rel="stylesheet">
+@yield("c_css")
 @endsection
 
 @section("content")
 <div class="container-fluid">
     <div class="row">
-        <div class="col-md-2 d-none d-md-block border border-dark">
+        <div class="col-md-2 d-none d-md-block border border-dark left_sidebar">
             @if (Auth::user()->user_type_id == 1)
-                <div class="row d-grid">
-                    <a href="{{ route('chat_room.index') }}" class="btn btn-primary btn-lg" role="button">通所者一覧</a>
+                <div class="row p-3">
+                    <a href="{{ route('chat_room.index') }}" class="btn btn-primary btn-lg btn-block" role="button">通所者一覧</a>
                 </div>
             @endif
             <div class="row">
@@ -37,7 +38,7 @@ if(isset($chatRoom)) {
                 @endif
                 @foreach ($offices as $office)
                     @if ($office->id == Auth::user()->office_id)
-                        <div class="row">
+                        <div class="col-12">
                             <p>{{ $office->office_name }}</p>
                             <ul>
                                 @foreach ($joinRooms as $joinRoom)
@@ -55,17 +56,17 @@ if(isset($chatRoom)) {
                         </div>
                     @endif
                 @endforeach
-                <div class="row">
-                    <div class="d-grid">
-                        <button type="button" class="btn btn-outline-dark" data-bs-toggle="collapse" data-bs-target="#subOffices" aria-expanded="false" aria-controls="subOffices">
+                <div class="col-12 px-0">
+                    <div class="p-0">
+                        <button type="button" class="btn btn-outline-dark btn-block" data-toggle="collapse" data-target="#subOffices" aria-expanded="false" aria-controls="subOffices">
                             <i class="fas fa-chevron-down"></i>
                         </button>
                     </div>
                     <div class="collapse" id="subOffices">
                         @foreach ($offices as $office)
                             @if ($office->id != Auth::user()->office_id)
-                                <div class="row">
-                                    <p>{{ $office->office_name }}</p>
+                                <div class="col-12">
+                                    <p class="pt-3">{{ $office->office_name }}</p>
                                     <ul>
                                         @foreach ($joinRooms as $joinRoom)
                                             @if ($joinRoom->office_id == $office->id)
@@ -86,7 +87,7 @@ if(isset($chatRoom)) {
                 </div>
             </div>
         </div>
-        <div class="col-md-8">
+        <div class="col-md-8 bg-white">
             @yield('center')
         </div>
         <div class="col-md-2 d-none d-md-block border border-dark">
