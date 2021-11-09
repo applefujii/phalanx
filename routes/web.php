@@ -15,7 +15,14 @@ use Illuminate\Support\Facades\Route;
 
 Route::get('/', [App\Http\Controllers\TopController::class, 'index'])->name('top');
 
-Auth::routes();
+Auth::routes([
+    'login' => true,
+    'logout' => true,
+    'register' => true,
+    'reset' => false,
+    'confirm' => true,
+    'verify' => false,
+]);
 
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
 
@@ -63,6 +70,7 @@ Route::get('/chat/{id}', [App\Http\Controllers\ChatController::class, 'index'])-
 Route::post('/chat/{id}', [App\Http\Controllers\ChatController::class, 'store'])->name('chat.store');
 
 //////////// API /////////////////////////////////
+
 // ユーザー
 Route::POST('/api/v1.0/get/users.json', [App\Http\Controllers\APIController::class, "ApiGetUsers"]);
 // 事業所

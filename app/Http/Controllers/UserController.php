@@ -14,6 +14,12 @@ use Illuminate\Support\Facades\Hash;
 
 class UserController extends Controller
 {
+    /**
+     * コンストラクタ
+     */
+    public function __construct() {
+        $this->middleware('staff');
+    }
 
     /**
      * Display a listing of the resource.
