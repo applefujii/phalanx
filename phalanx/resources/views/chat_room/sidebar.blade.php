@@ -20,7 +20,7 @@ if(isset($chatRoom)) {
 @section("content")
 <div class="container-fluid">
     <div class="row">
-        <div class="col-md-2 d-none d-md-block border border-dark position-fixed">
+        <div class="col-md-2 d-none d-md-block border border-dark">
             @if (Auth::user()->user_type_id == 1)
                 <div class="row d-grid">
                     <a href="{{ route('chat_room.index') }}" class="btn btn-primary btn-lg" role="button">通所者一覧</a>
@@ -86,10 +86,10 @@ if(isset($chatRoom)) {
                 </div>
             </div>
         </div>
-        <div class="col-md-8 bg-danger">
+        <div class="col-md-8">
             @yield('center')
         </div>
-        <div class="col-md-2 d-none d-md-block border border-dark position-fixed">
+        <div class="col-md-2 d-none d-md-block border border-dark">
             @if (isset($chatRoom))
                 <div class="row">
                     <p>参加者 - {{ count($chatRoom->chatRoom__User) }}</p>
