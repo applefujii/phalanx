@@ -15,6 +15,7 @@ if(isset($chatRoom)) {
 
 @section('css')
 <link href="{{ asset('css/sidebar.css') }}" rel="stylesheet">
+@yield("c_css")
 @endsection
 
 @section("content")
@@ -88,7 +89,7 @@ if(isset($chatRoom)) {
                 </div>
             </div>
         </div>
-        <div class="col-md-8">
+        <div class="col-md-8 bg-white">
             @yield('center')
         </div>
         <div class="col-md-2 d-none d-md-block border border-dark sticky-top">
