@@ -10,11 +10,17 @@ if(isset($chatRoom)) {
 }
 ?>
 
+
 @extends('layouts.app')
+
+@section('css')
+<link href="{{ asset('css/sidebar.css') }}" rel="stylesheet">
+@endsection
+
 @section("content")
 <div class="container-fluid">
     <div class="row">
-        <nav class="col-md-2 d-none d-md-block border border-dark">
+        <div class="col-md-2 d-none d-md-block border border-dark position-fixed">
             @if (Auth::user()->user_type_id == 1)
                 <div class="row d-grid">
                     <a href="{{ route('chat_room.index') }}" class="btn btn-primary btn-lg" role="button">通所者一覧</a>
@@ -79,16 +85,17 @@ if(isset($chatRoom)) {
                     </div>
                 </div>
             </div>
-        </nav>
-        <div class="col col-md-8">
+        </div>
+        <div class="col-md-8 bg-danger">
             @yield('center')
         </div>
-        <nav class="col-md-2 d-none d-md-block border border-dark">
+        <div class="col-md-2 d-none d-md-block border border-dark position-fixed">
             @if (isset($chatRoom))
                 <div class="row">
                     <p>参加者 - {{ count($chatRoom->chatRoom__User) }}</p>
                 </div>
             @endif
-        </nav>
+        </div>
     </div>
 </div>
+@endsection
