@@ -1,0 +1,14 @@
+.chat_main {
+  position: relative;
+}
+
+.chat_text {
+  white-space: pre-wrap;
+}
+
+.chat_input_fixed {
+  position: fixed;
+  bottom: 0;
+  width: 100% !important;
+}
+/*# sourceMappingURL=chat.css.map */

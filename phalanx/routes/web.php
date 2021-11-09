@@ -58,7 +58,9 @@ Route::get("/user_page", [App\Http\Controllers\UserpageController::class, "index
 Route::get("/chat_room/list", [App\Http\Controllers\ChatRoomController::class, "list"])->name("chat_room.list");
 Route::resource("chat_room", App\Http\Controllers\ChatRoomController::class);
 
-
+// チャット画面
+Route::get('/chat/{id}', [App\Http\Controllers\ChatController::class, 'index'])->name('chat.index');
+Route::post('/chat/{id}', [App\Http\Controllers\ChatController::class, 'store'])->name('chat.store');
 
 //////////// API /////////////////////////////////
 
