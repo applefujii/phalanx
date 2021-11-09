@@ -3,7 +3,7 @@
 <link href="https://use.fontawesome.com/releases/v5.6.1/css/all.css" rel="stylesheet">
 <div class="container-md">
     <h3 class="page_title">チャットルーム管理　編集</h3>
-    <form action="{{ route('chat_room.update') }}" method="post" class="mt-3">
+    <form action="{{ route('chat_room.update', $chatRoom->id) }}" method="post" class="mt-3">
         @csrf
         @method("PATCH")
         <div class="row">
@@ -29,7 +29,7 @@
                         <option value="">選択してください</option>
                         @foreach ($offices as $office)
                             <option value="{{ $office->id }}"
-                                @if (old("office_id", $chatRoom->office()->id) == $office->id) selected @endif>
+                                @if (old("office_id", $chatRoom->office->id) == $office->id) selected @endif>
                                 {{ $office->office_name }}
                             </option>
                         @endforeach

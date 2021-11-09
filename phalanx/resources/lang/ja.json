@@ -10,5 +10,6 @@
     "Register": "登録",
     "Confirm Password": "パスワード（再入力）",
     "Reset Password": "パスワードの再設定",
-    "Send Password Reset Link": "パスワード再設定用リンクを送信"
+    "Send Password Reset Link": "パスワード再設定用リンクを送信",
+    "Please confirm your password before continuing.": "続行する前にパスワードを確認してください。"
 }
