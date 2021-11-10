@@ -78,17 +78,17 @@
                             @if ($trial_application->is_checked)
                                 済
                             @else
-                                未
+                                <span class="text-danger font-weight-bold">未</span>
                             @endif
                         </td>
                         <td>
                             <div class="table-body-action">
                                 <span>
-                                    <a class="btn btn-sm btn-primary" role="button"
+                                    <a class="btn btn-sm btn-success" role="button"
                                         href="{{ route('trial_application_manage.check', $trial_application->id) }}">確認</a>
                                 </span>
                                 <div>
-                                    <a class="btn btn-sm btn-primary" role="button edit-button"
+                                    <a class="btn btn-sm btn-primary" role="button"
                                         href="{{ route('trial_application_manage.edit', $trial_application->id) }}">編集</a>
                                 </div>
                                 <form class="delete-form"
@@ -106,7 +106,7 @@
         </table>
         {{ $trial_applications->appends(request()->query())->links() }}
         <p>
-            <a class="btn btn-outline-primary" role="button" href="{{ route('home') }}">メニュー</a>
+            <a class="btn btn-outline-primary" role="button" href="{{ route('home') }}">ホーム</a>
         </p>
     </div>
 @endsection

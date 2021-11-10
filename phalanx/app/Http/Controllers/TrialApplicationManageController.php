@@ -38,6 +38,7 @@ class TrialApplicationManageController extends Controller
         $check_yet = $request->input('check_yet');
 
         $trial_applications = TrialApplication::whereNull('deleted_at')
+        ->with('office')
             ->when($office_id, function ($query) use ($office_id) {
                 return $query->where('office_id', $office_id);
             })

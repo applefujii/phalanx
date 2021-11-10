@@ -1,90 +1,187 @@
 <?php
-//渡された$joinRoomsを職員全体とそれ以外で分ける
-$group = $joinRooms->where("distinction_number", 0)->first();
-$notGroupRooms = $joinRooms->whereIn("distinction_number", [1, 2, 3, 4])->get();
+//$chat_roomが渡されているとき参加者の情報を取得
+if(isset($chat_room)) {
+    $chatRoomUsers = $chat_room->chat_room__user->whereNull("deleted_at");
+    if(isset($chatRoomUsers)) {
+        $officers = [];
+        $users = [];
+        $trials = [];
+        foreach($chatRoomUsers as $chatRoomUser) {
 
+            //職員のデータをoffice_idをキーにして$officersに入れる
+            if($chatRoomUser->user->user_type_id == 1) {
 
+                //$officersにすでにoffice_idと同じキーの配列があればその配列の後ろに入れ、なければ作る
+                if(isset($officers[$chatRoomUser->user->office_id])) {
+                    arary_push($officers[$chatRoomUser->user->office_id], $chatRoomUser->user->name);
+                } else {
+                    $officers[$chatRoomUser->user->office_id] = [$chatRoomUser->user->name];
+                }
+            } 
+            
+            //利用者も同様に処理する
+            else if($chatRoomUser->user->user_type_id == 2) {
+                if(isset($users[$chatRoomUser->user->office_id])) {
+                    arary_push($users[$chatRoomUser->user->office_id], $chatRoomUser->user->name);
+                } else {
+                    $users[$chatRoomUser->user->office_id] = [$chatRoomUser->user->name];
+                }
+            }
+
+            //体験者を$trialsに入れる
+            else {
+                $trials[] = $chatRoomUser->user->name;
+            }
+        }
+    }
+}
 ?>
 
+
 @extends('layouts.app')
+
+@section('css')
+<link href="{{ asset('css/sidebar.css') }}" rel="stylesheet">
+@yield("c_css")
+@endsection
+
 @section("content")
 <div class="container-fluid">
     <div class="row">
-        <nav class="col-md-2 d-none d-md-block border border-dark">
-            @if (Auth::user()->user_type_id == 1)
-                <div class="row d-grid">
-                    <a href="{{ route('chat_room.index') }}" class="btn btn-primary btn-lg" role="button">通所者一覧</a>
-                </div>
-            @endif
-            <div class="row">
-                @if (isset($group))
-                    <div class="row">
-                        <p>グループ</p>
-                        <ul style="list-style: none">
-                            <li><a href="{{ route("chat_room.show", $group->id) }}">全職員</a></li>
-                        </ul>
+        <div class="col-md-2 d-none d-md-block border border-dark">
+            <div class="sticky-top">
+                @if (Auth::user()->user_type_id == 1)
+                    <div class="row p-3">
+                        <a href="{{ route('chat_room.index') }}" class="btn btn-primary btn-lg btn-block" role="button">通所者一覧</a>
                     </div>
                 @endif
-                @foreach ($offices as $office)
-                    @if ($office->id == Auth::user()->office_id)
-                        <div class="row">
-                            <p>{{ $office->office_name }}</p>
-                            <ul>
-                                @foreach ($notGroupRooms as $joinRoom)
-                                    @if ($joinRoom->office_id == $office->id)
-                                        <li>
-                                            @if ($joinRoom->distinction_number == 4)
-                                                <a href="{{ route('chat_room.show', $joinRoom->id) }}">{{ $joinRoom->room_title }}</a>
-                                            @else
-                                                <a href="{{ route('chat_room.show', $joinRoom->id) }}">{{ $office->name }}職員</a>
-                                            @endif
-                                        </li>
-                                    @endif
-                                @endforeach
+                <div class="row">
+                    @if (isset($group))
+                        <div class="col-12 pt-3">
+                            <h5>リテラル</h5>
+                            <ul style="list-style: none">
+                                <li><a href="{{ route("chat.index", $group->id) }}">全職員</a></li>
                             </ul>
                         </div>
                     @endif
-                @endforeach
-                <div class="row">
-                    <div class="d-grid">
-                        <button type="button" class="btn btn-outline-dark" data-bs-toggle="collapse" data-bs-target="#subOffices" aria-expanded="false" aria-controls="subOffices">
-                            <i class="fas fa-chevron-down"></i>
-                        </button>
+                    @foreach ($offices as $office)
+                        @if ($office->id == Auth::user()->office_id)
+                            <div class="col-12 pt-3">
+                                <h5>{{ $office->office_name }}</h5>
+                                <ul>
+                                    @foreach ($joinRooms as $joinRoom)
+                                        @if ($joinRoom->office_id == $office->id)
+                                            <li>
+                                                @if ($joinRoom->distinction_number == 4)
+                                                    <a href="{{ route('chat.index', $joinRoom->id) }}">{{ $joinRoom->room_title }}</a>
+                                                @else
+                                                    <a href="{{ route('chat.index', $joinRoom->id) }}">{{ $office->name }}職員</a>
+                                                @endif
+                                            </li>
+                                        @endif
+                                    @endforeach
+                                </ul>
+                            </div>
+                        @endif
+                    @endforeach
+                    <div class="col-12 px-0">
+                        <div>
+                            <button type="button" class="btn btn-outline-dark btn-block" id="sub-offices" data-toggle="collapse" data-target="#subOffices" aria-expanded="false" aria-controls="subOffices">
+                                <i class="fas fa-chevron-down"></i>
+                            </button>
+                        </div>
+                        <div class="collapse" id="subOffices">
+                            @foreach ($offices as $office)
+                                @if ($office->id != Auth::user()->office_id)
+                                    <div class="col-12 pt-3">
+                                        <h5>{{ $office->office_name }}</h5>
+                                        <ul>
+                                            @foreach ($joinRooms as $joinRoom)
+                                                @if ($joinRoom->office_id == $office->id)
+                                                    <li>
+                                                        @if ($joinRoom->distinction_number == 4)
+                                                            <a href="{{ route('chat.index', $joinRoom->id) }}">{{ $joinRoom->room_title }}</a>
+                                                        @else
+                                                            <a href="{{ route('chat.index', $joinRoom->id) }}">{{ $office->name }}職員</a>
+                                                        @endif
+                                                    </li>
+                                                @endif
+                                            @endforeach
+                                        </ul>
+                                    </div>
+                                @endif
+                            @endforeach
+                        </div>
                     </div>
-                    <div class="collapse" id="subOffices">
+                </div>
+            </div>
+        </div>
+        <div class="col-md-8 bg-white">
+            @yield('center')
+        </div>
+        <div class="col-md-2 d-none d-md-block border border-dark">
+            <div class="sticky-top">
+                @if (isset($chat_room))
+                    <div class="row">
+                        <h5 class="col-12 pt-3">参加者 - {{ $chatRoomUsers->count() }}人</h5>
+                    </div>
+                    <div class="row">
                         @foreach ($offices as $office)
-                            @if ($office->id != Auth::user()->office_id)
-                                <div class="row">
-                                    <p>{{ $office->office_name }}</p>
-                                    <ul>
-                                        @foreach ($notGroupRooms as $joinRoom)
-                                            @if ($joinRoom->office_id == $office->id)
-                                                <li>
-                                                    @if ($joinRoom->distinction_number == 4)
-                                                        <a href="{{ route('chat_room.show', $joinRoom->id) }}">{{ $joinRoom->room_title }}</a>
-                                                    @else
-                                                        <a href="{{ route('chat_room.show', $joinRoom->id) }}">{{ $office->name }}職員</a>
-                                                    @endif
-                                                </li>
-                                            @endif
+                            @if (isset($officers[$office->id]))
+                                <div>
+                                    <h5 class="col-12 pt-3">{{ $office->office_name }}職員 - {{ count($officers[$office->id]) }}人</h5>
+                                    <ul class="col-12 pt-1" style="list-style: none">
+                                        @foreach ($officers[$office->id] as $officer)
+                                            {{ $officer }}
                                         @endforeach
                                     </ul>
                                 </div>
                             @endif
                         @endforeach
                     </div>
-                </div>
+                    <div class="row">
+                        @foreach ($offices as $office)
+                            @if (isset($users[$office->id]))
+                                <div>
+                                    <h5 class="col-12 pt-3">{{ $office->office_name }}通所者 - {{ count($users[$office->id]) }}人</h5>
+                                    <ul class="col-12 pt-1" style="list-style: none">
+                                        @foreach ($users[$office->id] as $user)
+                                            {{ $user }}
+                                        @endforeach
+                                    </ul>
+                                </div>
+                            @endif
+                        @endforeach
+                    </div>
+                    <div class="row">
+                        @if (isset($trials))
+                            <h5 class="col-12 pt-3">体験者 - {{ count($trials) }}人</h5>
+                            <ul class="col-12 pt-1" style="list-style: none">
+                                @foreach ($trials as $trial)
+                                    <li>{{ $trial }}</li>
+                                @endforeach
+                            </ul>
+                        @endif
+                    </div>
+                @endif
             </div>
-        </nav>
-        <div class="col col-md-8">
-            @yield('center')
         </div>
-        <nav class="col-md-2 d-none d-md-block border border-dark">
-            @if (isset($chatRoom))
-                <div class="row">
-                    <p>参加者 - {{ count($chatRoom->chatRoom__User) }}</p>
-                </div>
-            @endif
-        </nav>
     </div>
 </div>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+
+<script>
+    //
+    $(document).on('click', '#sub-offices', function(){
+        let fas = $(this).find(".fas");
+        if( fas.hasClass("fa-chevron-down") ) {
+            fas.removeClass("fa-chevron-down");
+            fas.addClass("fa-chevron-up");
+        } else {
+            fas.removeClass("fa-chevron-up");
+            fas.addClass("fa-chevron-down");
+        }
+    });
+</script>
+@endsection
