@@ -36,5 +36,6 @@ class DatabaseSeeder extends Seeder
                 'office_id' => $office_id,
             ]); // 体験者
         }
+        $this->call(ChatRoom__UserSeeder::class);// チャットルームユーザー中間テーブル
     }
 }
