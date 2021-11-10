@@ -17,13 +17,18 @@
     <td>{{ $aptitude_question->score_mint }}</td>
     <td>{{ $aptitude_question->score_maple }}</td>
     <td>
-        <div class="form-row">
-        <a class="btn btn-primary" role="button" href="{{ route('aptitude_question_manage.edit', $aptitude_question->id) }}">編集</a>
-        <form action="{{ route('aptitude_question_manage.destroy', $aptitude_question->id) }}" method="post">
-            @method('DELETE')
-            @csrf
-            <button class="btn btn-primary" type="submit">削除</button>
-        </form>
+        <div class="table-body-action">
+            <div>
+                <a class="btn btn-sm btn-primary" role="button edit-button"
+                    href="{{ route('aptitude_question_manage.edit', $aptitude_question->id) }}">編集</a>
+            </div>
+            <form class="delete-form"
+                action="{{ route('aptitude_question_manage.destroy', $aptitude_question->id) }}"
+                method="post">
+                @method('DELETE')
+                @csrf
+                <button class="btn btn-sm btn-danger" type="submit">削除</button>
+            </form>
         </div>
     </td>
 </tr>
