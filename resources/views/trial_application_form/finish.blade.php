@@ -1,20 +1,13 @@
 @extends('layouts.app')
 
 @section('content')
-<div class="container">
-    <div class="row justify-content-center">
-        <div class="col-md-8">
-            <div class="card">
-                <div class="card-header">申請が完了しました</div>
-
-                <div class="card-body">
-                    <div class="text-center">
-                        <p>申請が完了しました。</p>
-                        <p>担当者からの連絡をお待ちください。</p>
-                    </div>
-                </div>
-            </div>
-        </div>
+<div class="container text-center">
+    <div class="m-4">
+        <h3>申請が完了しました。</h3>
+        <p></p>
+        <h3>担当者からの連絡をお待ちください。</h3>
     </div>
+    
+    <p><a class="btn btn-outline-primary" role="button" href="{{ route('top') }}">トップに戻る</a></p>
 </div>
 @endsection
