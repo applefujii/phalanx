@@ -1,0 +1,9 @@
+{
+    "version": 3,
+    "mappings": "AAAA,AAAA,mBAAmB,CAAC;EAChB,UAAU,EAAE,MAAM;CAUrB;;AAXD,AAKgB,mBALG,CAEf,EAAE,AACG,UAAW,CAAA,CAAC,EACT,EAAE,AACG,UAAW,CAAA,CAAC,EAAE;EACX,SAAS,EAAE,KAAK;CACnB",
+    "sources": [
+        "aptitude_question_manage.scss"
+    ],
+    "names": [],
+    "file": "aptitude_question_manage.css"
+}
