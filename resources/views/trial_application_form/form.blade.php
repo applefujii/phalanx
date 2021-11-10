@@ -10,5 +10,5 @@
 @section('button_name', '申請')
 
 @section('back')
-href="{{ route('top') }}
+href="{{ route('top') }}"
 @endsection
