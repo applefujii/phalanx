@@ -5,6 +5,7 @@ if(isset($chat_room)) {
     if(isset($chatRoomUsers)) {
         $officers = [];
         $users = [];
+        $trials = [];
         foreach($chatRoomUsers as $chatRoomUser) {
 
             //職員のデータをoffice_idをキーにして$officersに入れる
@@ -19,12 +20,17 @@ if(isset($chat_room)) {
             } 
             
             //利用者も同様に処理する
-            else {
+            else if($chatRoomUser->user->user_type_id == 2) {
                 if(isset($users[$chatRoomUser->user->office_id])) {
                     arary_push($users[$chatRoomUser->user->office_id], $chatRoomUser->user);
                 } else {
                     $users = [$chatRoomUser->user->office_id => [$chatRoomUser->user]];
                 }
+            }
+
+            //体験者を$trialsに入れる
+            else {
+                array_push($trials, $chatRoomUser->user);
             }
         }
     }
@@ -126,7 +132,7 @@ if(isset($chat_room)) {
                                     <h5 class="col-12 pt-3">{{ $office->office_name }}職員 - {{ count($officers[$office->id]) }}人</h5>
                                     <ul class="col-12 pt-2" style="list-style-none">
                                         @foreach ($officers[$office->id] as $officer)
-                                            {{ $officer->name }}
+                                            <li>{{ $officer->name }}</li>
                                         @endforeach
                                     </ul>
                                 </div>
@@ -140,12 +146,22 @@ if(isset($chat_room)) {
                                     <h5 class="col-12 pt-3">{{ $office->office_name }}職員 - {{ count($users[$office->id]) }}人</h5>
                                     <ul class="col-12 pt-2" style="list-style-none">
                                         @foreach ($users[$office->id] as $user)
-                                            {{ $user->name }}
+                                            <li>{{ $user->name }}</li>
                                         @endforeach
                                     </ul>
                                 </div>
                             @endif
                         @endforeach
+                    </div>
+                    <div class="row">
+                        @if (isset($trials))
+                            <h5 class="col-12 pt-3">体験者 - {{ count($trials) }}</h5>
+                            <ul class="col-12 pt-2" style="list-style-none">
+                                @foreach ($trials as $trial)
+                                    <li>{{ $trial->name }}</li>
+                                @endforeach
+                            </ul>
+                        @endif
                     </div>
                 @endif
             </div>
