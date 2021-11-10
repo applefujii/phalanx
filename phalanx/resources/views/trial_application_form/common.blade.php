@@ -1,6 +1,6 @@
 @extends('layouts.app')
 @section('content')
-<div class="container-fluid">
+<div class="container">
     <h3 class="page_title">体験・見学申込@yield('page_title')</h3>
     @if ($errors->any())
     <div class="alert alert-danger w-100">
@@ -91,7 +91,7 @@
             </fieldset>
 
             <div class="form-group">
-                <button class="btn btn-primary" type="submit">@yield('button_name')</button>
+                <p><button class="btn btn-primary" type="submit">@yield('button_name')</button></p>
                 @yield('back_button')
             </div>
         </form>
