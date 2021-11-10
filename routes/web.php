@@ -15,7 +15,14 @@ use Illuminate\Support\Facades\Route;
 
 Route::get('/', [App\Http\Controllers\TopController::class, 'index'])->name('top');
 
-Auth::routes();
+Auth::routes([
+    'login' => true,
+    'logout' => true,
+    'register' => true,
+    'reset' => false,
+    'confirm' => true,
+    'verify' => false,
+]);
 
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
 
@@ -56,7 +63,7 @@ Route::get("/user_page", [App\Http\Controllers\UserpageController::class, "index
 
 // チャットルーム
 Route::get("/chat_room/list", [App\Http\Controllers\ChatRoomController::class, "list"])->name("chat_room.list");
-Route::resource("chat_room", App\Http\Controllers\ChatRoomController::class);
+Route::resource("chat_room", App\Http\Controllers\ChatRoomController::class)->only(["index", "create", "store", "edit", "update", "destroy"]);
 
 // チャット画面
 Route::get('/chat/{id}', [App\Http\Controllers\ChatController::class, 'index'])->name('chat.index');

@@ -36,9 +36,25 @@ class ChatController extends Controller
     public function index($id)
     {
         $chat_room = ChatRoom::whereNull('deleted_at')->findOrFail($id);
-        $chat_texts = $chat_room->chat_texts()->orderBy('created_at')->get();
-        
-        return view('chat/index', compact('chat_room', 'chat_texts'));
+        $chat_texts = ChatText::whereNull('deleted_at')->where('chat_room_id', $id)->with('chat_room')->with('user')->orderBy('created_at')->get();
+        //ログイン中のユーザーのidを取得
+        $user = Auth::user();
+
+        //利用者対職員の個人チャットを取得
+        $userRooms = ChatRoom::where("distinction_number", 3)->where("office_id", $user->office_id)->whereNotNull("deleted_at")->get();
+
+        //職員全体のチャットルームを取得
+        $group = ChatRoom::where("distinction_number", 0)->whereNull("deleted_at")->first();
+
+        //ログイン中のユーザーが参加している部屋一覧を取得
+        $joinRooms = ChatRoom::join("chat_room__user", "chat_rooms.id", "=", "chat_room__user.chat_room_id")
+            ->where("chat_room__user.user_id", $user->id)->whereNull("chat_rooms.deleted_at")->whereNull("chat_room__user.deleted_at")
+                ->whereIn("chat_rooms.distinction_number", [1, 2, 4])->orderBy("chat_rooms.distinction_number")->get();
+
+        //事業所一覧を取得
+        $offices = Office::whereNull("deleted_at")->orderBy("sort")->get();
+
+        return view('chat/index', compact('chat_room', 'chat_texts', "userRooms", "group", "joinRooms", "offices"));
     }
 
     /**
