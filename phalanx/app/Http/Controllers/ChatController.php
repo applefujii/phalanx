@@ -36,7 +36,7 @@ class ChatController extends Controller
     public function index($id)
     {
         $chat_room = ChatRoom::whereNull('deleted_at')->findOrFail($id);
-        $chat_texts = $chat_room->chat_texts()->orderBy('created_at')->get();
+        $chat_texts = ChatText::whereNull('deleted_at')->where('chat_room_id', $id)->with('chat_room')->with('user')->orderBy('created_at')->get();
         //ログイン中のユーザーのidを取得
         $user = Auth::user();
 

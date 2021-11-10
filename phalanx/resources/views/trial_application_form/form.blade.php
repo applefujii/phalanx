@@ -9,6 +9,6 @@
 
 @section('button_name', '申請')
 
-@section('back_button')
-    <p><a class="btn btn-outline-primary" role="button" href="{{ route('top') }}">トップに戻る</a></p>
+@section('back')
+href="{{ route('top') }}"
 @endsection
