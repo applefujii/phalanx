@@ -13,24 +13,24 @@ if(isset($chat_room)) {
 
                 //$officersにすでにoffice_idと同じキーの配列があればその配列の後ろに入れ、なければ作る
                 if(isset($officers[$chatRoomUser->user->office_id])) {
-                    arary_push($officers[$chatRoomUser->user->office_id], $chatRoomUser->user);
+                    arary_push($officers[$chatRoomUser->user->office_id], $chatRoomUser->user->name);
                 } else {
-                    $officers = [$chatRoomUser->user->office_id => [$chatRoomUser->user]];
+                    $officers[$chatRoomUser->user->office_id] = [$chatRoomUser->user->name];
                 }
             } 
             
             //利用者も同様に処理する
             else if($chatRoomUser->user->user_type_id == 2) {
                 if(isset($users[$chatRoomUser->user->office_id])) {
-                    arary_push($users[$chatRoomUser->user->office_id], $chatRoomUser->user);
+                    arary_push($users[$chatRoomUser->user->office_id], $chatRoomUser->user->name);
                 } else {
-                    $users = [$chatRoomUser->user->office_id => [$chatRoomUser->user]];
+                    $users[$chatRoomUser->user->office_id] = [$chatRoomUser->user->name];
                 }
             }
 
             //体験者を$trialsに入れる
             else {
-                array_push($trials, $chatRoomUser->user);
+                $trials[] = $chatRoomUser->user->name;
             }
         }
     }
@@ -60,7 +60,7 @@ if(isset($chat_room)) {
                         <div class="col-12 pt-3">
                             <h5>リテラル</h5>
                             <ul style="list-style: none">
-                                <li><a href="{{ route("chat_room.show", $group->id) }}">全職員</a></li>
+                                <li><a href="{{ route("chat.index", $group->id) }}">全職員</a></li>
                             </ul>
                         </div>
                     @endif
@@ -73,9 +73,9 @@ if(isset($chat_room)) {
                                         @if ($joinRoom->office_id == $office->id)
                                             <li>
                                                 @if ($joinRoom->distinction_number == 4)
-                                                    <a href="{{ route('chat_room.show', $joinRoom->id) }}">{{ $joinRoom->room_title }}</a>
+                                                    <a href="{{ route('chat.index', $joinRoom->id) }}">{{ $joinRoom->room_title }}</a>
                                                 @else
-                                                    <a href="{{ route('chat_room.show', $joinRoom->id) }}">{{ $office->name }}職員</a>
+                                                    <a href="{{ route('chat.index', $joinRoom->id) }}">{{ $office->name }}職員</a>
                                                 @endif
                                             </li>
                                         @endif
@@ -86,7 +86,7 @@ if(isset($chat_room)) {
                     @endforeach
                     <div class="col-12 px-0">
                         <div>
-                            <button type="button" class="btn btn-outline-dark btn-block" data-toggle="collapse" data-target="#subOffices" aria-expanded="false" aria-controls="subOffices">
+                            <button type="button" class="btn btn-outline-dark btn-block" id="sub-offices" data-toggle="collapse" data-target="#subOffices" aria-expanded="false" aria-controls="subOffices">
                                 <i class="fas fa-chevron-down"></i>
                             </button>
                         </div>
@@ -100,9 +100,9 @@ if(isset($chat_room)) {
                                                 @if ($joinRoom->office_id == $office->id)
                                                     <li>
                                                         @if ($joinRoom->distinction_number == 4)
-                                                            <a href="{{ route('chat_room.show', $joinRoom->id) }}">{{ $joinRoom->room_title }}</a>
+                                                            <a href="{{ route('chat.index', $joinRoom->id) }}">{{ $joinRoom->room_title }}</a>
                                                         @else
-                                                            <a href="{{ route('chat_room.show', $joinRoom->id) }}">{{ $office->name }}職員</a>
+                                                            <a href="{{ route('chat.index', $joinRoom->id) }}">{{ $office->name }}職員</a>
                                                         @endif
                                                     </li>
                                                 @endif
@@ -128,11 +128,11 @@ if(isset($chat_room)) {
                     <div class="row">
                         @foreach ($offices as $office)
                             @if (isset($officers[$office->id]))
-                                <div class="row">
+                                <div>
                                     <h5 class="col-12 pt-3">{{ $office->office_name }}職員 - {{ count($officers[$office->id]) }}人</h5>
-                                    <ul class="col-12 pt-2" style="list-style-none">
+                                    <ul class="col-12 pt-1" style="list-style: none">
                                         @foreach ($officers[$office->id] as $officer)
-                                            <li>{{ $officer->name }}</li>
+                                            {{ $officer }}
                                         @endforeach
                                     </ul>
                                 </div>
@@ -142,11 +142,11 @@ if(isset($chat_room)) {
                     <div class="row">
                         @foreach ($offices as $office)
                             @if (isset($users[$office->id]))
-                                <div class="row">
-                                    <h5 class="col-12 pt-3">{{ $office->office_name }}職員 - {{ count($users[$office->id]) }}人</h5>
-                                    <ul class="col-12 pt-2" style="list-style-none">
+                                <div>
+                                    <h5 class="col-12 pt-3">{{ $office->office_name }}通所者 - {{ count($users[$office->id]) }}人</h5>
+                                    <ul class="col-12 pt-1" style="list-style: none">
                                         @foreach ($users[$office->id] as $user)
-                                            <li>{{ $user->name }}</li>
+                                            {{ $user }}
                                         @endforeach
                                     </ul>
                                 </div>
@@ -155,10 +155,10 @@ if(isset($chat_room)) {
                     </div>
                     <div class="row">
                         @if (isset($trials))
-                            <h5 class="col-12 pt-3">体験者 - {{ count($trials) }}</h5>
-                            <ul class="col-12 pt-2" style="list-style-none">
+                            <h5 class="col-12 pt-3">体験者 - {{ count($trials) }}人</h5>
+                            <ul class="col-12 pt-1" style="list-style: none">
                                 @foreach ($trials as $trial)
-                                    <li>{{ $trial->name }}</li>
+                                    <li>{{ $trial }}</li>
                                 @endforeach
                             </ul>
                         @endif
@@ -168,4 +168,20 @@ if(isset($chat_room)) {
         </div>
     </div>
 </div>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+
+<script>
+    //
+    $(document).on('click', '#sub-offices', function(){
+        let fas = $(this).find(".fas");
+        if( fas.hasClass("fa-chevron-down") ) {
+            fas.removeClass("fa-chevron-down");
+            fas.addClass("fa-chevron-up");
+        } else {
+            fas.removeClass("fa-chevron-up");
+            fas.addClass("fa-chevron-down");
+        }
+    });
+</script>
 @endsection
