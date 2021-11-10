@@ -6,17 +6,24 @@ if(isset($chat_room)) {
         $officers = [];
         $users = [];
         foreach($chatRoomUsers as $chatRoomUser) {
+
+            //職員のデータをoffice_idをキーにして$officersに入れる
             if($chatRoomUser->user->user_type_id == 1) {
+
+                //$officersにすでにoffice_idと同じキーの配列があればその配列の後ろに入れ、なければ作る
                 if(isset($officers[$chatRoomUser->user->office_id])) {
                     arary_push($officers[$chatRoomUser->user->office_id], $chatRoomUser->user);
                 } else {
-                    $officers = [$chatRoomUser->user->office_id => $chatRoomUser->user];
+                    $officers = [$chatRoomUser->user->office_id => [$chatRoomUser->user]];
                 }
-            } else {
+            } 
+            
+            //利用者も同様に処理する
+            else {
                 if(isset($users[$chatRoomUser->user->office_id])) {
                     arary_push($users[$chatRoomUser->user->office_id], $chatRoomUser->user);
                 } else {
-                    $users = [$chatRoomUser->user->office_id => $chatRoomUser->user];
+                    $users = [$chatRoomUser->user->office_id => [$chatRoomUser->user]];
                 }
             }
         }
@@ -111,6 +118,34 @@ if(isset($chat_room)) {
                 @if (isset($chat_room))
                     <div class="row">
                         <h5 class="col-12 pt-3">参加者 - {{ $chatRoomUsers->count() }}人</h5>
+                    </div>
+                    <div class="row">
+                        @foreach ($offices as $office)
+                            @if (isset($officers[$office->id]))
+                                <div class="row">
+                                    <h5 class="col-12 pt-3">{{ $office->office_name }}職員 - {{ count($officers[$office->id]) }}人</h5>
+                                    <ul class="col-12 pt-2" style="list-style-none">
+                                        @foreach ($officers[$office->id] as $officer)
+                                            {{ $officer->name }}
+                                        @endforeach
+                                    </ul>
+                                </div>
+                            @endif
+                        @endforeach
+                    </div>
+                    <div class="row">
+                        @foreach ($offices as $office)
+                            @if (isset($users[$office->id]))
+                                <div class="row">
+                                    <h5 class="col-12 pt-3">{{ $office->office_name }}職員 - {{ count($users[$office->id]) }}人</h5>
+                                    <ul class="col-12 pt-2" style="list-style-none">
+                                        @foreach ($users[$office->id] as $user)
+                                            {{ $user->name }}
+                                        @endforeach
+                                    </ul>
+                                </div>
+                            @endif
+                        @endforeach
                     </div>
                 @endif
             </div>
