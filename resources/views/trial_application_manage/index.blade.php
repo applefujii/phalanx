@@ -78,7 +78,7 @@
                             @if ($trial_application->is_checked)
                                 済
                             @else
-                                未
+                                <span class="text-danger font-weight-bold">未</span>
                             @endif
                         </td>
                         <td>
@@ -106,7 +106,7 @@
         </table>
         {{ $trial_applications->appends(request()->query())->links() }}
         <p>
-            <a class="btn btn-outline-primary" role="button" href="{{ route('home') }}">メニュー</a>
+            <a class="btn btn-outline-primary" role="button" href="{{ route('home') }}">ホーム</a>
         </p>
     </div>
 @endsection
