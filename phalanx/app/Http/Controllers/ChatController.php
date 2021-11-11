@@ -35,8 +35,7 @@ class ChatController extends Controller
      */
     public function index($id)
     {
-        $chat_room = ChatRoom::whereNull('deleted_at')->findOrFail($id);
-        $chat_texts = ChatText::whereNull('deleted_at')->where('chat_room_id', $id)->with('chat_room')->with('user')->orderBy('created_at')->get();
+        $chat_room = ChatRoom::whereNull('deleted_at')->with('chat_texts')->findOrFail($id);
         //ログイン中のユーザーのidを取得
         $user = Auth::user();
 
@@ -54,7 +53,7 @@ class ChatController extends Controller
         //事業所一覧を取得
         $offices = Office::whereNull("deleted_at")->orderBy("sort")->get();
 
-        return view('chat/index', compact('chat_room', 'chat_texts', "userRooms", "group", "joinRooms", "offices"));
+        return view('chat/index', compact('chat_room', "userRooms", "group", "joinRooms", "offices"));
     }
 
     /**
