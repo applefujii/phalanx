@@ -19,6 +19,7 @@ class NotificationRequest extends FormRequest
     protected function prepareForValidation()
     {
         $target_users = explode(',', $this->target_users);
+        $old_target_users = explode(',', $this->old_target_users);
         $start_at = $this->start_date;
         $end_at = $this->end_date;
         if( $this->is_all_day == "0" ) {
@@ -31,6 +32,7 @@ class NotificationRequest extends FormRequest
 
         $this->merge([
             'target_users' => $target_users,
+            'old_target_users' => $old_target_users,
             'start_at' => $start_at,
             'end_at' => $end_at,
         ]);

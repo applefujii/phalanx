@@ -50,8 +50,7 @@
         </div>
         <div class="row justify-content-start mx-auto my-4">
             <div class="mx-4 user-list-wrapper insert-checked-people">
-                <span>ああああ, いいいいい, うううう, ええええええ, おおおおおお, かかかかかかかか, ききききききき,くくくくく   …他9名
-                </span>                        
+                <p class="text-danger">未選択</p>
             </div>
         </div>
         <form id="main-form" name="data" action="{{ route('notification.store') }}" method="POST">
@@ -60,8 +59,8 @@
         <input type="submit" form="main-form" class="btn btn-primary mx-4" value="登録">
         <a href="{{ route('notification.index') }}" class="btn btn-secondary mx-4">戻る</a>
     </div>
-    @dump($errors)
 </div>
 
 @endsection
+
 @include("component.people_list")
