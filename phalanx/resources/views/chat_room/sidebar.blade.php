@@ -172,7 +172,7 @@ if(isset($chat_room)) {
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
 
 <script>
-    //
+    //#sub-officesが押された時の動作
     $(document).on('click', '#sub-offices', function(){
         let fas = $(this).find(".fas");
         if( fas.hasClass("fa-chevron-down") ) {
