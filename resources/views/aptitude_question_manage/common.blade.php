@@ -41,5 +41,6 @@
             </table>
         </div>
     @yield('form_under')
+    <p><a class="btn btn-secondary" role="button" href="{{ route('home') }}">ホームに戻る</a></p>
 </div>
 @endsection

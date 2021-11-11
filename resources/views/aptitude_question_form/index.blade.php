@@ -56,8 +56,8 @@
             <button class="btn btn-primary" type="submit">結果を見る</button>
         </div>
     </form>
-    <p>
-        <a class="btn btn-outline-primary" role="button" href="{{ route('top') }}">トップに戻る</a>
+    <p class="text-center">
+        <a class="btn btn-secondary" role="button" href="{{ route('top') }}">トップに戻る</a>
     </p>
 </div>
 @endsection

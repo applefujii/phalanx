@@ -12,7 +12,7 @@
             <p><a class="btn btn-primary" role="button" href="{{ route('user.index') }}">ユーザーマスタ</a></p>
             <p><a class="btn btn-primary" role="button" href="{{ route('office.index') }}">事業所マスタ</a></p>
         @endif
-        <p><a class="btn btn-outline-primary" role="button" href="{{ route('top') }}">トップに戻る</a></p>
+        <p><a class="btn btn-secondary" role="button" href="{{ route('top') }}">トップに戻る</a></p>
     </div>
 </div>
 @endsection

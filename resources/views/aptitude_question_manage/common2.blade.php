@@ -76,7 +76,7 @@
                 
 
                 <div class="form-group">
-                    <button class="btn btn-primary" type="submit">@yield('button_name')</button>
+                    <button class="btn btn-secondary" type="submit">@yield('button_name')</button>
                     <a class="btn btn-secondary back-button" role="button"
                         href="{{ route('aptitude_question_manage.index') }}">取り消し</a>
                 </div>
