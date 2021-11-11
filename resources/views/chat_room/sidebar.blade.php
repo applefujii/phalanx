@@ -46,8 +46,8 @@ if(isset($chat_room)) {
 @endsection
 
 @section("content")
-<div class="container-fluid">
-    <div class="row">
+<div class="container-fluid h-100">
+    <div class="row h-100">
         <div class="col-md-2 d-none d-md-block border border-dark">
             <div class="sticky-top">
                 @if (Auth::user()->user_type_id == 1)
@@ -59,7 +59,7 @@ if(isset($chat_room)) {
                     @if (isset($group))
                         <div class="col-12 pt-3">
                             <h5>リテラル</h5>
-                            <ul style="list-style: none">
+                            <ul class="col-12 pt-1">
                                 <li><a href="{{ route("chat.index", $group->id) }}">全職員</a></li>
                             </ul>
                         </div>
@@ -68,7 +68,7 @@ if(isset($chat_room)) {
                         @if ($office->id == Auth::user()->office_id)
                             <div class="col-12 pt-3">
                                 <h5>{{ $office->office_name }}</h5>
-                                <ul>
+                                <ul class="col-12 pt-1">
                                     @foreach ($joinRooms as $joinRoom)
                                         @if ($joinRoom->office_id == $office->id)
                                             <li>
@@ -95,7 +95,7 @@ if(isset($chat_room)) {
                                 @if ($office->id != Auth::user()->office_id)
                                     <div class="col-12 pt-3">
                                         <h5>{{ $office->office_name }}</h5>
-                                        <ul>
+                                        <ul class="col-12 pt-1">
                                             @foreach ($joinRooms as $joinRoom)
                                                 @if ($joinRoom->office_id == $office->id)
                                                     <li>
@@ -130,7 +130,7 @@ if(isset($chat_room)) {
                             @if (isset($officers[$office->id]))
                                 <div>
                                     <h5 class="col-12 pt-3">{{ $office->office_name }}職員 - {{ count($officers[$office->id]) }}人</h5>
-                                    <ul class="col-12 pt-1" style="list-style: none">
+                                    <ul class="col-12 pt-1">
                                         @foreach ($officers[$office->id] as $officer)
                                             {{ $officer }}
                                         @endforeach
@@ -144,7 +144,7 @@ if(isset($chat_room)) {
                             @if (isset($users[$office->id]))
                                 <div>
                                     <h5 class="col-12 pt-3">{{ $office->office_name }}通所者 - {{ count($users[$office->id]) }}人</h5>
-                                    <ul class="col-12 pt-1" style="list-style: none">
+                                    <ul class="col-12 pt-1">
                                         @foreach ($users[$office->id] as $user)
                                             {{ $user }}
                                         @endforeach
@@ -156,7 +156,7 @@ if(isset($chat_room)) {
                     <div class="row">
                         @if (isset($trials))
                             <h5 class="col-12 pt-3">体験者 - {{ count($trials) }}人</h5>
-                            <ul class="col-12 pt-1" style="list-style: none">
+                            <ul class="col-12 pt-1">
                                 @foreach ($trials as $trial)
                                     <li>{{ $trial }}</li>
                                 @endforeach
@@ -169,9 +169,7 @@ if(isset($chat_room)) {
     </div>
 </div>
 
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
-
-<script>
+<div is="script">
     //#sub-officesが押された時の動作
     $(document).on('click', '#sub-offices', function(){
         let fas = $(this).find(".fas");
@@ -183,5 +181,5 @@ if(isset($chat_room)) {
             fas.addClass("fa-chevron-down");
         }
     });
-</script>
+</div>
 @endsection
