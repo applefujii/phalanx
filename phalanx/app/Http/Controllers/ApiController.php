@@ -205,6 +205,7 @@ class ApiController extends Controller
             try {
                 DB::transaction(function() use(&$ids, $con, $request) {
                     foreach($request->records as $r) {
+                        logger($r);
                         $id = $con->storeDetail( new Request($r) );
                         $ids .= strval($id) . ", ";
                     }
