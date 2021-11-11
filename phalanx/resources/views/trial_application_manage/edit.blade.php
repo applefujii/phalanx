@@ -13,3 +13,5 @@
 @section('back')
 href="{{ route('trial_application_manage.index') }}"
 @endsection
+
+@section('back_name', '取り消し')
