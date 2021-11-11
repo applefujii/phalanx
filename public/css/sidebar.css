@@ -1,7 +1,15 @@
+html, body, #app, main {
+    height: 100%;
+}
+
 #app main {
     padding-top: 0rem !important;
 }
 
 .top {
     top:0;
+}
+
+main ul {
+    list-style: none;
 }
