@@ -58,7 +58,7 @@ class ChatRoomController extends Controller
         //chat_roomsテーブルのuser_idが$userIdと一致するものを検索
         $chatRoom = ChatRoom::where("user_id", $user->id)->first();
 
-        return redirect()->route("chat_room.show", $chatRoom->id);
+        return redirect()->route("chat.index", $chatRoom->id);
     }
 
     /**

@@ -63,7 +63,7 @@ Route::get("/user_page", [App\Http\Controllers\UserpageController::class, "index
 
 // チャットルーム
 Route::get("/chat_room/list", [App\Http\Controllers\ChatRoomController::class, "list"])->name("chat_room.list");
-Route::resource("chat_room", App\Http\Controllers\ChatRoomController::class);
+Route::resource("chat_room", App\Http\Controllers\ChatRoomController::class)->only(["index", "create", "store", "edit", "update", "destroy"]);
 
 // チャット画面
 Route::get('/chat/{id}', [App\Http\Controllers\ChatController::class, 'index'])->name('chat.index');

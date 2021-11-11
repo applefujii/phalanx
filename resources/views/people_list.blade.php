@@ -214,11 +214,13 @@
         // チェックされている人のID
         var aCheckList = [];
         // 事業所全員がチェックされているか
-        var oIsAllCheck = {};
+        var aIsAllCheck = [];
         // 表示するグループ 利用者、職員
         var targetGroup;
+        // ロード状態フラグ
+        var fo_completed_load = { people: false, office: false };
 
-        var office = [
+        var aOffice = [
             { id : 1, en_office_name : "apple", office_name : "アップル梅田" },
             { id : 2, en_office_name : "mint", office_name : "ミント大阪" },
             { id : 3, en_office_name : "maple", office_name : "メープル関西" },
@@ -226,7 +228,7 @@
         ];
         var myOffice = "maple";
         var targetUserType;
-        var people = [
+        var aPeople = [
             { id : 1, name : "梅田太郎", office_id : 2, user_type_id : 2 },
             { id : 2, name : "いいいいい", office_id : 2, user_type_id : 2  },
             { id : 3, name : "ううううう", office_id : 2, user_type_id : 2  },
@@ -295,6 +297,7 @@
 
         peopleHtmlNest = '<div class="flex-fill ml-3">';
         peopleHtml = '<p><input type="checkbox" class="[EnName] check-individual" data-people-id="[PeopleId]" data-group="[EnName]"> [PeopleName]</p>';
+        ancompleted = '<p><b>読み込み中</b></p>';
 
 
         //-- 読み込まれたタイミングで実行
@@ -309,13 +312,14 @@
             //-- APIからメンバー情報を取得
             $.ajax({
                 type: "POST",
-                url: "./api/v1.0/get/users.json", // 送り先
+                url: "http://order.com/api/v1.0/get/users.json", // 送り先
                 data: {},   // 渡したいデータをオブジェクトで渡す
                 dataType : "json",  // データ形式を指定
                 scriptCharset: 'utf-8'  // 文字コードを指定
             })
             .done( function(param){     // paramに処理後のデータが入って戻ってくる
-                    people = param; // 帰ってきたら実行する処理
+                    aPeople = param; // 帰ってきたら実行する処理
+                    fo_completed_load['people'] = true;
                 })
             .fail( function(XMLHttpRequest, textStatus, errorThrown){   // エラーが起きた時はこちらが実行される
                     console.log(XMLHttpRequest);    // エラー内容表示
@@ -324,14 +328,15 @@
             //-- APIから事業所情報を取得
             $.ajax({
                 type: "POST",
-                url: "./api/v1.0/get/offices.json",
+                url: "http://order.com/api/v1.0/get/offices.json",
                 data: {},
                 dataType : "json",
                 scriptCharset: 'utf-8'
             })
             .done( function(param){
-                    office = param;
-                    office.push({ id : 0, en_office_name : "experience", office_name : "体験" });
+                    aOffice = param;
+                    aOffice.push({ id : 0, en_office_name : "experience", office_name : "体験" });
+                    fo_completed_load['office'] = true;
                 })
             .fail( function(XMLHttpRequest, textStatus, errorThrown){
                     console.log(XMLHttpRequest);
@@ -340,7 +345,7 @@
             // ※APIのテスト
             $.ajax({
                 type: "POST",
-                url: "./api/v1.0/set/notifications.json", // 送り先
+                url: "http://order.com/api/v1.0/set/notifications.json", // 送り先
                 data: {
                     records : [
                         { content : "複数登録1", start_at :"2022/01/01 00:00:00" , end_at : "2022/01/01 00:00:00", is_all_day : "0" },
@@ -376,11 +381,6 @@
             //-- ※aCheckListにチェックされている人のIDを代入
             aCheckList.push(5);
 
-            //
-            $.each(office, function(index, element){
-                oIsAllCheck[element.en_office_name+'-1'] = false;
-                oIsAllCheck[element.en_office_name+'-2'] = false;
-            });
         });
 
 
@@ -438,13 +438,13 @@
                     if( aCheckList.includes($(this).data('people-id')) == false )
                         aCheckList.push($(this).data('people-id'));
                 });
-                oIsAllCheck[$(this).data('child-class')+'-'+targetUserType] = true;
+                aIsAllCheck.push($(this).data('child-class')+'-'+targetUserType);
             } else {
                 $('.'+$(this).data('child-class')).each(function(index, element){
                     $(this).prop('checked', false);
                     aCheckList.splice(aCheckList.indexOf($(this).data('people-id')), 1);
                 });
-                oIsAllCheck[$(this).data('child-class')+'-'+targetUserType] = false;
+                aIsAllCheck.splice(aCheckList.indexOf($(this).data('child-class')+'-'+targetUserType), 1);
             }
         });
 
@@ -470,22 +470,44 @@
 
             // 全チェックフラグ操作
             if( fAllCheck )
-                oIsAllCheck[$(this).data('child-class')+'-'+targetUserType] = true;
+                aIsAllCheck.push($(this).data('group')+'-'+targetUserType);
             else
-                oIsAllCheck[$(this).data('child-class')+'-'+targetUserType] = false;
+                aIsAllCheck.splice(aCheckList.indexOf($(this).data('group')+'-'+targetUserType), 1);
         });
 
         //-- 決定ボタンを押したときの動作
         $('#people-list-modal-ok').on('click', function(){
-            console.log(aCheckList);
-            console.log(oIsAllCheck);
+            // console.log(aCheckList);
+            // console.log(aIsAllCheck);
+
+            let insert = $('.insert-checked-people');
+            insert.empty();
+            st = '<span>';
+            $.each(aCheckList, (index, element) => {
+                if(index >= 20) {
+                    st += ' ...他'+ String(aCheckList.length-index) +'名';
+                    return false;
+                }
+                st += aPeople.find( (elem) => elem.id == element).name + ', ';
+            });
+            st += '</span>';
+            insert.append(st);
+
+            $('#peopleListModal').modal('hide');
         });
 
 
         function modalWrite() {
             let insertOffice = $('.insert-office');
             insertOffice.empty();
-            $.each(office, function(index, element){
+
+            //-- 未読み込みのとき
+            if( !Object.values(fo_completed_load).every((ele) => ele == true) ) {
+                insertOffice.append(ancompleted);
+                return;
+            }
+
+            $.each(aOffice, function(index, element){
                 //-- 各種置換
                 let st = officeHtml.replace(/\[EnName\]/g, element.en_office_name);
                 st = st.replace(/\[Name\]/g, element.office_name);
@@ -505,7 +527,7 @@
                 let nest;
                 let fAllCheck = true;
                 let fNotClose = false;
-                let exc_people = people.filter(e => (e.office_id == element.id  &&  e.user_type_id == targetUserType));
+                let exc_people = aPeople.filter(e => (e.office_id == element.id  &&  e.user_type_id == targetUserType));
                 oneColumnNumber = Math.floor(exc_people.length/peopleColumn);
                 if( exc_people.length%peopleColumn != 0 ) oneColumnNumber++;
 
@@ -549,7 +571,7 @@
                 let nest;
                 let fAllCheck = true;
                 let fNotClose = false;
-                let exc_people = people.filter(e => (e.user_type_id == 3));
+                let exc_people = aPeople.filter(e => (e.user_type_id == 3));
                 oneColumnNumber = Math.floor(exc_people.length/peopleColumn);
                 if( exc_people.length%peopleColumn != 0 ) oneColumnNumber++;
 
