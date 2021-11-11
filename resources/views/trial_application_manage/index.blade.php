@@ -106,7 +106,7 @@
         </table>
         {{ $trial_applications->appends(request()->query())->links() }}
         <p>
-            <a class="btn btn-outline-primary" role="button" href="{{ route('home') }}">ホーム</a>
+            <a class="btn btn-secondary" role="button" href="{{ route('home') }}">ホームに戻る</a>
         </p>
     </div>
 @endsection

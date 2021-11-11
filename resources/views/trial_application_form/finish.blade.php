@@ -8,6 +8,6 @@
         <h3>担当者からの連絡をお待ちください。</h3>
     </div>
     
-    <p><a class="btn btn-outline-primary" role="button" href="{{ route('top') }}">トップに戻る</a></p>
+    <p><a class="btn btn-secondary" role="button" href="{{ route('top') }}">トップに戻る</a></p>
 </div>
 @endsection
