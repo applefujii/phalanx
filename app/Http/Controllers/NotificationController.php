@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use App\Http\Requests\NotificationRequest;
 use App\Models\Notification;
 use App\Models\Notification__User;
 use App\Models\Office;
@@ -65,7 +66,7 @@ class NotificationController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(NotificationRequest $request)
     {
         $id = $this->storeDetail($request);
 
@@ -78,7 +79,7 @@ class NotificationController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function storeDetail(Request $request)
+    public function storeDetail(NotificationRequest $request)
     {
         $dt = new \DateTime( "now" );
         $notifications = Notification::create([
@@ -91,6 +92,17 @@ class NotificationController extends Controller
             'created_at' => $dt->format('Y-m-d H:i:s'),
             'updated_at' => $dt->format('Y-m-d H:i:s')
         ]);
+
+        foreach( $request->target_users as $tu ) {
+            Notification__User::create([
+                'notification_id' => $notifications->id,
+                'user_id' => $tu,
+                'create_user_id' => Auth::user()->id,
+                'update_user_id' => Auth::user()->id,
+                'created_at' => $dt->format('Y-m-d H:i:s'),
+                'updated_at' => $dt->format('Y-m-d H:i:s')
+            ]);
+        }
 
         return $notifications->id;
     }

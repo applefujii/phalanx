@@ -30,17 +30,24 @@ class ChatText extends Model
     public $timestamps = false;
 
     /**
+     * 常にロードする必要があるリレーション
+     *
+     * @var array
+     */
+    protected $with = ['user', 'chat_room'];
+
+    /**
      * 関連するチャットルームのデータの取得
      */
     public function chat_room() {
-        return $this->belongsTo(ChatRoom::class);
+        return $this->belongsTo(ChatRoom::class)->whereNull('deleted_at');
     }
 
     /**
      * 関連するユーザーマスタのデータの取得
      */
     public function user() {
-        return $this->belongsTo(User::class);
+        return $this->belongsTo(User::class)->whereNull('deleted_at');
     }
 
     /**
