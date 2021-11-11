@@ -1,6 +1,6 @@
 @extends('trial_application_form.common')
 
-@section('page_title', '確認')
+@section('page_title', ' 確認')
 
 @section('form')
     <form action="{{ route('trial_application_manage.check', $trial_application->id) }}" method="post">
