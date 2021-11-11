@@ -107,7 +107,7 @@
             </div>
         </fieldset>
 
-        <button class="btn btn-primary" type="submit">@yield('button_name')</button><a @yield('back') class="btn btn-secondary back-button">戻る</a>
+        <button class="btn btn-primary" type="submit">@yield('button_name')</button><a @yield('back') class="btn btn-secondary back-button">@yield('back_name')</a>
     </div>
     </form>
     </div>
