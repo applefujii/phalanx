@@ -1,7 +1,10 @@
 @extends('layouts.app')
+
+@section('title', '適性診断')
+
 @section('content')
 <div class="container">
-    <h3 class="page_title">適性診断</h3>
+    <h3>適性診断</h3>
     @if ($errors->any())
     <div class="alert alert-danger w-100">
         <span>未回答の質問があります。</span>

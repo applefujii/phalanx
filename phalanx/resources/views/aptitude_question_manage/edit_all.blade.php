@@ -1,5 +1,6 @@
 @extends('aptitude_question_manage.common')
-@section('title', '一括編集')
+
+@section('page_title', '一括編集')
 
 @section('form_upper')
 <form action="{{ route('aptitude_question_manage.update_all') }}" method="post">
@@ -87,7 +88,7 @@
 @section('form_under')
     <div class="form-group">
         <button class="btn btn-primary" type="submit">更新</button>
-        <a class="btn btn-outline-primary" role="button" href="{{ route('aptitude_question_manage.index') }}">取り消し</a>
+        <a class="btn btn-secondary" role="button" href="{{ route('aptitude_question_manage.index') }}">取り消し</a>
     </div>
 </form>
 @endsection
