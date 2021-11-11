@@ -17,7 +17,7 @@
 
 <hr>
 
-@foreach ($chat_texts as $chat_text)
+@foreach ($chat_room->chat_texts as $chat_text)
 @php
     $created_at = new \Carbon\Carbon($chat_text->created_at);
 @endphp
