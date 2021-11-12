@@ -12,3 +12,5 @@
 @section('back')
 href="{{ route('top') }}"
 @endsection
+
+@section('back_name', 'トップに戻る')

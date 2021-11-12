@@ -5,9 +5,12 @@
     <link href="{{ asset('css/index-table.css') }}" rel="stylesheet">
     <link href="{{ asset('css/aptitude_question_manage.css') }}" rel="stylesheet">
 @endsection
+
+@section('title')適性診断質問管理 @yield('page_title')@endsection
+
 @section('content')
 <div class="container">
-    <h3>適性診断質問管理　@yield('title')</h3>
+    <h3>適性診断質問管理 @yield('page_title')</h3>
     @if ($errors->any())
     <div class="alert alert-danger w-100">
         <span>入力に誤りがあります。</span>
