@@ -1,4 +1,9 @@
 <?php
+/**
+ * 適性診断フォームのバリデーション
+ * 
+ * @author Fumio Mochizuki
+ */
 
 namespace App\Http\Requests;
 
