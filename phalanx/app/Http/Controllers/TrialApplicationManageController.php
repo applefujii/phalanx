@@ -38,6 +38,7 @@ class TrialApplicationManageController extends Controller
         $check_yet = $request->input('check_yet');
 
         $trial_applications = TrialApplication::whereNull('deleted_at')
+        ->with('office')
             ->when($office_id, function ($query) use ($office_id) {
                 return $query->where('office_id', $office_id);
             })
@@ -93,7 +94,7 @@ class TrialApplicationManageController extends Controller
         $trial_application->email = Crypt::encryptString($request->input('email'));
         $trial_application->phone_number = Crypt::encryptString($request->input('phone_number'));
         $trial_application->update_user_id = Auth::user()->id;
-        $trial_application->updated_at = $now->isoFormat('YYYY-MM-DD');
+        $trial_application->updated_at = $now->isoFormat('YYYY-MM-DD HH:mm:ss');
         $trial_application->save();
         return redirect()->route('trial_application_manage.index');
     }
@@ -111,7 +112,7 @@ class TrialApplicationManageController extends Controller
 
         $trial_application->update_user_id = Auth::user()->id;
         $trial_application->delete_user_id = Auth::user()->id;
-        $trial_application->deleted_at = $now->isoFormat('YYYY-MM-DD');
+        $trial_application->deleted_at = $now->isoFormat('YYYY-MM-DD HH:mm:ss');
         $trial_application->save();
         return redirect()->route('trial_application_manage.index');
     }
@@ -144,7 +145,7 @@ class TrialApplicationManageController extends Controller
 
         $trial_application->is_checked = !$trial_application->is_checked;
         $trial_application->update_user_id = Auth::user()->id;
-        $trial_application->updated_at = $now->isoFormat('YYYY-MM-DD');
+        $trial_application->updated_at = $now->isoFormat('YYYY-MM-DD HH:mm:ss');
         $trial_application->save();
         return redirect()->route('trial_application_manage.index');
     }

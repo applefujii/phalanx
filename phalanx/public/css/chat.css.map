@@ -1,0 +1,9 @@
+{
+    "version": 3,
+    "mappings": "AAAA,AAAA,qBAAqB,CAAC;EAClB,WAAW,EAAE,QAAQ;CACxB;;AAED,AAAA,cAAc,CAAC;EACX,MAAM,EAAE,IAAI;CACf;;AAED,AAAA,YAAY,CAAC;EACT,MAAM,EAAE,CAAC;CACZ",
+    "sources": [
+        "chat.scss"
+    ],
+    "names": [],
+    "file": "chat.css"
+}

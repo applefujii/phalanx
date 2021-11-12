@@ -14,6 +14,12 @@ use Illuminate\Support\Facades\Hash;
 
 class UserController extends Controller
 {
+    /**
+     * コンストラクタ
+     */
+    public function __construct() {
+        $this->middleware('staff');
+    }
 
     /**
      * Display a listing of the resource.
@@ -100,7 +106,7 @@ class UserController extends Controller
         $validated = $request->validated();
         $user->fill(array_merge($validated, ['password' => Hash::make($request->password)]));
         $now = Carbon::now();
-        $user->fill(['update_user_id' => Auth::id(), 'updated_at' => $now->isoFormat('YYYY-MM-DD')]);
+        $user->fill(['update_user_id' => Auth::id(), 'updated_at' => $now->isoFormat('YYYY-MM-DD HH:mm:ss')]);
         $user->save();
         return redirect()->route('user.index');
     }
@@ -114,7 +120,7 @@ class UserController extends Controller
     public function destroy(user $user)
     {
         $now = Carbon::now();
-        $user->fill(['delete_user_id' => Auth::id(), 'deleted_at' => $now->isoFormat('YYYY-MM-DD')])->save();
+        $user->fill(['delete_user_id' => Auth::id(), 'deleted_at' => $now->isoFormat('YYYY-MM-DD HH:mm:ss')])->save();
         return redirect()->route('user.index');
     }
 }

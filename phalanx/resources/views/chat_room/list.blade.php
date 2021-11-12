@@ -14,7 +14,7 @@
                     <th class="col-6">操作</th>
                 </tr>
             </thead>
-            <tbody>
+            <tbody class="align-items-center">
                 @foreach ($chatRooms as $chatRoom)
                     <tr>
                         <td>{{ $chatRoom->room_title }}</td>

@@ -1,6 +1,6 @@
 @extends('trial_application_form.common')
 
-@section('page_title', '確認')
+@section('page_title', ' 確認')
 
 @section('form')
     <form action="{{ route('trial_application_manage.check', $trial_application->id) }}" method="post">
@@ -14,6 +14,8 @@
     @section('button_name', '確認済にする') 
 @endif
 
-@section('back_button')
-    <a class="btn btn-outline-primary" role="button" href="{{ route('trial_application_manage.index') }}">取り消し</a>
+@section('back')
+href="{{ route('trial_application_manage.index') }}"
 @endsection
+
+@section('back_name', '取り消し')

@@ -11,7 +11,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Chat_text extends Model
+class ChatText extends Model
 {
     use HasFactory;
 
@@ -30,23 +30,30 @@ class Chat_text extends Model
     public $timestamps = false;
 
     /**
+     * 常にロードする必要があるリレーション
+     *
+     * @var array
+     */
+    protected $with = ['user', 'chat_room'];
+
+    /**
      * 関連するチャットルームのデータの取得
      */
     public function chat_room() {
-        return $this->belongsTo(Chat_room::class);
+        return $this->belongsTo(ChatRoom::class)->whereNull('deleted_at');
     }
 
     /**
      * 関連するユーザーマスタのデータの取得
      */
     public function user() {
-        return $this->belongsTo(User::class);
+        return $this->belongsTo(User::class)->whereNull('deleted_at');
     }
 
     /**
      * 関連するチャットルーム-ユーザー中間テーブルのデータの取得
      */
     public function chat_room__user() {
-        return $this->hasMany(Chat_room__User::class);
+        return $this->hasMany(ChatRoom__User::class);
     }
 }

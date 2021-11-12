@@ -9,6 +9,8 @@
 
 @section('button_name', '申請')
 
-@section('back_button')
-    <a class="btn btn-outline-primary" role="button" href="{{ route('home') }}">取り消し</a>
+@section('back')
+href="{{ route('top') }}"
 @endsection
+
+@section('back_name', 'トップに戻る')
