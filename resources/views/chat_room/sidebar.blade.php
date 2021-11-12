@@ -41,15 +41,18 @@ if(isset($chat_room)) {
 @extends('layouts.app')
 
 @section('css')
+{{-- jQuery読み込み --}}
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+
 <link href="{{ asset('css/sidebar.css') }}" rel="stylesheet">
 @yield("c_css")
 @endsection
 
 @section("content")
-<div class="container-fluid h-100">
-    <div class="row h-100">
-        <div class="col-md-2 d-none d-md-block border border-dark">
-            <div class="sticky-top">
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-md-2 d-none d-md-block border border-dark px-0">
+            <div class="contents-sticky container-fluid">
                 @if (Auth::user()->user_type_id == 1)
                     <div class="row p-3">
                         <a href="{{ route('chat_room.index') }}" class="btn btn-primary btn-lg btn-block" role="button">通所者一覧</a>
@@ -116,11 +119,142 @@ if(isset($chat_room)) {
                 </div>
             </div>
         </div>
-        <div class="col-md-8 bg-white">
-            @yield('center')
+        <div class="col-md-8 bg-white border-top border-dark">
+            <button type="button" class="btn btn-dark rounded-circle position-fixed mt-5 d-block d-md-none sidebar-open" id="left-open" data-toggle="modal" data-target="#left-modal">
+                <i class="fas fa-chevron-right"></i>
+            </button>
+            <div class="modal" id="left-modal" tabindex="-1">
+                <div class="modal-dialog">
+                    <div class="modal-content h-100">
+                        <div class="modal-body">
+                            @if (Auth::user()->user_type_id == 1)
+                                <div class="row p-3">
+                                    <a href="{{ route('chat_room.index') }}" class="btn btn-primary btn-lg btn-block" role="button">通所者一覧</a>
+                                </div>
+                            @endif
+                            <div class="row">
+                                @if (isset($group))
+                                    <div class="col-12 pt-3">
+                                        <h5>リテラル</h5>
+                                        <ul class="col-12 pt-1">
+                                            <li><a href="{{ route("chat.index", $group->id) }}">全職員</a></li>
+                                        </ul>
+                                    </div>
+                                @endif
+                                @foreach ($offices as $office)
+                                    @if ($office->id == Auth::user()->office_id)
+                                        <div class="col-12 pt-3">
+                                            <h5>{{ $office->office_name }}</h5>
+                                            <ul class="col-12 pt-1">
+                                                @foreach ($joinRooms as $joinRoom)
+                                                    @if ($joinRoom->office_id == $office->id)
+                                                        <li>
+                                                            @if ($joinRoom->distinction_number == 4)
+                                                                <a href="{{ route('chat.index', $joinRoom->id) }}">{{ $joinRoom->room_title }}</a>
+                                                            @else
+                                                                <a href="{{ route('chat.index', $joinRoom->id) }}">{{ $office->name }}職員</a>
+                                                            @endif
+                                                        </li>
+                                                    @endif
+                                                @endforeach
+                                            </ul>
+                                        </div>
+                                    @endif
+                                @endforeach
+                                <div class="col-12 px-0">
+                                    <div>
+                                        <button type="button" class="btn btn-outline-dark btn-block" id="sub-offices" data-toggle="collapse" data-target="#subOffices" aria-expanded="false" aria-controls="subOffices">
+                                            <i class="fas fa-chevron-down"></i>
+                                        </button>
+                                    </div>
+                                    <div class="collapse" id="subOffices">
+                                        @foreach ($offices as $office)
+                                            @if ($office->id != Auth::user()->office_id)
+                                                <div class="col-12 pt-3">
+                                                    <h5>{{ $office->office_name }}</h5>
+                                                    <ul class="col-12 pt-1">
+                                                        @foreach ($joinRooms as $joinRoom)
+                                                            @if ($joinRoom->office_id == $office->id)
+                                                                <li>
+                                                                    @if ($joinRoom->distinction_number == 4)
+                                                                        <a href="{{ route('chat.index', $joinRoom->id) }}">{{ $joinRoom->room_title }}</a>
+                                                                    @else
+                                                                        <a href="{{ route('chat.index', $joinRoom->id) }}">{{ $office->name }}職員</a>
+                                                                    @endif
+                                                                </li>
+                                                            @endif
+                                                        @endforeach
+                                                    </ul>
+                                                </div>
+                                            @endif
+                                        @endforeach
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            @if (isset($chat_room))
+                <button type="button" class="btn btn-dark rounded-circle position-fixed mt-5 d-block d-md-none sidebar-open" id="right-open" data-toggle="modal" data-target="#right-modal">
+                    <i class="fas fa-chevron-left"></i>
+                </button>
+                <div class="modal" id="right-modal" tabindex="-1">
+                    <div class="modal-dialog">
+                        <div class="modal-content h-100">
+                            <div class="modal-body">
+                                <div class="row">
+                                    <h5 class="col-12 pt-3">参加者 - {{ $chatRoomUsers->count() }}人</h5>
+                                </div>
+                                <div class="row">
+                                    @foreach ($offices as $office)
+                                        @if (isset($officers[$office->id]))
+                                            <div>
+                                                <h5 class="col-12 pt-3">{{ $office->office_name }}職員 - {{ count($officers[$office->id]) }}人</h5>
+                                                <ul class="col-12 pt-1">
+                                                    @foreach ($officers[$office->id] as $officer)
+                                                        {{ $officer }}
+                                                    @endforeach
+                                                </ul>
+                                            </div>
+                                        @endif
+                                    @endforeach
+                                </div>
+                                <div class="row">
+                                    @foreach ($offices as $office)
+                                        @if (isset($users[$office->id]))
+                                            <div>
+                                                <h5 class="col-12 pt-3">{{ $office->office_name }}通所者 - {{ count($users[$office->id]) }}人</h5>
+                                                <ul class="col-12 pt-1">
+                                                    @foreach ($users[$office->id] as $user)
+                                                        {{ $user }}
+                                                    @endforeach
+                                                </ul>
+                                            </div>
+                                        @endif
+                                    @endforeach
+                                </div>
+                                <div class="row">
+                                    @if (isset($trials))
+                                        <h5 class="col-12 pt-3">体験者 - {{ count($trials) }}人</h5>
+                                        <ul class="col-12 pt-1">
+                                            @foreach ($trials as $trial)
+                                                <li>{{ $trial }}</li>
+                                            @endforeach
+                                        </ul>
+                                    @endif
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            @endif
+            <div class="contents-sticky">
+                @yield('center')
+            </div>
         </div>
-        <div class="col-md-2 d-none d-md-block border border-dark">
-            <div class="sticky-top">
+        <div class="col-md-2 d-none d-md-block border border-dark pr-0">
+            <div class="contents-sticky">
                 @if (isset($chat_room))
                     <div class="row">
                         <h5 class="col-12 pt-3">参加者 - {{ $chatRoomUsers->count() }}人</h5>
@@ -170,16 +304,19 @@ if(isset($chat_room)) {
 </div>
 
 <div is="script">
-    //#sub-officesが押された時の動作
-    $(document).on('click', '#sub-offices', function(){
-        let fas = $(this).find(".fas");
-        if( fas.hasClass("fa-chevron-down") ) {
-            fas.removeClass("fa-chevron-down");
-            fas.addClass("fa-chevron-up");
-        } else {
-            fas.removeClass("fa-chevron-up");
-            fas.addClass("fa-chevron-down");
-        }
+    $(function() {
+
+        //#sub-officesが押された時の動作
+        $("#sub-offices").click(function(){
+            let fas = $(this).find(".fas");
+            if( fas.hasClass("fa-chevron-down") ) {
+                fas.removeClass("fa-chevron-down");
+                fas.addClass("fa-chevron-up");
+            } else {
+                fas.removeClass("fa-chevron-up");
+                fas.addClass("fa-chevron-down");
+            }
+        });
     });
 </div>
 @endsection
