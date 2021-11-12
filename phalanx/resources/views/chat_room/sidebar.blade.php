@@ -41,15 +41,18 @@ if(isset($chat_room)) {
 @extends('layouts.app')
 
 @section('css')
+{{-- jQuery読み込み --}}
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+
 <link href="{{ asset('css/sidebar.css') }}" rel="stylesheet">
 @yield("c_css")
 @endsection
 
 @section("content")
-<div class="container-fluid h-100">
-    <div class="row h-100">
-        <div class="col-md-2 d-none d-md-block border border-dark">
-            <div class="sticky-top">
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-md-2 d-none d-md-block border border-dark px-0">
+            <div class="contents-sticky container-fluid">
                 @if (Auth::user()->user_type_id == 1)
                     <div class="row p-3">
                         <a href="{{ route('chat_room.index') }}" class="btn btn-primary btn-lg btn-block" role="button">通所者一覧</a>
@@ -117,10 +120,25 @@ if(isset($chat_room)) {
             </div>
         </div>
         <div class="col-md-8 bg-white">
-            @yield('center')
+            <div class="contents-sticky">
+                <button type="button" class="btn btn-dark rounded-circle position-fixed d-block d-md-none sidebar-open" id="left-open">
+                    <i class="fas fa-chevron-right"></i>
+                </button>
+                <button type="button" class="btn btn-dark rounded-circle position-fixed d-block d-md-none sidebar-open" id="right-open">
+                    <i class="fas fa-chevron-left"></i>
+                </button>
+                <div class="modal left fade" id="left-modal" tabindex="-1">
+                    <div class="modal-dialog" role="document">
+                        <div class="modal-content">
+
+                        </div>
+                    </div>
+                </div>
+                @yield('center')
+            </div>
         </div>
-        <div class="col-md-2 d-none d-md-block border border-dark">
-            <div class="sticky-top">
+        <div class="col-md-2 d-none d-md-block border border-dark pr-0">
+            <div class="contents-sticky">
                 @if (isset($chat_room))
                     <div class="row">
                         <h5 class="col-12 pt-3">参加者 - {{ $chatRoomUsers->count() }}人</h5>
@@ -170,16 +188,22 @@ if(isset($chat_room)) {
 </div>
 
 <div is="script">
-    //#sub-officesが押された時の動作
-    $(document).on('click', '#sub-offices', function(){
-        let fas = $(this).find(".fas");
-        if( fas.hasClass("fa-chevron-down") ) {
-            fas.removeClass("fa-chevron-down");
-            fas.addClass("fa-chevron-up");
-        } else {
-            fas.removeClass("fa-chevron-up");
-            fas.addClass("fa-chevron-down");
-        }
+    $(function() {
+
+        //#sub-officesが押された時の動作
+        $("#sub-offices").click(function(){
+            let fas = $(this).find(".fas");
+            if( fas.hasClass("fa-chevron-down") ) {
+                fas.removeClass("fa-chevron-down");
+                fas.addClass("fa-chevron-up");
+            } else {
+                fas.removeClass("fa-chevron-up");
+                fas.addClass("fa-chevron-down");
+            }
+        });
     });
 </div>
+<script>
+
+</script>
 @endsection
