@@ -1,9 +1,6 @@
-html, body, #app, main {
-    height: 100%;
-}
-
 #app main {
     padding-top: 0rem !important;
+    height: calc(100vh - 57px);
 }
 
 .top {
@@ -12,4 +9,79 @@ html, body, #app, main {
 
 main ul {
     list-style: none;
+}
+
+.sidebar-open {
+    opacity: 0.5;
+    z-index: 1035;
+}
+
+.left-sidebar {
+    position: fixed;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    z-index: 100;
+    margin: 55px 0 0;
+}
+
+.right-sidebar {
+    position: fixed;
+    top: 0;
+    bottom: 0;
+    right: 0;
+    z-index: 100;
+    margin: 55px 0 0;
+}
+
+.contents-sticky {
+    position: sticky;
+    top: 0;
+    height: calc(100vh - 57px);
+    overflow-x: hidden;
+    overflow-y: auto;
+}
+
+#left-open {
+    left: 5%;
+}
+
+#right-open {
+    right: 5%;
+}
+
+#left-modal .modal-dialog {
+    position: fixed;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 30%;
+    margin: 0;
+}
+
+#left-modal .modal-content {
+    border: 0;
+    border-radius: 0 0.3rem 0.3rem 0;
+}
+
+#right-modal .modal-dialog {
+    position: fixed;
+    top: 0;
+    bottom: 0;
+    right: 0;
+    left: 30%;
+    margin: 0;
+}
+
+#right-modal .modal-content {
+    border: 0;
+    border-radius: 0.3rem 0 0 0.3rem;
+}
+
+#left-modal .modal-body, #right-modal .modal-body {
+    position: sticky;
+    top: 0;
+    height: calc(100vh - 57px);
+    overflow-x: hidden;
+    overflow-y: auto;
 }
