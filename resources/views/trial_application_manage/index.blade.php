@@ -1,78 +1,78 @@
 @extends('layouts.app')
+
+@section('css')
+    <link href="{{ asset('css/index-table.css') }}" rel="stylesheet">
+    <link href="{{ asset('css/trial-application-manager/index.css') }}" rel="stylesheet">
+@endsection
+
+@section('title')体験・見学申込管理 一覧@endsection
+
 @section('content')
-<h3 class="page_title">体験・見学申込管理　一覧</h3>
-<div class="card">
-    <div class="card-header">絞り込み条件</div>
-    <div class="card-body">
+    <div class="container">
+        <h3 class="page_title">体験・見学申込管理 一覧</h3>
         <form action="{{ route('trial_application_manage.index') }}" method="GET">
-        @csrf
-            <div class="form-group row">
-                <label for="office_id" class="col-form-label col-auto">事業所</label>
-                <select
-                    class="form-control @error("office_id") is-invalid @enderror"
-                    name="office_id"
-                >
-                    <option value="">選択してください</option>
-                    @foreach ($offices as $office)
-                    <option value="{{ $office->id }}" @if ($office->id == old('office_id', $office_id ?? "")) selected @endif>
-                        {{ $office->office_name }}
-                    </option>
-                    @endforeach
-                </select>
-                @error("office_id")
-                <span class="invalid-feedback" role="alert">
-                    <strong>{{ $message }}</strong>
-                </span>
-                @enderror
-            </div>
-            <div class="form-group row">
-                <label for="office_id" class="col-form-label col-auto">確認状況</label>
-                <div class="form-check col-auto">
-                    <input id="check_yet" name="check_yet" class="form-check-input" type="checkbox" @if ($check_yet) checked @endif>
-                    <label class="form-check-label" for="check_yet">未</label>
+            @csrf
+            <div class="form-group">
+                <div class="row justify-content-start mx-auto my-2">
+                    <label for="office_id" class="text-md-left label">事業所</label>
+                    <select class="form-select @error('office_id') is-invalid @enderror" name="office_id">
+                        <option value="">選択してください</option>
+                        @foreach ($offices as $office)
+                            <option value="{{ $office->id }}" @if ($office->id == old('office_id', $office_id ?? '')) selected @endif>
+                                {{ $office->office_name }}
+                            </option>
+                        @endforeach
+                    </select>
+                    @error('office_id')
+                        <span class="invalid-feedback" role="alert">
+                            <strong>{{ $message }}</strong>
+                        </span>
+                    @enderror
+                    <div class="col2"></div>
                 </div>
-                <div class="form-check col-auto">
-                    <input id="check_done" name="check_done" class="form-check-input" type="checkbox" @if ($check_done) checked @endif>
-                    <label class="form-check-label" for="check_done">済</label>
-                </div>
-                @error("check_yet")
-                <span class="invalid-feedback" role="alert">
-                    <strong>{{ $message }}</strong>
-                </span>
-                @enderror
-                @error("check_done")
-                <span class="invalid-feedback" role="alert">
-                    <strong>{{ $message }}</strong>
-                </span>
-                @enderror
-                <div class="col-auto">
-                    <input class="btn btn-primary" type="submit" value="絞り込み">
+                <div class="row justify-content-start mx-auto my-2">
+                    <label for="office_id" class="text-md-left label">確認状況</label>
+                    <div class="form-select">
+                        <span class="form-select-element">
+                            <input id="check_yet" name="check_yet" type="checkbox" @if ($check_yet) checked @endif>
+                            <label class="form-check-label" for="check_yet">未</label>
+                        </span>
+                        <span class="form-select-element">
+                            <input id="check_done" name="check_done" type="checkbox" @if ($check_done) checked @endif>
+                            <label class="form-check-label" for="check_done">済</label>
+                        </span>
+                    </div>
+                    @error('check_yet')
+                        <span class="invalid-feedback" role="alert">
+                            <strong>{{ $message }}</strong>
+                        </span>
+                    @enderror
+                    @error('check_done')
+                        <span class="invalid-feedback" role="alert">
+                            <strong>{{ $message }}</strong>
+                        </span>
+                    @enderror
+                    <input class="text-md-right filter-button" type="submit" value="絞り込み">
                 </div>
             </div>
         </form>
-    </div>
-</div>
-<div class="card">
-    <div class="card-header">一覧表示</div>
-    <div class="card-body">
-        <div class="table-responsive">
-            <table class="table table-bordered table-hover table-striped blue_table member_table">
-                <thead>
-                    <tr>
-                        <th>申請日</th>
-                        <th>事業所</th>
-                        <th>体験希望日</th>
-                        <th>氏名</th>
-                        <th>確認状況</th>
-                        <th>操作</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @foreach ($trial_applications as $trial_application)
-                        @php
-                            $application_date = new Carbon\Carbon($trial_application->created_at);
-                            $desired_date = new Carbon\Carbon($trial_application->desired_date);
-                        @endphp
+        <table class="table table-striped table-bordered table-sm">
+            <thead>
+                <tr class="table-header">
+                    <th class="table-header-sub">申請日</th>
+                    <th class="table-header-sub">事業所</th>
+                    <th class="table-header-sub">体験希望日</th>
+                    <th>氏名</th>
+                    <th class="table-header-sub-mini">確認状況</th>
+                    <th class="table-header-sub">操作</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach ($trial_applications as $trial_application)
+                    @php
+                        $application_date = new Carbon\Carbon($trial_application->created_at);
+                        $desired_date = new Carbon\Carbon($trial_application->desired_date);
+                    @endphp
                     <tr>
                         <td>{{ $application_date->isoFormat('YYYY年MM月DD日 (ddd)') }}</td>
                         <td>{{ $trial_application->office->office_name }}</td>
@@ -82,29 +82,35 @@
                             @if ($trial_application->is_checked)
                                 済
                             @else
-                                未
+                                <span class="text-danger font-weight-bold">未</span>
                             @endif
                         </td>
                         <td>
-                            <div class="form-row">
-                            <a class="btn btn-primary" role="button" href="{{ route('trial_application_manage.check', $trial_application->id) }}">確認</a>
-                            <a class="btn btn-primary" role="button" href="{{ route('trial_application_manage.edit', $trial_application->id) }}">編集</a>
-                            <form action="{{ route('trial_application_manage.destroy', $trial_application->id) }}" method="post">
-                                @method('DELETE')
-                                @csrf
-                                <button class="btn btn-primary" type="submit">削除</button>
-                            </form>
+                            <div class="table-body-action">
+                                <span>
+                                    <a class="btn btn-sm btn-success" role="button"
+                                        href="{{ route('trial_application_manage.check', $trial_application->id) }}">確認</a>
+                                </span>
+                                <div>
+                                    <a class="btn btn-sm btn-primary" role="button"
+                                        href="{{ route('trial_application_manage.edit', $trial_application->id) }}">編集</a>
+                                </div>
+                                <form class="delete-form"
+                                    action="{{ route('trial_application_manage.destroy', $trial_application->id) }}"
+                                    method="post">
+                                    @method('DELETE')
+                                    @csrf
+                                    <button class="btn btn-sm btn-danger" type="submit">削除</button>
+                                </form>
                             </div>
                         </td>
                     </tr>
-                    @endforeach
-                </tbody>
-            </table>
-        </div>
-		{{ $trial_applications->appends(request()->query())->links() }}
+                @endforeach
+            </tbody>
+        </table>
+        {{ $trial_applications->appends(request()->query())->links() }}
         <p>
-            <a class="btn btn-outline-primary" role="button" href="{{ route('home') }}">メニュー</a>
+            <a class="btn btn-secondary" role="button" href="{{ route('home') }}">ホームに戻る</a>
         </p>
     </div>
-</div>
 @endsection
