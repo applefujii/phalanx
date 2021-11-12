@@ -79,7 +79,7 @@ class NotificationController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function storeDetail(NotificationRequest $request)
+    public function storeDetail(Request $request)
     {
         $dt = new \DateTime( "now" );
         $notifications = Notification::create([
@@ -93,15 +93,17 @@ class NotificationController extends Controller
             'updated_at' => $dt->format('Y-m-d H:i:s')
         ]);
 
-        foreach( $request->target_users as $tu ) {
-            Notification__User::create([
-                'notification_id' => $notifications->id,
-                'user_id' => $tu,
-                'create_user_id' => Auth::user()->id,
-                'update_user_id' => Auth::user()->id,
-                'created_at' => $dt->format('Y-m-d H:i:s'),
-                'updated_at' => $dt->format('Y-m-d H:i:s')
-            ]);
+        if(isset($request->target_users)) {
+            foreach( $request->target_users as $tu ) {
+                Notification__User::create([
+                    'notification_id' => $notifications->id,
+                    'user_id' => $tu,
+                    'create_user_id' => Auth::user()->id,
+                    'update_user_id' => Auth::user()->id,
+                    'created_at' => $dt->format('Y-m-d H:i:s'),
+                    'updated_at' => $dt->format('Y-m-d H:i:s')
+                ]);
+            }
         }
 
         return $notifications->id;
@@ -127,7 +129,12 @@ class NotificationController extends Controller
     public function edit($id)
     {
         $notification = Notification::where("id", $id)->first();
-        return view("notification.edit", compact("notification"));
+        $targetUsers = Notification__User::select('user_id')->whereNull("deleted_at")->where('notification_id', $notification->id)->orderby('user_id', 'asc')->get();
+        $aTargetUsers = [];
+        foreach($targetUsers as $t) {
+            array_push($aTargetUsers, $t->user_id);
+        }
+        return view("notification.edit", compact("notification", "aTargetUsers"));
     }
 
     /**
@@ -137,10 +144,10 @@ class NotificationController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(NotificationRequest $request, $id)
     {
         $dt = new \DateTime( "now" );
-        $notifications = Notification::where("id", $id)->update([
+        Notification::where("id", $id)->update([
             'content' => $request->content,
             'start_at' => $request->start_at,
             'end_at' => $request->end_at,
@@ -148,6 +155,31 @@ class NotificationController extends Controller
             'update_user_id' => Auth::user()->id,
             'updated_at' => $dt->format('Y-m-d H:i:s')
         ]);
+
+        //-- 対象ユーザー登録
+        foreach( $request->target_users as $tu ) {
+            //-- 既に登録されていたら飛ばす
+            $fFind = Notification__User::where('notification_id', $id)->where('user_id', $tu)->first();
+            if( $fFind != null ) continue;
+
+            Notification__User::create([
+                'notification_id' => $id,
+                'user_id' => $tu,
+                'create_user_id' => Auth::user()->id,
+                'update_user_id' => Auth::user()->id,
+                'created_at' => $dt->format('Y-m-d H:i:s'),
+                'updated_at' => $dt->format('Y-m-d H:i:s')
+            ]);
+        }
+
+        //-- 対象外ユーザー削除
+        $reduction = array_filter($request->old_target_users, function($e) use($request) {
+            if(in_array($e, $request->target_users)) return false;
+            return true;
+        });
+        foreach( $reduction as $tu ) {
+            Notification__User::where("user_id", $tu)->delete();
+        }
 
         return redirect()->route("notification.index", $parameters = [], $status = 302, $headers = []);
     }

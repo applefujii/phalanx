@@ -16,6 +16,11 @@ use App\Models\Notification__User;
 use App\Models\Office;
 use App\Models\User;
 use App\Models\UserType;
+use App\Http\Requests\EditUserRequest;
+use Illuminate\Contracts\Container\Container;
+use Illuminate\Foundation\Providers\FormRequestServiceProvider;
+use Illuminate\Routing\Redirector;
+use Log;
 
 use App\Http\Controllers\NotificationController;
 
@@ -88,6 +93,120 @@ class ApiController extends Controller
         return json_encode($users);
     }
 
+        /**
+     * ユーザー 登録
+     * @param array $request 登録情報[user_type_id, office_id, name, name_katakana, login_name, password]
+     * @return json 実行結果
+     */
+    public function ApiStoreUsers( Request $request )
+    {
+        $con = app()->make("App\Http\Controllers\Auth\RegisterController");
+        if( isset($request->record) ) {
+            try {
+                $record_confirm = array_merge($request->record, ['password_confirmation' => $request->record["password"]]);
+                $id = $con->register_return_id( new Request($record_confirm) );
+            } catch(\Exception $e) {
+                Log::debug($e);
+                return json_encode( '{ result : "Failure" }' );
+            }
+            return json_encode( '{ result : "Success", result : '.$id.' }' );
+        }
+        else if( isset($request->records) ) {
+            $ids = "";
+            try {
+                DB::transaction(function() use(&$ids, $con, $request) {
+                    foreach($request->records as $r) {
+                        $record_confirm = array_merge($r, ['password_confirmation' => $r["password"]]);
+                        $id = $con->register_return_id( new Request($record_confirm) );
+                        $ids .= strval($id) . ", ";
+                    }
+                });
+            } catch( \Exception $e ) {
+                Log::debug($e);
+                return json_encode( '{ result : "Failure" }' );
+            }
+            return json_encode( '{ result : "Success", results : ['. $ids .'] }' );
+        }
+
+        return json_encode( '{ result : "Failure" }' );
+    }
+
+    /**
+     * ユーザー 更新
+     * @param array $request 登録情報[id, user_type_id, office_id, name, name_katakana, login_name, password]
+     * @return json 実行結果
+     */
+    public function ApiUpdateUsers( Request $request )
+    {
+        $con = app()->make("App\Http\Controllers\UserController");
+
+        if( isset($request->record) ) {
+            try {
+                $user = User::where("id", $request->record["id"])->first();
+                $record_confirm = array_merge($request->record, ['password_confirmation' => $request->record["password"]]);
+                $eud = EditUserRequest::create($uri=route('user.update', $request->record["id"]), $method="PUT", $parameters=$record_confirm);
+                $eud->user = $user;
+                $eud->setContainer(app())->setRedirector(app()->make(Redirector::class));
+                $eud->validateResolved();
+                app()->call( [$con,'update'], ['request' => $eud, 'user' => $user] );
+            } catch( \Exception $e ) {
+                Log::debug($e);
+                return json_encode( '{ result : "Failure" }' );
+            }
+            return json_encode( '{ result : "Success", id : ['. $request->record["id"] .'] }' );
+        }
+        else if( isset($request->records) ) {
+            $ids = "";
+            try {
+                DB::transaction(function() use(&$ids, $con, $request) {
+                    foreach($request->records as $r) {
+                        $user = User::where("id", $r["id"])->first();
+                        $record_confirm = array_merge($r, ['password_confirmation' => $r["password"]]);
+                        $eud = EditUserRequest::create($uri=route('user.update', $r["id"]), $method="PUT", $parameters=$record_confirm);
+                        $eud->user = $user;
+                        $eud->setContainer(app())->setRedirector(app()->make(Redirector::class));
+                        $eud->validateResolved();
+                        app()->call( [$con,'update'], ['request' => $eud, 'user' => $user] );
+                        $ids .= $r["id"] . ", ";
+                    }
+                });
+            } catch( \Exception $e ) {
+                Log::debug($e);
+                return json_encode( '{ result : "Failure" }' );
+            }
+            return json_encode( '{ result : "Success", ids : ['. $ids .'] }' );
+        }
+
+        return json_encode( '{ result : "Failure" }' );
+    }
+
+    public function ApiDeleteUsers( Request $request )
+    {
+        $con = app()->make("App\Http\Controllers\UserController");
+
+        if( isset($request->record) ) {
+            try {
+                $con->destroy( $user = User::where("id", $request->record["id"])->first() );
+            } catch( \Exception $e ) {
+                return json_encode( '{ result : "Failure" }' );
+            }
+            return json_encode( '{ result : "Success", id : ['. $request->record["id"] .'] }' );
+        }
+        else if( isset($request->records) ) {
+            $ids = "";
+            try {
+                DB::transaction(function() use(&$ids, $con, $request) {
+                    foreach($request->records as $r) {
+                        $con->destroy( $user = User::where("id", $r["id"])->first() );
+                        $ids .= $r["id"] . ", ";
+                    }
+                });
+            } catch( \Exception $e ) {
+                return json_encode( '{ result : "Failure" }' );
+            }
+            return json_encode( '{ result : "Success", ids : ['. $ids .'] }' );
+        }
+    }
 
     ///////////////////////////////// 事業所 //////////////////////////////////////////
 
@@ -205,6 +324,7 @@ class ApiController extends Controller
             try {
                 DB::transaction(function() use(&$ids, $con, $request) {
                     foreach($request->records as $r) {
+                        logger($r);
                         $id = $con->storeDetail( new Request($r) );
                         $ids .= strval($id) . ", ";
                     }

@@ -15,6 +15,7 @@
     【情報】
     各種情報はAPIから取得される。
     checkListにチェックされている人のIDが格納される。
+    $aTargetUsers(ターゲットのID配列)をviewに渡すとjsのcheckListに渡される。
     .insert-checked-peopleの中に名前一覧が挿入される。
 --}}
 
@@ -53,7 +54,7 @@
     // 1カラムの人数
     var oneColumnNumber = 10;
     // チェックされている人のID
-    var aCheckList = [];
+    var aCheckList = @json($aTargetUsers ?? []);
     // 事業所全員がチェックされているか
     var aIsAllCheck = [];
     // 表示するグループ 利用者、職員
@@ -101,6 +102,7 @@
         })
         .done( function(param){     // paramに処理後のデータが入って戻ってくる
                 aPeople = param; // 帰ってきたら実行する処理
+                updateUserList();
                 fo_completed_load['people'] = true;
             })
         .fail( function(XMLHttpRequest, textStatus, errorThrown){   // エラーが起きた時はこちらが実行される
@@ -124,8 +126,8 @@
                 console.log(XMLHttpRequest);
         });
 
-        //-- ※aCheckListにチェックされている人のIDを代入
-        //aCheckList.push(5);
+        $('#old_target_users').attr('value', aCheckList.join(','));
+        $('#target_users').attr('value', aCheckList.join(','));
 
     });
 
@@ -228,18 +230,7 @@
 
         $('#target_users').attr('value', aCheckList.join(','));
 
-        let insert = $('.insert-checked-people');
-        insert.empty();
-        st = '<span>';
-        $.each(aCheckList, (index, element) => {
-            if(index >= 20) {
-                st += ' ...他'+ String(aCheckList.length-index) +'名';
-                return false;
-            }
-            st += aPeople.find( (elem) => elem.id == element).name + ', ';
-        });
-        st += '</span>';
-        insert.append(st);
+        updateUserList();
 
         $('#peopleListModal').modal('hide');
     });
@@ -352,7 +343,21 @@
             if( countAll > 0 )
                 $('#experience-all-check').prop('checked', fAllCheck);
         }
+    }
 
+    function updateUserList() {
+        let insert = $('.insert-checked-people');
+        insert.empty();
+        st = '<span>';
+        $.each(aCheckList, (index, element) => {
+            if(index >= 20) {
+                st += ' ...他'+ String(aCheckList.length-index) +'名';
+                return false;
+            }
+            st += aPeople.find( (elem) => elem.id == element).name + '/ ';
+        });
+        st += '</span>';
+        insert.append(st);
     }
 
 </script>

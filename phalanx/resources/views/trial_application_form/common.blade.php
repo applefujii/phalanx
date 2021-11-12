@@ -4,9 +4,11 @@
     <link href="{{ asset('css/create_and_edit.css') }}" rel="stylesheet">
 @endsection
 
+@section('title')体験・見学申込@yield('page_title')@endsection
+
 @section('content')
     <div class="container">
-        <h3 class="page_title">体験・見学申込@yield('page_title')</h3>
+        <h3>体験・見学申込@yield('page_title')</h3>
         @if ($errors->any())
             <div class="alert alert-danger w-100">
                 <span>入力に誤りがあります。</span>
@@ -107,7 +109,7 @@
             </div>
         </fieldset>
 
-        <button class="btn btn-primary" type="submit">@yield('button_name')</button><a @yield('back') class="btn btn-secondary back-button">戻る</a>
+        <button class="btn btn-primary" type="submit">@yield('button_name')</button><a @yield('back') class="btn btn-secondary back-button">@yield('back_name')</a>
     </div>
     </form>
     </div>

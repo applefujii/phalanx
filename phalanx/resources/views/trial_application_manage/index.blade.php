@@ -1,11 +1,15 @@
 @extends('layouts.app')
+
 @section('css')
     <link href="{{ asset('css/index-table.css') }}" rel="stylesheet">
     <link href="{{ asset('css/trial-application-manager/index.css') }}" rel="stylesheet">
 @endsection
+
+@section('title')体験・見学申込管理 一覧@endsection
+
 @section('content')
     <div class="container">
-        <h3 class="page_title">体験・見学申込管理　一覧</h3>
+        <h3 class="page_title">体験・見学申込管理 一覧</h3>
         <form action="{{ route('trial_application_manage.index') }}" method="GET">
             @csrf
             <div class="form-group">
@@ -106,7 +110,7 @@
         </table>
         {{ $trial_applications->appends(request()->query())->links() }}
         <p>
-            <a class="btn btn-outline-primary" role="button" href="{{ route('home') }}">ホーム</a>
+            <a class="btn btn-secondary" role="button" href="{{ route('home') }}">ホームに戻る</a>
         </p>
     </div>
 @endsection
