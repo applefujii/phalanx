@@ -87,8 +87,8 @@ class RegisterController extends Controller
             'password' => Hash::make($data['password']),
             'create_user_id' => Auth::id(),
             'update_user_id' => Auth::id(),
-            'created_at' => $now->isoFormat('YYYY-MM-DD'),
-            'updated_at' => $now->isoFormat('YYYY-MM-DD'),
+            'created_at' => $now->isoFormat('YYYY-MM-DD HH:mm:ss'),
+            'updated_at' => $now->isoFormat('YYYY-MM-DD HH:mm:ss'),
         ]);
     }
 
@@ -115,5 +115,10 @@ class RegisterController extends Controller
 
         event(new Registered($user = $this->create($request->all())));
         return $user->id;
+    }
+
+    public function showRegistrationForm()
+    {
+        return redirect()->route('user.create');
     }
 }
