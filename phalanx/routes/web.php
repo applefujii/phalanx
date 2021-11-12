@@ -82,6 +82,13 @@ Route::POST('/api/v1.0/set/notifications.json', [App\Http\Controllers\APIControl
 Route::PUT('/api/v1.0/set/notifications.json', [App\Http\Controllers\APIController::class, "ApiUpdateNotifications"]);
 Route::DELETE('/api/v1.0/set/notifications.json', [App\Http\Controllers\APIController::class, "ApiDeleteNotifications"]);
 
+
+//---------- リレーション -----------------------
+
+// 予定通知__ユーザー
+Route::POST('/api/v1.0/get/notification__user.json', [App\Http\Controllers\APIController::class, "ApiGetNotificationUser"]);
+
+
 //URI例。取得系はget、登録系はset。
 // /api/v1.0/get/users.json
 // /api/v1.0/get/offices.json
