@@ -3,6 +3,8 @@
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
+use App\Models\AptitudeQuestion;
 
 class AptitudeQuestionManageRequest extends FormRequest
 {
@@ -32,20 +34,24 @@ class AptitudeQuestionManageRequest extends FormRequest
                 'numeric',
                 'max:999',
                 'min:0',
+                //自身と論理削除されたものを除いてユニーク
+                Rule::unique(AptitudeQuestion::class)->ignore($this->id)->where(function ($query) {
+                    $query->whereNull('deleted_at');
+                }),
             ],
             "score_apple" => [
                 'nullable',
-                'regex:/^[0-9F-]+$/u',
+                'regex:/(^[+-]?\d+$|^F{1}$)/u',// 整数かF
                 'max:6',
             ],
             "score_mint" => [
                 'nullable',
-                'regex:/^[0-9F-]+$/u',
+                'regex:/(^[+-]?\d+$|^F{1}$)/u',// 整数かF
                 'max:6',
             ],
             "score_maple" => [
                 'nullable',
-                'regex:/^[0-9F-]+$/u',
+                'regex:/(^[+-]?\d+$|^F{1}$)/u',// 整数かF
                 'max:6',
             ],
         ];

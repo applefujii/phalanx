@@ -16,6 +16,7 @@
         @endif
 
         @yield('form')
+        <input type="hidden" name="id" value="{{ $aptitude_question->id ?? '' }}">
 
         <div class="form-group">
             <div class="row justify-content-start mx-auto my-4">

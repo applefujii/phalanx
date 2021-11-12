@@ -122,20 +122,16 @@ class AptitudeQuestionManageController extends Controller
     public function update_all(AptitudeQuestionManageAllRequest $request)
     {
         $now = Carbon::now();
-        $questions = $request->input('questions');
-        $sorts = $request->input('sorts');
-        $score_apples = $request->input('score_apples');
-        $score_mints = $request->input('score_mints');
-        $score_maples = $request->input('score_maples');
+        $aptitude_questions = $request->input('aptitude_questions');
 
-        foreach ($questions as $id => $question) {
-            $aptitude_question = AptitudeQuestion::findOrFail($id);
+        foreach ($aptitude_questions as $input_value) {
+            $aptitude_question = AptitudeQuestion::findOrFail($input_value['id']);
         
-            $aptitude_question->question = $questions[$id];
-            $aptitude_question->sort = $sorts[$id];
-            $aptitude_question->score_apple = $score_apples[$id];
-            $aptitude_question->score_mint = $score_mints[$id];
-            $aptitude_question->score_maple = $score_maples[$id];
+            $aptitude_question->question = $input_value['question'];
+            $aptitude_question->sort = $input_value['sort'];
+            $aptitude_question->score_apple = $input_value['score_apple'];
+            $aptitude_question->score_mint = $input_value['score_mint'];
+            $aptitude_question->score_maple = $input_value['score_maple'];
             $aptitude_question->update_user_id = Auth::user()->id;
             $aptitude_question->updated_at = $now->isoFormat('YYYY-MM-DD HH:mm:ss');
             $aptitude_question->save();
