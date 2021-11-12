@@ -3,6 +3,7 @@
 @section('css')
     <link href="{{ asset('css/create_and_edit.css') }}" rel="stylesheet">
 @endsection
+
 @section('title')体験・見学申込@yield('page_title')@endsection
 
 @section('content')
