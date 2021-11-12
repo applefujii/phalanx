@@ -15,9 +15,10 @@
         <table class="table table-bordered table-hover table-striped blue_table member_table">
             <tbody>
                 @foreach ($aptitude_questions as $aptitude_question)
-                    <input type="hidden" name="score_apples[{{ $aptitude_question->id }}]" value="{{ $aptitude_question->score_apple ?? 0 }}">
-                    <input type="hidden" name="score_mints[{{ $aptitude_question->id }}]" value="{{ $aptitude_question->score_mint ?? 0 }}">
-                    <input type="hidden" name="score_maples[{{ $aptitude_question->id }}]" value="{{ $aptitude_question->score_maple ?? 0 }}">
+                    <input type="hidden" name="aptitude_questions[{{ $aptitude_question->id }}][id]" value="{{ $aptitude_question->id }}">
+                    <input type="hidden" name="aptitude_questions[{{ $aptitude_question->id }}][score_apple]" value="{{ $aptitude_question->score_apple ?? 0 }}">
+                    <input type="hidden" name="aptitude_questions[{{ $aptitude_question->id }}][score_mint]" value="{{ $aptitude_question->score_mint ?? 0 }}">
+                    <input type="hidden" name="aptitude_questions[{{ $aptitude_question->id }}][score_maple]" value="{{ $aptitude_question->score_maple ?? 0 }}">
                         
                     <tr>
                         <td>
@@ -35,14 +36,14 @@
                                                 id="{{ $option_key }}[{{ $aptitude_question->id }}]"
                                                 class="form-check-input"
                                                 type="radio"
-                                                name="answers[{{ $aptitude_question->id }}]"
+                                                name="aptitude_questions[{{ $aptitude_question->id }}][answer]"
                                                 value="{{ $option_value }}" 
-                                                @if (!is_null(old("answers.$aptitude_question->id")) && (int)old("answers.$aptitude_question->id") === $option_value ) checked @endif
+                                                @if (!is_null(old("aptitude_questions.$aptitude_question->id.answer")) && (int)old("answers.$aptitude_question->id.answer") === $option_value ) checked @endif
                                             >
                                             <label class="form-check-label" for="{{ $option_key }}[{{ $aptitude_question->id }}]">{{ config('const.option_japanese')[$option_key] }}</label>
                                         </div>
                                     @endforeach
-                                    @error("answers.$aptitude_question->id")
+                                    @error("aptitude_questions.$aptitude_question->id.answer")
                                         <p class="text-danger" role="alert">
                                             <strong>{{ $message }}</strong>
                                         </p>
