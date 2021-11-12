@@ -45,7 +45,7 @@
                         </div>
                     @endforeach
                     @error("aptitude_questions.$aptitude_question->id.answer")
-                        <p class="text-danger" role="alert">
+                        <p class="text-danger pl-3" role="alert">
                             <strong>{{ $message }}</strong>
                         </p>
                     @enderror
