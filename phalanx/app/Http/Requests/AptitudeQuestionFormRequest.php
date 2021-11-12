@@ -17,22 +17,6 @@ class AptitudeQuestionFormRequest extends FormRequest
         return true;
     }
 
-
-    /**
-     * ラジオボタンが未選択なら空のrequestを作成
-     */
-    protected function prepareForValidation()
-    {
-        $score_apples = $this->score_apples;
-        $answers = array();
-        foreach ($score_apples as $id => $value) {
-            $answers += array($id => $this->answers[$id] ?? null);
-        }
-        $this->merge([
-            'answers' => $answers,
-        ]);
-    }
-
     /**
      * Get the validation rules that apply to the request.
      *
@@ -41,8 +25,7 @@ class AptitudeQuestionFormRequest extends FormRequest
     public function rules()
     {
         return [
-            'answers'    => 'required|array',
-            "answers.*" => [
+            'aptitude_questions.*.answer'    => [
                 'required',
                 Rule::in(config('const.option')),
             ],
@@ -57,7 +40,7 @@ class AptitudeQuestionFormRequest extends FormRequest
     public function messages()
     {
         return [
-            'answers.*.required' => 'いずれかを選択してください。',
+            'aptitude_questions.*.answer.required' => 'いずれかを選択してください。',
         ];
     }
 }
