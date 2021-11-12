@@ -18,11 +18,21 @@
   <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
   <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery.tablesorter/2.31.0/js/jquery.tablesorter.min.js"></script>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jquery.tablesorter/2.31.0/css/theme.default.min.css">
-  <!-- <link rel="stylesheet" href="office.css"> -->
-  <link href="{{asset('/css/office.css?20211105')}}" rel="stylesheet">
+  <link href="{{asset('/css/user_page.css?202111123')}}" rel="stylesheet">
 </head>
 
 <body>
 <br>
-<a href="{{ route('office.create') }}" type="button" class="btn btn-primary text-center">チャット</a>
+<a href="{{ route('office.create') }}" type="button" class="btn btn-primary text-center d-flex 
+align-items-center justify-content-center rounded"><h1>チ ャ ッ ト</h1></a>
+<div class="line"></div>
+<h3 class="scj">予定</h3>
+<div class="txt">
+&nbsp&nbsp2020/03/16 12:45～<br>
+&nbsp&nbsp2020/03/16 14:30<br><br>
+
+&nbsp&nbspアップル梅田体験
+
+</div>
 </body>
+@endsection
