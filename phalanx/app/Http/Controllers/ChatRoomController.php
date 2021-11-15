@@ -216,7 +216,11 @@ class ChatRoomController extends Controller
         $users = User::whereNull("deleted_at")->get();
         $offices = Office::whereNull("deleted_at")->orderBy("sort")->get();
 
-        return view("chat_room.edit", compact("chatRoom", "users", "offices"));
+        $aTargetUsers = $chatRoom->chat_room__user->map(function ($chat_room__user) {
+            return $chat_room__user->user->id;
+        });
+
+        return view("chat_room.edit", compact("chatRoom", "users", "offices", "aTargetUsers"));
     }
 
     /**
