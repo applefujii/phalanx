@@ -27,7 +27,7 @@ class NotificationRequest extends FormRequest
             $end_at .= " " . $this->end_time . ":00";
         } else {
             $start_at .= " 00:00:00";
-            $end_at .= " 00:00:00";
+            $end_at .= " 23:59:59";
         }
 
         $this->merge([

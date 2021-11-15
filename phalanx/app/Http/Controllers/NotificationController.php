@@ -11,6 +11,7 @@ use App\Models\Office;
 use App\Models\UserType;
 
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 
 class NotificationController extends Controller
 {
@@ -37,7 +38,7 @@ class NotificationController extends Controller
         $filter_user_type_id = $request->input('user_type', '');
         $filter_user_type_id ??= '';
 
-        $query = Notification::query();
+        $query = Notification::whereNull('deleted_at');
         if ($filter_office_id !== '')
             $query->where('office_id', '=', $filter_office_id);
         if ($filter_user_type_id !== '')
@@ -81,32 +82,37 @@ class NotificationController extends Controller
      */
     public function storeDetail(Request $request)
     {
-        $dt = new \DateTime( "now" );
-        $notifications = Notification::create([
-            'content' => $request->content,
-            'start_at' => $request->start_at,
-            'end_at' => $request->end_at,
-            'is_all_day' => $request->is_all_day,
-            'create_user_id' => Auth::user()->id,
-            'update_user_id' => Auth::user()->id,
-            'created_at' => $dt->format('Y-m-d H:i:s'),
-            'updated_at' => $dt->format('Y-m-d H:i:s')
-        ]);
+        $notifications = null;
+        DB::transaction(function() use($request, &$notifications) {
 
-        if(isset($request->target_users)) {
-            foreach( $request->target_users as $tu ) {
-                Notification__User::create([
-                    'notification_id' => $notifications->id,
-                    'user_id' => $tu,
-                    'create_user_id' => Auth::user()->id,
-                    'update_user_id' => Auth::user()->id,
-                    'created_at' => $dt->format('Y-m-d H:i:s'),
-                    'updated_at' => $dt->format('Y-m-d H:i:s')
-                ]);
+            $dt = new \DateTime( "now" );
+            $notifications = Notification::create([
+                'content' => $request->content,
+                'start_at' => $request->start_at,
+                'end_at' => $request->end_at,
+                'is_all_day' => $request->is_all_day,
+                'create_user_id' => Auth::user()->id,
+                'update_user_id' => Auth::user()->id,
+                'created_at' => $dt->format('Y-m-d H:i:s'),
+                'updated_at' => $dt->format('Y-m-d H:i:s')
+            ]);
+
+            if(isset($request->target_users)) {
+                foreach( $request->target_users as $tu ) {
+                    Notification__User::create([
+                        'notification_id' => $notifications->id,
+                        'user_id' => $tu,
+                        'create_user_id' => Auth::user()->id,
+                        'update_user_id' => Auth::user()->id,
+                        'created_at' => $dt->format('Y-m-d H:i:s'),
+                        'updated_at' => $dt->format('Y-m-d H:i:s')
+                    ]);
+                }
             }
-        }
+        });
 
-        return $notifications->id;
+        if(isset($notifications)) return $notifications->id;
+        return -1;
     }
 
     /**
@@ -193,7 +199,7 @@ class NotificationController extends Controller
     public function destroy($id)
     {
         $dt = new \DateTime( "now" );
-        $notifications = Notification::where("id", $id)->update([
+        $notification = Notification::where("id", $id)->update([
             'delete_user_id' => Auth::user()->id,
             'deleted_at' => $dt->format('Y-m-d H:i:s')
         ]);
