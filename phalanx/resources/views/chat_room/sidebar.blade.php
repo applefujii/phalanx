@@ -41,9 +41,6 @@ if(isset($chat_room)) {
 @extends('layouts.app')
 
 @section('css')
-{{-- jQuery読み込み --}}
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
-
 <link href="{{ asset('css/sidebar.css') }}" rel="stylesheet">
 @yield("c_css")
 @endsection
@@ -302,8 +299,13 @@ if(isset($chat_room)) {
         </div>
     </div>
 </div>
+@endsection
 
-<div is="script">
+@section('script')
+{{-- jQuery読み込み --}}
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+
+<script>
     $(function() {
 
         //#sub-officesが押された時の動作
@@ -318,5 +320,7 @@ if(isset($chat_room)) {
             }
         });
     });
-</div>
+</script>
+
+@yield("c_script")
 @endsection
