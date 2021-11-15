@@ -416,14 +416,20 @@ class ApiController extends Controller
 
     /**
      * 予定通知__ユーザー 取得
-     * @param array $request 検索条件[id, sort]
+     * @param array $request 検索条件[id, notification_id, user_id, sort]
      * @return json 実行結果
      */
     public function ApiGetNotificationUser( Request $request )
     {
-        $filter_notification_id = $request->input('id', '');
+        $filter_notification__user_id = $request->input('id', '');
+        if ($filter_notification__user_id != ""  &&  !is_array($filter_notification__user_id))
+        $filter_notification__user_id = compact("filter_notification__user_id");
+        $filter_notification_id = $request->input('notification', '');
         if ($filter_notification_id != ""  &&  !is_array($filter_notification_id))
         $filter_notification_id = compact("filter_notification_id");
+        $filter_user_id = $request->input('user_id', '');
+        if ($filter_user_id != ""  &&  !is_array($filter_user_id))
+        $filter_user_id = compact("filter_user_id");
 
         $sort = "";
         $t_sort = $request->input('sort', '');
@@ -441,8 +447,12 @@ class ApiController extends Controller
         
 
         $query = Notification__User::whereNull('deleted_at');
+        if ($filter_notification__user_id !== '')
+            $query->whereIn('id', $filter_notification__user_id);
         if ($filter_notification_id !== '')
-            $query->whereIn('id', $filter_notification_id);
+            $query->whereIn('notification_id', $filter_notification_id);
+        if ($filter_user_id !== '')
+            $query->whereIn('user_id', $filter_user_id);
 
         if ($sort !== '') {
             foreach($sort as $s) {

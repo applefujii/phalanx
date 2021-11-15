@@ -61,6 +61,10 @@ Route::resource('office', App\Http\Controllers\OfficeController::class)->only(['
 //ログイン後の利用者の画面（仮）
 Route::get("/user_page", [App\Http\Controllers\UserpageController::class, "index"])->name("user_page");
 
+//ログイン後の職員の画面（仮）
+Route::get("/staff_page", [App\Http\Controllers\StaffpageController::class, "index"])->name("staff_page");
+
+
 // チャットルーム
 Route::get("/chat_room/list", [App\Http\Controllers\ChatRoomController::class, "list"])->name("chat_room.list");
 Route::resource("chat_room", App\Http\Controllers\ChatRoomController::class)->only(["index", "create", "store", "edit", "update", "destroy"]);
@@ -73,6 +77,9 @@ Route::post('/chat/{id}', [App\Http\Controllers\ChatController::class, 'store'])
 
 // ユーザー
 Route::POST('/api/v1.0/get/users.json', [App\Http\Controllers\APIController::class, "ApiGetUsers"]);
+Route::POST('/api/v1.0/set/users.json', [App\Http\Controllers\APIController::class, "ApiStoreUsers"]);
+Route::PUT('/api/v1.0/set/users.json', [App\Http\Controllers\APIController::class, "ApiUpdateUsers"]);
+Route::DELETE('/api/v1.0/set/users.json', [App\Http\Controllers\APIController::class, "ApiDeleteUsers"]);
 // 事業所
 Route::POST('/api/v1.0/get/offices.json', [App\Http\Controllers\APIController::class, "ApiGetOffices"]);
 
