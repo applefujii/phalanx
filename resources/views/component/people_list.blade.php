@@ -1,8 +1,4 @@
 {{--
-    【前提】
-    FontAwsomeを読み込んでおく
-    <link href="https://use.fontawesome.com/releases/v5.6.1/css/all.css" rel="stylesheet">
-
     【使用方法】
     <!-- モーダルを呼び出す -->
     <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#peopleListModal" data-target-group="user">
@@ -55,18 +51,27 @@
     var oneColumnNumber = 10;
     // チェックされている人のID
     var aCheckList = @json($aTargetUsers ?? []);
+    if('{{ old("is_all_day") }}' != '')     // oldが存在したら(力技)空に
+        aCheckList = [];
+    if('{{ old("target_users") }}' != '')
+        aCheckList = '{{ old("target_users") }}'.split(',').map(Number);
     // 事業所全員がチェックされているか
     var aIsAllCheck = [];
     // 表示するグループ 利用者、職員
     var targetGroup;
     // ロード状態フラグ
-    var fo_completed_load = { people: false, office: false };
+    var fo_completed_load = {
+        people: false, office: false,
+        ready: function() {
+            return this.people && this.office;
+        }
+    };
 
     var aOffice = [];
-    var myOffice = "maple";
+    var myOffice = @json(Auth::user()->office_id);
     var targetUserType;
     var aPeople = [];
-    officeHtml = '\
+    const officeHtml = '\
         <div class="f-office order-[OrderNo]">\n\
             <div class="d-flex justify-content-center">\n\
                 <p>─── <a data-toggle="collapse" href="#list-[EnName]" class="collapse-trigger"><i class="fas fa-chevron-down"></i> <b>[Name]</b></a> <input id="[EnName]-all-check" class="all-check" type="checkbox" data-child-class="[EnName]"> ───</p>\n\
@@ -78,9 +83,10 @@
         </div>\n\
         ';
 
-    peopleHtmlNest = '<div class="flex-fill ml-3">';
-    peopleHtml = '<p><input type="checkbox" class="[EnName] check-individual" data-people-id="[PeopleId]" data-group="[EnName]"> [PeopleName]</p>';
-    ancompleted = '<p><b>読み込み中</b></p>';
+    const peopleHtmlNest = '<div class="flex-fill ml-3">';
+    const peopleHtml = '<p><input type="checkbox" class="[EnName] check-individual" data-people-id="[PeopleId]" data-group="[EnName]"> [PeopleName]</p>';
+    const ancompleted = '<p><b>読み込み中</b></p>';
+    const noChuse = '<p class="text-danger">未選択</p>';
 
 
     //-- 読み込まれたタイミングで実行
@@ -125,6 +131,14 @@
         .fail( function(XMLHttpRequest, textStatus, errorThrown){
                 console.log(XMLHttpRequest);
         });
+
+        //-- 読み込み完了していればモーダル描画 定期的にチェック
+        var timer = setInterval(() => {
+            if(fo_completed_load.ready()) {
+                modalWrite();
+                clearInterval(timer);
+            }
+        }, 500);
 
         $('#old_target_users').attr('value', aCheckList.join(','));
         $('#target_users').attr('value', aCheckList.join(','));
@@ -241,7 +255,7 @@
         insertOffice.empty();
 
         //-- 未読み込みのとき
-        if( !Object.values(fo_completed_load).every((ele) => ele == true) ) {
+        if( fo_completed_load.ready() == false ) {
             insertOffice.append(ancompleted);
             return;
         }
@@ -251,7 +265,7 @@
             let st = officeHtml.replace(/\[EnName\]/g, element.en_office_name);
             st = st.replace(/\[Name\]/g, element.office_name);
             // 自分の事業所を
-            if( element.en_office_name == myOffice) {
+            if( element.id == myOffice) {
                 // 表示順を最上に、初期状態を展開に
                 st = st.replace(/\[OrderNo\]/g, "0");
                 st = st.replace(/fa-chevron-down/g, "fa-chevron-up");
@@ -348,6 +362,18 @@
     function updateUserList() {
         let insert = $('.insert-checked-people');
         insert.empty();
+        //-- idを昇順ソート
+        aCheckList.sort(function(a,b){
+            if( a < b ) return -1;
+            if( a > b ) return 1;
+            return 0;
+        });
+
+        if(aCheckList.length == 0) {
+            insert.append(noChuse);
+            return;
+        }
+
         st = '<span>';
         $.each(aCheckList, (index, element) => {
             if(index >= 20) {

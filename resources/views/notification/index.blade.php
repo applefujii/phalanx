@@ -59,10 +59,10 @@
                                         class="btn btn-sm btn-primary edit-button">編集
                                     </a>
                                 </span>
-                                <form>
-                                    <input hidden value="1">
-                                    <button type="submit" class="btn btn-sm btn-danger delete-button">削除
-                                    </button>
+                                <form action="{{ route('notification.destroy', $notification->id) }}" method="POST">
+                                    @csrf
+                                    @method('DELETE')
+                                    <button type="submit" class="btn btn-sm btn-danger delete-button">削除</button>
                                 </form>
                         </td>
                     </tr>
