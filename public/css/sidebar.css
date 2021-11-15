@@ -64,6 +64,22 @@ main ul {
     border-radius: 0 0.3rem 0.3rem 0;
 }
 
+#left-modal .modal-dialog {
+    transform: translate(-50px, 0);
+}
+
+#left-modal.show .modal-dialog {
+    transform: none;
+}
+
+#right-modal .modal-dialog {
+    transform: translate(50px, 0);
+}
+
+#right-modal.show .modal-dialog {
+    transform: none;
+}
+
 #right-modal .modal-dialog {
     position: fixed;
     top: 0;
