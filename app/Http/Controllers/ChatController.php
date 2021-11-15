@@ -78,4 +78,16 @@ class ChatController extends Controller
 
         return redirect()->route('chat.index', $chat_room_id);
     }
+
+    /**
+     * チャットルームのテキストをjavascriptで取得
+     * @param $chat_room_id
+     * @param array $request 登録情報[id]
+     * @return json 実行結果
+     */
+    public function getChatRoomJson ($id)
+    {
+        $chat_room = ChatRoom::whereNull('deleted_at')->with('chat_texts')->find($id);
+        return response()->json($chat_room);
+    }
 }
