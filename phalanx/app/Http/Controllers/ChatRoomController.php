@@ -52,7 +52,7 @@ class ChatRoomController extends Controller
             $offices = Office::whereNull("deleted_at")->orderBy("sort")->get();
 
             //chat_room.indexが出来次第変える
-            return view("chat_room/sidebar", compact("userRooms", "group", "joinRooms", "offices"));
+            return view("chat_room.index", compact("userRooms", "group", "joinRooms", "offices"));
         }
 
         //chat_roomsテーブルのuser_idが$userIdと一致するものを検索

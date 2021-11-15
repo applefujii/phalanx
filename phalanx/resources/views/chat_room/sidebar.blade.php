@@ -123,7 +123,7 @@ if(isset($chat_room)) {
             <button type="button" class="btn btn-dark rounded-circle position-fixed mt-5 d-block d-md-none sidebar-open" id="left-open" data-toggle="modal" data-target="#left-modal">
                 <i class="fas fa-chevron-right"></i>
             </button>
-            <div class="modal" id="left-modal" tabindex="-1">
+            <div class="modal fade" id="left-modal" tabindex="-1">
                 <div class="modal-dialog">
                     <div class="modal-content h-100">
                         <div class="modal-body">
@@ -199,7 +199,7 @@ if(isset($chat_room)) {
                 <button type="button" class="btn btn-dark rounded-circle position-fixed mt-5 d-block d-md-none sidebar-open" id="right-open" data-toggle="modal" data-target="#right-modal">
                     <i class="fas fa-chevron-left"></i>
                 </button>
-                <div class="modal" id="right-modal" tabindex="-1">
+                <div class="modal fade" id="right-modal" tabindex="-1">
                     <div class="modal-dialog">
                         <div class="modal-content h-100">
                             <div class="modal-body">
