@@ -77,6 +77,9 @@ Route::post('/chat/{id}', [App\Http\Controllers\ChatController::class, 'store'])
 
 // ユーザー
 Route::POST('/api/v1.0/get/users.json', [App\Http\Controllers\APIController::class, "ApiGetUsers"]);
+Route::POST('/api/v1.0/set/users.json', [App\Http\Controllers\APIController::class, "ApiStoreUsers"]);
+Route::PUT('/api/v1.0/set/users.json', [App\Http\Controllers\APIController::class, "ApiUpdateUsers"]);
+Route::DELETE('/api/v1.0/set/users.json', [App\Http\Controllers\APIController::class, "ApiDeleteUsers"]);
 // 事業所
 Route::POST('/api/v1.0/get/offices.json', [App\Http\Controllers\APIController::class, "ApiGetOffices"]);
 
