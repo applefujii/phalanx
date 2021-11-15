@@ -17,6 +17,7 @@ use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Http\JsonResponse;
+use Log;
 
 class RegisterController extends Controller
 {
@@ -47,7 +48,7 @@ class RegisterController extends Controller
      */
     public function __construct()
     {
-        // $this->middleware('guest');
+        $this->middleware('staff');
     }
 
     /**
@@ -86,8 +87,8 @@ class RegisterController extends Controller
             'password' => Hash::make($data['password']),
             'create_user_id' => Auth::id(),
             'update_user_id' => Auth::id(),
-            'created_at' => $now->isoFormat('YYYY-MM-DD'),
-            'updated_at' => $now->isoFormat('YYYY-MM-DD'),
+            'created_at' => $now->isoFormat('YYYY-MM-DD HH:mm:ss'),
+            'updated_at' => $now->isoFormat('YYYY-MM-DD HH:mm:ss'),
         ]);
     }
 
@@ -106,5 +107,18 @@ class RegisterController extends Controller
         return $request->wantsJson()
                     ? new JsonResponse([], 201)
                     : redirect($this->redirectPath());
+    }
+
+    public function register_return_id(Request $request)
+    {
+        $this->validator($request->all())->validate();
+
+        event(new Registered($user = $this->create($request->all())));
+        return $user->id;
+    }
+
+    public function showRegistrationForm()
+    {
+        return redirect()->route('user.create');
     }
 }

@@ -4,9 +4,11 @@
 <link href="{{ asset('css/create_and_edit.css') }}" rel="stylesheet">
 @endsection
 
+@section('title')適性診断質問管理 @yield('page_title')@endsection
+
 @section('content')
     <div class="container">
-        <h3>適性診断質問管理　@yield('page_title')</h3>
+        <h3>適性診断質問管理 @yield('page_title')</h3>
         @if ($errors->any())
             <div class="alert alert-danger w-100">
                 <span>入力に誤りがあります。</span>
@@ -14,6 +16,7 @@
         @endif
 
         @yield('form')
+        <input type="hidden" name="id" value="{{ $aptitude_question->id ?? '' }}">
 
         <div class="form-group">
             <div class="row justify-content-start mx-auto my-4">
@@ -76,7 +79,7 @@
                 
 
                 <div class="form-group">
-                    <button class="btn btn-secondary" type="submit">@yield('button_name')</button>
+                    <button class="btn btn-primary" type="submit">@yield('button_name')</button>
                     <a class="btn btn-secondary back-button" role="button"
                         href="{{ route('aptitude_question_manage.index') }}">取り消し</a>
                 </div>

@@ -67,4 +67,9 @@ class User extends Authenticatable
     public function office() {
         return $this->belongsTo(Office::class);
     }
+
+    // リファクタリングする機会があったら
+    public function is_staff() {
+        return $this->user_type_id == 1;
+    }
 }

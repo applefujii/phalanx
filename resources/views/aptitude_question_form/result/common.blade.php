@@ -1,5 +1,6 @@
 @extends('layouts.app')
 
+@section('title')適性診断結果：@yield('office_name')@endsection
 
 @section('css')
 <link href="{{ asset('css/aptitude_result.css') }}" rel="stylesheet">
