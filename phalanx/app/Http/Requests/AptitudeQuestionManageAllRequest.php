@@ -3,6 +3,8 @@
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
+use App\Models\AptitudeQuestion;
 
 class AptitudeQuestionManageAllRequest extends FormRequest
 {
@@ -24,28 +26,29 @@ class AptitudeQuestionManageAllRequest extends FormRequest
     public function rules()
     {
         return [
-            "questions.*" => [
+            "aptitude_questions.*.question" => [
                 'required',
             ],
-            "sorts.*" => [
+            "aptitude_questions.*.sort" => [
                 'required',
                 'numeric',
                 'max:999',
                 'min:0',
+                'distinct'// 重複ダメ
             ],
-            "score_apples.*" => [
+            "aptitude_questions.*.score_apple" => [
                 'nullable',
-                'regex:/^[0-9F-]+$/u',
+                'regex:/(^[+-]?\d+$|^F{1}$)/u',// 整数かF
                 'max:6',
             ],
-            "score_mints.*" => [
+            "aptitude_questions.*.score_mint" => [
                 'nullable',
-                'regex:/^[0-9F-]+$/u',
+                'regex:/(^[+-]?\d+$|^F{1}$)/u',// 整数かF
                 'max:6',
             ],
-            "score_maples.*" => [
+            "aptitude_questions.*.score_maple" => [
                 'nullable',
-                'regex:/^[0-9F-]+$/u',
+                'regex:/(^[+-]?\d+$|^F{1}$)/u',// 整数かF
                 'max:6',
             ],
         ];
@@ -59,9 +62,9 @@ class AptitudeQuestionManageAllRequest extends FormRequest
     public function messages()
     {
         return [
-            'score_apples.*.regex' => ':attributeは半角数字の整数かFを入力してください。',
-            'score_mints.*.regex' => ':attributeは半角数字の整数かFを入力してください。',
-            'score_maples.*.regex' => ':attributeは半角数字の整数かFを入力してください。',
+            'aptitude_questions.*.score_apple.regex' => ':attributeは半角数字の整数かFを入力してください。',
+            'aptitude_questions.*.score_mint.regex' => ':attributeは半角数字の整数かFを入力してください。',
+            'aptitude_questions.*.score_maple.regex' => ':attributeは半角数字の整数かFを入力してください。',
         ];
     }
 }

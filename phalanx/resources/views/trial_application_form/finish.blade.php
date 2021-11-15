@@ -1,5 +1,7 @@
 @extends('layouts.app')
 
+@section('title')体験・見学申込 申請完了@endsection
+
 @section('content')
 <div class="container text-center">
     <div class="m-4">

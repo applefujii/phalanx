@@ -1,5 +1,6 @@
 @extends('aptitude_question_manage.common')
-@section('title', '一覧')
+
+@section('page_title', '一覧')
 
 @section('form_upper')
 <p>
@@ -36,4 +37,5 @@
 @endsection
 
 @section('form_under')
+<p><a class="btn btn-secondary" role="button" href="{{ route('home') }}">ホームに戻る</a></p>
 @endsection

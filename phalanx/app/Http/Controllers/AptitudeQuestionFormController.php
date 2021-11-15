@@ -32,49 +32,49 @@ class AptitudeQuestionFormController extends Controller
     public function calculate(AptitudeQuestionFormRequest $request)
     {
         // dd($request->toArray());
-        $answers = $request->input('answers');
-        $score_apples = $request->input('score_apples');
-        $score_mints = $request->input('score_mints');
-        $score_maples = $request->input('score_maples');
+        $aptitude_questions = $request->input('aptitude_questions');
 
+        // 各事業所の合計点数
         $total_score_apple = 0;
         $total_score_mint = 0;
         $total_score_maple = 0;
+        // 確定質問で確定された対象の事業所
         $fixed = '';
 
-        foreach ($answers as $id => $value) {
-            if ($score_apples[$id] === 'F') {
-                if ($value === "1") {
+        foreach ($aptitude_questions as $aptitude_question) {
+            if ($aptitude_question['score_apple'] === 'F') {
+                if ($aptitude_question['answer'] === "1") {
                     $fixed = 'apple';
                 }
-            }else if ($score_mints[$id] === 'F') {
-                if ($value === "1") {
+            }else if ($aptitude_question['score_mint'] === 'F') {
+                if ($aptitude_question['answer'] === "1") {
                     if ($fixed === '' || $fixed === 'maple') {
                         $fixed = 'mint';
                     }
                 }
-            }else if ($score_maples[$id] === 'F') {
-                if ($value === "1") {
+            }else if ($aptitude_question['score_maple'] === 'F') {
+                if ($aptitude_question['answer'] === "1") {
                     if ($fixed === '') {
                         $fixed = 'maple';
                     }
                 }
             } else {
-                $total_score_apple += $value * $score_apples[$id];
-                $total_score_mint += $value * $score_mints[$id];
-                $total_score_maple += $value * $score_maples[$id];
+                $total_score_apple += $aptitude_question['answer'] * $aptitude_question['score_apple'];
+                $total_score_mint += $aptitude_question['answer'] * $aptitude_question['score_mint'];
+                $total_score_maple += $aptitude_question['answer'] * $aptitude_question['score_maple'];
             }
         }
 
         logger("apple:" . $total_score_apple . " mint:" . $total_score_mint . " maple:" . $total_score_maple . " fixed:" . $fixed);
 
-        if ($fixed === 'apple') {
-            return redirect()->route('aptitude_question_form.apple');
-        } else if ($fixed === 'mint') {
-            return redirect()->route('aptitude_question_form.mint');
-        } else if ($fixed === 'maple') {
-            return redirect()->route('aptitude_question_form.maple');
-            
+        if (!empty($fixed)) {
+            if ($fixed === 'maple') {
+                return redirect()->route('aptitude_question_form.maple');
+            } else if ($fixed === 'mint') {
+                return redirect()->route('aptitude_question_form.mint');
+            } else {
+                return redirect()->route('aptitude_question_form.apple');
+            }
         } else if ($total_score_maple > $total_score_mint && $total_score_maple > $total_score_apple) {
             return redirect()->route('aptitude_question_form.maple');
         } else if ($total_score_mint >= $total_score_maple && $total_score_mint > $total_score_apple) {

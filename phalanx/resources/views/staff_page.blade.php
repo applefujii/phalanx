@@ -18,7 +18,7 @@
   <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
   <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery.tablesorter/2.31.0/js/jquery.tablesorter.min.js"></script>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jquery.tablesorter/2.31.0/css/theme.default.min.css">
-  <link href="{{asset('/css/user_page.css?202111123')}}" rel="stylesheet">
+  <link href="{{asset('/css/staff_page.css?202111123')}}" rel="stylesheet">
 </head>
 
 <body>
@@ -31,7 +31,7 @@ align-items-center justify-content-center rounded"><h1>チ ャ ッ ト</h1></a>
 &nbsp&nbsp2020/03/16 12:45～<br>
 &nbsp&nbsp2020/03/16 14:30<br><br>
 
-&nbsp&nbspアップル梅田体験
+&nbsp&nbspミント大阪体験
 
 </div>
 </body>
