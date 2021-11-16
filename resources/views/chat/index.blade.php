@@ -51,6 +51,7 @@
             })
             // 成功時
             .done(function(json){
+                console.log(json);
                 $('#room_name').text(json.room_title);
                 $.map(json.chat_texts, function (val, index) {
                     html = `
