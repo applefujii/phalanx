@@ -91,13 +91,13 @@ class ChatController extends Controller
         $now = Carbon::now();
 
         //Requestから渡されたchat-roomsを配列に変換し、foreachで処理を回す
-        $chatRooms = $request->input("chat-rooms");
+        $chatRooms = $request->input("chat_rooms");
         $roomsId = explode(",", $chatRooms);
         foreach($roomsId as $roomId) {
 
             //各種データを挿入
             $chat_text = new ChatText();
-            $chat_text->chat_text = $request->input("chat-text");
+            $chat_text->chat_text = $request->input("chat_text");
             $chat_text->chat_room_id = $roomId;
             $chat_text->user_id = Auth::user()->id;
             $chat_text->create_user_id = Auth::user()->id;
