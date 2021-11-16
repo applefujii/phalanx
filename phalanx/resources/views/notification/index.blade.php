@@ -51,7 +51,7 @@
                         <td>{{ $notification->created_at }}</td>
                         <td>{{ $notification->start_at }}</td>
                         <td>{{ $notification->end_at }}</td>
-                        <td>{{ $notification->content }}</td>
+                        <td>{{ mb_substr($notification->content, 0, 32) }}</td>
                         <td>
                             <div class="table-body-action">
                                 <span>

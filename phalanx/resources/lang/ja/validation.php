@@ -168,6 +168,14 @@ return [
         'score_maple' => '点数',
         'aptitude_questions.*.score_maple' => '点数',
 
+        // 通知
+        'start_at' => '開始日時',
+        'end_at' => '終了日時',
+        'is_all_day' => 'チェックボックス',
+        'content' => '内容',
+        'target_users' => '対象ユーザー',
+        'target_users.*' => '対象ユーザー',
+
         // ユーザーマスター追加
         'user_type_id' => 'ユーザー種別',
         'name_katakana' => '氏名（カナ）',
