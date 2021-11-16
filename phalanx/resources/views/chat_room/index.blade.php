@@ -74,7 +74,27 @@
         </div>
     </div>
     <button type="button" class="btn btn-primary position-fixed broadcast" data-toggle="modal" data-target="#broadcastModal">一斉送信</button>
+</div>
+@endsection
 
+@section('c_modal')
+<div class="modal fade modal-lg" id="broadcastModal" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-body">
+                <form class="mx-5 my-2" action="#" method="post">
+                    @csrf
+                    <input type="hidden" name="chat-rooms" id="chatRoomsValue">
+                    <div class="form-group">
+                        <label for="chatText" class="sr-only">チャットテキスト</label>
+                        <textarea class="form-control" name="chat-text" id="chatText" cols="40" rows="5" placeholder="テキスト"></textarea>
+                    </div>
+                    <input class="col-md-9 pl-0 mt-1" type="file" name="file">
+                    <button class="btn btn-primary mt-1" type="submit">一斉送信</button>
+                </form>
+            </div>
+        </div>
+    </div>
 </div>
 @endsection
 
@@ -92,6 +112,18 @@
                 fas.removeClass("fa-chevron-up");
                 fas.addClass("fa-chevron-down");
             }
+        });
+
+        //一斉送信ボタンが押されたとき
+        $(".broadcast").click(function() {
+            let roomsList = document.getElementsByName("user");
+            let rooms = [];
+            for (let i = 0; i < roomsList.length; i ++) {
+                if(roomsList[i].checked == true) {
+                    rooms.push(roomsList[i].value);
+                }
+            }
+            document.getElementById("chatRoomsValue").value = rooms.join();
         });
 
         //事務所ごとに各種動作を作成
