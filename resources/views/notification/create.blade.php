@@ -23,8 +23,8 @@
         <div class="row justify-content-start mx-auto my-4">
             <div class="mx-4">
                 <label>開始日時</label><br />
-                <input form="main-form" name="start_date" type="date" value="{{ isset($start_at) ? $start_at->isoFormat('YYYY-MM-DD') : $now_at->isoFormat('YYYY-MM-DD') }}" class="@error('start_at') is-invalid @enderror">
-                <input id="start_time" form="main-form" name="start_time" type="time" value="{{ isset($start_at) ? $start_at->isoFormat('HH:mm') : $now_at->isoFormat('HH:mm') }}" class="@error('start_at') is-invalid @enderror">
+                <input form="main-form" name="start_date" type="date" value="{{ old('start_date', isset($start_at) ? $start_at->isoFormat('YYYY-MM-DD') : $now_at->isoFormat('YYYY-MM-DD') )}}" class="@error('start_at') is-invalid @enderror">
+                <input id="start_time" form="main-form" name="start_time" type="time" value="{{ old('start_time', isset($start_at) ? $start_at->isoFormat('HH:mm') : $now_at->isoFormat('HH:mm') ) }}" class="@error('start_at') is-invalid @enderror">
                 @error('start_at')
                     <span class="invalid-feedback" role="alert">
                         <strong>{{ $message }}</strong>
@@ -33,8 +33,8 @@
             </div>
             <div class="mx-4">
                 <label>終了日時</label><br />
-                <input form="main-form" name="end_date" type="date" value="{{ isset($end_at) ? $end_at->isoFormat('YYYY-MM-DD') : $now_at->isoFormat('YYYY-MM-DD') }}" class="@error('end_at') is-invalid @enderror">
-                <input id="end_time" form="main-form" name="end_time" type="time" value="{{ isset($end_at) ? $end_at->isoFormat('HH:mm') : $now_at->isoFormat('HH:mm') }}" class="@error('end_at') is-invalid @enderror">
+                <input form="main-form" name="end_date" type="date" value="{{ old('end_date', isset($end_at) ? $end_at->isoFormat('YYYY-MM-DD') : $now_at->isoFormat('YYYY-MM-DD') ) }}" class="@error('end_at') is-invalid @enderror">
+                <input id="end_time" form="main-form" name="end_time" type="time" value="{{ old('end_time', isset($end_at) ? $end_at->isoFormat('HH:mm') : $now_at->isoFormat('HH:mm') ) }}" class="@error('end_at') is-invalid @enderror">
                 @error('end_at')
                     <span class="invalid-feedback" role="alert">
                         <strong>{{ $message }}</strong>
@@ -101,6 +101,9 @@
 
 @endsection
 
+
+@section("script")
+
 @include("component.people_list")
 
 <script>
@@ -121,3 +124,5 @@
         }
     });
 </script>
+
+@endsection

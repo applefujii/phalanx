@@ -98,15 +98,19 @@ class NotificationController extends Controller
             ]);
 
             if(isset($request->target_users)) {
+                $aItem = [];
                 foreach( $request->target_users as $tu ) {
-                    Notification__User::create([
+                    array_push($aItem, [
                         'notification_id' => $notifications->id,
                         'user_id' => $tu,
                         'create_user_id' => Auth::user()->id,
-                        'update_user_id' => Auth::user()->id,
-                        'created_at' => $dt->format('Y-m-d H:i:s'),
-                        'updated_at' => $dt->format('Y-m-d H:i:s')
+                        'created_at' => $dt->format('Y-m-d H:i:s')
                     ]);
+                }
+
+                $aChunk = array_chunk($aItem, 100);
+                foreach($aChunk as $chunk){
+                    Notification__User::insert($chunk);
                 }
             }
         });
@@ -135,7 +139,7 @@ class NotificationController extends Controller
     public function edit($id)
     {
         $notification = Notification::where("id", $id)->first();
-        $targetUsers = Notification__User::select('user_id')->whereNull("deleted_at")->where('notification_id', $notification->id)->orderby('user_id', 'asc')->get();
+        $targetUsers = Notification__User::select('user_id')->where('notification_id', $notification->id)->orderby('user_id', 'asc')->get();
         $aTargetUsers = [];
         foreach($targetUsers as $t) {
             array_push($aTargetUsers, $t->user_id);
@@ -152,40 +156,45 @@ class NotificationController extends Controller
      */
     public function update(NotificationRequest $request, $id)
     {
-        $dt = new \DateTime( "now" );
-        Notification::where("id", $id)->update([
-            'content' => $request->content,
-            'start_at' => $request->start_at,
-            'end_at' => $request->end_at,
-            'is_all_day' => $request->is_all_day,
-            'update_user_id' => Auth::user()->id,
-            'updated_at' => $dt->format('Y-m-d H:i:s')
-        ]);
-
-        //-- 対象ユーザー登録
-        foreach( $request->target_users as $tu ) {
-            //-- 既に登録されていたら飛ばす
-            $fFind = Notification__User::where('notification_id', $id)->where('user_id', $tu)->first();
-            if( $fFind != null ) continue;
-
-            Notification__User::create([
-                'notification_id' => $id,
-                'user_id' => $tu,
-                'create_user_id' => Auth::user()->id,
+        DB::transaction(function() use($request, $id) {
+            $dt = new \DateTime( "now" );
+            Notification::where("id", $id)->update([
+                'content' => $request->content,
+                'start_at' => $request->start_at,
+                'end_at' => $request->end_at,
+                'is_all_day' => $request->is_all_day,
                 'update_user_id' => Auth::user()->id,
-                'created_at' => $dt->format('Y-m-d H:i:s'),
                 'updated_at' => $dt->format('Y-m-d H:i:s')
             ]);
-        }
 
-        //-- 対象外ユーザー削除
-        $reduction = array_filter($request->old_target_users, function($e) use($request) {
-            if(in_array($e, $request->target_users)) return false;
-            return true;
+            //-- 対象ユーザー登録
+            $aItem = [];
+            foreach( $request->target_users as $tu ) {
+                //-- 既に登録されていたら飛ばす
+                $fFind = Notification__User::where('notification_id', $id)->where('user_id', $tu)->first();
+                if( $fFind != null ) continue;
+
+                array_push($aItem, [
+                    'notification_id' => $id,
+                    'user_id' => $tu,
+                    'create_user_id' => Auth::user()->id,
+                    'created_at' => $dt->format('Y-m-d H:i:s'),
+                ]);
+            }
+            $aChunk = array_chunk($aItem, 100);
+            foreach($aChunk as $chunk){
+                Notification__User::insert($chunk);
+            }
+
+            //-- 対象外ユーザー削除
+            $reduction = array_filter($request->old_target_users, function($e) use($request) {
+                if(in_array($e, $request->target_users)) return false;
+                return true;
+            });
+            foreach( $reduction as $tu ) {
+                Notification__User::where("user_id", $tu)->delete();
+            }
         });
-        foreach( $reduction as $tu ) {
-            Notification__User::where("user_id", $tu)->delete();
-        }
 
         return redirect()->route("notification.index", $parameters = [], $status = 302, $headers = []);
     }
@@ -198,11 +207,14 @@ class NotificationController extends Controller
      */
     public function destroy($id)
     {
-        $dt = new \DateTime( "now" );
-        $notification = Notification::where("id", $id)->update([
-            'delete_user_id' => Auth::user()->id,
-            'deleted_at' => $dt->format('Y-m-d H:i:s')
-        ]);
+        DB::transaction(function() use($id) {
+            $dt = new \DateTime( "now" );
+            $notification = Notification::where("id", $id)->update([
+                'delete_user_id' => Auth::user()->id,
+                'deleted_at' => $dt->format('Y-m-d H:i:s')
+            ]);
+            Notification__User::where("notification_id", $id)->delete();
+        });
 
         return redirect()->route("notification.index", $parameters = [], $status = 302, $headers = []);
     }
@@ -220,9 +232,7 @@ class NotificationController extends Controller
             'notification_id' => $request->notification_id,
             'user_id' => $request->user_id,
             'create_user_id' => Auth::user()->id,
-            'update_user_id' => Auth::user()->id,
-            'created_at' => $dt->format('Y-m-d H:i:s'),
-            'updated_at' => $dt->format('Y-m-d H:i:s')
+            'created_at' => $dt->format('Y-m-d H:i:s')
         ]);
 
         return;
@@ -235,10 +245,7 @@ class NotificationController extends Controller
     public function notification__user_destroy($id)
     {
         $dt = new \DateTime( "now" );
-        $notifications = Notification__User::where("id", $id)->update([
-            'delete_user_id' => Auth::user()->id,
-            'deleted_at' => $dt->format('Y-m-d H:i:s')
-        ]);
+        $notifications = Notification__User::where("id", $id)->delete();
 
         return;
     }

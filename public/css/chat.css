@@ -1,12 +1,29 @@
-.white_space_pre_wrap {
+#chat_texts {
+  margin-bottom: 60px;
+}
+
+#chat_texts .chat_individual .chat_header {
+  margin-left: 20px;
+}
+
+#chat_texts .chat_individual .chat_text {
+  margin-left: 40px;
   white-space: pre-wrap;
 }
 
-.chat_textarea {
-  resize: none;
+#chat_texts .chat_individual + #chat_texts .chat_individual {
+  margin-top: 20px;
 }
 
-.chat_bottom {
+#chat_hooter {
+  background-color: white;
+  height: 60px;
+  width: 100%;
+  position: fixed;
   bottom: 0;
+}
+
+#chat_hooter .chat_textarea {
+  resize: none;
 }
 /*# sourceMappingURL=chat.css.map */

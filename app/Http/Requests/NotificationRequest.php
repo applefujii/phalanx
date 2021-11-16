@@ -45,14 +45,26 @@ class NotificationRequest extends FormRequest
      */
     public function rules()
     {
-        logger($this);
         return [
             "content" => "required|max:500",
             "start_at" => "required|date",//date_format:'Y-m-d H:i:s'
-            "end_at" => "required|date",//date_format:'Y-m-d H:i:s'
+            "end_at" => "required|date|after:start_at",//date_format:'Y-m-d H:i:s'
             "is_all_day" => "required|boolean",
             "target_users" => "required|array|distinct",
             "target_users.*" => "required|integer"
+        ];
+    }
+
+    /**
+     * バリデーションルールのエラーメッセージ
+     *
+     * @return array
+     */
+    public function messages()
+    {
+        return [
+            // 'start_at' => ':attributeは半角数字の整数かFを入力してください。',
+            // 'end_at' => ':attributeは半角数字の整数かFを入力してください。',
         ];
     }
 }
