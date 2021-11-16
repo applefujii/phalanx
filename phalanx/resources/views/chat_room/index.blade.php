@@ -73,6 +73,9 @@
             </div>
         </div>
     </div>
+    @if ($errors->any())
+        <div class="text-danger position-fixed" id="errorMessage">正しく送信できませんでした。</div>
+    @endif
     <button type="button" class="btn btn-primary position-fixed broadcast" data-toggle="modal" data-target="#broadcastModal">一斉送信</button>
 </div>
 @endsection
@@ -84,10 +87,10 @@
             <div class="modal-body">
                 <form class="mx-5 my-2" action="#" method="post">
                     @csrf
-                    <input type="hidden" name="chat-rooms" id="chatRoomsValue">
+                    <input type="hidden" name="chat_rooms" id="chatRoomsValue">
                     <div class="form-group">
                         <label for="chatText" class="sr-only">チャットテキスト</label>
-                        <textarea class="form-control" name="chat-text" id="chatText" cols="40" rows="5" placeholder="テキスト"></textarea>
+                        <textarea class="form-control" name="chat_text" id="chatText" cols="40" rows="5" placeholder="テキスト"></textarea>
                     </div>
                     <div class="text-right">
                         <div class="text-danger mr-2 d-none" id="notSelect">※送信先を選んでいません</div>
