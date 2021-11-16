@@ -13,10 +13,9 @@
     <div id="chat_texts">
     </div>
 
-    <div id="chat_hooter">
+    <div id="chat_footer">
         <div class="m-2">
             <div class="form-row mx-auto">
-                @csrf
                 <div class="col-6">
                     <textarea id="chat_text" name="chat_text" class="form-control chat_textarea @error('chat_text') is-invalid @enderror" rows="1" required="required">{{ old('chat_text') }}</textarea>
                     @error('chat_text')
