@@ -90,4 +90,29 @@ class ChatController extends Controller
         $chat_room = ChatRoom::whereNull('deleted_at')->with('chat_texts')->find($id);
         return response()->json($chat_room);
     }
+
+    /**
+     * チャット文章をDBに保存
+     *
+     * @param  \App\Http\Requests\ChatTextRequest  $request
+     * @return \Illuminate\Http\Response
+     */
+    public function storeJson(ChatTextRequest $request, $id)
+    {
+        $now = Carbon::now();
+
+        $chat_text = new ChatText();
+        $chat_text->chat_text = $request->input('chat_text');
+        $chat_text->chat_room_id = $id;
+        $chat_text->user_id = Auth::user()->id;
+        $chat_text->create_user_id = Auth::user()->id;
+        $chat_text->update_user_id = Auth::user()->id;
+        $chat_text->created_at = $now->isoFormat('YYYY-MM-DD HH:mm:ss');
+        $chat_text->updated_at = $now->isoFormat('YYYY-MM-DD HH:mm:ss');
+        $chat_text->save();
+
+        $chat_room = ChatRoom::whereNull('deleted_at')->with('chat_texts')->find($id);
+        
+        return response()->json($chat_room);
+    }
 }
