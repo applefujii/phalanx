@@ -25,6 +25,7 @@
                                 </div>
                             @endif
                         @endforeach
+                        {{-- 仮データ --}}
                         @for ($i = 0; $i < 10; $i++)
                             <div class="col-6 col-md-4 col-xl-3">
                                 <input type="checkbox" class="mr-1 apple-checkBox" name="user" value="{{ $i + 1 }}">
