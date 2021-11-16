@@ -62,40 +62,6 @@ class ChatRoomController extends Controller
     }
 
     /**
-     * チャットルームの表示
-     */
-    public function show($id) {
-        //chat_roomsテーブルのidと$idが一致するデータを取得
-        $chatRoom = ChatRoom::where("id", $id)->whereNull("deleted_at")->first();
-
-        //存在しないidを参照したとき残りの処理を飛ばす
-        if($chatRoom != null) {
-        
-            //ログイン中のユーザーのidを取得
-            $userId = Auth::id();
-
-            //ログイン中のユーザーがチャットルームに参加しているかどうかの判断
-            $join = $chatRoom->chat_room__user()->where("user_id", $userId)->whereNull("deleted_at")->first();
-
-            //参加していない場合残りの処理を飛ばす
-            if($join != null) {
-
-                //ログイン中のユーザーが参加している部屋一覧を取得
-                $joinRooms = ChatRoom__User::where("user_id", $userId)->whereNull("deleted_at")->chat_rooms()
-                    ->whereNull("deleted_at")->orderBy("distinction_number")->get();
-
-                //事業所一覧を取得
-                $offices = Office::whereNull("deleted_at")->orderBy("sort")->get();
-
-                return view("chat_room.show", compact("chatRoom", "joinRooms", "offices"));
-            }
-        }
-
-        //表示される条件を満たしてなかった場合indexにリダイレクトする
-        return redirect()->route("chat_room.index");
-    }
-
-    /**
      * チャットルーム管理一覧画面
      */
     public function list() {
