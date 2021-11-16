@@ -469,7 +469,7 @@ class ApiController extends Controller
 
     /**
      * 予定通知__ユーザー 登録
-     * @param array $request 登録情報[content, start_at, end_at, is_all_day]
+     * @param array $request 登録情報[notification_id, user_id]
      * @return json 実行結果
      */
     public function ApiStoreNotificationUser( Request $request )
