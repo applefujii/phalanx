@@ -80,6 +80,16 @@ class ChatController extends Controller
     }
 
     /**
+     * 一斉送信されたチャットをDBに保存
+     * 
+     * @param \App\Http\Requests\ChatTextRequest $request
+     * @return \Illuminate\http\Response
+     */
+    public function multiStore(ChatTextRequest $request) {
+        
+    }
+
+    /**
      * チャットルームのテキストをjavascriptで取得
      * @param $chat_room_id
      * @param array $request 登録情報[id]
