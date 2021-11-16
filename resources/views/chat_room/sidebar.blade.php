@@ -41,9 +41,6 @@ if(isset($chat_room)) {
 @extends('layouts.app')
 
 @section('css')
-{{-- jQuery読み込み --}}
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
-
 <link href="{{ asset('css/sidebar.css') }}" rel="stylesheet">
 @yield("c_css")
 @endsection
@@ -123,7 +120,7 @@ if(isset($chat_room)) {
             <button type="button" class="btn btn-dark rounded-circle position-fixed mt-5 d-block d-md-none sidebar-open" id="left-open" data-toggle="modal" data-target="#left-modal">
                 <i class="fas fa-chevron-right"></i>
             </button>
-            <div class="modal" id="left-modal" tabindex="-1">
+            <div class="modal fade" id="left-modal" tabindex="-1">
                 <div class="modal-dialog">
                     <div class="modal-content h-100">
                         <div class="modal-body">
@@ -199,7 +196,7 @@ if(isset($chat_room)) {
                 <button type="button" class="btn btn-dark rounded-circle position-fixed mt-5 d-block d-md-none sidebar-open" id="right-open" data-toggle="modal" data-target="#right-modal">
                     <i class="fas fa-chevron-left"></i>
                 </button>
-                <div class="modal" id="right-modal" tabindex="-1">
+                <div class="modal fade" id="right-modal" tabindex="-1">
                     <div class="modal-dialog">
                         <div class="modal-content h-100">
                             <div class="modal-body">
@@ -302,8 +299,13 @@ if(isset($chat_room)) {
         </div>
     </div>
 </div>
+@endsection
 
-<div is="script">
+@section('script')
+{{-- jQuery読み込み --}}
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+
+<script>
     $(function() {
 
         //#sub-officesが押された時の動作
@@ -318,5 +320,7 @@ if(isset($chat_room)) {
             }
         });
     });
-</div>
+</script>
+
+@yield("c_script")
 @endsection

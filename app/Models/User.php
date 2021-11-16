@@ -68,6 +68,10 @@ class User extends Authenticatable
         return $this->belongsTo(Office::class);
     }
 
+    public function notification__user() {
+        return $this->hasMany(Notification__User::class);
+    }
+
     // リファクタリングする機会があったら
     public function is_staff() {
         return $this->user_type_id == 1;
