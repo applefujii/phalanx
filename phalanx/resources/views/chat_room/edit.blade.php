@@ -66,10 +66,35 @@
                 </div>
             @endif
         </div>
+        <input form="main-form" name="target_users" id="target_users" class="@error('target_users') is-invalid @enderror @error('target_users.*') is-invalid @enderror" hidden>
+        @error('target_users')
+            <span class="invalid-feedback" role="alert">
+                <strong>{{ $message }}</strong>
+            </span>
+        @enderror
+        @error('target_users.*')
+            <span class="invalid-feedback" role="alert">
+                <strong>{{ $message }}</strong>
+            </span>
+        @enderror
+        {{--
+        <div class="row justify-content-start mx-auto my-4">
+            <div class="mx-4 user-list-wrapper insert-checked-people">
+                @if(old("target_users") == "")
+                    <p class="text-danger">未選択</p>
+                @else
+                    <p>読み込み中...</p>
+                @endif
+            </div>
+        </div>
+        --}}
         <div class="row ml-0 mt-3">
             <button class="btn btn-primary" type="submit">更新</button>
         </div>
     </form>
-    @include("component.people_list")
 </div>
+@endsection
+
+@section('script')
+@include("component.people_list")
 @endsection
