@@ -89,8 +89,10 @@
                         <label for="chatText" class="sr-only">チャットテキスト</label>
                         <textarea class="form-control" name="chat-text" id="chatText" cols="40" rows="5" placeholder="テキスト"></textarea>
                     </div>
-                    <input class="col-md-9 pl-0 mt-1" type="file" name="file">
-                    <button class="btn btn-primary mt-1" type="submit">一斉送信</button>
+                    <div class="text-right">
+                        <div class="text-danger mr-2 d-none" id="notSelect">※送信先を選んでいません</div>
+                        <button class="btn btn-primary mt-1" id="broadcastSubmit" type="submit">一斉送信</button>
+                    </div>
                 </form>
             </div>
         </div>
@@ -121,6 +123,23 @@
             for (let i = 0; i < roomsList.length; i ++) {
                 if(roomsList[i].checked == true) {
                     rooms.push(roomsList[i].value);
+                }
+            }
+            let notSelect = $("#notSelect");
+            let broadcastSubmit = document.getElementById("broadcastSubmit");
+            if(!rooms.length) {
+                if(notSelect.hasClass("d-none")) {
+                    notSelect.removeClass("d-none");
+                }
+                if(broadcastSubmit.disabled == false) {
+                    broadcastSubmit.disabled = true;
+                }
+            } else {
+                if(!notSelect.hasClass("d-none")) {
+                    notSelect.addClass("d-none");
+                }
+                if(broadcastSubmit.disabled) {
+                    broadcastSubmit.disabled = false;
                 }
             }
             document.getElementById("chatRoomsValue").value = rooms.join();
