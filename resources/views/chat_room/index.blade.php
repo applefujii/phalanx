@@ -85,7 +85,7 @@
     <div class="modal-dialog modal-dialog-centered" role="document">
         <div class="modal-content">
             <div class="modal-body">
-                <form class="mx-5 my-2" action="#" method="post">
+                <form class="mx-5 my-2" action="{{ route('chat.multiStore') }}" method="post">
                     @csrf
                     <input type="hidden" name="chat_rooms" id="chatRoomsValue">
                     <div class="form-group">
