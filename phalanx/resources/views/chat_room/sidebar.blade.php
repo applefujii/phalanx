@@ -249,6 +249,7 @@ if(isset($chat_room)) {
             <div class="contents-sticky">
                 @yield('center')
             </div>
+            @yield("c_modal")
         </div>
         <div class="col-md-2 d-none d-md-block border border-dark pr-0">
             <div class="contents-sticky">
