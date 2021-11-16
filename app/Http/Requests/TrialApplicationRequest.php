@@ -28,12 +28,12 @@ class TrialApplicationRequest extends FormRequest
         return [
             'name' => [
                 'required',
-                'max:100',
+                'max:50',
             ],
             'name_kana' => [
                 'required',
                 'regex:/^[ァ-ヴー]+$/u',
-                'max:100',
+                'max:50',
             ],
             'office_id' => [
                 'required',
