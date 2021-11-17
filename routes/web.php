@@ -70,11 +70,10 @@ Route::get("/chat_room/list", [App\Http\Controllers\ChatRoomController::class, "
 Route::resource("chat_room", App\Http\Controllers\ChatRoomController::class)->only(["index", "create", "store", "edit", "update", "destroy"]);
 
 // チャット画面
-Route::get('/chat/{id}', [App\Http\Controllers\ChatController::class, 'index'])->name('chat.index');
-Route::post('/chat/{id}', [App\Http\Controllers\ChatController::class, 'store'])->name('chat.store');
 Route::get('/chat/{id}/getChatLogJson', [App\Http\Controllers\ChatController::class, "getChatLogJson"]);
-Route::post('/chat/{id}/storeJson', [App\Http\Controllers\ChatController::class, "storeChatJson"]);
+Route::post('/chat/{id}/storeChatJson', [App\Http\Controllers\ChatController::class, "storeChatJson"]);
 Route::post("/chat", [App\Http\Controllers\ChatController::class, "multiStore"])->name("chat.multiStore");
+Route::resource("chat", App\Http\Controllers\ChatController::class)->only(["index", "show", "store"]);
 
 //////////// API /////////////////////////////////
 

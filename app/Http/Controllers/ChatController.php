@@ -29,7 +29,41 @@ class ChatController extends Controller
     }
 
     /**
-     * チャット画面
+     * どのチャットを最初に表示するかの判断
+     */
+    public function index() {
+        //ログイン中のユーザーのidを取得
+        $user = Auth::user();
+
+        //ログイン中のユーザーが職員かどうかの判別(職員のuser_type_idを1と仮定)
+        if($user->user_type_id == 1) {
+
+            //利用者対職員の個人チャットを取得
+            $userRooms = ChatRoom::where("distinction_number", 3)->where("office_id", $user->office_id)->whereNotNull("deleted_at")->get();
+
+            //職員全体のチャットルームを取得
+            $group = ChatRoom::where("distinction_number", 0)->whereNull("deleted_at")->first();
+
+            //ログイン中のユーザーが参加している部屋一覧を取得
+            $joinRooms = ChatRoom::join("chat_room__user", "chat_rooms.id", "=", "chat_room__user.chat_room_id")
+                ->where("chat_room__user.user_id", $user->id)->whereNull("chat_rooms.deleted_at")->whereNull("chat_room__user.deleted_at")
+                    ->whereIn("chat_rooms.distinction_number", [1, 2, 4])->orderBy("chat_rooms.distinction_number")->get();
+
+            //事業所一覧を取得
+            $offices = Office::whereNull("deleted_at")->orderBy("sort")->get();
+
+            //chat_room.indexが出来次第変える
+            return view("chat_room.index", compact("userRooms", "group", "joinRooms", "offices"));
+        }
+
+        //chat_roomsテーブルのuser_idが$userIdと一致するものを検索
+        $chatRoom = ChatRoom::where("user_id", $user->id)->first();
+
+        return redirect()->route("chat.show", $chatRoom->id);
+    }
+
+    /**
+     * チャット画面を表示
      *
      * @return \Illuminate\Http\Response
      */
@@ -62,7 +96,7 @@ class ChatController extends Controller
         //事業所一覧を取得
         $offices = Office::whereNull("deleted_at")->orderBy("sort")->get();
 
-        return view('chat/index', compact('chat_room', "group", "joinRooms", "offices"));
+        return view('chat/show', compact('chat_room', "group", "joinRooms", "offices"));
     }
 
     /**
@@ -98,9 +132,9 @@ class ChatController extends Controller
 
     /**
      * チャットログをjavascriptで取得
-     * @param $chat_room_id
-     * @param array $request 登録情報[id]
-     * @return json 実行結果
+     * 
+     * @param チャットルームテーブルのID $id
+     * @return json $chat_room
      */
     public function getChatLogJson ($id)
     {
@@ -112,7 +146,8 @@ class ChatController extends Controller
      * 入力されたチャットをDBに保存
      *
      * @param  \App\Http\Requests\ChatTextRequest  $request
-     * @return \Illuminate\Http\Response
+     * @param チャットルームテーブルのID $id
+     * @return json $chat_room
      */
     public function storeChatJson(ChatTextRequest $request, $id)
     {
