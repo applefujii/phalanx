@@ -180,7 +180,10 @@ return [
         'user_type_id' => 'ユーザー種別',
         'name_katakana' => '氏名（カナ）',
         'login_name' => 'ログイン名',
-        'password' => 'パスワード'
+        'password' => 'パスワード',
+
+        // チャットルーム管理
+        'room_title' => 'ルーム名',
     ]
 
 ];
