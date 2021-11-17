@@ -58,12 +58,8 @@ Route::resource('user', App\Http\Controllers\UserController::class)->only(['inde
 // 事業所マスター
 Route::resource('office', App\Http\Controllers\OfficeController::class)->only(['index', 'create', 'store', 'edit', 'update', 'destroy']);
 
-//ログイン後の利用者の画面（仮）
+//ログイン後の画面
 Route::get("/user_page", [App\Http\Controllers\UserpageController::class, "index"])->name("user_page");
-
-//ログイン後の職員の画面（仮）
-Route::get("/staff_page", [App\Http\Controllers\StaffpageController::class, "index"])->name("staff_page");
-
 
 // チャットルーム
 Route::resource("chat_room", App\Http\Controllers\ChatRoomController::class)->only(["index", "create", "store", "edit", "update", "destroy"]);
