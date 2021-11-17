@@ -62,12 +62,13 @@ Route::resource('office', App\Http\Controllers\OfficeController::class)->only(['
 Route::get("/user_page", [App\Http\Controllers\UserpageController::class, "index"])->name("user_page");
 
 // チャットルーム
-Route::get("/chat_room/list", [App\Http\Controllers\ChatRoomController::class, "list"])->name("chat_room.list");
 Route::resource("chat_room", App\Http\Controllers\ChatRoomController::class)->only(["index", "create", "store", "edit", "update", "destroy"]);
 
 // チャット画面
-Route::get('/chat/{id}', [App\Http\Controllers\ChatController::class, 'index'])->name('chat.index');
-Route::post('/chat/{id}', [App\Http\Controllers\ChatController::class, 'store'])->name('chat.store');
+Route::get('/chat/{id}/getChatLogJson', [App\Http\Controllers\ChatController::class, "getChatLogJson"]);
+Route::post('/chat/{id}/storeChatJson', [App\Http\Controllers\ChatController::class, "storeChatJson"]);
+Route::post("/chat/multiStore", [App\Http\Controllers\ChatController::class, "multiStore"])->name("chat.multiStore");
+Route::resource("chat", App\Http\Controllers\ChatController::class)->only(["index", "show", "store"]);
 
 //////////// API /////////////////////////////////
 

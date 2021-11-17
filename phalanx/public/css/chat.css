@@ -1,12 +1,33 @@
-.white_space_pre_wrap {
+#chat_header {
+  margin-bottom: 20px;
+}
+
+#chat_log {
+  margin-bottom: 60px;
+}
+
+#chat_log .chat_individual .chat_header {
+  margin-left: 20px;
+}
+
+#chat_log .chat_individual .chat_header + #chat_log .chat_individual .chat_header {
+  margin-top: 20px;
+}
+
+#chat_log .chat_individual .chat_text {
+  margin-left: 40px;
   white-space: pre-wrap;
 }
 
-.chat_textarea {
-  resize: none;
+#chat_footer {
+  background-color: white;
+  height: 60px;
+  width: 100%;
+  position: fixed;
+  bottom: 0;
 }
 
-.chat_bottom {
-  bottom: 0;
+#chat_footer .chat_textarea {
+  resize: none;
 }
 /*# sourceMappingURL=chat.css.map */
