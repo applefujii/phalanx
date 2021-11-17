@@ -39,15 +39,108 @@
     </script>
     <script>
         $(function() {
-            getChatLog();
-            // 10秒ごとに実行
+            // チャット読み込み
+            // Ajaxリクエスト
+            $.ajaxSetup({
+                headers: {
+                    "X-CSRF-TOKEN": $('meta[name="csrf-token"]').attr("content"),
+                },
+            });
+            $.ajax({
+                url:'/chat/' + id + '/getChatLogJson',
+                type:'GET',
+            })
+            // 成功時
+            .done(function(json){
+                // ルーム名表示
+                $('#room_name').text(json.room_title);
+                // チャットログを空に
+                $("#chat_log").empty();
+                // チャットログ表示
+                $.map(json.chat_texts, function (val, index) {
+                    html = `
+                    <div class="chat_individual">
+                        <div class="chat_header">
+                            <span class="text-danger">${val.user.name}</span>　${val.created_at}
+                        </div>
+                            
+                        <div class="chat_text">${val.chat_text}</div>
+                    </div>
+                    `;
+                    $("#chat_log").append(html);
+                    
+                    // ブックマーク追加
+                    if (val.id == json.newest_read_chat_text_id) {
+                        html = `
+                                <div class="chat_individual">
+                                    <div id="bookmark">
+                                        <span class="text-danger">-----------------------bookmark-------------------------------------</span>
+                                    </div>
+                                </div>
+                                `;
+                        $("#chat_log").append(html);
+                    }
+                });
+            })
+            // 失敗時
+            .fail(function(json){
+                alert('受信に失敗しました。');
+            });
+
+
+            // 10秒ごとに最新チャット取得
             setInterval(() => {
                 // スクロール位置を保存
                 let scroll_top = $(window).scrollTop();
-                console.log(scroll_top);
-                getChatLog();
-                // スクロール位置を元に戻す
-                $(window).scrollTop(scroll_top);
+                // Ajaxリクエスト
+                $.ajaxSetup({
+                    headers: {
+                        "X-CSRF-TOKEN": $('meta[name="csrf-token"]').attr("content"),
+                    },
+                });
+                $.ajax({
+                    url:'/chat/' + id + '/getNewChatLogJson',
+                    type:'GET',
+                })
+                // 成功時
+                .done(function(json){
+                    // ルーム名表示
+                    $('#room_name').text(json.room_title);
+
+                    // 古いブックマーク削除
+                    $("#bookmark").remove();
+
+                    // ブックマーク追加
+                    html = `
+                            <div class="chat_individual">
+                                <div id="bookmark">
+                                    <span class="text-danger">-----------------------bookmark-------------------------------------</span>
+                                </div>
+                            </div>
+                            `;
+                    $("#chat_log").append(html);
+
+                    // チャットログ表示
+                    $.map(json.chat_texts, function (val, index) {
+                        html = `
+                        <div class="chat_individual">
+                            <div class="chat_header">
+                                <span class="text-danger">${val.user.name}</span>　${val.created_at}
+                            </div>
+                                
+                            <div class="chat_text">${val.chat_text}</div>
+                        </div>
+                        `;
+                        $("#chat_log").append(html);
+                    });
+                    // スクロール位置を元に戻す
+                    $(window).scrollTop(scroll_top);
+                })
+                // 失敗時
+                .fail(function(json){
+                    alert('受信に失敗しました。');
+                });
+
             }, 10000);
             
             // チャット送信
@@ -76,12 +169,25 @@
                 })
                 // 成功時
                 .then((json) => {
+                    console.log(json.newest_read_chat_text_id);
                     // 入力フォームを空に
                     $('#chat_text').val('');
                     // ルーム名表示
                     $('#room_name').text(json.room_title);
-                    // チャットログを空に
-                    $("#chat_log").empty();
+
+                    // 古いブックマーク削除
+                    $("#bookmark").remove();
+
+                    // ブックマーク追加
+                    html = `
+                            <div class="chat_individual">
+                                <div id="bookmark">
+                                    <span class="text-danger">-----------------------bookmark-------------------------------------</span>
+                                </div>
+                            </div>
+                            `;
+                    $("#chat_log").append(html);
+
                     // チャットログ表示
                     $.map(json.chat_texts, function (val, index) {
                         html = `
@@ -103,45 +209,6 @@
                     alert('送信に失敗しました。');
                 });
             });
-
-            // チャット読み込み
-            function getChatLog () {
-                // Ajaxリクエスト
-                $.ajaxSetup({
-                    headers: {
-                        "X-CSRF-TOKEN": $('meta[name="csrf-token"]').attr("content"),
-                    },
-                });
-                $.ajax({
-                    url:'/chat/' + id + '/getChatLogJson',
-                    type:'GET',
-                })
-                // 成功時
-                .done(function(json){
-                    console.log(json);
-                    // ルーム名表示
-                    $('#room_name').text(json.room_title);
-                    // チャットログを空に
-                    $("#chat_log").empty();
-                    // チャットログ表示
-                    $.map(json.chat_texts, function (val, index) {
-                        html = `
-                        <div class="chat_individual">
-                            <div class="chat_header">
-                                <span class="text-danger">${val.user.name}</span>　${val.created_at}
-                            </div>
-                                
-                            <div class="chat_text">${val.chat_text}</div>
-                        </div>
-                        `;
-                        $("#chat_log").append(html);
-                    });
-                })
-                // 失敗時
-                .fail(function(json){
-                    alert('受信に失敗しました。');
-                });
-            }
         });
     </script>
 @endsection
