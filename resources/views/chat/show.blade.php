@@ -42,7 +42,12 @@
             getChatLog();
             // 10秒ごとに実行
             setInterval(() => {
+                // スクロール位置を保存
+                let scroll_top = $(window).scrollTop();
+                console.log(scroll_top);
                 getChatLog();
+                // スクロール位置を元に戻す
+                $(window).scrollTop(scroll_top);
             }, 10000);
             
             // チャット送信
@@ -101,11 +106,6 @@
 
             // チャット読み込み
             function getChatLog () {
-                // スクロール位置を保存
-                let scroll_top = $(window).scrollTop();
-                console.log(scroll_top);
-                // チャットログを空に
-                $("#chat_log").empty();
                 // Ajaxリクエスト
                 $.ajaxSetup({
                     headers: {
@@ -136,8 +136,6 @@
                         `;
                         $("#chat_log").append(html);
                     });
-                    // スクロール位置を元に戻す
-                    $(window).scrollTop(scroll_top);
                 })
                 // 失敗時
                 .fail(function(json){
