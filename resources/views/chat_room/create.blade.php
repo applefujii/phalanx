@@ -1,6 +1,9 @@
 @extends('layouts.app')
-@section('content')
+@section('css')
 <link href="https://use.fontawesome.com/releases/v5.6.1/css/all.css" rel="stylesheet">
+@endsection
+
+@section('content')
 <div class="container-md">
     <h3 class="page_title">チャットルーム管理　新規作成</h3>
     <form action="{{ route('chat_room.store') }}" method="post" class="mt-3">
