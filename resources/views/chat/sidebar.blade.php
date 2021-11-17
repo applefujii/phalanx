@@ -126,7 +126,7 @@ if(isset($chat_room)) {
                         <div class="modal-body">
                             @if (Auth::user()->user_type_id == 1)
                                 <div class="row p-3">
-                                    <a href="{{ route('chat_room.index') }}" class="btn btn-primary btn-lg btn-block" role="button">通所者一覧</a>
+                                    <a href="{{ route('chat.index') }}" class="btn btn-primary btn-lg btn-block" role="button">通所者一覧</a>
                                 </div>
                             @endif
                             <div class="row">
