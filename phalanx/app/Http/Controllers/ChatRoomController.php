@@ -24,7 +24,7 @@ class ChatRoomController extends Controller
      */
     public function __construct() {
         //ログインしているかどうかの判断
-        $this->middleware("auth");
+        $this->middleware("staff");
     }
 
     /**
@@ -34,13 +34,6 @@ class ChatRoomController extends Controller
         //ログイン中のユーザーデータを取得
         $user = Auth::user();
         
-        //ログイン中のユーザーが職員かどうかの判別(職員のuser_type_idを1と仮定)
-        if($user->user_type_id != 1) {
-
-            //職員でなければindexにリダイレクト
-            return redirect()->route("chat_room.index");
-        }
-
         //表示する部屋の一覧を取得
         $chatRooms = ChatRoom::where("distinction_number", 4)->whereNull("offices.deleted_at")->whereNull("chat_rooms.deleted_at")
             ->join("offices", "chat_rooms.office_id", "=", "offices.id")->orderBy("offices.sort")
@@ -55,15 +48,6 @@ class ChatRoomController extends Controller
      * チャットルームの作成
      */
     public function create() {
-        //ログイン中のユーザーデータを取得
-        $user = Auth::user();
-        
-        //ログイン中のユーザーが職員かどうかの判別(職員のuser_type_idを1と仮定)
-        if($user->user_type_id != 1) {
-
-            //職員でなければindexにリダイレクト
-            return redirect()->route("chat_room.index");
-        }
 
         //必要なユーザーと事業所のデータを取得
         $users = User::whereNull("deleted_at")->get();
@@ -80,13 +64,6 @@ class ChatRoomController extends Controller
         //ログイン中のユーザーデータを取得
         $user = Auth::user();
         
-        //ログイン中のユーザーが職員かどうかの判別(職員のuser_type_idを1と仮定)
-        if($user->user_type_id != 1) {
-
-            //職員でなければindexにリダイレクト
-            return redirect()->route("chat_room.index");
-        }
-
         //各種リクエストのデータを取得
         $roomTitle = $request->input("room_title");
         $officeId = $request->input("office_id");
@@ -126,16 +103,6 @@ class ChatRoomController extends Controller
      * チャットルームの編集
      */
     public function edit($id) {
-        //ログイン中のユーザーデータを取得
-        $user = Auth::user();
-        
-        //ログイン中のユーザーが職員かどうかの判別(職員のuser_type_idを1と仮定)
-        if($user->user_type_id != 1) {
-
-            //職員でなければindexにリダイレクト
-            return redirect()->route("chat_room.index");
-        }
-
         //編集するチャットルームのデータを取得
         $chatRoom = ChatRoom::where("id", $id)->whereNull("deleted_at")->first();
 
@@ -162,13 +129,6 @@ class ChatRoomController extends Controller
         //ログイン中のユーザーデータを取得
         $user = Auth::user();
         
-        //ログイン中のユーザーが職員かどうかの判別(職員のuser_type_idを1と仮定)
-        if($user->user_type_id != 1) {
-
-            //職員でなければindexにリダイレクト
-            return redirect()->route("chat_room.index");
-        }
-
         //編集するチャットルームのデータを取得
         $chatRoom = ChatRoom::where("id", $id)->whereNull("deleted_at")->first();
 
@@ -228,13 +188,6 @@ class ChatRoomController extends Controller
         //ログイン中のユーザーデータを取得
         $user = Auth::user();
         
-        //ログイン中のユーザーが職員かどうかの判別(職員のuser_type_idを1と仮定)
-        if($user->user_type_id != 1) {
-
-            //職員でなければindexにリダイレクト
-            return redirect()->route("chat_room.index");
-        }
-
         //削除するチャットルームのデータを取得
         $chatRoom = ChatRoom::where("id", $id)->whereNull("deleted_at")->first();
 
