@@ -54,6 +54,6 @@ class ChatRoom extends Model
      * 関連するチャットテキストのデータを取得
      */
     public function chat_texts() {
-        return $this->hasMany(ChatText::class)->whereNull('deleted_at')->orderBy('created_at');
+        return $this->hasMany(ChatText::class)->whereNull('deleted_at')->orderBy('id');
     }
 }
