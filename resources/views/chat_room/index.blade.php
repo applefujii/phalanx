@@ -40,7 +40,7 @@
             </tbody>
         </table>
     </div>
-    <div class="text-right">
+    <div class="mt-2">
         {{ $chatRooms->links() }}
     </div>
 </div>
