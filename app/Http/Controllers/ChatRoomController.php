@@ -30,7 +30,7 @@ class ChatRoomController extends Controller
     /**
      * チャットルーム管理一覧画面
      */
-    public function list() {
+    public function index() {
         //ログイン中のユーザーデータを取得
         $user = Auth::user();
         
@@ -48,7 +48,7 @@ class ChatRoomController extends Controller
 
         // $chatRooms = Chat_room::where("distinction_number", 4)->whereNull("deleted_at")->orderBy("room_title")->paginate(10);
 
-        return view("chat_room/list", compact("chatRooms"));
+        return view("chat_room/index", compact("chatRooms"));
     }
 
     /**
@@ -119,7 +119,7 @@ class ChatRoomController extends Controller
             $chatRoomUser->save();
         }
 
-        return redirect()->route("chat_room.list");
+        return redirect()->route("chat_room.index");
     }
 
     /**
@@ -218,7 +218,7 @@ class ChatRoomController extends Controller
             }
         }
 
-        return redirect()->route("chat_room.list");
+        return redirect()->route("chat_room.index");
     }
 
     /**
@@ -264,6 +264,6 @@ class ChatRoomController extends Controller
             }
         }
 
-        return redirect()->route("chat_room.list");
+        return redirect()->route("chat_room.index");
     }
 }
