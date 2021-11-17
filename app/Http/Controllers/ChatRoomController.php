@@ -48,7 +48,7 @@ class ChatRoomController extends Controller
 
         // $chatRooms = Chat_room::where("distinction_number", 4)->whereNull("deleted_at")->orderBy("room_title")->paginate(10);
 
-        return view("chat_room/list", compact("chatRooms"));
+        return view("chat_room/index", compact("chatRooms"));
     }
 
     /**
