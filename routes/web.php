@@ -72,8 +72,8 @@ Route::resource("chat_room", App\Http\Controllers\ChatRoomController::class)->on
 // チャット画面
 Route::get('/chat/{id}', [App\Http\Controllers\ChatController::class, 'index'])->name('chat.index');
 Route::post('/chat/{id}', [App\Http\Controllers\ChatController::class, 'store'])->name('chat.store');
-Route::get('/chat/{id}/getChatRoomJson', [App\Http\Controllers\ChatController::class, "getChatRoomJson"]);
-Route::post('/chat/{id}/storeJson', [App\Http\Controllers\ChatController::class, "storeJson"]);
+Route::get('/chat/{id}/getChatLogJson', [App\Http\Controllers\ChatController::class, "getChatLogJson"]);
+Route::post('/chat/{id}/storeJson', [App\Http\Controllers\ChatController::class, "storeChatJson"]);
 Route::post("/chat", [App\Http\Controllers\ChatController::class, "multiStore"])->name("chat.multiStore");
 
 //////////// API /////////////////////////////////
