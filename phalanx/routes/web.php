@@ -66,7 +66,6 @@ Route::get("/staff_page", [App\Http\Controllers\StaffpageController::class, "ind
 
 
 // チャットルーム
-Route::get("/chat_room/list", [App\Http\Controllers\ChatRoomController::class, "list"])->name("chat_room.list");
 Route::resource("chat_room", App\Http\Controllers\ChatRoomController::class)->only(["index", "create", "store", "edit", "update", "destroy"]);
 
 // チャット画面
