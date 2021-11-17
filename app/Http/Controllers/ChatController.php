@@ -39,21 +39,30 @@ class ChatController extends Controller
         //ログイン中のユーザーのidを取得
         $user = Auth::user();
 
-        //利用者対職員の個人チャットを取得
-        $userRooms = ChatRoom::where("distinction_number", 3)->where("office_id", $user->office_id)->whereNotNull("deleted_at")->get();
+        //職員とそれ以外でサイドバーに必要なデータが異なるので場合分け
+        if($user->user_type_id == 1) {
 
-        //職員全体のチャットルームを取得
-        $group = ChatRoom::where("distinction_number", 0)->whereNull("deleted_at")->first();
+            //職員全体のチャットルームを取得
+            $group = ChatRoom::where("distinction_number", 0)->whereNull("deleted_at")->first();
 
-        //ログイン中のユーザーが参加している部屋一覧を取得
-        $joinRooms = ChatRoom::join("chat_room__user", "chat_rooms.id", "=", "chat_room__user.chat_room_id")
-            ->where("chat_room__user.user_id", $user->id)->whereNull("chat_rooms.deleted_at")->whereNull("chat_room__user.deleted_at")
-                ->whereIn("chat_rooms.distinction_number", [1, 2, 4])->orderBy("chat_rooms.distinction_number")->get();
+            //ログイン中のユーザーが参加している部屋一覧を取得
+            $joinRooms = ChatRoom::join("chat_room__user", "chat_rooms.id", "=", "chat_room__user.chat_room_id")
+                ->where("chat_room__user.user_id", $user->id)->whereNull("chat_rooms.deleted_at")->whereNull("chat_room__user.deleted_at")
+                    ->whereIn("chat_rooms.distinction_number", [1, 2, 4])->orderBy("chat_rooms.distinction_number")->get("chat_rooms.*");
+        } else {
 
+            //issetでfalseを返すようにnullを入れる
+            $group = null;
+
+            //ログイン中のユーザーが参加している部屋一覧を取得
+            $joinRooms = ChatRoom::join("chat_room__user", "chat_rooms.id", "=", "chat_room__user.chat_room_id")
+                ->where("chat_room__user.user_id", $user->id)->whereNull("chat_rooms.deleted_at")->whereNull("chat_room__user.deleted_at")
+                    ->whereIn("chat_rooms.distinction_number", [3, 4])->orderBy("chat_rooms.distinction_number")->get("chat_rooms.*");
+        }
         //事業所一覧を取得
         $offices = Office::whereNull("deleted_at")->orderBy("sort")->get();
 
-        return view('chat/index', compact('chat_room', "userRooms", "group", "joinRooms", "offices"));
+        return view('chat/index', compact('chat_room', "group", "joinRooms", "offices"));
     }
 
     /**
@@ -63,7 +72,28 @@ class ChatController extends Controller
      * @return \Illuminate\http\Response
      */
     public function multiStore(ChatTextRequest $request) {
-        
+
+        //現在時刻の取得
+        $now = Carbon::now();
+
+        //Requestから渡されたchat-roomsを配列に変換し、foreachで処理を回す
+        $chatRooms = $request->input("chat_rooms");
+        $roomsId = explode(",", $chatRooms);
+        foreach($roomsId as $roomId) {
+
+            //各種データを挿入
+            $chat_text = new ChatText();
+            $chat_text->chat_text = $request->input("chat_text");
+            $chat_text->chat_room_id = $roomId;
+            $chat_text->user_id = Auth::user()->id;
+            $chat_text->create_user_id = Auth::user()->id;
+            $chat_text->update_user_id = Auth::user()->id;
+            $chat_text->created_at = $now->isoFormat('YYYY-MM-DD HH:mm:ss');
+            $chat_text->updated_at = $now->isoFormat('YYYY-MM-DD HH:mm:ss');
+            $chat_text->save();
+        }
+
+        return redirect()->route("chat_room.index");
     }
 
     /**
