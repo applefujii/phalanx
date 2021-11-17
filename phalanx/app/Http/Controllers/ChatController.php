@@ -164,6 +164,8 @@ class ChatController extends Controller
         $chat_text->save();
 
         $chat_room = ChatRoom::whereNull('deleted_at')->with('chat_texts')->find($id);
+
+        
         
         return response()->json($chat_room);
     }
