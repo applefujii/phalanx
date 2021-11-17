@@ -14,12 +14,12 @@
                     <th class="col-6">操作</th>
                 </tr>
             </thead>
-            <tbody class="align-items-center">
+            <tbody>
                 @foreach ($chatRooms as $chatRoom)
                     <tr>
-                        <td>{{ $chatRoom->room_title }}</td>
-                        <td>{{ $chatRoom->office->office_name }}</td>
-                        <td>
+                        <td class="align-middle">{{ $chatRoom->room_title }}</td>
+                        <td class="align-middle">{{ $chatRoom->office->office_name }}</td>
+                        <td class="align-middle">
                             <div class="row gx-2 text-center">
                                 <div class="col">
                                     <form action="{{ route('chat_room.edit', $chatRoom->id) }}" method="GET">
