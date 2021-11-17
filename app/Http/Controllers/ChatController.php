@@ -138,7 +138,61 @@ class ChatController extends Controller
      */
     public function getChatLogJson ($id)
     {
+        // チャットルーム-ユーザー-中間テーブルから、既読チャットテキストIDを取得
+        $chat_room__user = ChatRoom__User::where('chat_room_id', $id)->where('user_id', Auth::user()->id)->first();
+        $newest_read_chat_text_id = $chat_room__user->newest_read_chat_text_id;
+
+        // 全てのチャットテキストを取得
         $chat_room = ChatRoom::whereNull('deleted_at')->with('chat_texts')->find($id);
+
+        $chat_room_array = $chat_room->toArray();
+
+        // 既読チャットテキストIDを戻り値に追加
+        $chat_room_array += array('newest_read_chat_text_id' => $newest_read_chat_text_id);
+
+        // チャットルーム-ユーザー-中間テーブルに、既読チャットテキストIDを保存
+        $now = Carbon::now();
+
+        $chat_room__user->newest_read_chat_text_id = $chat_room->chat_texts->last()->id;
+        $chat_room__user->update_user_id = Auth::user()->id;
+        $chat_room__user->updated_at = $now->isoFormat('YYYY-MM-DD HH:mm:ss');
+        $chat_room__user->save();
+
+        return response()->json($chat_room_array);
+    }
+
+    /**
+     * チャットログの差分をjavascriptで取得
+     * 
+     * @param チャットルームテーブルのID $id
+     * @return json $chat_room
+     */
+    public function getNewChatLogJson ($id)
+    {
+        // チャットルーム-ユーザー-中間テーブルから、既読チャットテキストIDを取得
+        $chat_room__user = ChatRoom__User::where('chat_room_id', $id)->where('user_id', Auth::user()->id)->first();
+        $newest_read_chat_text_id = $chat_room__user->newest_read_chat_text_id;
+        
+        // 未読のチャットテキストのみを取得
+        $chat_room = ChatRoom::whereNull('deleted_at')
+            ->with(['chat_texts' => function ($query) use ($newest_read_chat_text_id) {
+                $query->where('id', '>', $newest_read_chat_text_id);
+            }])
+            ->find($id);
+            
+        // 未読があるとき
+        if (!empty($chat_room->chat_texts->last())) {
+            $newest_read_chat_text_id = $chat_room->chat_texts->last()->id;
+
+            // チャットルーム-ユーザー-中間テーブルに、既読チャットテキストIDを保存
+            $now = Carbon::now();
+
+            $chat_room__user->newest_read_chat_text_id = $newest_read_chat_text_id;
+            $chat_room__user->update_user_id = Auth::user()->id;
+            $chat_room__user->updated_at = $now->isoFormat('YYYY-MM-DD HH:mm:ss');
+            $chat_room__user->save();
+        }
+        
         return response()->json($chat_room);
     }
 
@@ -163,7 +217,29 @@ class ChatController extends Controller
         $chat_text->updated_at = $now->isoFormat('YYYY-MM-DD HH:mm:ss');
         $chat_text->save();
 
-        $chat_room = ChatRoom::whereNull('deleted_at')->with('chat_texts')->find($id);
+        // チャットルーム-ユーザー-中間テーブルから、既読チャットテキストIDを取得
+        $chat_room__user = ChatRoom__User::where('chat_room_id', $id)->where('user_id', Auth::user()->id)->first();
+        $newest_read_chat_text_id = $chat_room__user->newest_read_chat_text_id;
+        
+        // 未読のチャットテキストのみを取得
+        $chat_room = ChatRoom::whereNull('deleted_at')
+            ->with(['chat_texts' => function ($query) use ($newest_read_chat_text_id) {
+                $query->where('id', '>', $newest_read_chat_text_id);
+            }])
+            ->find($id);
+        
+        // 未読があるとき
+        if (!empty($chat_room->chat_texts->last())) {
+            $newest_read_chat_text_id = $chat_room->chat_texts->last()->id;
+
+            // チャットルーム-ユーザー-中間テーブルに、既読チャットテキストIDを保存
+            $now = Carbon::now();
+
+            $chat_room__user->newest_read_chat_text_id = $newest_read_chat_text_id;
+            $chat_room__user->update_user_id = Auth::user()->id;
+            $chat_room__user->updated_at = $now->isoFormat('YYYY-MM-DD HH:mm:ss');
+            $chat_room__user->save();
+        }
         
         return response()->json($chat_room);
     }
