@@ -16,6 +16,7 @@ use App\Models\Office;
 use App\Models\User;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Requests\ChatRoomRequest;
+use Carbon\Carbon;
 
 class ChatRoomController extends Controller
 {
@@ -24,7 +25,7 @@ class ChatRoomController extends Controller
      */
     public function __construct() {
         //ログインしているかどうかの判断
-        $this->middleware("auth");
+        $this->middleware("staff");
     }
 
     /**
@@ -34,17 +35,10 @@ class ChatRoomController extends Controller
         //ログイン中のユーザーデータを取得
         $user = Auth::user();
         
-        //ログイン中のユーザーが職員かどうかの判別(職員のuser_type_idを1と仮定)
-        if($user->user_type_id != 1) {
-
-            //職員でなければindexにリダイレクト
-            return redirect()->route("chat_room.index");
-        }
-
         //表示する部屋の一覧を取得
         $chatRooms = ChatRoom::where("distinction_number", 4)->whereNull("offices.deleted_at")->whereNull("chat_rooms.deleted_at")
             ->join("offices", "chat_rooms.office_id", "=", "offices.id")->orderBy("offices.sort")
-                ->orderBy("chat_rooms.room_title")->paginate(10);
+                ->orderBy("chat_rooms.room_title")->select("chat_rooms.*")->paginate(10);
 
         // $chatRooms = Chat_room::where("distinction_number", 4)->whereNull("deleted_at")->orderBy("room_title")->paginate(10);
 
@@ -55,15 +49,6 @@ class ChatRoomController extends Controller
      * チャットルームの作成
      */
     public function create() {
-        //ログイン中のユーザーデータを取得
-        $user = Auth::user();
-        
-        //ログイン中のユーザーが職員かどうかの判別(職員のuser_type_idを1と仮定)
-        if($user->user_type_id != 1) {
-
-            //職員でなければindexにリダイレクト
-            return redirect()->route("chat_room.index");
-        }
 
         //必要なユーザーと事業所のデータを取得
         $users = User::whereNull("deleted_at")->get();
@@ -80,21 +65,13 @@ class ChatRoomController extends Controller
         //ログイン中のユーザーデータを取得
         $user = Auth::user();
         
-        //ログイン中のユーザーが職員かどうかの判別(職員のuser_type_idを1と仮定)
-        if($user->user_type_id != 1) {
-
-            //職員でなければindexにリダイレクト
-            return redirect()->route("chat_room.index");
-        }
-
         //各種リクエストのデータを取得
         $roomTitle = $request->input("room_title");
         $officeId = $request->input("office_id");
         $joinUsersId = $request->input("checkBox");
 
         //現在時刻を取得
-        $now = new DateTime("now");
-        $now = $now->format("Y-m-d H:i:s");
+        $now = Carbon::now()->isoFormat('YYYY-MM-DD HH:mm:ss');
 
         //Chat_roomインスタンスを作成、各種データを挿入後登録
         $chatRoom = new ChatRoom();
@@ -126,22 +103,12 @@ class ChatRoomController extends Controller
      * チャットルームの編集
      */
     public function edit($id) {
-        //ログイン中のユーザーデータを取得
-        $user = Auth::user();
-        
-        //ログイン中のユーザーが職員かどうかの判別(職員のuser_type_idを1と仮定)
-        if($user->user_type_id != 1) {
-
-            //職員でなければindexにリダイレクト
-            return redirect()->route("chat_room.index");
-        }
-
         //編集するチャットルームのデータを取得
         $chatRoom = ChatRoom::where("id", $id)->whereNull("deleted_at")->first();
 
         //存在しないチャットルームを編集しようとした時listにリダイレクト
         if($chatRoom == null) {
-            return redirect()->route("chat_room.list");
+            return redirect()->route("chat_room.index");
         }
 
         //必要なユーザーと事業所のデータを取得
@@ -162,19 +129,12 @@ class ChatRoomController extends Controller
         //ログイン中のユーザーデータを取得
         $user = Auth::user();
         
-        //ログイン中のユーザーが職員かどうかの判別(職員のuser_type_idを1と仮定)
-        if($user->user_type_id != 1) {
-
-            //職員でなければindexにリダイレクト
-            return redirect()->route("chat_room.index");
-        }
-
         //編集するチャットルームのデータを取得
         $chatRoom = ChatRoom::where("id", $id)->whereNull("deleted_at")->first();
 
         //存在しないチャットルームを編集しようとした時listにリダイレクト
         if(is_null($chatRoom)) {
-            return redirect()->route("chat_room.list");
+            return redirect()->route("chat_room.index");
         }
 
         //各種リクエストのデータを取得
@@ -183,8 +143,7 @@ class ChatRoomController extends Controller
         $joinUsersId = $request->input("checkBox");
 
         //現在時刻を取得
-        $now = new DateTime("now");
-        $now = $now->format("Y-m-d H:i:s");
+        $now = Carbon::now()->isoFormat('YYYY-MM-DD HH:mm:ss');
 
         //取得したデータを用いて各種データを更新
         $chatRoom->room_title = $roomTitle;
@@ -228,28 +187,20 @@ class ChatRoomController extends Controller
         //ログイン中のユーザーデータを取得
         $user = Auth::user();
         
-        //ログイン中のユーザーが職員かどうかの判別(職員のuser_type_idを1と仮定)
-        if($user->user_type_id != 1) {
-
-            //職員でなければindexにリダイレクト
-            return redirect()->route("chat_room.index");
-        }
-
         //削除するチャットルームのデータを取得
         $chatRoom = ChatRoom::where("id", $id)->whereNull("deleted_at")->first();
 
         //存在しないチャットルームを削除しようとした時listにリダイレクト
         if(is_null($chatRoom)) {
-            return redirect()->route("chat_room.list");
+            return redirect()->route("chat_room.index");
         }
 
         //現在時刻を取得
-        $now = new DateTime("now");
-        $now = $now->format("Y-m-d H:i:s");
+        $now = Carbon::now()->isoFormat('YYYY-MM-DD HH:mm:ss');
 
         //チャットルームテーブルのデータの削除を実行
-        $chatRoom->update_user_id = $user->id;
-        $chatRoom->updated_at = $now;
+        $chatRoom->delete_user_id = $user->id;
+        $chatRoom->deleted_at = $now;
         $chatRoom->save();
 
         //削除するチャットルーム-ユーザー中間テーブルのデータを取得

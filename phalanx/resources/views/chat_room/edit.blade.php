@@ -41,9 +41,7 @@
                 @if ($errors->has("office_id"))
                     <div class="row mt-2">
                         <ul style="list-style: none">
-                            @foreach ($errors->get("office_id") as $error)
-                                <li class="text-danger">{{ $error }}</li>
-                            @endforeach
+                            <li class="text-danger">事業所を選択してください。</li>
                         </ul>
                     </div>
                 @endif
@@ -62,9 +60,7 @@
             @if ($errors->has("checkBox"))
                 <div class="row mt-2">
                     <ul style="list-style: none">
-                        @foreach ($errors->get("checkBox") as $error)
-                            <li class="text-danger">{{ $error }}</li>
-                        @endforeach
+                        <li class="text-danger">メンバーを選択してください。</li>
                     </ul>
                 </div>
             @endif
