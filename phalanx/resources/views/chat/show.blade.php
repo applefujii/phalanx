@@ -45,7 +45,6 @@
                 getChatLog();
             }, 10000);
             
-            
             // チャット送信
             $("#submit").on('click', function() {
                 // 入力値を取得
@@ -72,8 +71,6 @@
                 })
                 // 成功時
                 .then((json) => {
-                    // スクロール位置を元に戻す
-                    $(window).scrollTop(scroll_top);
                     // 入力フォームを空に
                     $('#chat_text').val('');
                     // ルーム名表示
@@ -93,6 +90,8 @@
                         `;
                         $("#chat_log").append(html);
                     });
+                    // スクロール位置を元に戻す
+                    $(window).scrollTop(scroll_top);
                 })
                 // 失敗時
                 .fail((error) => {
@@ -103,7 +102,8 @@
             // チャット読み込み
             function getChatLog () {
                 // スクロール位置を保存
-                const scroll_top = $(window).scrollTop();
+                let scroll_top = $(window).scrollTop();
+                console.log(scroll_top);
                 // チャットログを空に
                 $("#chat_log").empty();
                 // Ajaxリクエスト
@@ -119,8 +119,6 @@
                 // 成功時
                 .done(function(json){
                     console.log(json);
-                    // スクロール位置を元に戻す
-                    $(window).scrollTop(scroll_top);
                     // ルーム名表示
                     $('#room_name').text(json.room_title);
                     // チャットログを空に
@@ -138,6 +136,8 @@
                         `;
                         $("#chat_log").append(html);
                     });
+                    // スクロール位置を元に戻す
+                    $(window).scrollTop(scroll_top);
                 })
                 // 失敗時
                 .fail(function(json){
