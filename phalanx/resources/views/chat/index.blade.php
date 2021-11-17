@@ -10,7 +10,7 @@
         <span id="room_name">
     </div>
 
-    <div id="chat_texts">
+    <div id="chat_log">
     </div>
 
     <div id="chat_footer">
@@ -39,37 +39,12 @@
     </script>
     <script>
         $(function() {
-            // Ajaxリクエスト
-            $.ajaxSetup({
-                headers: {
-                    "X-CSRF-TOKEN": $('meta[name="csrf-token"]').attr("content"),
-                },
-            });
-            $.ajax({
-                url:'/chat/' + id + '/getChatRoomJson',
-                type:'GET',
-            })
-            // 成功時
-            .done(function(json){
-                console.log(json);
-                $('#room_name').text(json.room_title);
-                $.map(json.chat_texts, function (val, index) {
-                    html = `
-                    <div class="chat_individual">
-                        <div class="chat_header">
-                            <span class="text-danger">${val.user.name}</span>　${val.created_at}
-                        </div>
-                            
-                        <div class="chat_text">${val.chat_text}</div>
-                    </div>
-                    `;
-                    $("#chat_texts").append(html);
-                });
-            })
-            // 失敗時
-            .fail(function(json){
-                alert('受信に失敗しました。');
-            });
+            getChatLog();
+            // 10秒ごとに実行
+            setInterval(() => {
+                getChatLog();
+            }, 10000);
+            
             
             // チャット送信
             $("#submit").on('click', function() {
@@ -89,7 +64,7 @@
                 });
                 $.ajax({
                     type: "post",
-                    url:'/chat/' + id + '/storeJson',
+                    url:'/chat/' + id + '/storeChatJson',
                     dataType: "json",
                     data: {
                         chat_text: chat_text,
@@ -97,10 +72,15 @@
                 })
                 // 成功時
                 .then((json) => {
+                    // スクロール位置を元に戻す
                     $(window).scrollTop(scroll_top);
+                    // 入力フォームを空に
                     $('#chat_text').val('');
+                    // ルーム名表示
                     $('#room_name').text(json.room_title);
-                    $("#chat_texts").empty();
+                    // チャットログを空に
+                    $("#chat_log").empty();
+                    // チャットログ表示
                     $.map(json.chat_texts, function (val, index) {
                         html = `
                         <div class="chat_individual">
@@ -111,7 +91,7 @@
                             <div class="chat_text">${val.chat_text}</div>
                         </div>
                         `;
-                        $("#chat_texts").append(html);
+                        $("#chat_log").append(html);
                     });
                 })
                 // 失敗時
@@ -119,6 +99,51 @@
                     alert('送信に失敗しました。');
                 });
             });
+
+            // チャット読み込み
+            function getChatLog () {
+                // スクロール位置を保存
+                const scroll_top = $(window).scrollTop();
+                // チャットログを空に
+                $("#chat_log").empty();
+                // Ajaxリクエスト
+                $.ajaxSetup({
+                    headers: {
+                        "X-CSRF-TOKEN": $('meta[name="csrf-token"]').attr("content"),
+                    },
+                });
+                $.ajax({
+                    url:'/chat/' + id + '/getChatLogJson',
+                    type:'GET',
+                })
+                // 成功時
+                .done(function(json){
+                    console.log(json);
+                    // スクロール位置を元に戻す
+                    $(window).scrollTop(scroll_top);
+                    // ルーム名表示
+                    $('#room_name').text(json.room_title);
+                    // チャットログを空に
+                    $("#chat_log").empty();
+                    // チャットログ表示
+                    $.map(json.chat_texts, function (val, index) {
+                        html = `
+                        <div class="chat_individual">
+                            <div class="chat_header">
+                                <span class="text-danger">${val.user.name}</span>　${val.created_at}
+                            </div>
+                                
+                            <div class="chat_text">${val.chat_text}</div>
+                        </div>
+                        `;
+                        $("#chat_log").append(html);
+                    });
+                })
+                // 失敗時
+                .fail(function(json){
+                    alert('受信に失敗しました。');
+                });
+            }
         });
     </script>
 @endsection
