@@ -232,7 +232,7 @@ if(isset($chat_room)) {
                                     @endforeach
                                 </div>
                                 <div class="row">
-                                    @if (isset($trials))
+                                    @if (isset($trials[0]))
                                         <h5 class="col-12 pt-3">体験者 - {{ count($trials) }}人</h5>
                                         <ul class="col-12 pt-1">
                                             @foreach ($trials as $trial)
@@ -286,7 +286,7 @@ if(isset($chat_room)) {
                         @endforeach
                     </div>
                     <div class="row">
-                        @if (isset($trials))
+                        @if (isset($trials[0]))
                             <h5 class="col-12 pt-3">体験者 - {{ count($trials) }}人</h5>
                             <ul class="col-12 pt-1">
                                 @foreach ($trials as $trial)
