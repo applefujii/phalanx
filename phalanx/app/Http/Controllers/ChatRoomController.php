@@ -12,6 +12,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\ChatRoom;
 use App\Models\ChatRoom__User;
+use App\Models\ChatText;
 use App\Models\Office;
 use App\Models\User;
 use Illuminate\Support\Facades\Auth;
@@ -206,10 +207,21 @@ class ChatRoomController extends Controller
         //削除するチャットルーム-ユーザー中間テーブルのデータを取得
         $chatRoomUsers = ChatRoom__User::where("chat_room_id", $id)->get();
 
-        //削除するデータがある場合のみ削除を実行
+        //削除を実行
         if(isset($chatRoomUsers)) {
             foreach($chatRoomUsers as $chatRoomUser) {
                 $chatRoomUser->delete();
+            }
+        }
+
+        //削除するチャットテキストテーブルのデータを取得
+        $chatTexts = ChatText::whereNull("deleted_at")->where("chat_room_id", $id)->get();
+
+        //削除するデータが存在する場合のみ削除を実行
+        if(isset($chatTexts)) {
+            foreach($chatTexts as $chatText) {
+                $chatText->delete_user_id = $user->id;
+                $chatText->deleted_at = $now;
             }
         }
 
