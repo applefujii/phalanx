@@ -1,7 +1,7 @@
 <?php
 //$chat_roomが渡されているとき参加者の情報を取得
 if(isset($chat_room)) {
-    $chatRoomUsers = $chat_room->chat_room__user->whereNull("deleted_at");
+    $chatRoomUsers = $chat_room->chat_room__user;
     if(isset($chatRoomUsers)) {
         $officers = [];
         $users = [];
