@@ -16,7 +16,7 @@
     <div id="chat_footer">
         <div class="m-2">
             <div class="form-row mx-auto">
-                <div class="col-6">
+                <div class="col-7">
                     <textarea id="chat_text" name="chat_text" class="form-control chat_textarea @error('chat_text') is-invalid @enderror" rows="1" required="required">{{ old('chat_text') }}</textarea>
                     @error('chat_text')
                         <span class="invalid-feedback" role="alert">
@@ -39,7 +39,7 @@
     </script>
     <script>
         $(function() {
-            // チャット読み込み
+            // 初回チャット読み込み
             // Ajaxリクエスト
             $.ajaxSetup({
                 headers: {
@@ -72,15 +72,15 @@
                     // ブックマーク追加
                     if (val.id == json.newest_read_chat_text_id) {
                         html = `
-                                <div class="chat_individual">
-                                    <div id="bookmark">
-                                        <span class="text-danger">-----------------------bookmark-------------------------------------</span>
-                                    </div>
+                                <div id="bookmark">
+                                    <span class="text-danger">-------------------------------bookmark-------------------------------------</span>
                                 </div>
                                 `;
                         $("#chat_log").append(html);
                     }
                 });
+                // bookmarkまでスクロール
+                $(window).scrollTop($('#bookmark').offset().top);
             })
             // 失敗時
             .fail(function(json){
@@ -91,7 +91,7 @@
             // 10秒ごとに最新チャット取得
             setInterval(() => {
                 // スクロール位置を保存
-                let scroll_top = $(window).scrollTop();
+                const scroll_top = $(window).scrollTop();
                 // Ajaxリクエスト
                 $.ajaxSetup({
                     headers: {
@@ -106,19 +106,6 @@
                 .done(function(json){
                     // ルーム名表示
                     $('#room_name').text(json.room_title);
-
-                    // 古いブックマーク削除
-                    $("#bookmark").remove();
-
-                    // ブックマーク追加
-                    html = `
-                            <div class="chat_individual">
-                                <div id="bookmark">
-                                    <span class="text-danger">-----------------------bookmark-------------------------------------</span>
-                                </div>
-                            </div>
-                            `;
-                    $("#chat_log").append(html);
 
                     // チャットログ表示
                     $.map(json.chat_texts, function (val, index) {
@@ -143,8 +130,23 @@
 
             }, 10000);
             
-            // チャット送信
+            // 送信ボタンを押したらチャット送信
             $("#submit").on('click', function() {
+                submitText();
+            });
+
+            // SHFIT+ENTERを押したらチャット送信
+            $(window).keydown(function(e){
+                if(event.shiftKey){
+                    if(e.keyCode === 13){
+                        submitText();
+                        return false;
+                    }
+                }
+            });
+            
+            // チャット送信
+            function submitText() {
                 // 入力値を取得
                 const chat_text = $('#chat_text').val();
                 if (chat_text.length < 1) {
@@ -175,19 +177,6 @@
                     // ルーム名表示
                     $('#room_name').text(json.room_title);
 
-                    // 古いブックマーク削除
-                    $("#bookmark").remove();
-
-                    // ブックマーク追加
-                    html = `
-                            <div class="chat_individual">
-                                <div id="bookmark">
-                                    <span class="text-danger">-----------------------bookmark-------------------------------------</span>
-                                </div>
-                            </div>
-                            `;
-                    $("#chat_log").append(html);
-
                     // チャットログ表示
                     $.map(json.chat_texts, function (val, index) {
                         html = `
@@ -208,7 +197,7 @@
                 .fail((error) => {
                     alert('送信に失敗しました。');
                 });
-            });
+            }
         });
     </script>
 @endsection
