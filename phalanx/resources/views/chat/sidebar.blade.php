@@ -13,7 +13,7 @@ if(isset($chat_room)) {
 
                 //$officersにすでにoffice_idと同じキーの配列があればその配列の後ろに入れ、なければ作る
                 if(isset($officers[$chatRoomUser->user->office_id])) {
-                    arary_push($officers[$chatRoomUser->user->office_id], $chatRoomUser->user->name);
+                    array_push($officers[$chatRoomUser->user->office_id], $chatRoomUser->user->name);
                 } else {
                     $officers[$chatRoomUser->user->office_id] = [$chatRoomUser->user->name];
                 }
@@ -22,7 +22,7 @@ if(isset($chat_room)) {
             //利用者も同様に処理する
             else if($chatRoomUser->user->user_type_id == 2) {
                 if(isset($users[$chatRoomUser->user->office_id])) {
-                    arary_push($users[$chatRoomUser->user->office_id], $chatRoomUser->user->name);
+                    array_push($users[$chatRoomUser->user->office_id], $chatRoomUser->user->name);
                 } else {
                     $users[$chatRoomUser->user->office_id] = [$chatRoomUser->user->name];
                 }
@@ -210,7 +210,7 @@ if(isset($chat_room)) {
                                                 <h5 class="col-12 pt-3">{{ $office->office_name }}職員 - {{ count($officers[$office->id]) }}人</h5>
                                                 <ul class="col-12 pt-1">
                                                     @foreach ($officers[$office->id] as $officer)
-                                                        {{ $officer }}
+                                                        <li>{{ $officer }}</li>
                                                     @endforeach
                                                 </ul>
                                             </div>
@@ -224,7 +224,7 @@ if(isset($chat_room)) {
                                                 <h5 class="col-12 pt-3">{{ $office->office_name }}通所者 - {{ count($users[$office->id]) }}人</h5>
                                                 <ul class="col-12 pt-1">
                                                     @foreach ($users[$office->id] as $user)
-                                                        {{ $user }}
+                                                        <li>{{ $user }}</li>
                                                     @endforeach
                                                 </ul>
                                             </div>
@@ -264,7 +264,7 @@ if(isset($chat_room)) {
                                     <h5 class="col-12 pt-3">{{ $office->office_name }}職員 - {{ count($officers[$office->id]) }}人</h5>
                                     <ul class="col-12 pt-1">
                                         @foreach ($officers[$office->id] as $officer)
-                                            {{ $officer }}
+                                            <li>{{ $officer }}</li>
                                         @endforeach
                                     </ul>
                                 </div>
@@ -278,7 +278,7 @@ if(isset($chat_room)) {
                                     <h5 class="col-12 pt-3">{{ $office->office_name }}通所者 - {{ count($users[$office->id]) }}人</h5>
                                     <ul class="col-12 pt-1">
                                         @foreach ($users[$office->id] as $user)
-                                            {{ $user }}
+                                            <li>{{ $user }}</li>
                                         @endforeach
                                     </ul>
                                 </div>
