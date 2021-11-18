@@ -148,13 +148,13 @@
             // チャット送信
             function submitText() {
                 // 入力値を取得
-                const chat_text = $('#chat_text').val();
+                let chat_text = $('#chat_text').val();
                 if (chat_text.length < 1) {
                     alert('メッセージが空です。');
                     return false;
                 }
                 // スクロール位置を保存
-                const scroll_top = $(window).scrollTop();
+                let scroll_top = $(window).scrollTop();
                 // Ajaxリクエスト
                 $.ajaxSetup({
                     headers: {
@@ -171,7 +171,6 @@
                 })
                 // 成功時
                 .then((json) => {
-                    console.log(json.newest_read_chat_text_id);
                     // 入力フォームを空に
                     $('#chat_text').val('');
                     // ルーム名表示
