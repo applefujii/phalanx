@@ -179,6 +179,18 @@ class ChatController extends Controller
                 $query->where('id', '>', $newest_read_chat_text_id);
             }])
             ->find($id);
+
+        // // 未読がないとき
+        // if (empty($chat_room->chat_texts->last())) {
+        //     //10秒待機
+        //     sleep(10);
+        //     // 未読のチャットテキストのみを取得
+        //     $chat_room = ChatRoom::whereNull('deleted_at')
+        //     ->with(['chat_texts' => function ($query) use ($newest_read_chat_text_id) {
+        //         $query->where('id', '>', $newest_read_chat_text_id);
+        //     }])
+        //     ->find($id);
+        // }
             
         // 未読があるとき
         if (!empty($chat_room->chat_texts->last())) {
