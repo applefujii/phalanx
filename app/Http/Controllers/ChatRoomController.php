@@ -68,7 +68,8 @@ class ChatRoomController extends Controller
         //各種リクエストのデータを取得
         $roomTitle = $request->input("room_title");
         $officeId = $request->input("office_id");
-        $joinUsersId = $request->input("checkBox");
+        $targetUsers = $request->input("target_users");
+        $joinUsersId = explode(",", $targetUsers);
 
         //現在時刻を取得
         $now = Carbon::now()->isoFormat('YYYY-MM-DD HH:mm:ss');
@@ -115,7 +116,8 @@ class ChatRoomController extends Controller
         $users = User::whereNull("deleted_at")->get();
         $offices = Office::whereNull("deleted_at")->orderBy("sort")->get();
 
-        $aTargetUsers = $chatRoom->chat_room__user->map(function ($chat_room__user) {
+        $aTargetDatas = ChatRoom__User::whereNull("deleted_at")->where("chat_room_id", $id)->get();
+        $aTargetUsers = $aTargetDatas->map(function ($chat_room__user) {
             return $chat_room__user->user->id;
         });
 
@@ -140,7 +142,8 @@ class ChatRoomController extends Controller
         //各種リクエストのデータを取得
         $roomTitle = $request->input("room_title");
         $officeId = $request->input("office_id");
-        $joinUsersId = $request->input("checkBox");
+        $targetUsers = $request->input("target_users");
+        $joinUsersId = explode(",", $targetUsers);
 
         //現在時刻を取得
         $now = Carbon::now()->isoFormat('YYYY-MM-DD HH:mm:ss');
