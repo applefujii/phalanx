@@ -80,7 +80,7 @@
                     }
                 });
                 // bookmarkまでスクロール
-                $(window).scrollTop($('#bookmark').offset().top);
+                $("#center-scroll").scrollTop($('#bookmark').offset().top);
             })
             // 失敗時
             .fail(function(json){

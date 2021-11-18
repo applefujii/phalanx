@@ -49,7 +49,7 @@ if(isset($chat_room)) {
 <div class="container-fluid">
     <div class="row">
         <div class="col-md-2 d-none d-md-block border border-dark px-0">
-            <div class="contents-sticky container-fluid">
+            <div class="scroll-contents container-fluid">
                 @if (Auth::user()->user_type_id == 1)
                     <div class="row p-3">
                         <a href="{{ route('chat.index') }}" class="btn btn-primary btn-lg btn-block" role="button">通所者一覧</a>
@@ -246,13 +246,13 @@ if(isset($chat_room)) {
                     </div>
                 </div>
             @endif
-            <div class="">
+            <div class="scroll-contents" id="center-scroll">
                 @yield('center')
             </div>
             @yield("c_modal")
         </div>
         <div class="col-md-2 d-none d-md-block border border-dark pr-0">
-            <div class="contents-sticky">
+            <div class="scroll-contents">
                 @if (isset($chat_room))
                     <div class="row">
                         <h5 class="col-12 pt-3">参加者 - {{ $chatRoomUsers->count() }}人</h5>
