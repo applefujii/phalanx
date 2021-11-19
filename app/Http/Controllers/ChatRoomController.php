@@ -12,6 +12,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\ChatRoom;
 use App\Models\ChatRoom__User;
+use App\Models\ChatText;
 use App\Models\Office;
 use App\Models\User;
 use Illuminate\Support\Facades\Auth;
@@ -68,7 +69,8 @@ class ChatRoomController extends Controller
         //各種リクエストのデータを取得
         $roomTitle = $request->input("room_title");
         $officeId = $request->input("office_id");
-        $joinUsersId = $request->input("checkBox");
+        $targetUsers = $request->input("target_users");
+        $joinUsersId = explode(",", $targetUsers);
 
         //現在時刻を取得
         $now = Carbon::now()->isoFormat('YYYY-MM-DD HH:mm:ss');
@@ -140,7 +142,8 @@ class ChatRoomController extends Controller
         //各種リクエストのデータを取得
         $roomTitle = $request->input("room_title");
         $officeId = $request->input("office_id");
-        $joinUsersId = $request->input("checkBox");
+        $targetUsers = $request->input("target_users");
+        $joinUsersId = explode(",", $targetUsers);
 
         //現在時刻を取得
         $now = Carbon::now()->isoFormat('YYYY-MM-DD HH:mm:ss');
@@ -153,18 +156,16 @@ class ChatRoomController extends Controller
         $chatRoom->save();
 
         //$joinUsersIdを用いて変更後に参加者となっていないユーザーの中間テーブルを取得し、データを削除
-        $chatRoomUsers = ChatRoom__User::where("chat_room_id", $id)->whereNull("deleted_at")->whereNotIn("user_id", $joinUsersId)->get();
+        $chatRoomUsers = ChatRoom__User::where("chat_room_id", $id)->whereNotIn("user_id", $joinUsersId)->get();
         foreach($chatRoomUsers as $chatRoomUser) {
-            $chatRoomUser->delete_user_id = $user->id;
-            $chatRoomUser->deleted_at = $now;
-            $chatRoomUser->save();
+            $chatRoomUser->delete();
         }
 
         //変更された参加者とルームを結びつける中間テーブルのデータがすでにあるかどうかを判別
         foreach($joinUsersId as $joinUserId) {
-            $serch = ChatRoom__User::whereNull("deleted_at")->where("chat_room_id", $id)->where("user_id", $joinUserId)->first();
+            $serch = ChatRoom__User::where("chat_room_id", $id)->where("user_id", $joinUserId)->first();
 
-            //中間テーブルにデータがまだない場合のみ作成
+            //中間テーブルにデータがまだない場合は作成
             if(is_null($serch)) {
                 $chatRoomUser = new ChatRoom__User();
                 $chatRoomUser->chat_room_id = $id;
@@ -204,14 +205,23 @@ class ChatRoomController extends Controller
         $chatRoom->save();
 
         //削除するチャットルーム-ユーザー中間テーブルのデータを取得
-        $chatRoomUsers = ChatRoom__User::where("chat_room_id", $id)->whereNull("deleted_at")->get();
+        $chatRoomUsers = ChatRoom__User::where("chat_room_id", $id)->get();
 
-        //削除するデータがある場合のみ削除を実行
+        //削除を実行
         if(isset($chatRoomUsers)) {
             foreach($chatRoomUsers as $chatRoomUser) {
-                $chatRoomUser->delete_user_id = $user->id;
-                $chatRoomUser->deleted_at = $now;
-                $chatRoomUser->save();
+                $chatRoomUser->delete();
+            }
+        }
+
+        //削除するチャットテキストテーブルのデータを取得
+        $chatTexts = ChatText::whereNull("deleted_at")->where("chat_room_id", $id)->get();
+
+        //削除するデータが存在する場合のみ削除を実行
+        if(isset($chatTexts)) {
+            foreach($chatTexts as $chatText) {
+                $chatText->delete_user_id = $user->id;
+                $chatText->deleted_at = $now;
             }
         }
 

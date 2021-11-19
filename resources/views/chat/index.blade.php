@@ -82,9 +82,15 @@
 @endsection
 
 @section('c_modal')
-<div class="modal fade modal-lg" id="broadcastModal" tabindex="-1" role="dialog" aria-hidden="true">
+<div class="modal fade" id="broadcastModal" tabindex="-1" role="dialog" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered" role="document">
         <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">一斉送信</h5>
+                <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
             <div class="modal-body">
                 <form class="mx-5 my-2" action="{{ route('chat.multiStore') }}" method="post">
                     @csrf

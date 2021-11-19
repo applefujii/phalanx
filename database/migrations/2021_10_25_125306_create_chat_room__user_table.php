@@ -20,10 +20,8 @@ class CreateChatRoomUserTable extends Migration
             $table->unsignedBigInteger("newest_read_chat_text_id")->nullable()->default(null);
             $table->unsignedBigInteger("create_user_id");
             $table->unsignedBigInteger("update_user_id");
-            $table->unsignedBigInteger("delete_user_id")->nullable()->default(null);
             $table->dateTime("created_at");
             $table->dateTime("updated_at");
-            $table->dateTime("deleted_at")->nullable()->default(null);
         });
     }
 
