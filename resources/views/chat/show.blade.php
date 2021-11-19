@@ -53,7 +53,7 @@
     </script>
     <script>
         $(function() {
-            
+
             // 新着ありメッセージ非表示
             $('#new').hide();
             
@@ -95,7 +95,7 @@
                 $("#chat_log").empty();
                 // チャットログ表示
                 $.map(json.chat_texts, function (val, index) {
-                    html = `
+                    let html = `
                     <div class="chat_individual">
                         <div class="chat_header">
                             <span class="text-danger">${val.user.name}</span>　${moment(val.created_at, "YYYY-MM-DD hh:mm:ss").locale('ja').format('llll')}
@@ -118,6 +118,9 @@
                 });
                 // bookmarkまでスクロール
                 $("#center-scroll").scrollTop($('#bookmark').offset().top);
+
+                //最新チャット取得
+                getNewChatLog();
             })
             // 失敗時
             .fail(function(json){
@@ -126,8 +129,12 @@
 
             // 10秒ごとに最新チャット取得
             setInterval(() => {
-                getNewChatLog();
+                // 最新チャット取得中でないとき
+                if (!is_getting_text) {
+                    getNewChatLog();
+                }
             }, 10000);
+
             // 送信ボタンを押したらチャット送信
             $("#submit").on('click', function() {
                 submitText();
@@ -144,6 +151,9 @@
             });
             
             function getNewChatLog() {
+                // 新着メッセージ取得中ならtrue
+                is_getting_text = true;
+
                 // Ajaxリクエスト
                 $.ajaxSetup({
                     headers: {
@@ -199,6 +209,10 @@
                 .fail(function(json){
                     $('#error_message').text('メッセージの受信に失敗しました。');
                     $('#error').show();
+                })
+                .always(() => {
+                    // 新着メッセージ取得完了
+                    is_getting_text = false;
                 });
             }
             
@@ -232,7 +246,6 @@
                     } else {// 成功時
                         // 入力フォームを空に
                         $('#chat_text').val('');
-                        getNewChatLog();
                     }
                 })
                 // 失敗時
