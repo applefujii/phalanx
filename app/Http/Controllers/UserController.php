@@ -120,10 +120,11 @@ class UserController extends Controller
      */
     public function destroy(user $user)
     {
-        if ($user->id != Auth::id()) {
-            $now = Carbon::now();
-            $user->fill(['delete_user_id' => Auth::id(), 'deleted_at' => $now->isoFormat('YYYY-MM-DD HH:mm:ss')])->save();
+        if (!$user->id != Auth::id()) {
+            abort(403);
         }
+        $now = Carbon::now();
+        $user->fill(['delete_user_id' => Auth::id(), 'deleted_at' => $now->isoFormat('YYYY-MM-DD HH:mm:ss')])->save();
         return redirect()->route('user.index');
     }
 }

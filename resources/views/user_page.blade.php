@@ -45,7 +45,7 @@ align-items-center justify-content-center rounded"><h1>チ ャ ッ ト</h1></a>
 align-items-center justify-content-center rounded"><h4>体験・見学申込一覧</h4></a>
 <a href="{{ route('office.create') }}" type="button" class="mst btn-primary text-center d-flex 
 align-items-center justify-content-center rounded"><h4>マスタ管理</h4></a>
-<a href="{{ route('chat_room.list') }}" type="button" class="room btn-primary text-center d-flex 
+<a href="{{ route('chat_room.index') }}" type="button" class="room btn-primary text-center d-flex 
 align-items-center justify-content-center rounded"><h4>チャットルーム管理</h4></a>
 
 
@@ -55,7 +55,7 @@ align-items-center justify-content-center rounded"><h4>チャットルーム管�
 &nbsp&nbsp2020/03/16 12:45～<br>
 &nbsp&nbsp2020/03/16 14:30<br><br>
 
-&nbsp&nbspミント大阪体験
+&nbsp&nbspアップル梅田体験
 
 </div>
 
