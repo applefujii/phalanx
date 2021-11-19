@@ -41,9 +41,7 @@
                 @if ($errors->has("office_id"))
                     <div class="row mt-2">
                         <ul style="list-style: none">
-                            @foreach ($errors->get("office_id") as $error)
-                                <li class="text-danger">{{ $error }}</li>
-                            @endforeach
+                            <li class="text-danger">事業所を選択してください。</li>
                         </ul>
                     </div>
                 @endif
@@ -59,17 +57,16 @@
                 </div>
             </div>
             <!-- モーダルの中身を渡すときのキーをcheckBoxと仮定 -->
-            @if ($errors->has("checkBox"))
-                <div class="row mt-2">
-                    <ul style="list-style: none">
-                        @foreach ($errors->get("checkBox") as $error)
-                            <li class="text-danger">{{ $error }}</li>
-                        @endforeach
+            @if ($errors->has("target_users"))
+                <div class="row mt-2 ml-0">
+                    <ul class="pl-0" style="list-style: none">
+                        <li class="text-danger">メンバーを選択してください。</li>
                     </ul>
                 </div>
             @endif
         </div>
-        <input form="main-form" name="target_users" id="target_users" class="@error('target_users') is-invalid @enderror @error('target_users.*') is-invalid @enderror" hidden>
+        <input name="target_users" id="target_users" hidden>
+        {{--
         @error('target_users')
             <span class="invalid-feedback" role="alert">
                 <strong>{{ $message }}</strong>
@@ -80,6 +77,7 @@
                 <strong>{{ $message }}</strong>
             </span>
         @enderror
+        --}}
         {{--
         <div class="row justify-content-start mx-auto my-4">
             <div class="mx-4 user-list-wrapper insert-checked-people">
