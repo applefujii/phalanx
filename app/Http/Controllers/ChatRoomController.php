@@ -12,10 +12,12 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\ChatRoom;
 use App\Models\ChatRoom__User;
+use App\Models\ChatText;
 use App\Models\Office;
 use App\Models\User;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Requests\ChatRoomRequest;
+use Carbon\Carbon;
 
 class ChatRoomController extends Controller
 {
@@ -37,7 +39,7 @@ class ChatRoomController extends Controller
         //表示する部屋の一覧を取得
         $chatRooms = ChatRoom::where("distinction_number", 4)->whereNull("offices.deleted_at")->whereNull("chat_rooms.deleted_at")
             ->join("offices", "chat_rooms.office_id", "=", "offices.id")->orderBy("offices.sort")
-                ->orderBy("chat_rooms.room_title")->paginate(10);
+                ->orderBy("chat_rooms.room_title")->select("chat_rooms.*")->paginate(10);
 
         // $chatRooms = Chat_room::where("distinction_number", 4)->whereNull("deleted_at")->orderBy("room_title")->paginate(10);
 
@@ -67,11 +69,11 @@ class ChatRoomController extends Controller
         //各種リクエストのデータを取得
         $roomTitle = $request->input("room_title");
         $officeId = $request->input("office_id");
-        $joinUsersId = $request->input("checkBox");
+        $targetUsers = $request->input("target_users");
+        $joinUsersId = explode(",", $targetUsers);
 
         //現在時刻を取得
-        $now = new DateTime("now");
-        $now = $now->format("Y-m-d H:i:s");
+        $now = Carbon::now()->isoFormat('YYYY-MM-DD HH:mm:ss');
 
         //Chat_roomインスタンスを作成、各種データを挿入後登録
         $chatRoom = new ChatRoom();
@@ -108,7 +110,7 @@ class ChatRoomController extends Controller
 
         //存在しないチャットルームを編集しようとした時listにリダイレクト
         if($chatRoom == null) {
-            return redirect()->route("chat_room.list");
+            return redirect()->route("chat_room.index");
         }
 
         //必要なユーザーと事業所のデータを取得
@@ -134,17 +136,17 @@ class ChatRoomController extends Controller
 
         //存在しないチャットルームを編集しようとした時listにリダイレクト
         if(is_null($chatRoom)) {
-            return redirect()->route("chat_room.list");
+            return redirect()->route("chat_room.index");
         }
 
         //各種リクエストのデータを取得
         $roomTitle = $request->input("room_title");
         $officeId = $request->input("office_id");
-        $joinUsersId = $request->input("checkBox");
+        $targetUsers = $request->input("target_users");
+        $joinUsersId = explode(",", $targetUsers);
 
         //現在時刻を取得
-        $now = new DateTime("now");
-        $now = $now->format("Y-m-d H:i:s");
+        $now = Carbon::now()->isoFormat('YYYY-MM-DD HH:mm:ss');
 
         //取得したデータを用いて各種データを更新
         $chatRoom->room_title = $roomTitle;
@@ -154,18 +156,16 @@ class ChatRoomController extends Controller
         $chatRoom->save();
 
         //$joinUsersIdを用いて変更後に参加者となっていないユーザーの中間テーブルを取得し、データを削除
-        $chatRoomUsers = ChatRoom__User::where("chat_room_id", $id)->whereNull("deleted_at")->whereNotIn("user_id", $joinUsersId)->get();
+        $chatRoomUsers = ChatRoom__User::where("chat_room_id", $id)->whereNotIn("user_id", $joinUsersId)->get();
         foreach($chatRoomUsers as $chatRoomUser) {
-            $chatRoomUser->delete_user_id = $user->id;
-            $chatRoomUser->deleted_at = $now;
-            $chatRoomUser->save();
+            $chatRoomUser->delete();
         }
 
         //変更された参加者とルームを結びつける中間テーブルのデータがすでにあるかどうかを判別
         foreach($joinUsersId as $joinUserId) {
-            $serch = ChatRoom__User::whereNull("deleted_at")->where("chat_room_id", $id)->where("user_id", $joinUserId)->first();
+            $serch = ChatRoom__User::where("chat_room_id", $id)->where("user_id", $joinUserId)->first();
 
-            //中間テーブルにデータがまだない場合のみ作成
+            //中間テーブルにデータがまだない場合は作成
             if(is_null($serch)) {
                 $chatRoomUser = new ChatRoom__User();
                 $chatRoomUser->chat_room_id = $id;
@@ -193,27 +193,35 @@ class ChatRoomController extends Controller
 
         //存在しないチャットルームを削除しようとした時listにリダイレクト
         if(is_null($chatRoom)) {
-            return redirect()->route("chat_room.list");
+            return redirect()->route("chat_room.index");
         }
 
         //現在時刻を取得
-        $now = new DateTime("now");
-        $now = $now->format("Y-m-d H:i:s");
+        $now = Carbon::now()->isoFormat('YYYY-MM-DD HH:mm:ss');
 
         //チャットルームテーブルのデータの削除を実行
-        $chatRoom->update_user_id = $user->id;
-        $chatRoom->updated_at = $now;
+        $chatRoom->delete_user_id = $user->id;
+        $chatRoom->deleted_at = $now;
         $chatRoom->save();
 
         //削除するチャットルーム-ユーザー中間テーブルのデータを取得
-        $chatRoomUsers = ChatRoom__User::where("chat_room_id", $id)->whereNull("deleted_at")->get();
+        $chatRoomUsers = ChatRoom__User::where("chat_room_id", $id)->get();
 
-        //削除するデータがある場合のみ削除を実行
+        //削除を実行
         if(isset($chatRoomUsers)) {
             foreach($chatRoomUsers as $chatRoomUser) {
-                $chatRoomUser->delete_user_id = $user->id;
-                $chatRoomUser->deleted_at = $now;
-                $chatRoomUser->save();
+                $chatRoomUser->delete();
+            }
+        }
+
+        //削除するチャットテキストテーブルのデータを取得
+        $chatTexts = ChatText::whereNull("deleted_at")->where("chat_room_id", $id)->get();
+
+        //削除するデータが存在する場合のみ削除を実行
+        if(isset($chatTexts)) {
+            foreach($chatTexts as $chatText) {
+                $chatText->delete_user_id = $user->id;
+                $chatText->deleted_at = $now;
             }
         }
 

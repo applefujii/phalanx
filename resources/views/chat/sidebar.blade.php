@@ -1,7 +1,7 @@
 <?php
 //$chat_roomが渡されているとき参加者の情報を取得
 if(isset($chat_room)) {
-    $chatRoomUsers = $chat_room->chat_room__user->whereNull("deleted_at");
+    $chatRoomUsers = $chat_room->chat_room__user;
     if(isset($chatRoomUsers)) {
         $officers = [];
         $users = [];
@@ -13,7 +13,7 @@ if(isset($chat_room)) {
 
                 //$officersにすでにoffice_idと同じキーの配列があればその配列の後ろに入れ、なければ作る
                 if(isset($officers[$chatRoomUser->user->office_id])) {
-                    arary_push($officers[$chatRoomUser->user->office_id], $chatRoomUser->user->name);
+                    array_push($officers[$chatRoomUser->user->office_id], $chatRoomUser->user->name);
                 } else {
                     $officers[$chatRoomUser->user->office_id] = [$chatRoomUser->user->name];
                 }
@@ -22,7 +22,7 @@ if(isset($chat_room)) {
             //利用者も同様に処理する
             else if($chatRoomUser->user->user_type_id == 2) {
                 if(isset($users[$chatRoomUser->user->office_id])) {
-                    arary_push($users[$chatRoomUser->user->office_id], $chatRoomUser->user->name);
+                    array_push($users[$chatRoomUser->user->office_id], $chatRoomUser->user->name);
                 } else {
                     $users[$chatRoomUser->user->office_id] = [$chatRoomUser->user->name];
                 }
@@ -49,7 +49,7 @@ if(isset($chat_room)) {
 <div class="container-fluid">
     <div class="row">
         <div class="col-md-2 d-none d-md-block border border-dark px-0">
-            <div class="contents-sticky container-fluid">
+            <div class="scroll-contents container-fluid">
                 @if (Auth::user()->user_type_id == 1)
                     <div class="row p-3">
                         <a href="{{ route('chat.index') }}" class="btn btn-primary btn-lg btn-block" role="button">通所者一覧</a>
@@ -126,7 +126,7 @@ if(isset($chat_room)) {
                         <div class="modal-body">
                             @if (Auth::user()->user_type_id == 1)
                                 <div class="row p-3">
-                                    <a href="{{ route('chat_room.index') }}" class="btn btn-primary btn-lg btn-block" role="button">通所者一覧</a>
+                                    <a href="{{ route('chat.index') }}" class="btn btn-primary btn-lg btn-block" role="button">通所者一覧</a>
                                 </div>
                             @endif
                             <div class="row">
@@ -210,7 +210,7 @@ if(isset($chat_room)) {
                                                 <h5 class="col-12 pt-3">{{ $office->office_name }}職員 - {{ count($officers[$office->id]) }}人</h5>
                                                 <ul class="col-12 pt-1">
                                                     @foreach ($officers[$office->id] as $officer)
-                                                        {{ $officer }}
+                                                        <li>{{ $officer }}</li>
                                                     @endforeach
                                                 </ul>
                                             </div>
@@ -224,7 +224,7 @@ if(isset($chat_room)) {
                                                 <h5 class="col-12 pt-3">{{ $office->office_name }}通所者 - {{ count($users[$office->id]) }}人</h5>
                                                 <ul class="col-12 pt-1">
                                                     @foreach ($users[$office->id] as $user)
-                                                        {{ $user }}
+                                                        <li>{{ $user }}</li>
                                                     @endforeach
                                                 </ul>
                                             </div>
@@ -232,7 +232,7 @@ if(isset($chat_room)) {
                                     @endforeach
                                 </div>
                                 <div class="row">
-                                    @if (isset($trials))
+                                    @if (isset($trials[0]))
                                         <h5 class="col-12 pt-3">体験者 - {{ count($trials) }}人</h5>
                                         <ul class="col-12 pt-1">
                                             @foreach ($trials as $trial)
@@ -246,13 +246,13 @@ if(isset($chat_room)) {
                     </div>
                 </div>
             @endif
-            <div class="contents-sticky">
+            <div class="scroll-contents" id="center-scroll">
                 @yield('center')
             </div>
             @yield("c_modal")
         </div>
         <div class="col-md-2 d-none d-md-block border border-dark pr-0">
-            <div class="contents-sticky">
+            <div class="scroll-contents">
                 @if (isset($chat_room))
                     <div class="row">
                         <h5 class="col-12 pt-3">参加者 - {{ $chatRoomUsers->count() }}人</h5>
@@ -264,7 +264,7 @@ if(isset($chat_room)) {
                                     <h5 class="col-12 pt-3">{{ $office->office_name }}職員 - {{ count($officers[$office->id]) }}人</h5>
                                     <ul class="col-12 pt-1">
                                         @foreach ($officers[$office->id] as $officer)
-                                            {{ $officer }}
+                                            <li>{{ $officer }}</li>
                                         @endforeach
                                     </ul>
                                 </div>
@@ -278,7 +278,7 @@ if(isset($chat_room)) {
                                     <h5 class="col-12 pt-3">{{ $office->office_name }}通所者 - {{ count($users[$office->id]) }}人</h5>
                                     <ul class="col-12 pt-1">
                                         @foreach ($users[$office->id] as $user)
-                                            {{ $user }}
+                                            <li>{{ $user }}</li>
                                         @endforeach
                                     </ul>
                                 </div>
@@ -286,7 +286,7 @@ if(isset($chat_room)) {
                         @endforeach
                     </div>
                     <div class="row">
-                        @if (isset($trials))
+                        @if (isset($trials[0]))
                             <h5 class="col-12 pt-3">体験者 - {{ count($trials) }}人</h5>
                             <ul class="col-12 pt-1">
                                 @foreach ($trials as $trial)
