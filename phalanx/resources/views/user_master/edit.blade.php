@@ -1,4 +1,5 @@
 @extends('layouts.app')
+@section('title', 'ユーザーマスター　編集')
 @section('css')
 <link href="{{ asset('css/user-master/create_and_edit.css') }}" rel="stylesheet">
 @endsection
