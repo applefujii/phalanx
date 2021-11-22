@@ -55,7 +55,7 @@ align-items-center justify-content-center rounded"><h4>チャットルーム管�
 &nbsp&nbsp2020/03/16 12:45～<br>
 &nbsp&nbsp2020/03/16 14:30<br><br>
 
-&nbsp&nbspミント大阪体験
+&nbsp&nbspアップル梅田体験
 
 </div>
 
