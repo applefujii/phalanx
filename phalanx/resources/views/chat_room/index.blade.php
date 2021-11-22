@@ -44,7 +44,7 @@
         </table>
     </div>
     <div class="mt-2">
-        {{ $chatRooms->links() }}
+        {{ $chatRooms->links('vendor/pagination/pagination_view') }}
     </div>
 </div>
 @endsection
