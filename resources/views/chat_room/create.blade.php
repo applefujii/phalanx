@@ -46,8 +46,8 @@
                 @endif
             </div>
         </div>
-        <div class="row ml-0">
-            <div class="row w-100">
+        <div class="d-flex flex-column">
+            <div class="row">
                 <div class="col-sm-auto mt-3">
                     <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#peopleListModal" data-target-group="staff">メンバー選択（職員）</button>
                 </div>
@@ -55,9 +55,9 @@
                     <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#peopleListModal" data-target-group="user">メンバー選択（利用者）</button>
                 </div>
             </div>
-            <!-- モーダルの中身を渡すときのキーをcheckBoxと仮定 -->
+            <div class="row mx-0 insert-checked-people"></div>
             @if ($errors->has("target_users"))
-                <div class="row mt-2 ml-0">
+                <div class="row mt-2 mx-0">
                     <ul class="pl-0" style="list-style: none">
                         <li class="text-danger">メンバーを選択してください。</li>
                     </ul>
@@ -65,33 +65,13 @@
             @endif
         </div>
         <input name="target_users" id="target_users" hidden>
-        {{--
-        @error('target_users')
-            <span class="invalid-feedback" role="alert">
-                <strong>{{ $message }}</strong>
-            </span>
-        @enderror
-        @error('target_users.*')
-            <span class="invalid-feedback" role="alert">
-                <strong>{{ $message }}</strong>
-            </span>
-        @enderror
-        --}}
-        {{--
-        <div class="row justify-content-start mx-auto my-4">
-            <div class="mx-4 user-list-wrapper insert-checked-people">
-                @if(old("target_users") == "")
-                    <p class="text-danger">未選択</p>
-                @else
-                    <p>読み込み中...</p>
-                @endif
-            </div>
-        </div>
-        --}}
         <div class="row ml-0 mt-3">
             <button class="btn btn-primary" type="submit">登録</button>
         </div>
     </form>
 </div>
 @endsection
+
+@section("script")
 @include("component.people_list")
+@endsection

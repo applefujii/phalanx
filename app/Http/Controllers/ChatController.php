@@ -173,24 +173,23 @@ class ChatController extends Controller
         $chat_room__user = ChatRoom__User::where('chat_room_id', $id)->where('user_id', Auth::user()->id)->first();
         $newest_read_chat_text_id = $chat_room__user->newest_read_chat_text_id;
         
-        // 未読のチャットテキストのみを取得
-        $chat_room = ChatRoom::whereNull('deleted_at')
+        // 未読がなければ最大10秒間待ってから値を返す
+        foreach (range(1, 10) as $value) {
+            // 未読のチャットテキストのみを取得
+            $chat_room = ChatRoom::whereNull('deleted_at')
             ->with(['chat_texts' => function ($query) use ($newest_read_chat_text_id) {
                 $query->where('id', '>', $newest_read_chat_text_id);
             }])
             ->find($id);
 
-        // // 未読がないとき
-        // if (empty($chat_room->chat_texts->last())) {
-        //     //10秒待機
-        //     sleep(10);
-        //     // 未読のチャットテキストのみを取得
-        //     $chat_room = ChatRoom::whereNull('deleted_at')
-        //     ->with(['chat_texts' => function ($query) use ($newest_read_chat_text_id) {
-        //         $query->where('id', '>', $newest_read_chat_text_id);
-        //     }])
-        //     ->find($id);
-        // }
+            // 未読があるとき
+            if (!empty($chat_room->chat_texts->last())) {
+                break;
+            }
+
+            //1秒待機
+            sleep(1);
+        }
             
         // 未読があるとき
         if (!empty($chat_room->chat_texts->last())) {
@@ -211,48 +210,34 @@ class ChatController extends Controller
     /**
      * 入力されたチャットをDBに保存
      *
-     * @param  \App\Http\Requests\ChatTextRequest  $request
+     * @param  Request  $request
      * @param チャットルームテーブルのID $id
      * @return json $chat_room
      */
-    public function storeChatJson(ChatTextRequest $request, $id)
+    public function storeChatJson(Request $request, $id)
     {
-        $now = Carbon::now();
+        // 入力された文字数
+        $chat_text_length = mb_strlen($request->input('chat_text'));
 
-        $chat_text = new ChatText();
-        $chat_text->chat_text = $request->input('chat_text');
-        $chat_text->chat_room_id = $id;
-        $chat_text->user_id = Auth::user()->id;
-        $chat_text->create_user_id = Auth::user()->id;
-        $chat_text->update_user_id = Auth::user()->id;
-        $chat_text->created_at = $now->isoFormat('YYYY-MM-DD HH:mm:ss');
-        $chat_text->updated_at = $now->isoFormat('YYYY-MM-DD HH:mm:ss');
-        $chat_text->save();
+        if ($chat_text_length == 0) {// 空入力のとき
+            return response()->json(['error' => 'メッセージが入力されていません。']);
 
-        // チャットルーム-ユーザー-中間テーブルから、既読チャットテキストIDを取得
-        $chat_room__user = ChatRoom__User::where('chat_room_id', $id)->where('user_id', Auth::user()->id)->first();
-        $newest_read_chat_text_id = $chat_room__user->newest_read_chat_text_id;
-        
-        // 未読のチャットテキストのみを取得
-        $chat_room = ChatRoom::whereNull('deleted_at')
-            ->with(['chat_texts' => function ($query) use ($newest_read_chat_text_id) {
-                $query->where('id', '>', $newest_read_chat_text_id);
-            }])
-            ->find($id);
-        
-        // 未読があるとき
-        if (!empty($chat_room->chat_texts->last())) {
-            $newest_read_chat_text_id = $chat_room->chat_texts->last()->id;
-
-            // チャットルーム-ユーザー-中間テーブルに、既読チャットテキストIDを保存
+        } else if ($chat_text_length > 500) {// 文字数が500字を超えるとき
+            return response()->json(['error' => 'メッセージは500字以内で入力してください。']);
+        } else {
             $now = Carbon::now();
 
-            $chat_room__user->newest_read_chat_text_id = $newest_read_chat_text_id;
-            $chat_room__user->update_user_id = Auth::user()->id;
-            $chat_room__user->updated_at = $now->isoFormat('YYYY-MM-DD HH:mm:ss');
-            $chat_room__user->save();
+            $chat_text = new ChatText();
+            $chat_text->chat_text = $request->input('chat_text');
+            $chat_text->chat_room_id = $id;
+            $chat_text->user_id = Auth::user()->id;
+            $chat_text->create_user_id = Auth::user()->id;
+            $chat_text->update_user_id = Auth::user()->id;
+            $chat_text->created_at = $now->isoFormat('YYYY-MM-DD HH:mm:ss');
+            $chat_text->updated_at = $now->isoFormat('YYYY-MM-DD HH:mm:ss');
+            $chat_text->save();
         }
         
-        return response()->json($chat_room);
+        return response()->json(['success' => '送信が完了しました。']);
     }
 }
