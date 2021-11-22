@@ -55,9 +55,9 @@
                     <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#peopleListModal" data-target-group="user">メンバー選択（利用者）</button>
                 </div>
             </div>
-            <div class="row ml-0 insert-checked-people"></div>
+            <div class="row mx-0 insert-checked-people"></div>
             @if ($errors->has("target_users"))
-                <div class="row mt-2 ml-0">
+                <div class="row mt-2 mx-0">
                     <ul class="pl-0" style="list-style: none">
                         <li class="text-danger">メンバーを選択してください。</li>
                     </ul>
