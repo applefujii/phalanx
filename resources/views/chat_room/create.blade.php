@@ -71,4 +71,7 @@
     </form>
 </div>
 @endsection
+
+@section("script")
 @include("component.people_list")
+@endsection
