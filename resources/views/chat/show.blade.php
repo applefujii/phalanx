@@ -62,13 +62,17 @@
             let is_getting_text = false;
 
             // 最新チャットメッセージ閲覧済みかどうか
-            let is_checked_latest =false;
+            let is_checked_latest = false;
+
+            // 表示している中で最も古いチャットテキストのID
+            let oldest_display_chat_text_id = 1;
 
             // ----------------------------メッセージ表示----------------------------
+
             // 新着ありメッセージ非表示
             $('#new').hide();
             
-            //一番下までスクロールしたら
+            //スクロールしたら
             $("#center-scroll").on("scroll", function() {
                 // ドキュメントの高さ
                 let document_height = $(document).innerHeight();
@@ -84,6 +88,14 @@
                     // 最新チャットメッセージ閲覧済み
                     is_checked_latest =true;
                 }
+                // スクロール位置
+                let scroll_top = $("#center-scroll").scrollTop();
+                
+                // 一番上までスクロールしたら
+                if (scroll_top == 0) {
+                    getOldChatLog();
+                }
+
             });
 
             // エラーメッセージ非表示
@@ -112,16 +124,22 @@
                 // チャットログを空に
                 $("#chat_log").empty();
                 // チャットログ表示
-                $.map(json.chat_texts, function (val, index) {
+                $.map(json.chat_texts.reverse(), function (val, index) {// 逆順
                     displayChatText (val, index);
                     
                     // ブックマーク追加
                     if (val.id == json.newest_read_chat_text_id) {
                         displayBookmark();
                     }
+
                 });
-                // bookmarkまでスクロール
-                $("#center-scroll").scrollTop($('#bookmark').offset().top);
+                // もっとも古い
+                oldest_display_chat_text_id = json.oldest_display_chat_text_id;
+                // bookmarkがあれば
+                if($('#bookmark').length){
+                    // bookmarkまでスクロール
+                    $("#center-scroll").scrollTop($('#bookmark').offset().top);
+                }
             })
             // 失敗時
             .fail((json) => {
@@ -133,7 +151,7 @@
             setInterval(() => {
                 // 最新チャット取得中でないとき
                 if (!is_getting_text) {
-                    getNewChatLog();
+                    getOldChatLog();
                 }
             }, 10000);
 
@@ -204,6 +222,64 @@
                 .always(() => {
                     // 新着メッセージ取得完了
                     is_getting_text = false;
+                });
+            }
+
+            // ----------------------------過去メッセージ取得----------------------------
+            function getOldChatLog() {
+                
+                let old_height = $('#chat_log').innerHeight();
+                console.log('old_height   '+old_height);
+                
+                // Ajaxリクエスト
+                $.ajaxSetup({
+                    headers: {
+                        "X-CSRF-TOKEN": $('meta[name="csrf-token"]').attr("content"),
+                    },
+                });
+                $.ajax({
+                    url:'/chat/' + chat_room_id + '/' + oldest_display_chat_text_id + '/getOldChatLogJson',
+                    type:'GET',
+                })
+                // 成功時
+                .done((json) => {
+                    // 新着メッセージがある場合
+                    if (json.chat_texts.length > 0) {
+
+                        // チャットログ表示
+                        $.map(json.chat_texts, function (val, index) {
+                            // ユーザー名のCSS
+                            let name_css = 'text-danger font-weight-bold';
+                            // 自分の書き込みなら
+                            if (val.user_id == user_id) {
+                                name_css = 'text-primary font-weight-bold';
+                            }
+                            let html = `
+                            <div class="chat_individual">
+                                <div class="chat_header">
+                                    <span class="${name_css}">${val.user.name}</span>　${moment(val.created_at, "YYYY-MM-DD hh:mm:ss").locale('ja').format('llll')}
+                                </div>
+                                    
+                                <div class="chat_text">${val.chat_text}</div>
+                            </div>
+                            `;
+                            $("#chat_log").prepend(html);
+
+                            // 最古チャットテキストID更新
+                            oldest_display_chat_text_id = val.id;
+                        });
+                    }
+                })
+                // 失敗時
+                .fail((json) => {
+                    $('#error_message').text('メッセージの受信に失敗しました。');
+                    $('#error').show();
+                })
+                .always(() => {
+                    let new_height = $('#chat_log').innerHeight();
+                    console.log('new_height   '+new_height);
+
+                    $("#center-scroll").scrollTop(new_height - old_height);
                 });
             }
             
