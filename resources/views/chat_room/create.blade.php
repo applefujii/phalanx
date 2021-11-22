@@ -55,7 +55,6 @@
                     <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#peopleListModal" data-target-group="user">メンバー選択（利用者）</button>
                 </div>
             </div>
-            <!-- モーダルの中身を渡すときのキーをcheckBoxと仮定 -->
             @if ($errors->has("target_users"))
                 <div class="row mt-2 ml-0">
                     <ul class="pl-0" style="list-style: none">
@@ -65,29 +64,6 @@
             @endif
         </div>
         <input name="target_users" id="target_users" hidden>
-        {{--
-        @error('target_users')
-            <span class="invalid-feedback" role="alert">
-                <strong>{{ $message }}</strong>
-            </span>
-        @enderror
-        @error('target_users.*')
-            <span class="invalid-feedback" role="alert">
-                <strong>{{ $message }}</strong>
-            </span>
-        @enderror
-        --}}
-        {{--
-        <div class="row justify-content-start mx-auto my-4">
-            <div class="mx-4 user-list-wrapper insert-checked-people">
-                @if(old("target_users") == "")
-                    <p class="text-danger">未選択</p>
-                @else
-                    <p>読み込み中...</p>
-                @endif
-            </div>
-        </div>
-        --}}
         <div class="row ml-0 mt-3">
             <button class="btn btn-primary" type="submit">登録</button>
         </div>
