@@ -52,7 +52,7 @@
         // チャットルームID
         let chat_room_id = @json($chat_room->id);
         // ログイン者のユーザーID
-        let user_id = @json(Auth::user()->id);
+        const user_id = @json(Auth::user()->id);
     </script>
     <script>
         $(function() {
@@ -106,46 +106,27 @@
                 type:'GET',
             })
             // 成功時
-            .done(function(json){
+            .done((json) => {
                 // ルーム名表示
                 $('#room_name').text(json.room_title);
                 // チャットログを空に
                 $("#chat_log").empty();
                 // チャットログ表示
                 $.map(json.chat_texts, function (val, index) {
-                    // ユーザー名のCSS
-                    let name_css = 'text-danger font-weight-bold';
-                    // 自分の書き込みなら
-                    if (val.user_id == user_id) {
-                        name_css = 'text-primary font-weight-bold';
-                    }
-                    let html = `
-                    <div class="chat_individual">
-                        <div class="chat_header">
-                            <span class="${name_css}">${val.user.name}</span>　${moment(val.created_at, "YYYY-MM-DD hh:mm:ss").locale('ja').format('llll')}
-                        </div>
-                            
-                        <div class="chat_text">${val.chat_text}</div>
-                    </div>
-                    `;
-                    $("#chat_log").append(html);
+                    displayChatText (val, index);
                     
                     // ブックマーク追加
                     if (val.id == json.newest_read_chat_text_id) {
-                        let html = `
-                                <div id="bookmark" class="border border-primary text-center">
-                                    <span class="text-primary">新着</span>
-                                </div>
-                                `;
-                        $("#chat_log").append(html);
+                        displayBookmark();
                     }
                 });
                 // bookmarkまでスクロール
                 $("#center-scroll").scrollTop($('#bookmark').offset().top);
             })
             // 失敗時
-            .fail(function(json){
-                alert('受信に失敗しました。');
+            .fail((json) => {
+                $('#error_message').text('メッセージの受信に失敗しました。');
+                $('#error').show();
             });
 
             // ----------------------------10秒ごとに最新チャット取得----------------------------
@@ -187,7 +168,7 @@
                     type:'GET',
                 })
                 // 成功時
-                .done(function(json){
+                .done((json) => {
                     // 新着メッセージがある場合
                     if (json.chat_texts.length > 0) {
                         // ルーム名表示
@@ -203,32 +184,12 @@
                                 $("#bookmark").remove();
                                 
                                 // ブックマーク追加
-                                let html = `
-                                        <div id="bookmark" class="border border-primary text-center">
-                                            <span class="text-primary">新着</span>
-                                        </div>
-                                        `;
-                                $("#chat_log").append(html);
+                                displayBookmark();
                             }
 
                         // チャットログ表示
                         $.map(json.chat_texts, function (val, index) {
-                            // ユーザー名のCSS
-                            let name_css = 'text-danger font-weight-bold';
-                            // 自分の書き込みなら
-                            if (val.user_id == user_id) {
-                                name_css = 'text-primary font-weight-bold';
-                            }
-                            let html = `
-                            <div class="chat_individual">
-                                <div class="chat_header">
-                                    <span class="${name_css}">${val.user.name}</span>　${moment(val.created_at, "YYYY-MM-DD hh:mm:ss").locale('ja').format('llll')}
-                                </div>
-                                    
-                                <div class="chat_text">${val.chat_text}</div>
-                            </div>
-                            `;
-                            $("#chat_log").append(html);
+                            displayChatText(val, index);
                         });
                         // 新着ありメッセージ表示
                         $('#new').show();
@@ -237,7 +198,7 @@
                     }
                 })
                 // 失敗時
-                .fail(function(json){
+                .fail((json) => {
                     $('#error_message').text('メッセージの受信に失敗しました。');
                     $('#error').show();
                 })
@@ -255,6 +216,9 @@
                     // 空ならなにもしない
                     return false;
                 }
+                // 送信ボタン無効化
+                $('#submit').prop('disabled', true);
+
                 // Ajaxリクエスト
                 $.ajaxSetup({
                     headers: {
@@ -282,10 +246,45 @@
                     }
                 })
                 // 失敗時
-                .fail((error) => {
+                .fail((json) => {
                     $('#error_message').text('送信に失敗しました。');
                     $('#error').show();
+                })
+                .always(() => {
+                    // 送信ボタン有効化
+                    $('#submit').prop('disabled', false);
                 });
+            }
+
+            
+            // ----------------------------チャット履歴表示----------------------------
+            function displayChatText(val, index) {
+                // ユーザー名のCSS
+                let name_css = 'text-danger font-weight-bold';
+                // 自分の書き込みなら
+                if (val.user_id == user_id) {
+                    name_css = 'text-primary font-weight-bold';
+                }
+                let html = `
+                <div class="chat_individual">
+                    <div class="chat_header">
+                        <span class="${name_css}">${val.user.name}</span>　${moment(val.created_at, "YYYY-MM-DD hh:mm:ss").locale('ja').format('llll')}
+                    </div>
+                        
+                    <div class="chat_text">${val.chat_text}</div>
+                </div>
+                `;
+                $("#chat_log").append(html);
+            }
+
+            // ----------------------------ブックマーク表示----------------------------
+            function displayBookmark() {
+                let html = `
+                        <div id="bookmark" class="border border-primary text-center">
+                            <span class="text-primary">新着</span>
+                        </div>
+                        `;
+                $("#chat_log").append(html);
             }
         });
     </script>
