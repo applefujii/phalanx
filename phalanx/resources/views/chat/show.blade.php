@@ -49,8 +49,10 @@
     <script src="{{ asset('js/jquery-3.6.0.min.js') }}"></script>
     <script src="{{ asset('js/moment-with-locales.min.js') }}"></script>
     <script>
-        // チャットルームIDの取得
-        let id = @json($chat_room->id);
+        // チャットルームID
+        let chat_room_id = @json($chat_room->id);
+        // ログイン者のユーザーID
+        let user_id = @json(Auth::user()->id);
     </script>
     <script>
         $(function() {
@@ -70,10 +72,10 @@
             $("#center-scroll").on("scroll", function() {
                 // ドキュメントの高さ
                 let document_height = $(document).innerHeight();
-                console.log('doc   '+document_height);
+                // console.log('doc   '+document_height);
                 // 最下位置
                 let bottom_height = $('#bottom').offset().top;
-                console.log('bottom'+bottom_height);
+                // console.log('bottom'+bottom_height);
                 
                 // 最下付近までスクロールしたら
                 if (bottom_height - document_height < 10) {
@@ -100,7 +102,7 @@
                 },
             });
             $.ajax({
-                url:'/chat/' + id + '/getChatLogJson',
+                url:'/chat/' + chat_room_id + '/getChatLogJson',
                 type:'GET',
             })
             // 成功時
@@ -111,10 +113,16 @@
                 $("#chat_log").empty();
                 // チャットログ表示
                 $.map(json.chat_texts, function (val, index) {
+                    // ユーザー名のCSS
+                    let name_css = 'text-danger font-weight-bold';
+                    // 自分の書き込みなら
+                    if (val.user_id == user_id) {
+                        name_css = 'text-primary font-weight-bold';
+                    }
                     let html = `
                     <div class="chat_individual">
                         <div class="chat_header">
-                            <span class="text-danger">${val.user.name}</span>　${moment(val.created_at, "YYYY-MM-DD hh:mm:ss").locale('ja').format('llll')}
+                            <span class="${name_css}">${val.user.name}</span>　${moment(val.created_at, "YYYY-MM-DD hh:mm:ss").locale('ja').format('llll')}
                         </div>
                             
                         <div class="chat_text">${val.chat_text}</div>
@@ -175,7 +183,7 @@
                     },
                 });
                 $.ajax({
-                    url:'/chat/' + id + '/getNewChatLogJson',
+                    url:'/chat/' + chat_room_id + '/getNewChatLogJson',
                     type:'GET',
                 })
                 // 成功時
@@ -205,12 +213,16 @@
 
                         // チャットログ表示
                         $.map(json.chat_texts, function (val, index) {
-                            let beforeDate = moment(val.created_at, "YYYY-MM-DD hh:mm:ss");
-                            let afterDate = beforeDate.format('YYYY年MM月DD日(ddd) HH:mm');
+                            // ユーザー名のCSS
+                            let name_css = 'text-danger font-weight-bold';
+                            // 自分の書き込みなら
+                            if (val.user_id == user_id) {
+                                name_css = 'text-primary font-weight-bold';
+                            }
                             let html = `
                             <div class="chat_individual">
                                 <div class="chat_header">
-                                    <span class="text-danger">${val.user.name}</span>　${moment(val.created_at, "YYYY-MM-DD hh:mm:ss").locale('ja').format('llll')}
+                                    <span class="${name_css}">${val.user.name}</span>　${moment(val.created_at, "YYYY-MM-DD hh:mm:ss").locale('ja').format('llll')}
                                 </div>
                                     
                                 <div class="chat_text">${val.chat_text}</div>
@@ -251,7 +263,7 @@
                 });
                 $.ajax({
                     type: "post",
-                    url:'/chat/' + id + '/storeChatJson',
+                    url:'/chat/' + chat_room_id + '/storeChatJson',
                     dataType: "json",
                     data: {
                         chat_text: chat_text,
