@@ -120,7 +120,7 @@ class UserController extends Controller
      */
     public function destroy(user $user)
     {
-        if (!$user->id != Auth::id()) {
+        if ($user->id == Auth::id()) {
             abort(403);
         }
         $now = Carbon::now();
