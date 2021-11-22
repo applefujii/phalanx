@@ -143,12 +143,11 @@
             });
 
             // SHFIT+ENTERを押したらチャット送信
+            // 連打防止で送信ボタン無効なら送信しない
             $(window).on('keydown', function(e){
-                if(event.shiftKey){
-                    if(e.keyCode === 13){
-                        submitText();
-                        return false;
-                    }
+                if(event.shiftKey && e.keyCode === 13 && !$('#submit').prop('disabled')){
+                    submitText();
+                    return false;
                 }
             });
 
