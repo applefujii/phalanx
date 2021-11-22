@@ -47,8 +47,8 @@
                 @endif
             </div>
         </div>
-        <div class="row ml-0">
-            <div class="row w-100">
+        <div class="d-flex flex-column">
+            <div class="row">
                 <div class="col-sm-auto mt-3">
                     <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#peopleListModal" data-target-group="staff">メンバー選択（職員）</button>
                 </div>
@@ -56,6 +56,7 @@
                     <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#peopleListModal" data-target-group="user">メンバー選択（利用者）</button>
                 </div>
             </div>
+            <div class="row ml-0 insert-checked-people"></div>
             @if ($errors->has("target_users"))
                 <div class="row mt-2 ml-0">
                     <ul class="pl-0" style="list-style: none">
