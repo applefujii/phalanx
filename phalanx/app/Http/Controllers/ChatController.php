@@ -133,27 +133,37 @@ class ChatController extends Controller
     /**
      * チャットログをjavascriptで取得
      * 
-     * @param チャットルームテーブルのID $id
+     * @param チャットルームテーブルのID $chat_room_id
      * @return json $chat_room
      */
-    public function getChatLogJson ($id)
+    public function getChatLogJson ($chat_room_id)
     {
         // チャットルーム-ユーザー-中間テーブルから、既読チャットテキストIDを取得
-        $chat_room__user = ChatRoom__User::where('chat_room_id', $id)->where('user_id', Auth::user()->id)->first();
+        $chat_room__user = ChatRoom__User::where('chat_room_id', $chat_room_id)->where('user_id', Auth::user()->id)->first();
         $newest_read_chat_text_id = $chat_room__user->newest_read_chat_text_id;
 
-        // 全てのチャットテキストを取得
-        $chat_room = ChatRoom::whereNull('deleted_at')->with('chat_texts')->find($id);
+        // チャットテキストを取得
+        $chat_room = ChatRoom::whereNull('deleted_at')
+            ->with(['chat_texts' => function ($query) {
+                $query->whereNull('deleted_at')->orderByDesc('id')->limit(10);
+            }])
+            ->find($chat_room_id);
+
+        // 表示している中で最古のテキストのID
+        $oldest_display_chat_text_id = $chat_room->chat_texts->last()->id;
 
         $chat_room_array = $chat_room->toArray();
 
-        // 既読チャットテキストIDを戻り値に追加
-        $chat_room_array += array('newest_read_chat_text_id' => $newest_read_chat_text_id);
+        // 戻り値に追加
+        $chat_room_array += array(
+                'newest_read_chat_text_id' => $newest_read_chat_text_id,
+                'oldest_display_chat_text_id' => $oldest_display_chat_text_id,
+            );
 
         // チャットルーム-ユーザー-中間テーブルに、既読チャットテキストIDを保存
         $now = Carbon::now();
 
-        $chat_room__user->newest_read_chat_text_id = $chat_room->chat_texts->last()->id;
+        $chat_room__user->newest_read_chat_text_id = $chat_room->chat_texts->first()->id;
         $chat_room__user->update_user_id = Auth::user()->id;
         $chat_room__user->updated_at = $now->isoFormat('YYYY-MM-DD HH:mm:ss');
         $chat_room__user->save();
@@ -164,13 +174,13 @@ class ChatController extends Controller
     /**
      * チャットログの差分をjavascriptで取得
      * 
-     * @param チャットルームテーブルのID $id
+     * @param チャットルームテーブルのID $chat_room_id
      * @return json $chat_room
      */
-    public function getNewChatLogJson ($id)
+    public function getNewChatLogJson ($chat_room_id)
     {
         // チャットルーム-ユーザー-中間テーブルから、既読チャットテキストIDを取得
-        $chat_room__user = ChatRoom__User::where('chat_room_id', $id)->where('user_id', Auth::user()->id)->first();
+        $chat_room__user = ChatRoom__User::where('chat_room_id', $chat_room_id)->where('user_id', Auth::user()->id)->first();
         $newest_read_chat_text_id = $chat_room__user->newest_read_chat_text_id;
         
         // 未読がなければ最大10秒間待ってから値を返す
@@ -178,9 +188,9 @@ class ChatController extends Controller
             // 未読のチャットテキストのみを取得
             $chat_room = ChatRoom::whereNull('deleted_at')
             ->with(['chat_texts' => function ($query) use ($newest_read_chat_text_id) {
-                $query->where('id', '>', $newest_read_chat_text_id);
+                $query->where('id', '>', $newest_read_chat_text_id)->whereNull('deleted_at')->orderBy('id');
             }])
-            ->find($id);
+            ->find($chat_room_id);
 
             // 未読があるとき
             if (!empty($chat_room->chat_texts->last())) {
@@ -208,13 +218,32 @@ class ChatController extends Controller
     }
 
     /**
+     * 過去のチャットログをjavascriptで取得
+     * 
+     * @param チャットルームテーブルのID $chat_room_id
+     * @param チャットテキストのID $chat_text_id
+     * @return json $chat_room
+     */
+    public function getOldChatLogJson ($chat_room_id, $chat_text_id)
+    {
+        // $chat_text_idより古いテキストのみを取得
+        $chat_room = ChatRoom::whereNull('deleted_at')
+        ->with(['chat_texts' => function ($query) use ($chat_text_id) {
+            $query->where('id', '<', $chat_text_id)->whereNull('deleted_at')->orderByDesc('id')->limit(10);
+        }])
+        ->find($chat_room_id);
+        
+        return response()->json($chat_room);
+    }
+
+    /**
      * 入力されたチャットをDBに保存
      *
      * @param  Request  $request
      * @param チャットルームテーブルのID $id
      * @return json $chat_room
      */
-    public function storeChatJson(Request $request, $id)
+    public function storeChatJson(Request $request, $chat_room_id)
     {
         // 入力された文字数
         $chat_text_length = mb_strlen($request->input('chat_text'));
@@ -229,7 +258,7 @@ class ChatController extends Controller
 
             $chat_text = new ChatText();
             $chat_text->chat_text = $request->input('chat_text');
-            $chat_text->chat_room_id = $id;
+            $chat_text->chat_room_id = $chat_room_id;
             $chat_text->user_id = Auth::user()->id;
             $chat_text->create_user_id = Auth::user()->id;
             $chat_text->update_user_id = Auth::user()->id;
