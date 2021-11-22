@@ -1,6 +1,7 @@
 @if ($paginator->hasPages())
     <nav>
         <ul class="pagination">
+            
             {{-- First Page Link and Previous Page Link --}}
             @if ($paginator->onFirstPage())
                 <li class="page-item disabled" aria-disabled="true">
@@ -27,7 +28,7 @@
 
                 {{-- Array Of Links --}}
                 @if (is_array($element))
-                
+
                     {{-- 定数よりもページ数が多い時 --}}
                     @if ($paginator->lastPage() > config("const.paginate.link_num"))
 
