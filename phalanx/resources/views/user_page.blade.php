@@ -24,7 +24,7 @@
 <body>
 @if (Auth::user()->user_type_id === 2 or Auth::user()->user_type_id === 3)
 <br>
-<a href="{{ route('chat_room.index') }}" type="button" class="btn btn-primary text-center d-flex 
+<a href="{{ route('chat.index') }}" type="button" class="btn btn-primary text-center d-flex 
 align-items-center justify-content-center rounded"><h1>チ ャ ッ ト</h1></a>
 <div class="line"></div>
 <h3 class="scj">予定</h3>
@@ -39,13 +39,13 @@ align-items-center justify-content-center rounded"><h1>チ ャ ッ ト</h1></a>
 
 @if (Auth::user()->user_type_id === 1)
 <br>
-<a href="{{ route('chat_room.index') }}" type="button" class="btnb btn-primary text-center d-flex 
+<a href="{{ route('chat.index') }}" type="button" class="btnb btn-primary text-center d-flex 
 align-items-center justify-content-center rounded"><h1>チ ャ ッ ト</h1></a>
 <a href="{{ route('office.create') }}" type="button" class="tkn btn-primary text-center d-flex 
 align-items-center justify-content-center rounded"><h4>体験・見学申込一覧</h4></a>
 <a href="{{ route('office.create') }}" type="button" class="mst btn-primary text-center d-flex 
 align-items-center justify-content-center rounded"><h4>マスタ管理</h4></a>
-<a href="{{ route('chat_room.list') }}" type="button" class="room btn-primary text-center d-flex 
+<a href="{{ route('chat_room.index') }}" type="button" class="room btn-primary text-center d-flex 
 align-items-center justify-content-center rounded"><h4>チャットルーム管理</h4></a>
 
 
