@@ -75,7 +75,7 @@ if(isset($chat_room)) {
                                                 @if ($joinRoom->distinction_number == 4)
                                                     <a href="{{ route('chat.show', $joinRoom->id) }}">{{ $joinRoom->room_title }}</a>
                                                 @else
-                                                    <a href="{{ route('chat.show', $joinRoom->id) }}">{{ $office->name }}職員</a>
+                                                    <a href="{{ route('chat.show', $joinRoom->id) }}">{{ $office->office_name }}職員</a>
                                                 @endif
                                             </li>
                                         @endif
@@ -102,7 +102,7 @@ if(isset($chat_room)) {
                                                         @if ($joinRoom->distinction_number == 4)
                                                             <a href="{{ route('chat.show', $joinRoom->id) }}">{{ $joinRoom->room_title }}</a>
                                                         @else
-                                                            <a href="{{ route('chat.show', $joinRoom->id) }}">{{ $office->name }}職員</a>
+                                                            <a href="{{ route('chat.show', $joinRoom->id) }}">{{ $office->office_name }}職員</a>
                                                         @endif
                                                     </li>
                                                 @endif
@@ -149,7 +149,7 @@ if(isset($chat_room)) {
                                                             @if ($joinRoom->distinction_number == 4)
                                                                 <a href="{{ route('chat.show', $joinRoom->id) }}">{{ $joinRoom->room_title }}</a>
                                                             @else
-                                                                <a href="{{ route('chat.show', $joinRoom->id) }}">{{ $office->name }}職員</a>
+                                                                <a href="{{ route('chat.show', $joinRoom->id) }}">{{ $office->office_name }}職員</a>
                                                             @endif
                                                         </li>
                                                     @endif
@@ -176,7 +176,7 @@ if(isset($chat_room)) {
                                                                     @if ($joinRoom->distinction_number == 4)
                                                                         <a href="{{ route('chat.show', $joinRoom->id) }}">{{ $joinRoom->room_title }}</a>
                                                                     @else
-                                                                        <a href="{{ route('chat.show', $joinRoom->id) }}">{{ $office->name }}職員</a>
+                                                                        <a href="{{ route('chat.show', $joinRoom->id) }}">{{ $office->office_name }}職員</a>
                                                                     @endif
                                                                 </li>
                                                             @endif
