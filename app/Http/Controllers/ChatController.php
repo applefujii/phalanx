@@ -42,18 +42,21 @@ class ChatController extends Controller
             $userRooms = ChatRoom::where("distinction_number", 3)->where("office_id", $user->office_id)->whereNull("deleted_at")->get();
 
             //職員全体のチャットルームを取得
-            $group = ChatRoom::where("distinction_number", 0)->whereNull("deleted_at")->first();
+            $group = ChatRoom::where("distinction_number", 0)->whereNull("deleted_at")->orderBy("room_title")->first();
+
+            //その他に入れるチャットルームを取得
+            $otherRooms = ChatRoom::where("office_id", 0)->whereNull("deleted_at")->get();
 
             //ログイン中のユーザーが参加している部屋一覧を取得
             $joinRooms = ChatRoom::join("chat_room__user", "chat_rooms.id", "=", "chat_room__user.chat_room_id")
-                ->where("chat_room__user.user_id", $user->id)->whereNull("chat_rooms.deleted_at")
-                    ->whereIn("chat_rooms.distinction_number", [1, 2, 4])->orderBy("chat_rooms.distinction_number")->orderBy("chat_rooms.room_title")->get("chat_rooms.*");
+                ->where("chat_room__user.user_id", $user->id)->whereNull("chat_rooms.deleted_at")->where("office_id", "<>", 0)
+                    ->where("chat_rooms.distinction_number", 4)->orderBy("chat_rooms.distinction_number")->orderBy("chat_rooms.room_title")->get("chat_rooms.*");
 
             //事業所一覧を取得
             $offices = Office::whereNull("deleted_at")->orderBy("sort")->get();
 
             //chat_room.indexが出来次第変える
-            return view("chat.index", compact("userRooms", "group", "joinRooms", "offices"));
+            return view("chat.index", compact("userRooms", "group", "joinRooms", "offices", "otherRooms"));
         }
 
         //chat_roomsテーブルのuser_idが$userIdと一致するものを検索
@@ -81,6 +84,9 @@ class ChatController extends Controller
             return redirect()->route("chat.index");
         }
 
+        //その他に入れるチャットルームを取得
+        $otherRooms = ChatRoom::where("office_id", 0)->whereNull("deleted_at")->orderBy("room_title")->get();
+
         //職員とそれ以外でサイドバーに必要なデータが異なるので場合分け
         if($user->user_type_id == 1) {
 
@@ -89,8 +95,8 @@ class ChatController extends Controller
 
             //ログイン中のユーザーが参加している部屋一覧を取得
             $joinRooms = ChatRoom::join("chat_room__user", "chat_rooms.id", "=", "chat_room__user.chat_room_id")
-                ->where("chat_room__user.user_id", $user->id)->whereNull("chat_rooms.deleted_at")
-                    ->whereIn("chat_rooms.distinction_number", [1, 2, 4])->orderBy("chat_rooms.distinction_number")->orderBy("chat_rooms.room_title")->get("chat_rooms.*");
+                ->where("chat_room__user.user_id", $user->id)->whereNull("chat_rooms.deleted_at")->where("office_id", "<>", 0)
+                    ->where("chat_rooms.distinction_number",  4)->orderBy("chat_rooms.distinction_number")->orderBy("chat_rooms.room_title")->get("chat_rooms.*");
         } else {
 
             //issetでfalseを返すようにnullを入れる
@@ -98,13 +104,13 @@ class ChatController extends Controller
 
             //ログイン中のユーザーが参加している部屋一覧を取得
             $joinRooms = ChatRoom::join("chat_room__user", "chat_rooms.id", "=", "chat_room__user.chat_room_id")
-                ->where("chat_room__user.user_id", $user->id)->whereNull("chat_rooms.deleted_at")
+                ->where("chat_room__user.user_id", $user->id)->whereNull("chat_rooms.deleted_at")->where("office_id", "<>", 0)
                     ->whereIn("chat_rooms.distinction_number", [3, 4])->orderBy("chat_rooms.distinction_number")->orderBy("chat_rooms.room_title")->get("chat_rooms.*");
         }
         //事業所一覧を取得
         $offices = Office::whereNull("deleted_at")->orderBy("sort")->get();
 
-        return view('chat/show', compact('chat_room', "group", "joinRooms", "offices"));
+        return view('chat/show', compact('chat_room', "group", "joinRooms", "offices", "otherRooms"));
     }
 
     /**
