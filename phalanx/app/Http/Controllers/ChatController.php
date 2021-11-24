@@ -39,7 +39,7 @@ class ChatController extends Controller
         if($user->user_type_id == 1) {
 
             //利用者対職員の個人チャットを取得
-            $userRooms = ChatRoom::where("distinction_number", 3)->where("office_id", $user->office_id)->whereNotNull("deleted_at")->get();
+            $userRooms = ChatRoom::where("distinction_number", 3)->where("office_id", $user->office_id)->whereNull("deleted_at")->get();
 
             //職員全体のチャットルームを取得
             $group = ChatRoom::where("distinction_number", 0)->whereNull("deleted_at")->first();
@@ -127,7 +127,7 @@ class ChatController extends Controller
             $chat_text->save();
         }
 
-        return redirect()->route("chat_room.index");
+        return redirect()->route("chat.index");
     }
 
     /**

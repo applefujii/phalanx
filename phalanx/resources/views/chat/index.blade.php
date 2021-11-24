@@ -20,18 +20,11 @@
                         @foreach ($userRooms as $userRoom)
                             @if ($userRoom->user->user_type_id == 2 && $userRoom->user->office_id == $office->id)
                                 <div class="col-6 col-md-4 col-xl-3">
-                                    <input type="checkbox" class="mr-1 {{ $office->en_office_name }}-checkBox" name="user" value="{{ $userRoom->user_id }}">
+                                    <input type="checkbox" class="mr-1 {{ $office->en_office_name }}-checkBox" name="user" value="{{ $userRoom->id }}">
                                     <a href="{{ route('chat.show', $userRoom->id) }}">{{ $userRoom->room_title }}</a>
                                 </div>
                             @endif
                         @endforeach
-                        {{-- 仮データ --}}
-                        @for ($i = 0; $i < 10; $i++)
-                            <div class="col-6 col-md-4 col-xl-3">
-                                <input type="checkbox" class="mr-1 apple-checkBox" name="user" value="{{ $i + 1 }}">
-                                <a href="">aaaaa</a>
-                            </div>
-                        @endfor
                     </div>
                 </div>
             @else
@@ -46,7 +39,7 @@
                         @foreach ($userRooms as $userRoom)
                             @if ($userRoom->user->user_type_id == 2 && $userRoom->user->office_id == $office->id)
                                 <div class="col-6 col-md-4 col-xl-3">
-                                    <input type="checkbox" class="mr-1 {{ $office->en_office_name }}-checkBox" name="user" value="{{ $userRoom->user_id }}">
+                                    <input type="checkbox" class="mr-1 {{ $office->en_office_name }}-checkBox" name="user" value="{{ $userRoom->id }}">
                                     <a href="{{ route('chat.show', $userRoom->id) }}">{{ $userRoom->room_title }}</a>
                                 </div>
                             @endif
@@ -66,7 +59,7 @@
                 @foreach ($userRooms as $userRoom)
                     @if ($userRoom->user->user_type_id == 3)
                         <div class="col-6 col-md-4 col-xl-3">
-                            <input type="checkbox" class="mr-1 trial-checkBox" name="user" value="{{ $userRoom->user_id }}">
+                            <input type="checkbox" class="mr-1 trial-checkBox" name="user" value="{{ $userRoom->id }}">
                             <a href="{{ route('chat.show', $userRoom->id) }}">{{ $userRoom->room_title }}</a>
                         </div>
                     @endif
