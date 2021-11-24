@@ -43,7 +43,7 @@
     </div>
 @endsection
 
-@section('script')
+@section('c_script')
     <script src="{{ asset('js/jquery-3.6.0.min.js') }}"></script>
     <script src="{{ asset('js/moment-with-locales.min.js') }}"></script>
     <script>
