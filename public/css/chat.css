@@ -2,9 +2,7 @@
   background-color: white;
   position: fixed;
   height: 40px;
-  top: 35px;
-  margin-top: 20px;
-  margin-bottom: 20px;
+  margin-top: -41px;
 }
 
 #chat_log {
