@@ -19,7 +19,7 @@
                     <div class="collapse show text-left row" id="{{ $office->en_office_name }}Collapse">
                         @foreach ($userRooms as $userRoom)
                             @if ($userRoom->user->user_type_id == 2 && $userRoom->user->office_id == $office->id)
-                                <div class="col-6 col-md-4 col-xl-3">
+                                <div class="col-6 col-md-4 col-xl-3 my-1">
                                     <input type="checkbox" class="mr-1 {{ $office->en_office_name }}-checkBox" name="user" value="{{ $userRoom->id }}">
                                     <a href="{{ route('chat.show', $userRoom->id) }}">{{ $userRoom->room_title }}</a>
                                 </div>
@@ -38,7 +38,7 @@
                     <div class="collapse text-left row" id="{{ $office->en_office_name }}Collapse">
                         @foreach ($userRooms as $userRoom)
                             @if ($userRoom->user->user_type_id == 2 && $userRoom->user->office_id == $office->id)
-                                <div class="col-6 col-md-4 col-xl-3">
+                                <div class="col-6 col-md-4 col-xl-3 my-1">
                                     <input type="checkbox" class="mr-1 {{ $office->en_office_name }}-checkBox" name="user" value="{{ $userRoom->id }}">
                                     <a href="{{ route('chat.show', $userRoom->id) }}">{{ $userRoom->room_title }}</a>
                                 </div>
@@ -58,7 +58,7 @@
             <div class="collapse text-left row" id="trialsCollapse">
                 @foreach ($userRooms as $userRoom)
                     @if ($userRoom->user->user_type_id == 3)
-                        <div class="col-6 col-md-4 col-xl-3">
+                        <div class="col-6 col-md-4 col-xl-3 my-1">
                             <input type="checkbox" class="mr-1 trial-checkBox" name="user" value="{{ $userRoom->id }}">
                             <a href="{{ route('chat.show', $userRoom->id) }}">{{ $userRoom->room_title }}</a>
                         </div>
