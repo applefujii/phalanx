@@ -42,4 +42,9 @@ class LoginController extends Controller
     {
         return 'login_name';
     }
+
+    public function redirectPath()
+    {
+        return 'user_page';
+    }
 }

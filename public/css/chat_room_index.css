@@ -1,3 +1,9 @@
-.broadcast {
-    bottom: 3%;
+table {
+    table-layout: fixed;
+}
+
+.room-title {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
 }

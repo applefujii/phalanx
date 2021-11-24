@@ -26,7 +26,7 @@ class ChatRoomRequest extends FormRequest
         return [
             "room_title" => "required|max:100",
             "office_id" => "required||integer",
-            "checkBox" => "required|integer"
+            "target_users" => "required"
         ];
     }
 }

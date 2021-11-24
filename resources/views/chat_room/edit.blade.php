@@ -1,6 +1,9 @@
 @extends('layouts.app')
-@section('content')
+@section('css')
 <link href="https://use.fontawesome.com/releases/v5.6.1/css/all.css" rel="stylesheet">
+@endsection
+
+@section('content')
 <div class="container-md">
     <h3 class="page_title">チャットルーム管理　編集</h3>
     <form action="{{ route('chat_room.update', $chatRoom->id) }}" method="post" class="mt-3">
@@ -38,16 +41,14 @@
                 @if ($errors->has("office_id"))
                     <div class="row mt-2">
                         <ul style="list-style: none">
-                            @foreach ($errors->get("office_id") as $error)
-                                <li class="text-danger">{{ $error }}</li>
-                            @endforeach
+                            <li class="text-danger">事業所を選択してください。</li>
                         </ul>
                     </div>
                 @endif
             </div>
         </div>
-        <div class="row ml-0">
-            <div class="row w-100">
+        <div class="d-flex flex-column">
+            <div class="row">
                 <div class="col-sm-auto mt-3">
                     <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#peopleListModal" data-target-group="staff">メンバー選択（職員）</button>
                 </div>
@@ -55,43 +56,22 @@
                     <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#peopleListModal" data-target-group="user">メンバー選択（利用者）</button>
                 </div>
             </div>
-            <!-- モーダルの中身を渡すときのキーをcheckBoxと仮定 -->
-            @if ($errors->has("checkBox"))
-                <div class="row mt-2">
-                    <ul style="list-style: none">
-                        @foreach ($errors->get("checkBox") as $error)
-                            <li class="text-danger">{{ $error }}</li>
-                        @endforeach
+            <div class="row mx-0 insert-checked-people"></div>
+            @if ($errors->has("target_users"))
+                <div class="row mt-2 mx-0">
+                    <ul class="pl-0" style="list-style: none">
+                        <li class="text-danger">メンバーを選択してください。</li>
                     </ul>
                 </div>
             @endif
         </div>
-        <input form="main-form" name="target_users" id="target_users" class="@error('target_users') is-invalid @enderror @error('target_users.*') is-invalid @enderror" hidden>
-        @error('target_users')
-            <span class="invalid-feedback" role="alert">
-                <strong>{{ $message }}</strong>
-            </span>
-        @enderror
-        @error('target_users.*')
-            <span class="invalid-feedback" role="alert">
-                <strong>{{ $message }}</strong>
-            </span>
-        @enderror
-        {{--
-        <div class="row justify-content-start mx-auto my-4">
-            <div class="mx-4 user-list-wrapper insert-checked-people">
-                @if(old("target_users") == "")
-                    <p class="text-danger">未選択</p>
-                @else
-                    <p>読み込み中...</p>
-                @endif
-            </div>
-        </div>
-        --}}
-        <div class="row ml-0 mt-3">
+        <input name="target_users" id="target_users" hidden>
+        <div class="d-flex flex-row mt-3">
             <button class="btn btn-primary" type="submit">更新</button>
+            <button class="btn btn-secondary ml-3" type="submit" form="cancelButton" onclick="return confirm('更新を中止しますか？')">キャンセル</button>
         </div>
     </form>
+    <form action="{{ route('chat_room.index') }}" method="get" id="cancelButton"></form>
 </div>
 @endsection
 
