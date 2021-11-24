@@ -4,6 +4,7 @@ namespace Database\Factories;
 
 use App\Models\ChatRoom;
 use Illuminate\Database\Eloquent\Factories\Factory;
+use Carbon\Carbon;
 
 class ChatRoomFactory extends Factory
 {
@@ -21,7 +22,8 @@ class ChatRoomFactory extends Factory
      */
     public function definition()
     {
-        $dateTime = $this->faker->dateTimeBetween($startDate = '-2 months', $endDate = 'now')->format('Y-m-d');
+        //現在時刻の取得
+        $now = Carbon::now();
         
         return [
             'room_title' => $this->faker->realText(10),
@@ -29,8 +31,8 @@ class ChatRoomFactory extends Factory
             'office_id' => $this->faker->randomElement($array = [1,2,3]),
             'create_user_id' => 1,
             'update_user_id' => 1,
-            'created_at' => $dateTime,
-            'updated_at' => $dateTime,
+            'created_at' => $now->isoFormat('YYYY-MM-DD HH:mm:ss'),
+            'updated_at' => $now->isoFormat('YYYY-MM-DD HH:mm:ss'),
         ];
     }
 }

@@ -4,6 +4,7 @@ namespace Database\Seeders;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Database\Seeder;
+use Carbon\Carbon;
 
 class TestUsersSeeder extends Seeder
 {
@@ -125,6 +126,19 @@ class TestUsersSeeder extends Seeder
                 'name' => 'メープル関西　体験者',
                 'name_katakana' => 'メープルカンサイ　タイケンシャ',
                 'login_name' => 'maple_ex',
+                'password' => Hash::make('password'), // password
+                'remember_token' => null,
+                'create_user_id' => 1,
+                'update_user_id' => 1,
+                'updated_at' => "2021-04-01 12:34:56",
+                'created_at' => "2021-04-01 12:34:56",
+            ],
+            [
+                'user_type_id' => 2,
+                'office_id' => 1,
+                'name' => 'ユーザー０１',
+                'name_katakana' => 'ユーザーゼロワン',
+                'login_name' => 'user01',
                 'password' => Hash::make('password'), // password
                 'remember_token' => null,
                 'create_user_id' => 1,

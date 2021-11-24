@@ -156,25 +156,37 @@ class ChatController extends Controller
                 $query->whereNull('deleted_at')->orderByDesc('id')->limit(10);
             }])
             ->find($chat_room_id);
-
-        // 表示している中で最古のテキストのID
-        $oldest_display_chat_text_id = $chat_room->chat_texts->last()->id;
-
+        
+        //配列に変換
         $chat_room_array = $chat_room->toArray();
 
         // 戻り値に追加
         $chat_room_array += array(
-                'newest_read_chat_text_id' => $newest_read_chat_text_id,
+            'newest_read_chat_text_id' => $newest_read_chat_text_id,
+        );
+
+        // 過去ログがあるとき
+        if (!empty($chat_room->chat_texts->first())) {
+            
+            // 表示している中で最古のテキストのID
+            $oldest_display_chat_text_id = $chat_room->chat_texts->last()->id;
+
+            // 戻り値に追加
+            $chat_room_array += array(
                 'oldest_display_chat_text_id' => $oldest_display_chat_text_id,
             );
+            
+            // 既読チャットテキストID
+            $newest_read_chat_text_id = $chat_room->chat_texts->first()->id;
 
-        // チャットルーム-ユーザー-中間テーブルに、既読チャットテキストIDを保存
-        $now = Carbon::now();
+            // チャットルーム-ユーザー-中間テーブルに、既読チャットテキストIDを保存
+            $now = Carbon::now();
 
-        $chat_room__user->newest_read_chat_text_id = $chat_room->chat_texts->first()->id;
-        $chat_room__user->update_user_id = Auth::user()->id;
-        $chat_room__user->updated_at = $now->isoFormat('YYYY-MM-DD HH:mm:ss');
-        $chat_room__user->save();
+            $chat_room__user->newest_read_chat_text_id = $newest_read_chat_text_id;
+            $chat_room__user->update_user_id = Auth::user()->id;
+            $chat_room__user->updated_at = $now->isoFormat('YYYY-MM-DD HH:mm:ss');
+            $chat_room__user->save();
+        }
 
         return response()->json($chat_room_array);
     }
@@ -190,6 +202,11 @@ class ChatController extends Controller
         // チャットルーム-ユーザー-中間テーブルから、既読チャットテキストIDを取得
         $chat_room__user = ChatRoom__User::where('chat_room_id', $chat_room_id)->where('user_id', Auth::user()->id)->first();
         $newest_read_chat_text_id = $chat_room__user->newest_read_chat_text_id;
+
+        // 既読情報なしならnullを返す
+        if (empty($newest_read_chat_text_id)) {
+            return null;
+        }
         
         // 未読がなければ最大10秒間待ってから値を返す
         foreach (range(1, 10) as $value) {
