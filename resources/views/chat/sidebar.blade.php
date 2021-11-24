@@ -116,7 +116,7 @@ if(isset($chat_room)) {
                 </div>
             </div>
         </div>
-        <div class="col-md-8 bg-white border-top border-dark">
+        <div class="col-md-8 bg-white border-top border-dark p-0">
             <button type="button" class="btn btn-dark rounded-circle position-fixed mt-5 d-block d-md-none sidebar-open" id="left-open" data-toggle="modal" data-target="#left-modal">
                 <i class="fas fa-chevron-right"></i>
             </button>
