@@ -73,6 +73,14 @@ class ChatController extends Controller
         //ログイン中のユーザーのidを取得
         $user = Auth::user();
 
+        //表示するチャットルームにログイン中のユーザーが参加しているかの判別
+        $check = $chat_room->chat_room__user->where("user_id", $user->id)->first();
+
+        //参加していなかった場合indexにリダイレクト
+        if(is_null($check)) {
+            return redirect()->route("chat.index");
+        }
+
         //職員とそれ以外でサイドバーに必要なデータが異なるので場合分け
         if($user->user_type_id == 1) {
 
