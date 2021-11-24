@@ -49,8 +49,8 @@
     <script>
         // チャットルームID
         let chat_room_id = @json($chat_room->id);
-        // ログイン者のユーザーID
-        const user_id = @json(Auth::user()->id);
+        // ログイン者のユーザー情報
+        const user = @json(Auth::user());
     </script>
     <script src="{{ asset('js/chat.js') }}"></script>
 @endsection
