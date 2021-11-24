@@ -1,5 +1,6 @@
 @extends('layouts.app')
 
+@section('title', 'ユーザーマスター　一覧')
 @section('css')
     <link href="{{ asset('css/index-table.css') }}" rel="stylesheet">
     <link href="{{ asset('css/user-master/index.css') }}" rel="stylesheet">
@@ -54,7 +55,7 @@
                                         type="button" class="btn btn-sm btn-primary edit-button">編集</a></span>
                                 <form method="post" action="{{ route('user.destroy', $user->id) }}"> @csrf
                                     @method('DELETE') <button type="submit"
-                                        class="btn btn-sm btn-danger delete-button">削除</button></form>
+                                        class="btn btn-sm btn-danger delete-button" onclick='@if($user->id == Auth::id()) alert("自身のアカウントを削除できないように制限しています"); return false; @else return confirm("削除しますか\nID: {{ $user->id }}\n名前: {{ $user->name }}\nユーザー種別: {{ $user->user_type->alias }}\n事業所: {{ $user->office->office_name }}"); @endif'>削除</button></form>
                             </div>
                         </td>
                     </tr>
