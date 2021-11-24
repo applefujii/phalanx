@@ -86,7 +86,7 @@ if(isset($chat_room)) {
                     @endforeach
                     <div class="col-12 px-0">
                         <div>
-                            <button type="button" class="btn btn-outline-dark btn-block" id="sub-offices" data-toggle="collapse" data-target="#subOffices" aria-expanded="false" aria-controls="subOffices">
+                            <button type="button" class="btn btn-outline-dark btn-block sub-offices" data-toggle="collapse" data-target="#subOffices" aria-expanded="false" aria-controls="subOffices">
                                 <i class="fas fa-chevron-down"></i>
                             </button>
                         </div>
@@ -160,7 +160,7 @@ if(isset($chat_room)) {
                                 @endforeach
                                 <div class="col-12 px-0">
                                     <div>
-                                        <button type="button" class="btn btn-outline-dark btn-block" id="sub-offices" data-toggle="collapse" data-target="#subOffices" aria-expanded="false" aria-controls="subOffices">
+                                        <button type="button" class="btn btn-outline-dark btn-block sub-offices" data-toggle="collapse" data-target="#subOffices" aria-expanded="false" aria-controls="subOffices">
                                             <i class="fas fa-chevron-down"></i>
                                         </button>
                                     </div>
@@ -309,8 +309,31 @@ if(isset($chat_room)) {
 <script>
     $(function() {
 
+        //ナビゲーションバーの高さを取得
+        let navHeight = $("nav").innerHeight();
+
+        //.scroll-contentsの高さを調整
+        $(".scroll-contents").css("height", `calc(100vh - 2px - ${navHeight}px)`);
+        $("main").css("height", `calc(100vh - 2px - ${navHeight}px)`);
+
+        $(".navbar-toggler").click(function() {
+            setTimeout(function() {
+                navHeight = $("nav").innerHeight();
+                $(".scroll-contents").css("height", `calc(100vh - 2px - ${navHeight}px)`);
+                $("main").css("height", `calc(100vh - 2px - ${navHeight}px)`);
+            }, 500);
+        });
+
+        $("#navbarDropdown").click(function() {
+            setTimeout(function() {
+                navHeight = $("nav").innerHeight();
+                $(".scroll-contents").css("height", `calc(100vh - 2px - ${navHeight}px)`);
+                $("main").css("height", `calc(100vh - 2px - ${navHeight}px)`);
+            }, 100);
+        })
+
         //#sub-officesが押された時の動作
-        $("#sub-offices").click(function(){
+        $(".sub-offices").click(function(){
             let fas = $(this).find(".fas");
             if( fas.hasClass("fa-chevron-down") ) {
                 fas.removeClass("fa-chevron-down");

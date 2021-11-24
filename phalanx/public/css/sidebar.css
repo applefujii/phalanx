@@ -1,6 +1,5 @@
 #app main {
     padding-top: 0rem !important;
-    height: calc(100vh - 57px);
 }
 
 .top {
@@ -37,9 +36,8 @@ main ul {
 .scroll-contents {
     position: sticky;
     top: 0;
-    height: calc(100vh - 57px);
     overflow-x: hidden;
-    overflow-y: auto;
+    overflow-y: scroll;
 }
 
 #left-open {
