@@ -31,7 +31,7 @@ $(function() {
             // 最新チャットメッセージ閲覧済み
             is_checked_latest = true;
         }
-        
+
         // 一番上までスクロールしたら
         if (scroll_top == 0) {
             // 過去ログ表示
@@ -59,23 +59,27 @@ $(function() {
         type:'GET',
     })
     // 成功時
-    .done((json) => {
+    .done((room) => {
         // ルーム名表示
-        $('#room_name').text(json.room_title);
+        // 個人用ルームかつログイン者が職員でないとき
+        if (room.user_id && user.user_type_id !== 1) {
+            $('#room_name').text(user.office.office_name + ' 職員');
+        } else {
+            $('#room_name').text(room.room_title);
+        }
         // チャットログを空に
         $("#chat_log").empty();
         // チャットログ表示
-        $.map(json.chat_texts.reverse(), function (val, index) {// 逆順
+        $.map(room.chat_texts.reverse(), function (val, index) {// 逆順
             displayChatText (val, index);
             
             // ブックマーク追加
-            if (val.id == json.newest_read_chat_text_id) {
+            if (val.id == room.newest_read_chat_text_id) {
                 displayBookmark();
             }
-
         });
         // もっとも古いチャットテキストのID更新
-        oldest_display_chat_text_id = json.oldest_display_chat_text_id;
+        oldest_display_chat_text_id = room.oldest_display_chat_text_id;
         // bookmarkがあれば
         if($('#bookmark').length){
             // bookmarkまでスクロール
@@ -97,18 +101,22 @@ $(function() {
     }, 10000);
 
     // 送信ボタンを押したらチャット送信
-    $("#submit").on('click', function() {
-        submitText();
-    });
+    $("#submit").on('click', () => {
+            submitText();
+        });
 
     // SHFIT+ENTERを押したらチャット送信
     // 連打防止で送信ボタン無効なら送信しない
-    $(window).on('keydown', function(e){
-        if(event.shiftKey && e.keyCode === 13 && !$('#submit').prop('disabled')){
-            submitText();
-            return false;
+    $(window).on('keydown', (event) => {
+        if (!$('#submit').prop('disabled')) {
+            if (event.shiftKey) {
+                if (event.key === 'Enter') {
+                    submitText();
+                    return false;
+                }
+            }
         }
-    });
+        });
 
     // ----------------------------新着メッセージ取得----------------------------
     function getNewChatLog() {
@@ -129,25 +137,23 @@ $(function() {
         .done((json) => {
             // 新着メッセージがある場合
             if (json.chat_texts.length > 0) {
-                // ルーム名表示
-                $('#room_name').text(json.room_title);
-                    // ドキュメントの高さ
-                    let document_height = $(document).innerHeight();
-                    // 最下位置
-                    let bottom_height = $('#bottom').offset().top;
-                    
-                    // 最新メッセージを閲覧していたら
-                    if (is_checked_latest) {
-                        // ブックマーク削除
-                        $("#bookmark").remove();
-                        // ブックマーク追加
-                        displayBookmark();
-                    }
+                // ドキュメントの高さ
+                let document_height = $(document).innerHeight();
+                // 最下位置
+                let bottom_height = $('#bottom').offset().top;
+                
+                // 最新メッセージを閲覧していたら
+                if (is_checked_latest) {
+                    // ブックマーク削除
+                    $("#bookmark").remove();
+                    // ブックマーク追加
+                    displayBookmark();
+                }
 
                 // チャットログ表示
-                $.map(json.chat_texts, function (val, index) {
-                    displayChatText(val, index);
-                });
+                $.map(json.chat_texts, (val, index) => {
+                        displayChatText(val, index);
+                    });
                 // 新着ありメッセージ表示
                 $('#new').show();
                 // 最新メッセージ閲覧未
@@ -190,7 +196,7 @@ $(function() {
                     // ユーザー名のCSS
                     let name_css = 'text-danger font-weight-bold';
                     // 自分の書き込みなら
-                    if (val.user_id == user_id) {
+                    if (val.user_id == user.id) {
                         name_css = 'text-primary font-weight-bold';
                     }
                     let html = `
@@ -276,7 +282,7 @@ $(function() {
         // ユーザー名のCSS
         let name_css = 'text-danger font-weight-bold';
         // 自分の書き込みなら
-        if (val.user_id == user_id) {
+        if (val.user_id == user.id) {
             name_css = 'text-primary font-weight-bold';
         }
         let html = `
