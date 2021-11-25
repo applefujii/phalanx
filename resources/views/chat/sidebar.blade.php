@@ -64,6 +64,16 @@ if(isset($chat_room)) {
                             </ul>
                         </div>
                     @endif
+                    @if (isset($otherRooms))
+                        <div class="col-12 pt-3">
+                            <h5>その他</h5>
+                            <ul class="col-12 pt-1">
+                                @foreach ($otherRooms as $otherRoom)
+                                    <li><a href="{{ route('chat.show', $otherRoom->id) }}">{{ $otherRoom->room_title }}</a></li>
+                                @endforeach
+                            </ul>
+                        </div>
+                    @endif
                     @foreach ($offices as $office)
                         @if ($office->id == Auth::user()->office_id)
                             <div class="col-12 pt-3">
@@ -86,7 +96,7 @@ if(isset($chat_room)) {
                     @endforeach
                     <div class="col-12 px-0">
                         <div>
-                            <button type="button" class="btn btn-outline-dark btn-block" id="sub-offices" data-toggle="collapse" data-target="#subOffices" aria-expanded="false" aria-controls="subOffices">
+                            <button type="button" class="btn btn-outline-dark btn-block sub-offices" data-toggle="collapse" data-target="#subOffices" aria-expanded="false" aria-controls="subOffices">
                                 <i class="fas fa-chevron-down"></i>
                             </button>
                         </div>
@@ -116,7 +126,7 @@ if(isset($chat_room)) {
                 </div>
             </div>
         </div>
-        <div class="col-md-8 bg-white border-top border-dark">
+        <div class="col-md-8 bg-white border-top p-0">
             <button type="button" class="btn btn-dark rounded-circle position-fixed mt-5 d-block d-md-none sidebar-open" id="left-open" data-toggle="modal" data-target="#left-modal">
                 <i class="fas fa-chevron-right"></i>
             </button>
@@ -160,7 +170,7 @@ if(isset($chat_room)) {
                                 @endforeach
                                 <div class="col-12 px-0">
                                     <div>
-                                        <button type="button" class="btn btn-outline-dark btn-block" id="sub-offices" data-toggle="collapse" data-target="#subOffices" aria-expanded="false" aria-controls="subOffices">
+                                        <button type="button" class="btn btn-outline-dark btn-block sub-offices" data-toggle="collapse" data-target="#subOffices" aria-expanded="false" aria-controls="subOffices">
                                             <i class="fas fa-chevron-down"></i>
                                         </button>
                                     </div>
@@ -309,8 +319,31 @@ if(isset($chat_room)) {
 <script>
     $(function() {
 
+        //ナビゲーションバーの高さを取得
+        let navHeight = $("nav").innerHeight();
+
+        //.scroll-contentsの高さを調整
+        $(".scroll-contents").css("height", `calc(100vh - 2px - ${navHeight}px)`);
+        $("main").css("height", `calc(100vh - 2px - ${navHeight}px)`);
+
+        $(".navbar-toggler").click(function() {
+            setTimeout(function() {
+                navHeight = $("nav").innerHeight();
+                $(".scroll-contents").css("height", `calc(100vh - 2px - ${navHeight}px)`);
+                $("main").css("height", `calc(100vh - 2px - ${navHeight}px)`);
+            }, 500);
+        });
+
+        $("#navbarDropdown").click(function() {
+            setTimeout(function() {
+                navHeight = $("nav").innerHeight();
+                $(".scroll-contents").css("height", `calc(100vh - 2px - ${navHeight}px)`);
+                $("main").css("height", `calc(100vh - 2px - ${navHeight}px)`);
+            }, 100);
+        })
+
         //#sub-officesが押された時の動作
-        $("#sub-offices").click(function(){
+        $(".sub-offices").click(function(){
             let fas = $(this).find(".fas");
             if( fas.hasClass("fa-chevron-down") ) {
                 fas.removeClass("fa-chevron-down");

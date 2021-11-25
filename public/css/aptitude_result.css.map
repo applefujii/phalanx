@@ -1,9 +1,1 @@
-{
-    "version": 3,
-    "mappings": "AAAA,AAAA,KAAK,CAAC;EACF,KAAK,EAAE,KAAK;EACZ,SAAS,EAAE,GAAG;CACjB",
-    "sources": [
-        "aptitude_result.scss"
-    ],
-    "names": [],
-    "file": "aptitude_result.css"
-}
+{"version":3,"sources":["aptitude_result.scss"],"names":[],"mappings":"AAAA;EACI,YAAA;EACA,cAAA;AACJ","file":"aptitude_result.css"}
