@@ -36,6 +36,7 @@
                                 {{ $office->office_name }}
                             </option>
                         @endforeach
+                        <option value="0">その他</option>
                     </select>
                 </div>
                 @if ($errors->has("office_id"))

@@ -64,6 +64,16 @@ if(isset($chat_room)) {
                             </ul>
                         </div>
                     @endif
+                    @if (isset($otherRooms))
+                        <div class="col-12 pt-3">
+                            <h5>その他</h5>
+                            <ul class="col-12 pt-1">
+                                @foreach ($otherRooms as $otherRoom)
+                                    <li><a href="{{ route('chat.show', $otherRoom->id) }}">{{ $otherRoom->room_title }}</a></li>
+                                @endforeach
+                            </ul>
+                        </div>
+                    @endif
                     @foreach ($offices as $office)
                         @if ($office->id == Auth::user()->office_id)
                             <div class="col-12 pt-3">
