@@ -48,7 +48,7 @@ if(isset($chat_room)) {
 
 @section("content")
 
-<div id="nav-left-container">
+<div id="nav-left-container" style="display: none">
     <div id="nav-button-left" class="nav-button openbtn d-flex align-items-center justify-content-end" data-is-open="false"><i class="fas fa-chevron-right"></i></div>
     <nav id="nav-left" class="edge-nav">
         <div id="nav-list-left" class="nav-list">
@@ -62,7 +62,7 @@ if(isset($chat_room)) {
     </nav>
 </div>
 
-<div id="nav-right-container">
+<div id="nav-right-container" style="display: none">
     <div id="nav-button-right" class="nav-button openbtn d-flex align-items-center justify-content-start" data-is-open="false"><i class="fas fa-chevron-left"></i></div>
     <nav id="nav-right" class="edge-nav">
         <div id="nav-list-right" class="nav-list">
@@ -368,11 +368,9 @@ if(isset($chat_room)) {
     }
 
     class navigation {
-        static fAnyoneOpen = false;
-        static viewportWidth;
-        static viewportHeight;
         /* コンストラクタ */
-        constructor(tagName, direction, toutchSize, navSizeRem) {
+        constructor(manager, tagName, direction, toutchSize, navSizeRem, vW, vH) {
+            this.manager = manager;
             this.navButton= '#nav-button-'+tagName, this.nav= '#nav-'+tagName;
             this.container = '#nav-'+tagName+'-container';
             this.direction= direction;
@@ -380,13 +378,13 @@ if(isset($chat_room)) {
             this.navSizeRem = navSizeRem;
             this.navSizePixel = convertRemToPx(navSizeRem);
             if(direction==1) this.max= this.navSizePixel;
-            else if(direction==2) this.max= navigation.viewportWidth-this.navSizePixel;
-            else if(direction==3) this.max= navigation.viewportHeight-this.navSizePixel;
+            else if(direction==2) this.max= vW-this.navSizePixel;
+            else if(direction==3) this.max= vH-this.navSizePixel;
             else if(direction==4) this.max= this.max= this.navSizePixel;
             this.pastPosX = [], this.pastPosY = [];
             this.fOpen= false, this.fInMotion= false;
             this.fAction = false;
-            this.resizeFunction();
+            this.changeViewport( vW, vH )
             this.eventRegister();
         }
 
@@ -403,42 +401,20 @@ if(isset($chat_room)) {
                 cl.setOpen(false, true);
             });
 
-            $(window).resize(function(){
-                cl.resizeFunction();
-            });
-
             setInterval(function() {
-                // console.log(navigation.fAnyoneOpen);
+                // console.log(cl.manager.fAnyoneOpen);
             },2000);
         }
 
-        //-- リサイズされたとき
-        resizeFunction() {
-            let wid = window.innerWidth;
-            let bsSize = wid<576 ? 1 : wid<768 ? 2 : wid<992 ? 3 : wid<1200 ? 4 : wid<1400 ? 5 : 6;
-            navigation.setViewportSize(window.innerWidth, window.innerHeight);
-            if(this.direction==1) this.max= this.navSizePixel;
-            else if(this.direction==2) this.max= navigation.viewportWidth-this.navSizePixel;
-            else if(this.direction==3) this.max= navigation.viewportHeight-this.navSizePixel;
-            else if(this.direction==4) this.max= this.max= this.navSizePixel;
-            if(bsSize<=2) {
-                this.setHide(false);
-                this.fAction = true;
-            }
-            else {
-                this.setHide(true);
-                this.fAction = false;
-            }
-        }
-
         // タッチした時
-        toutchStart( posX, posY ) {
+        toutchStart( event, posX, posY ) {
             this.pastPosX = [], this.pastPosY = [];
             this.pastPosX.push(posX);
             this.pastPosY.push(posY);
 
             this.setTransition('all 0s');
 
+            //-- 開いていない状態で画面端タッチなら動作させる。開いた状態で他部分をタッチしたら動作させる。
             switch(this.direction) {
                 case 1:
                     break
@@ -447,7 +423,7 @@ if(isset($chat_room)) {
                         this.fInMotion = true;
                     }
                     else if( this.fOpen ) {
-                        if( posX <= this.max -this.toutchSize ) {   // &&  ※ボタンを除く
+                        if( !$(event.target).closest(this.navButton).length  &&  !$(event.target).closest(this.nav).length ) {
                             this.fInMotion = true;
                             console.log('toutch on');
                             this.setOpen(false);
@@ -467,7 +443,7 @@ if(isset($chat_room)) {
                         this.fInMotion = true;
                     }
                     else if( this.fOpen ) {
-                        if( posX >= this.max+ this.toutchSize ) {
+                        if( !$(event.target).closest(this.navButton).length  &&  !$(event.target).closest(this.nav).length ) {
                             this.fInMotion = true;
                             console.log('toutch on');
                             this.setOpen(false);
@@ -555,16 +531,28 @@ if(isset($chat_room)) {
                 }
 
                 if( this.fOpen ) {
-                    console.log('toutch off');
                     this.setOpen(true, true);
                 } else {
-                    console.log('toutch off');
                     this.setOpen(false, true);
                 }
                 this.setTransform( 0 );
             }
 
             this.fInMotion = false;
+        }
+
+        changeViewport( wid, hei ) {
+            let bsSize = wid<576 ? 1 : wid<768 ? 2 : wid<992 ? 3 : wid<1200 ? 4 : wid<1400 ? 5 : 6;
+            if(this.direction==1) this.max= this.navSizePixel;
+            else if(this.direction==2) this.max= wid-this.navSizePixel;
+            else if(this.direction==3) this.max= hei-this.navSizePixel;
+            else if(this.direction==4) this.max= this.navSizePixel;
+            if(bsSize<=2) {
+                this.setHide(false);
+            }
+            else {
+                this.setHide(true);
+            }
         }
 
 
@@ -579,6 +567,7 @@ if(isset($chat_room)) {
             if(iActive) {
                 if(navigation.fAnyoneOpen) return;
                 if(iAnimation) this.setTransition('all .6s');
+                else this.setTransition('all 0s');
                 $(this.navButton).addClass('active');
                 $(this.nav).addClass('panelactive');
                 cover.on(0,0,0,88);
@@ -586,13 +575,17 @@ if(isset($chat_room)) {
                 navigation.fAnyoneOpen = true;
                 $(this.navButton).data('is-open', 'true');
             } else {
+                if(!this.fOpen) return;
                 if(iAnimation) this.setTransition('all .6s');
+                else this.setTransition('all 0s');
                 $(this.navButton).removeClass('active');
                 $(this.nav).removeClass('panelactive');
                 cover.on(0,0,0,0);
-                setTimeout(cover.off, 600);
+                setTimeout(function() {
+                    cover.off();
+                    navigation.fAnyoneOpen = false;
+                }, 600);
                 this.fOpen = false;
-                navigation.fAnyoneOpen = false;
                 $(this.navButton).data('is-open', 'false');
             }
         }
@@ -607,10 +600,8 @@ if(isset($chat_room)) {
             let a = volume/2;
             if(a > 88) a = 88;
             if(this.fOpen) cover.on(0,0,0,88)
-            else if(volume != 0) cover.on(0,0,0,a);
             else {
-                cover.on(0,0,0,0);
-                setTimeout(cover.off, 600);
+                if(volume > 0) cover.on(0,0,0,a);
             }
 
             switch(this.direction) {
@@ -636,17 +627,77 @@ if(isset($chat_room)) {
         setHide(iHidden) {
             if(iHidden) {
                 $(this.container).hide(0);
+                this.fAction = false;
                 this.setOpen(false);
             } else {
                 $(this.container).show(0);
+                this.fAction = true;
                 this.setOpen(false);
             }
         }
 
-        static setViewportSize( w, h ) {
-            navigation.viewportWidth = w;
-            navigation.viewportHeight = h;
+    }
+
+    /**
+    *   シングルトン
+    */
+    class navigationManager {
+        static count = 0;
+        constructor() {
+            if(navigationManager.count >= 1) return;
+            navigationManager.count++;
+            this.oNavigation = {};
+            this.fAnyoneOpen = false;
+            this.viewportWidth = window.innerWidth;
+            this.viewportHeight = window.innerHeight;
+            this.eventRegister();
         }
+
+        eventRegister() {
+            let cl = this;
+            //-- リサイズされたとき
+            $(window).resize(function(){
+                cl.viewportWidth = window.innerWidth;
+                cl.viewportHeight = window.innerHeight;
+                let wid = window.innerWidth;
+                Object.values(cl.oNavigation).forEach((nav) => {
+                    nav.changeViewport(cl.viewportWidth, cl.viewportHeight);
+                });
+            });
+        }
+
+        add(tagName, direction, toutchSize, navSizeRem) {
+            this.oNavigation[tagName] = new navigation(this, tagName, direction, toutchSize, navSizeRem, this.viewportWidth, this.viewportHeight);
+        }
+
+        toutchStart( event, posX, posY ) {
+            Object.values(this.oNavigation).forEach((nav) => {
+                nav.toutchStart( event, posX, posY );
+            });
+        }
+
+        toutchMove( posX, posY ) {
+            Object.values(this.oNavigation).forEach((nav) => {
+                nav.toutchMove( posX, posY );
+            });
+        }
+
+        toutchEnd( posX, posY ) {
+            Object.values(this.oNavigation).forEach((nav) => {
+                nav.toutchEnd( posX, posY );
+            });
+        }
+
+        allNonactive() {
+            Object.values(this.oNavigation).forEach((nav) => {
+                nav.setOpen( false );
+            });
+        }
+
+        isAnyoneOpen() {
+            return fAnyoneOpen;
+        }
+
     }
 
     ////////////////////// endクラス /////////////////////////////////////////
@@ -672,10 +723,11 @@ if(isset($chat_room)) {
     //------------ ナビゲーションバーの動作 ------------------------------------------
     var fLeftOpen = false, fRightOpen = false
     // 
-    navigation.setViewportSize(window.innerWidth, window.innerHeight);
+    //navigation.setViewportSize(window.innerWidth, window.innerHeight);
     // インスタンス作成
-    var navLeft = new navigation('left', 4, 16, 20 );
-    var navRight = new navigation('right', 2, 16, 20 );
+    var navManager = new navigationManager();
+    navManager.add( 'left', 4, 16, 20 );
+    navManager.add( 'right', 2, 16, 20 );
 
     $(document).ready(function()
     {
@@ -707,8 +759,7 @@ if(isset($chat_room)) {
             startPosY = getY(event);
             posY = startPosY;
 
-            navLeft.toutchStart(posX, posY);
-            navRight.toutchStart(posX, posY);
+            navManager.toutchStart(event, posX, posY);
         }
     
         // スワイプ中の処理
@@ -717,15 +768,13 @@ if(isset($chat_room)) {
             posX = getX(event);
             posY = getY(event);
 
-            navLeft.toutchMove(posX, posY);
-            navRight.toutchMove(posX, posY);
+            navManager.toutchMove(posX, posY);
         }
     
         // 指が離れた時の処理
         function end_check(event)
         {
-            navLeft.toutchEnd(posX, posY);
-            navRight.toutchEnd(posX, posY);
+            navManager.toutchEnd(posX, posY);
         }
     
         function getX(event) 
