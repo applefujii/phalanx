@@ -28,7 +28,7 @@
         <div id="chat_footer" class="border col-md-8 d-flex align-items-center p-0">
             <div class="form-row col-12">
                 <div class="col-11">
-                    <textarea id="chat_text" name="chat_text" class="form-control chat_textarea @error('chat_text') is-invalid @enderror" rows="1" required="required">{{ old('chat_text') }}</textarea>
+                    <textarea id="chat_text" name="chat_text" class="form-control border border-primary chat_textarea @error('chat_text') is-invalid @enderror" rows="1" required="required">{{ old('chat_text') }}</textarea>
                     @error('chat_text')
                         <span class="invalid-feedback" role="alert">
                             <strong>{{ $message }}</strong>

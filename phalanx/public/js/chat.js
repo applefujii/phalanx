@@ -60,13 +60,19 @@ $(function () {
     })
         // 成功時
         .done((room) => {
-            // ルーム名表示
+            // ルーム名
+            let room_title ="";
             // 個人用ルームかつログイン者が職員でないとき
             if (room.user_id && user.user_type_id !== 1) {
-                $('#room_name').text(user.office.office_name + ' 職員');
+                room_title = user.office.office_name + ' 職員';
             } else {
-                $('#room_name').text(room.room_title);
+                room_title = room.room_title;
             }
+            // ヘッダーにルーム名表示
+            $('#room_name').text(room_title);
+            // メッセージ入力のプレースホルダーにルーム名表示
+            $('#chat_text').prop('placeholder', room_title + 'にメッセージ送信');
+
             // チャットログを空に
             $("#chat_log").empty();
             // チャットログ表示
@@ -310,8 +316,8 @@ $(function () {
     // ----------------------------ブックマーク表示----------------------------
     function displayBookmark() {
         let html = `
-                <div id="bookmark" class="border border-primary text-center">
-                    <span class="text-primary">新着</span>
+                <div id="bookmark" class="border border-success text-center">
+                    <span class="text-success">新着</span>
                 </div>
                 `;
         $("#chat_log").append(html);
