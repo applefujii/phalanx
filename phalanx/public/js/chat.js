@@ -87,7 +87,7 @@ $(function() {
         }
     })
     // 失敗時
-    .fail((json) => {
+    .fail(() => {
         $('#error_message').text('メッセージの受信に失敗しました。');
         $('#error').show();
     });
@@ -134,14 +134,9 @@ $(function() {
             type:'GET',
         })
         // 成功時
-        .done((json) => {
+        .done((room) => {
             // 新着メッセージがある場合
-            if (json.chat_texts.length > 0) {
-                // ドキュメントの高さ
-                let document_height = $(document).innerHeight();
-                // 最下位置
-                let bottom_height = $('#bottom').offset().top;
-                
+            if (room.chat_texts.length > 0) {
                 // 最新メッセージを閲覧していたら
                 if (is_checked_latest) {
                     // ブックマーク削除
@@ -151,7 +146,7 @@ $(function() {
                 }
 
                 // チャットログ表示
-                $.map(json.chat_texts, (val, index) => {
+                $.map(room.chat_texts, (val, index) => {
                         displayChatText(val, index);
                     });
                 // 新着ありメッセージ表示
@@ -161,7 +156,7 @@ $(function() {
             }
         })
         // 失敗時
-        .fail((json) => {
+        .fail(() => {
             $('#error_message').text('メッセージの受信に失敗しました。');
             $('#error').show();
         })
@@ -187,12 +182,12 @@ $(function() {
             type:'GET',
         })
         // 成功時
-        .done((json) => {
+        .done((room) => {
             // 新着メッセージがある場合
-            if (json.chat_texts.length > 0) {
+            if (room.chat_texts.length > 0) {
 
                 // チャットログ表示
-                $.map(json.chat_texts, function (val, index) {
+                $.map(room.chat_texts, function (val, index) {
                     // ユーザー名のCSS
                     let name_css = 'text-danger font-weight-bold';
                     // 自分の書き込みなら
@@ -216,7 +211,7 @@ $(function() {
             }
         })
         // 失敗時
-        .fail((json) => {
+        .fail(() => {
             $('#error_message').text('メッセージの受信に失敗しました。');
             $('#error').show();
         })
