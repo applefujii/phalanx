@@ -39,21 +39,24 @@ class ChatController extends Controller
         if($user->user_type_id == 1) {
 
             //利用者対職員の個人チャットを取得
-            $userRooms = ChatRoom::where("distinction_number", 3)->where("office_id", $user->office_id)->whereNotNull("deleted_at")->get();
+            $userRooms = ChatRoom::where("distinction_number", 3)->where("office_id", $user->office_id)->whereNull("deleted_at")->get();
 
             //職員全体のチャットルームを取得
-            $group = ChatRoom::where("distinction_number", 0)->whereNull("deleted_at")->first();
+            $group = ChatRoom::where("distinction_number", 0)->whereNull("deleted_at")->orderBy("room_title")->first();
+
+            //その他に入れるチャットルームを取得
+            $otherRooms = ChatRoom::where("office_id", 0)->whereNull("deleted_at")->get();
 
             //ログイン中のユーザーが参加している部屋一覧を取得
             $joinRooms = ChatRoom::join("chat_room__user", "chat_rooms.id", "=", "chat_room__user.chat_room_id")
-                ->where("chat_room__user.user_id", $user->id)->whereNull("chat_rooms.deleted_at")
-                    ->whereIn("chat_rooms.distinction_number", [1, 2, 4])->orderBy("chat_rooms.distinction_number")->orderBy("chat_rooms.room_title")->get();
+                ->where("chat_room__user.user_id", $user->id)->whereNull("chat_rooms.deleted_at")->where("office_id", "<>", 0)
+                    ->where("chat_rooms.distinction_number", 4)->orderBy("chat_rooms.distinction_number")->orderBy("chat_rooms.room_title")->get("chat_rooms.*");
 
             //事業所一覧を取得
             $offices = Office::whereNull("deleted_at")->orderBy("sort")->get();
 
             //chat_room.indexが出来次第変える
-            return view("chat.index", compact("userRooms", "group", "joinRooms", "offices"));
+            return view("chat.index", compact("userRooms", "group", "joinRooms", "offices", "otherRooms"));
         }
 
         //chat_roomsテーブルのuser_idが$userIdと一致するものを検索
@@ -73,6 +76,17 @@ class ChatController extends Controller
         //ログイン中のユーザーのidを取得
         $user = Auth::user();
 
+        //表示するチャットルームにログイン中のユーザーが参加しているかの判別
+        $check = $chat_room->chat_room__user->where("user_id", $user->id)->first();
+
+        //参加していなかった場合indexにリダイレクト
+        if(is_null($check)) {
+            return redirect()->route("chat.index");
+        }
+
+        //その他に入れるチャットルームを取得
+        $otherRooms = ChatRoom::where("office_id", 0)->whereNull("deleted_at")->orderBy("room_title")->get();
+
         //職員とそれ以外でサイドバーに必要なデータが異なるので場合分け
         if($user->user_type_id == 1) {
 
@@ -81,8 +95,8 @@ class ChatController extends Controller
 
             //ログイン中のユーザーが参加している部屋一覧を取得
             $joinRooms = ChatRoom::join("chat_room__user", "chat_rooms.id", "=", "chat_room__user.chat_room_id")
-                ->where("chat_room__user.user_id", $user->id)->whereNull("chat_rooms.deleted_at")
-                    ->whereIn("chat_rooms.distinction_number", [1, 2, 4])->orderBy("chat_rooms.distinction_number")->orderBy("chat_rooms.room_title")->get("chat_rooms.*");
+                ->where("chat_room__user.user_id", $user->id)->whereNull("chat_rooms.deleted_at")->where("office_id", "<>", 0)
+                    ->where("chat_rooms.distinction_number",  4)->orderBy("chat_rooms.distinction_number")->orderBy("chat_rooms.room_title")->get("chat_rooms.*");
         } else {
 
             //issetでfalseを返すようにnullを入れる
@@ -90,13 +104,13 @@ class ChatController extends Controller
 
             //ログイン中のユーザーが参加している部屋一覧を取得
             $joinRooms = ChatRoom::join("chat_room__user", "chat_rooms.id", "=", "chat_room__user.chat_room_id")
-                ->where("chat_room__user.user_id", $user->id)->whereNull("chat_rooms.deleted_at")
+                ->where("chat_room__user.user_id", $user->id)->whereNull("chat_rooms.deleted_at")->where("office_id", "<>", 0)
                     ->whereIn("chat_rooms.distinction_number", [3, 4])->orderBy("chat_rooms.distinction_number")->orderBy("chat_rooms.room_title")->get("chat_rooms.*");
         }
         //事業所一覧を取得
         $offices = Office::whereNull("deleted_at")->orderBy("sort")->get();
 
-        return view('chat/show', compact('chat_room', "group", "joinRooms", "offices"));
+        return view('chat/show', compact('chat_room', "group", "joinRooms", "offices", "otherRooms"));
     }
 
     /**
@@ -127,36 +141,58 @@ class ChatController extends Controller
             $chat_text->save();
         }
 
-        return redirect()->route("chat_room.index");
+        return redirect()->route("chat.index");
     }
 
     /**
      * チャットログをjavascriptで取得
      * 
-     * @param チャットルームテーブルのID $id
+     * @param チャットルームテーブルのID $chat_room_id
      * @return json $chat_room
      */
-    public function getChatLogJson ($id)
+    public function getChatLogJson ($chat_room_id)
     {
         // チャットルーム-ユーザー-中間テーブルから、既読チャットテキストIDを取得
-        $chat_room__user = ChatRoom__User::where('chat_room_id', $id)->where('user_id', Auth::user()->id)->first();
+        $chat_room__user = ChatRoom__User::where('chat_room_id', $chat_room_id)->where('user_id', Auth::user()->id)->first();
         $newest_read_chat_text_id = $chat_room__user->newest_read_chat_text_id;
 
-        // 全てのチャットテキストを取得
-        $chat_room = ChatRoom::whereNull('deleted_at')->with('chat_texts')->find($id);
-
+        // チャットテキストを取得
+        $chat_room = ChatRoom::whereNull('deleted_at')
+            ->with(['chat_texts' => function ($query) {
+                $query->whereNull('deleted_at')->orderByDesc('id')->limit(10);
+            }])
+            ->find($chat_room_id);
+        
+        //配列に変換
         $chat_room_array = $chat_room->toArray();
 
-        // 既読チャットテキストIDを戻り値に追加
-        $chat_room_array += array('newest_read_chat_text_id' => $newest_read_chat_text_id);
+        // 戻り値に追加
+        $chat_room_array += array(
+            'newest_read_chat_text_id' => $newest_read_chat_text_id,
+        );
 
-        // チャットルーム-ユーザー-中間テーブルに、既読チャットテキストIDを保存
-        $now = Carbon::now();
+        // 過去ログがあるとき
+        if (!empty($chat_room->chat_texts->first())) {
+            
+            // 表示している中で最古のテキストのID
+            $oldest_display_chat_text_id = $chat_room->chat_texts->last()->id;
 
-        $chat_room__user->newest_read_chat_text_id = $chat_room->chat_texts->last()->id;
-        $chat_room__user->update_user_id = Auth::user()->id;
-        $chat_room__user->updated_at = $now->isoFormat('YYYY-MM-DD HH:mm:ss');
-        $chat_room__user->save();
+            // 戻り値に追加
+            $chat_room_array += array(
+                'oldest_display_chat_text_id' => $oldest_display_chat_text_id,
+            );
+            
+            // 既読チャットテキストID
+            $newest_read_chat_text_id = $chat_room->chat_texts->first()->id;
+
+            // チャットルーム-ユーザー-中間テーブルに、既読チャットテキストIDを保存
+            $now = Carbon::now();
+
+            $chat_room__user->newest_read_chat_text_id = $newest_read_chat_text_id;
+            $chat_room__user->update_user_id = Auth::user()->id;
+            $chat_room__user->updated_at = $now->isoFormat('YYYY-MM-DD HH:mm:ss');
+            $chat_room__user->save();
+        }
 
         return response()->json($chat_room_array);
     }
@@ -164,23 +200,25 @@ class ChatController extends Controller
     /**
      * チャットログの差分をjavascriptで取得
      * 
-     * @param チャットルームテーブルのID $id
+     * @param チャットルームテーブルのID $chat_room_id
      * @return json $chat_room
      */
-    public function getNewChatLogJson ($id)
+    public function getNewChatLogJson ($chat_room_id)
     {
         // チャットルーム-ユーザー-中間テーブルから、既読チャットテキストIDを取得
-        $chat_room__user = ChatRoom__User::where('chat_room_id', $id)->where('user_id', Auth::user()->id)->first();
+        $chat_room__user = ChatRoom__User::where('chat_room_id', $chat_room_id)->where('user_id', Auth::user()->id)->first();
         $newest_read_chat_text_id = $chat_room__user->newest_read_chat_text_id;
-        
+
         // 未読がなければ最大10秒間待ってから値を返す
         foreach (range(1, 10) as $value) {
             // 未読のチャットテキストのみを取得
             $chat_room = ChatRoom::whereNull('deleted_at')
-            ->with(['chat_texts' => function ($query) use ($newest_read_chat_text_id) {
-                $query->where('id', '>', $newest_read_chat_text_id);
-            }])
-            ->find($id);
+            ->when($newest_read_chat_text_id, function ($query) use ($newest_read_chat_text_id) {
+                $query->with(['chat_texts' => function ($query) use ($newest_read_chat_text_id) {
+                    $query->where('id', '>', $newest_read_chat_text_id)->whereNull('deleted_at')->orderBy('id');
+                }]);
+            })
+            ->find($chat_room_id);
 
             // 未読があるとき
             if (!empty($chat_room->chat_texts->last())) {
@@ -208,13 +246,32 @@ class ChatController extends Controller
     }
 
     /**
+     * 過去のチャットログをjavascriptで取得
+     * 
+     * @param チャットルームテーブルのID $chat_room_id
+     * @param チャットテキストのID $chat_text_id
+     * @return json $chat_room
+     */
+    public function getOldChatLogJson ($chat_room_id, $chat_text_id)
+    {
+        // $chat_text_idより古いテキストのみを取得
+        $chat_room = ChatRoom::whereNull('deleted_at')
+        ->with(['chat_texts' => function ($query) use ($chat_text_id) {
+            $query->where('id', '<', $chat_text_id)->whereNull('deleted_at')->orderByDesc('id')->limit(10);
+        }])
+        ->find($chat_room_id);
+        
+        return response()->json($chat_room);
+    }
+
+    /**
      * 入力されたチャットをDBに保存
      *
      * @param  Request  $request
      * @param チャットルームテーブルのID $id
      * @return json $chat_room
      */
-    public function storeChatJson(Request $request, $id)
+    public function storeChatJson(Request $request, $chat_room_id)
     {
         // 入力された文字数
         $chat_text_length = mb_strlen($request->input('chat_text'));
@@ -229,7 +286,7 @@ class ChatController extends Controller
 
             $chat_text = new ChatText();
             $chat_text->chat_text = $request->input('chat_text');
-            $chat_text->chat_room_id = $id;
+            $chat_text->chat_room_id = $chat_room_id;
             $chat_text->user_id = Auth::user()->id;
             $chat_text->create_user_id = Auth::user()->id;
             $chat_text->update_user_id = Auth::user()->id;

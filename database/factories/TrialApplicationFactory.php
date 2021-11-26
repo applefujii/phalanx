@@ -6,6 +6,7 @@ use App\Models\TrialApplication;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Crypt;
+use Carbon\Carbon;
 
 class TrialApplicationFactory extends Factory
 {
@@ -23,6 +24,8 @@ class TrialApplicationFactory extends Factory
      */
     public function definition()
     {
+        //現在時刻の取得
+        $now = Carbon::now();
         $dateTime = $this->faker->dateTimeBetween($startDate = '-2 months', $endDate = 'now')->format('Y-m-d');
         return [
             'name' => Crypt::encryptString($this->faker->name),
@@ -32,8 +35,8 @@ class TrialApplicationFactory extends Factory
             'is_checked' => $this->faker->randomElement($array = [true, false]),
             'email' => Crypt::encryptString($this->faker->safeEmail),
             'phone_number' => Crypt::encryptString($this->faker->phoneNumber),
-            'created_at' => $dateTime,
-            'updated_at' => $dateTime,
+            'created_at' => $now->isoFormat('YYYY-MM-DD HH:mm:ss'),
+            'updated_at' => $now->isoFormat('YYYY-MM-DD HH:mm:ss'),
         ];
     }
 }

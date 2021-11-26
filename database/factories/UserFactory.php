@@ -6,6 +6,7 @@ use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
+use Carbon\Carbon;
 
 class UserFactory extends Factory
 {
@@ -23,7 +24,9 @@ class UserFactory extends Factory
      */
     public function definition()
     {
-        $dateTime = $this->faker->dateTimeBetween($startDate = '-2 months', $endDate = 'now')->format('Y-m-d');
+        //現在時刻の取得
+        $now = Carbon::now();
+        
         return [
             'user_type_id' => $this->faker->randomElement($array = [1,2,3]),
             'office_id' => $this->faker->randomElement($array = [1,2,3]),
@@ -34,8 +37,8 @@ class UserFactory extends Factory
             'remember_token' => Str::random(10),
             'create_user_id' => 1,
             'update_user_id' => 1,
-            'created_at' => $dateTime,
-            'updated_at' => $dateTime,
+            'created_at' => $now->isoFormat('YYYY-MM-DD HH:mm:ss'),
+            'updated_at' => $now->isoFormat('YYYY-MM-DD HH:mm:ss'),
         ];
     }
 }
