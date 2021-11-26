@@ -36,6 +36,7 @@
                                 {{ $office->office_name }}
                             </option>
                         @endforeach
+                        <option value="0">その他</option>
                     </select>
                 </div>
                 @if ($errors->has("office_id"))
@@ -66,10 +67,12 @@
             @endif
         </div>
         <input name="target_users" id="target_users" hidden>
-        <div class="row ml-0 mt-3">
+        <div class="d-flex flex-row mt-3">
             <button class="btn btn-primary" type="submit">更新</button>
+            <button class="btn btn-secondary ml-3" type="submit" form="cancelButton" onclick="return confirm('更新を中止しますか？')">キャンセル</button>
         </div>
     </form>
+    <form action="{{ route('chat_room.index') }}" method="get" id="cancelButton"></form>
 </div>
 @endsection
 

@@ -34,7 +34,7 @@ class ChatText extends Model
      *
      * @var array
      */
-    protected $with = ['user', 'chat_room'];
+    protected $with = ['user'];
 
     /**
      * 関連するチャットルームのデータの取得
