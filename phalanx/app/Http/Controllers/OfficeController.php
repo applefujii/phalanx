@@ -45,6 +45,16 @@ class OfficeController extends Controller
      */
     public function store(Request $request)
     {
+        $request->validate([
+            'office_name' => 'required',
+            'sort' => 'required'
+        ],
+        [
+            'office_name.required' => '事業所名を入力してください。',
+            'sort.required' => '表示する順番を数字で入力してください。',
+     ]);
+
+
         //ログイン中のユーザーデータを取得
         $user = Auth::user();
 
@@ -59,8 +69,8 @@ class OfficeController extends Controller
         $office = new Office();
         $office->office_name = $officename;
         $office->sort = $sort;
-        $office->create_user_id = $user->id;
-        $office->update_user_id = $user->id;
+        $office->create_user_id = isset($user->id);
+        $office->update_user_id = isset($user->id);
         $office->created_at = $now;
         $office->updated_at = $now;
         $office->save();
@@ -90,6 +100,15 @@ class OfficeController extends Controller
      */
     public function update(Request $request, $id)
     {
+        $request->validate([
+            'office_name' => 'required',
+            'sort' => 'required'
+        ],
+        [
+            'office_name.required' => '事業所名を入力してください。',
+            'sort.required' => '表示する順番を数字で入力してください。',
+     ]);
+
         //ログイン中のユーザーデータを取得
         $user = Auth::user();
 
@@ -124,5 +143,13 @@ class OfficeController extends Controller
         $office = Office::findOrFail($id);
         $office->delete();
         return redirect()->route("office.index");
+    }
+
+    public function messages()
+    {
+        return [
+            'office_name.required' => 'A title is required',
+            'sort.required'  => 'A message is required',
+        ];
     }
 }

@@ -13,16 +13,30 @@
             <div class="row justify-content-start mx-auto my-4">
                 <div class="mx-4">
                     <label for="text" class="text-md-left form-element">事業所名</label><br />
-                    <input type="text" id="text" class="form-control form-element @error('text') is-invalid @enderror" name="office_name" value="{{ old('office_name', $office->office_name) }}" autofocus>
-                    @error('office_name')
-                        <span class="invalid-feedback" role="alert">
-                            <strong>{{ $message }}</strong>
-                        </span>
-                    @enderror
+                    <input type="text" id="officename" class="form-control form-element" name="office_name" value="{{ old('office_name', $office->office_name) }}"><br>
+                @if ($errors->has("office_name"))
+                   <!--  <div class="row mt-2">
+                        <ul class="pl-0" style="list-style: none"> -->
+                            @foreach ($errors->get("office_name") as $error)
+                            <li class="text-danger">{{ $error }}</li> 
+                            @endforeach
+                        <!-- </ul>
+                    </div> -->
+                @endif
                 </div>
                 <div class="mx-4">
                     <label for="text" class="text-md-left form-element">表示順</label><br />
-                    <input type="number" id="number" class="form-control form-element" name="sort" value="{{old('sort',$office->sort) }}">
+                    <input type="number" id="sort" class="form-control form-element" name="sort" value="{{old('sort',$office->sort) }}"><br>
+                @if ($errors->has("sort"))
+                    <!-- <div class="row mt-2"> -->
+                        <!-- <ul class="pl-0" style="list-style: none"> -->
+                                @foreach ($errors->get("sort") as $error)
+                                    <li class="text-danger">{{ $error }}</li>
+                                @endforeach
+                        <!-- </ul> -->
+                    <!-- </div> -->
+                @endif
+
                 </div>
             </div>
 
