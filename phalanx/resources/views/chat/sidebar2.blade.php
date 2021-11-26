@@ -41,51 +41,147 @@ if(isset($chat_room)) {
 @extends('layouts.app')
 
 @section('css')
-<link href="{{ asset('css/sidebar.css') }}" rel="stylesheet">
 <link href="{{ asset('css/navigation.css') }}" rel="stylesheet">
 @yield("c_css")
 @endsection
 
 @section("content")
 
-<div id="nav-left-container" style="display: none">
+{{-- 左ナビゲーション --}}
+<div id="nav-left-container" class="d-block d-md-none">
     <div id="nav-button-left" class="nav-button openbtn d-flex align-items-center justify-content-end" data-is-open="false"><i class="fas fa-chevron-right"></i></div>
     <nav id="nav-left" class="edge-nav">
-        <div id="nav-list-left" class="nav-list">
-            <ul>
-                <li><a href="#">Top</a></li> 
-                <li><a href="#">About</a></li> 
-                <li><a href="#">Service</a></li> 
-                <li><a href="#">Contact</a></li> 
-            </ul>
+        @if (Auth::user()->user_type_id == 1)
+            <div class="p-3">
+                <a href="{{ route('chat.index') }}" class="btn btn-primary btn-lg btn-block" role="button">通所者一覧</a>
+            </div>
+        @endif
+        <div class="">
+            @if (isset($group))
+                <div class="col-12 pt-3">
+                    <h5>リテラル</h5>
+                    <ul class="col-12 pt-1">
+                        <li><a href="{{ route("chat.show", $group->id) }}">全職員</a></li>
+                    </ul>
+                </div>
+            @endif
+            @foreach ($offices as $office)
+                @if ($office->id == Auth::user()->office_id)
+                    <div class="col-12 pt-3">
+                        <h5>{{ $office->office_name }}</h5>
+                        <ul class="col-12 pt-1">
+                            @foreach ($joinRooms as $joinRoom)
+                                @if ($joinRoom->office_id == $office->id)
+                                    <li>
+                                        @if ($joinRoom->distinction_number == 4)
+                                            <a href="{{ route('chat.show', $joinRoom->id) }}">{{ $joinRoom->room_title }}</a>
+                                        @else
+                                            <a href="{{ route('chat.show', $joinRoom->id) }}">{{ $office->office_name }}職員</a>
+                                        @endif
+                                    </li>
+                                @endif
+                            @endforeach
+                        </ul>
+                    </div>
+                @endif
+            @endforeach
+            <div class="col-12 px-0">
+                <div>
+                    <button type="button" class="btn btn-outline-dark btn-block sub-offices" data-toggle="collapse" data-target="#subOffices" aria-expanded="false" aria-controls="subOffices">
+                        <i class="fas fa-chevron-down"></i>
+                    </button>
+                </div>
+                <div class="collapse" id="subOffices">
+                    @foreach ($offices as $office)
+                        @if ($office->id != Auth::user()->office_id)
+                            <div class="col-12 pt-3">
+                                <h5>{{ $office->office_name }}</h5>
+                                <ul class="col-12 pt-1">
+                                    @foreach ($joinRooms as $joinRoom)
+                                        @if ($joinRoom->office_id == $office->id)
+                                            <li>
+                                                @if ($joinRoom->distinction_number == 4)
+                                                    <a href="{{ route('chat.show', $joinRoom->id) }}">{{ $joinRoom->room_title }}</a>
+                                                @else
+                                                    <a href="{{ route('chat.show', $joinRoom->id) }}">{{ $office->office_name }}職員</a>
+                                                @endif
+                                            </li>
+                                        @endif
+                                    @endforeach
+                                </ul>
+                            </div>
+                        @endif
+                    @endforeach
+                </div>
+            </div>
         </div>
     </nav>
 </div>
 
-<div id="nav-right-container" style="display: none">
+{{-- 右ナビゲーション --}}
+<div id="nav-right-container" class="d-block d-md-none">
     <div id="nav-button-right" class="nav-button openbtn d-flex align-items-center justify-content-start" data-is-open="false"><i class="fas fa-chevron-left"></i></div>
     <nav id="nav-right" class="edge-nav">
-        <div id="nav-list-right" class="nav-list">
-            <ul>
-                <li><a href="#">Top</a></li> 
-                <li><a href="#">About</a></li> 
-                <li><a href="#">Service</a></li> 
-                <li><a href="#">Contact</a></li> 
-            </ul>
+        <div class="m-2">
+            @if (isset($chat_room))
+                <div class="">
+                    <h5 class="col-12 pt-3">参加者 - {{ $chatRoomUsers->count() }}人</h5>
+                </div>
+                <div class="">
+                    @foreach ($offices as $office)
+                        @if (isset($officers[$office->id]))
+                            <div>
+                                <h5 class="col-12 pt-3">{{ $office->office_name }}職員 - {{ count($officers[$office->id]) }}人</h5>
+                                <ul class="col-12 pt-1">
+                                    @foreach ($officers[$office->id] as $officer)
+                                        <li>{{ $officer }}</li>
+                                    @endforeach
+                                </ul>
+                            </div>
+                        @endif
+                    @endforeach
+                </div>
+                <div class="">
+                    @foreach ($offices as $office)
+                        @if (isset($users[$office->id]))
+                            <div>
+                                <h5 class="col-12 pt-3">{{ $office->office_name }}通所者 - {{ count($users[$office->id]) }}人</h5>
+                                <ul class="col-12 pt-1">
+                                    @foreach ($users[$office->id] as $user)
+                                        <li>{{ $user }}</li>
+                                    @endforeach
+                                </ul>
+                            </div>
+                        @endif
+                    @endforeach
+                </div>
+                <div class="">
+                    @if (isset($trials[0]))
+                        <h5 class="col-12 pt-3">体験者 - {{ count($trials) }}人</h5>
+                        <ul class="col-12 pt-1">
+                            @foreach ($trials as $trial)
+                                <li>{{ $trial }}</li>
+                            @endforeach
+                        </ul>
+                    @endif
+                </div>
+            @endif
         </div>
     </nav>
 </div>
 
+{{-- ナビゲーション表示時の背景オーバーレイ --}}
 <div id="cover" style="position: fixed; top: 0; left: 0; width: 100%; height:100%; z-index: 990; background-color: #00000055" hidden>
 </div>
+
 
 <div class="container-fluid">
     <div class="row">
         <div class="col-md-2 d-none d-md-block border border-dark px-0">
-            <div class="contents-sticky container-fluid">
+            <div class="scroll-contents container-fluid">
                 @if (Auth::user()->user_type_id == 1)
                     <div class="row p-3">
-                        <a href="{{ route('chat_room.index') }}" class="btn btn-primary btn-lg btn-block" role="button">通所者一覧</a>
+                        <a href="{{ route('chat.index') }}" class="btn btn-primary btn-lg btn-block" role="button">通所者一覧</a>
                     </div>
                 @endif
                 <div class="row">
@@ -93,7 +189,17 @@ if(isset($chat_room)) {
                         <div class="col-12 pt-3">
                             <h5>リテラル</h5>
                             <ul class="col-12 pt-1">
-                                <li><a href="{{ route("chat.index", $group->id) }}">全職員</a></li>
+                                <li><a href="{{ route("chat.show", $group->id) }}">全職員</a></li>
+                            </ul>
+                        </div>
+                    @endif
+                    @if (isset($otherRooms))
+                        <div class="col-12 pt-3">
+                            <h5>その他</h5>
+                            <ul class="col-12 pt-1">
+                                @foreach ($otherRooms as $otherRoom)
+                                    <li><a href="{{ route('chat.show', $otherRoom->id) }}">{{ $otherRoom->room_title }}</a></li>
+                                @endforeach
                             </ul>
                         </div>
                     @endif
@@ -106,9 +212,9 @@ if(isset($chat_room)) {
                                         @if ($joinRoom->office_id == $office->id)
                                             <li>
                                                 @if ($joinRoom->distinction_number == 4)
-                                                    <a href="{{ route('chat.index', $joinRoom->id) }}">{{ $joinRoom->room_title }}</a>
+                                                    <a href="{{ route('chat.show', $joinRoom->id) }}">{{ $joinRoom->room_title }}</a>
                                                 @else
-                                                    <a href="{{ route('chat.index', $joinRoom->id) }}">{{ $office->name }}職員</a>
+                                                    <a href="{{ route('chat.show', $joinRoom->id) }}">{{ $office->office_name }}職員</a>
                                                 @endif
                                             </li>
                                         @endif
@@ -119,7 +225,7 @@ if(isset($chat_room)) {
                     @endforeach
                     <div class="col-12 px-0">
                         <div>
-                            <button type="button" class="btn btn-outline-dark btn-block" id="sub-offices" data-toggle="collapse" data-target="#subOffices" aria-expanded="false" aria-controls="subOffices">
+                            <button type="button" class="btn btn-outline-dark btn-block sub-offices" data-toggle="collapse" data-target="#subOffices" aria-expanded="false" aria-controls="subOffices">
                                 <i class="fas fa-chevron-down"></i>
                             </button>
                         </div>
@@ -133,9 +239,9 @@ if(isset($chat_room)) {
                                                 @if ($joinRoom->office_id == $office->id)
                                                     <li>
                                                         @if ($joinRoom->distinction_number == 4)
-                                                            <a href="{{ route('chat.index', $joinRoom->id) }}">{{ $joinRoom->room_title }}</a>
+                                                            <a href="{{ route('chat.show', $joinRoom->id) }}">{{ $joinRoom->room_title }}</a>
                                                         @else
-                                                            <a href="{{ route('chat.index', $joinRoom->id) }}">{{ $office->name }}職員</a>
+                                                            <a href="{{ route('chat.show', $joinRoom->id) }}">{{ $office->office_name }}職員</a>
                                                         @endif
                                                     </li>
                                                 @endif
@@ -149,142 +255,14 @@ if(isset($chat_room)) {
                 </div>
             </div>
         </div>
-        <div class="col-md-8 bg-white border-top border-dark">
-            <button type="button" class="btn btn-dark rounded-circle position-fixed mt-5 d-block d-md-none sidebar-open" id="left-open" data-toggle="modal" data-target="#left-modal">
-                <i class="fas fa-chevron-right"></i>
-            </button>
-            <div class="modal fade" id="left-modal" tabindex="-1">
-                <div class="modal-dialog">
-                    <div class="modal-content h-100">
-                        <div class="modal-body">
-                            @if (Auth::user()->user_type_id == 1)
-                                <div class="row p-3">
-                                    <a href="{{ route('chat_room.index') }}" class="btn btn-primary btn-lg btn-block" role="button">通所者一覧</a>
-                                </div>
-                            @endif
-                            <div class="row">
-                                @if (isset($group))
-                                    <div class="col-12 pt-3">
-                                        <h5>リテラル</h5>
-                                        <ul class="col-12 pt-1">
-                                            <li><a href="{{ route("chat.index", $group->id) }}">全職員</a></li>
-                                        </ul>
-                                    </div>
-                                @endif
-                                @foreach ($offices as $office)
-                                    @if ($office->id == Auth::user()->office_id)
-                                        <div class="col-12 pt-3">
-                                            <h5>{{ $office->office_name }}</h5>
-                                            <ul class="col-12 pt-1">
-                                                @foreach ($joinRooms as $joinRoom)
-                                                    @if ($joinRoom->office_id == $office->id)
-                                                        <li>
-                                                            @if ($joinRoom->distinction_number == 4)
-                                                                <a href="{{ route('chat.index', $joinRoom->id) }}">{{ $joinRoom->room_title }}</a>
-                                                            @else
-                                                                <a href="{{ route('chat.index', $joinRoom->id) }}">{{ $office->name }}職員</a>
-                                                            @endif
-                                                        </li>
-                                                    @endif
-                                                @endforeach
-                                            </ul>
-                                        </div>
-                                    @endif
-                                @endforeach
-                                <div class="col-12 px-0">
-                                    <div>
-                                        <button type="button" class="btn btn-outline-dark btn-block" id="sub-offices" data-toggle="collapse" data-target="#subOffices" aria-expanded="false" aria-controls="subOffices">
-                                            <i class="fas fa-chevron-down"></i>
-                                        </button>
-                                    </div>
-                                    <div class="collapse" id="subOffices">
-                                        @foreach ($offices as $office)
-                                            @if ($office->id != Auth::user()->office_id)
-                                                <div class="col-12 pt-3">
-                                                    <h5>{{ $office->office_name }}</h5>
-                                                    <ul class="col-12 pt-1">
-                                                        @foreach ($joinRooms as $joinRoom)
-                                                            @if ($joinRoom->office_id == $office->id)
-                                                                <li>
-                                                                    @if ($joinRoom->distinction_number == 4)
-                                                                        <a href="{{ route('chat.index', $joinRoom->id) }}">{{ $joinRoom->room_title }}</a>
-                                                                    @else
-                                                                        <a href="{{ route('chat.index', $joinRoom->id) }}">{{ $office->name }}職員</a>
-                                                                    @endif
-                                                                </li>
-                                                            @endif
-                                                        @endforeach
-                                                    </ul>
-                                                </div>
-                                            @endif
-                                        @endforeach
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            @if (isset($chat_room))
-                <button type="button" class="btn btn-dark rounded-circle position-fixed mt-5 d-block d-md-none sidebar-open" id="right-open" data-toggle="modal" data-target="#right-modal">
-                    <i class="fas fa-chevron-left"></i>
-                </button>
-                <div class="modal fade" id="right-modal" tabindex="-1">
-                    <div class="modal-dialog">
-                        <div class="modal-content h-100">
-                            <div class="modal-body">
-                                <div class="row">
-                                    <h5 class="col-12 pt-3">参加者 - {{ $chatRoomUsers->count() }}人</h5>
-                                </div>
-                                <div class="row">
-                                    @foreach ($offices as $office)
-                                        @if (isset($officers[$office->id]))
-                                            <div>
-                                                <h5 class="col-12 pt-3">{{ $office->office_name }}職員 - {{ count($officers[$office->id]) }}人</h5>
-                                                <ul class="col-12 pt-1">
-                                                    @foreach ($officers[$office->id] as $officer)
-                                                        {{ $officer }}
-                                                    @endforeach
-                                                </ul>
-                                            </div>
-                                        @endif
-                                    @endforeach
-                                </div>
-                                <div class="row">
-                                    @foreach ($offices as $office)
-                                        @if (isset($users[$office->id]))
-                                            <div>
-                                                <h5 class="col-12 pt-3">{{ $office->office_name }}通所者 - {{ count($users[$office->id]) }}人</h5>
-                                                <ul class="col-12 pt-1">
-                                                    @foreach ($users[$office->id] as $user)
-                                                        {{ $user }}
-                                                    @endforeach
-                                                </ul>
-                                            </div>
-                                        @endif
-                                    @endforeach
-                                </div>
-                                <div class="row">
-                                    @if (isset($trials))
-                                        <h5 class="col-12 pt-3">体験者 - {{ count($trials) }}人</h5>
-                                        <ul class="col-12 pt-1">
-                                            @foreach ($trials as $trial)
-                                                <li>{{ $trial }}</li>
-                                            @endforeach
-                                        </ul>
-                                    @endif
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            @endif
-            <div class="contents-sticky">
+        <div class="col-md-8 bg-white border-top p-0">
+            <div class="scroll-contents" id="center-scroll">
                 @yield('center')
             </div>
+            @yield("c_modal")
         </div>
         <div class="col-md-2 d-none d-md-block border border-dark pr-0">
-            <div class="contents-sticky">
+            <div class="scroll-contents">
                 @if (isset($chat_room))
                     <div class="row">
                         <h5 class="col-12 pt-3">参加者 - {{ $chatRoomUsers->count() }}人</h5>
@@ -296,7 +274,7 @@ if(isset($chat_room)) {
                                     <h5 class="col-12 pt-3">{{ $office->office_name }}職員 - {{ count($officers[$office->id]) }}人</h5>
                                     <ul class="col-12 pt-1">
                                         @foreach ($officers[$office->id] as $officer)
-                                            {{ $officer }}
+                                            <li>{{ $officer }}</li>
                                         @endforeach
                                     </ul>
                                 </div>
@@ -310,7 +288,7 @@ if(isset($chat_room)) {
                                     <h5 class="col-12 pt-3">{{ $office->office_name }}通所者 - {{ count($users[$office->id]) }}人</h5>
                                     <ul class="col-12 pt-1">
                                         @foreach ($users[$office->id] as $user)
-                                            {{ $user }}
+                                            <li>{{ $user }}</li>
                                         @endforeach
                                     </ul>
                                 </div>
@@ -318,7 +296,7 @@ if(isset($chat_room)) {
                         @endforeach
                     </div>
                     <div class="row">
-                        @if (isset($trials))
+                        @if (isset($trials[0]))
                             <h5 class="col-12 pt-3">体験者 - {{ count($trials) }}人</h5>
                             <ul class="col-12 pt-1">
                                 @foreach ($trials as $trial)
@@ -341,8 +319,14 @@ if(isset($chat_room)) {
 
 <script>
 
+    var fRightNav = {{ isset($chat_room) ? 'true' : 'false' }};
+
     ////////////////////// クラス /////////////////////////////////////////
 
+    /**
+     * コンテンツオーバーレイの制御
+     * @auther 藤井淳一
+    */
     class cover {
         static fVisible = false;
         static colorA = 0;      // 0～255
@@ -367,6 +351,10 @@ if(isset($chat_room)) {
         }
     }
 
+    /**
+     * 画面橋から引き出すナビゲーション
+     * @auther 藤井淳一
+    */
     class navigation {
         /* コンストラクタ */
         constructor(manager, tagName, direction, toutchSize, navSizeRem, vW, vH) {
@@ -408,27 +396,25 @@ if(isset($chat_room)) {
 
         // タッチした時
         toutchStart( event, posX, posY ) {
+            if(this.fAction == false) return;
             this.pastPosX = [], this.pastPosY = [];
             this.pastPosX.push(posX);
             this.pastPosY.push(posY);
-
-            this.setTransition('all 0s');
 
             //-- 開いていない状態で画面端タッチなら動作させる。開いた状態で他部分をタッチしたら動作させる。
             switch(this.direction) {
                 case 1:
                     break
                 case 2:
-                    if( !navigation.fAnyoneOpen  &&  !this.fOpen  &&  posX >= (navigation.viewportWidth-this.toutchSize)) {
+                    if( !this.manager.fAnyoneOpen  &&  !this.fOpen  &&  posX >= (this.manager.viewportWidth-this.toutchSize)) {
                         this.fInMotion = true;
                     }
                     else if( this.fOpen ) {
                         if( !$(event.target).closest(this.navButton).length  &&  !$(event.target).closest(this.nav).length ) {
                             this.fInMotion = true;
-                            console.log('toutch on');
                             this.setOpen(false);
 
-                            let x = navigation.viewportWidth-posX;
+                            let x = this.manager.viewportWidth-posX;
                             if( x > this.navSizePixel ) {
                                 x = this.navSizePixel;
                             }
@@ -439,13 +425,12 @@ if(isset($chat_room)) {
                 case 3:
                     break
                 case 4:
-                    if( !navigation.fAnyoneOpen  &&  !this.fOpen  &&  posX <= this.toutchSize) {
+                    if( !this.manager.fAnyoneOpen  &&  !this.fOpen  &&  posX <= this.toutchSize) {
                         this.fInMotion = true;
                     }
                     else if( this.fOpen ) {
                         if( !$(event.target).closest(this.navButton).length  &&  !$(event.target).closest(this.nav).length ) {
                             this.fInMotion = true;
-                            console.log('toutch on');
                             this.setOpen(false);
 
                             let x = posX;
@@ -467,14 +452,12 @@ if(isset($chat_room)) {
             this.pastPosX.push(posX);
             this.pastPosY.push(posY);
 
-            this.setTransition('all 0s');
-
             switch(this.direction) {
                 case 1:
                     break
                 case 2:
                     if(this.fInMotion) {
-                        let x = navigation.viewportWidth-posX;
+                        let x = this.manager.viewportWidth-posX;
                         if( x > this.navSizePixel ) {
                             x = this.navSizePixel;
                             this.fOpen = true;
@@ -509,12 +492,16 @@ if(isset($chat_room)) {
                 //-- 速度が一定以上ならfOpenをtrueにする
                 let speedX = (this.pastPosX[this.pastPosX.length-1] - this.pastPosX[0]) /this.pastPosX.length;
                 let speedY = (this.pastPosY[this.pastPosY.length-1] - this.pastPosY[0]) /this.pastPosX.length;
+                let fSpeed = false;
                 switch(this.direction) {
                     case 1:
                         break
                     case 2:
                         if(this.pastPosX.length>=2) {
-                            if(speedX <= -2.0) this.fOpen = true;
+                            if(speedX <= -2.0) {
+                                this.fOpen = true;
+                                fSpeed = true;
+                            }
                         } else {
                             if(this.fOpen == true) this.fOpen = false;
                         }
@@ -523,7 +510,10 @@ if(isset($chat_room)) {
                         break
                     case 4:
                         if(this.pastPosX.length>=2) {
-                            if(speedX >= 2.0) this.fOpen = true;
+                            if(speedX >= 2.0) {
+                                this.fOpen = true;
+                                fSpeed = true;
+                            }
                         } else {
                             if(this.fOpen == true) this.fOpen = false;
                         }
@@ -531,7 +521,8 @@ if(isset($chat_room)) {
                 }
 
                 if( this.fOpen ) {
-                    this.setOpen(true, true);
+                    if( fSpeed ) this.setOpen(true, true);
+                    else this.setOpen(true, false);
                 } else {
                     this.setOpen(false, true);
                 }
@@ -563,27 +554,27 @@ if(isset($chat_room)) {
         }
 
         setOpen( iActive, iAnimation=false ) {
-            console.log('dir:'+this.direction+'/ active:'+iActive+'/ anim:'+iAnimation);
+            // console.log('dir:'+this.direction+'/ active:'+iActive+'/ anim:'+iAnimation);
+            if(iAnimation) this.setTransition('all .6s');
+            else this.setTransition('all 0s');
+
             if(iActive) {
-                if(navigation.fAnyoneOpen) return;
-                if(iAnimation) this.setTransition('all .6s');
-                else this.setTransition('all 0s');
+                if(this.manager.fAnyoneOpen) return;
                 $(this.navButton).addClass('active');
                 $(this.nav).addClass('panelactive');
                 cover.on(0,0,0,88);
                 this.fOpen = true;
-                navigation.fAnyoneOpen = true;
+                this.manager.setAnyoneOpen(true);
                 $(this.navButton).data('is-open', 'true');
             } else {
                 if(!this.fOpen) return;
-                if(iAnimation) this.setTransition('all .6s');
-                else this.setTransition('all 0s');
                 $(this.navButton).removeClass('active');
                 $(this.nav).removeClass('panelactive');
                 cover.on(0,0,0,0);
+                let cl = this;
                 setTimeout(function() {
                     cover.off();
-                    navigation.fAnyoneOpen = false;
+                    cl.manager.setAnyoneOpen(false);
                 }, 600);
                 this.fOpen = false;
                 $(this.navButton).data('is-open', 'false');
@@ -601,7 +592,11 @@ if(isset($chat_room)) {
             if(a > 88) a = 88;
             if(this.fOpen) cover.on(0,0,0,88)
             else {
-                if(volume > 0) cover.on(0,0,0,a);
+                if(volume > 0) {
+                    this.setTransition('all 0s');
+                    cover.on(0,0,0,a);
+                }
+                else cover.off();
             }
 
             switch(this.direction) {
@@ -639,7 +634,9 @@ if(isset($chat_room)) {
     }
 
     /**
-    *   シングルトン
+     * 画面橋から引き出すナビゲーションの管理クラス
+     * シングルトン
+     * @auther 藤井淳一
     */
     class navigationManager {
         static count = 0;
@@ -688,14 +685,18 @@ if(isset($chat_room)) {
             });
         }
 
-        allNonactive() {
+        allNonactivate() {
             Object.values(this.oNavigation).forEach((nav) => {
                 nav.setOpen( false );
             });
         }
 
         isAnyoneOpen() {
-            return fAnyoneOpen;
+            return this.fAnyoneOpen;
+        }
+
+        setAnyoneOpen( flag ) {
+            this.fAnyoneOpen = flag;
         }
 
     }
@@ -704,11 +705,23 @@ if(isset($chat_room)) {
 
     $(function() {
 
-        let wid = window.innerWidth;
-        var bsSize = wid<576 ? 1 : wid<768 ? 2 : wid<992 ? 3 : wid<1200 ? 4 : wid<1400 ? 5 : 6;
+        //ナビゲーションバーの高さを取得
+        let navHeight = $("nav").innerHeight();
+
+        //.scroll-contentsの高さを調整
+        $(".scroll-contents").css("height", `calc(100vh - 2px - ${navHeight}px)`);
+        $("main").css("height", `calc(100vh - 2px - ${navHeight}px)`);
+
+        // const observer = new MutationObserver((mutationsList, observer) => {
+        //     mutationsList.forEach(({target, oldValue}) => {
+        //         console.log(target.style.transition);
+        //         console.log('old: '+oldValue);
+        //     });
+        // });
+        // observer.observe(document.querySelector('#cover'), { attributes: true, childList: true, subtree: true });
 
         //#sub-officesが押された時の動作
-        $("#sub-offices").click(function(){
+        $(".sub-offices").click(function(){
             let fas = $(this).find(".fas");
             if( fas.hasClass("fa-chevron-down") ) {
                 fas.removeClass("fa-chevron-down");
@@ -726,8 +739,8 @@ if(isset($chat_room)) {
     //navigation.setViewportSize(window.innerWidth, window.innerHeight);
     // インスタンス作成
     var navManager = new navigationManager();
-    navManager.add( 'left', 4, 16, 20 );
-    navManager.add( 'right', 2, 16, 20 );
+    navManager.add( 'left', 4, 32, 20 );
+    if(fRightNav) navManager.add( 'right', 2, 32, 20 );
 
     $(document).ready(function()
     {
