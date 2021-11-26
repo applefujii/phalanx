@@ -48,7 +48,7 @@ if(isset($chat_room)) {
 @section("content")
 
 {{-- 左ナビゲーション --}}
-<div id="nav-left-container" class="d-block d-md-none">
+<div id="nav-left-container" class="d-block d-md-none" style='visibility: hidden'>
     <div id="nav-button-left" class="nav-button openbtn d-flex align-items-center justify-content-end" data-is-open="false"><i class="fas fa-chevron-right"></i></div>
     <nav id="nav-left" class="edge-nav">
         @if (Auth::user()->user_type_id == 1)
@@ -119,7 +119,7 @@ if(isset($chat_room)) {
 </div>
 
 {{-- 右ナビゲーション --}}
-<div id="nav-right-container" class="d-block d-md-none">
+<div id="nav-right-container" class="d-block d-md-none" style='visibility: hidden'>
     <div id="nav-button-right" class="nav-button openbtn d-flex align-items-center justify-content-start" data-is-open="false"><i class="fas fa-chevron-left"></i></div>
     <nav id="nav-right" class="edge-nav">
         <div class="m-2">
@@ -665,6 +665,7 @@ if(isset($chat_room)) {
 
         add(tagName, direction, toutchSize, navSizeRem) {
             this.oNavigation[tagName] = new navigation(this, tagName, direction, toutchSize, navSizeRem, this.viewportWidth, this.viewportHeight);
+            $('#nav-'+tagName+'-container').css('visibility', 'visible');
         }
 
         toutchStart( event, posX, posY ) {
