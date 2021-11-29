@@ -2,6 +2,10 @@
     padding-top: 0rem !important;
 }
 
+nav {
+    z-index: 1035;
+}
+
 .top {
     top:0;
 }
