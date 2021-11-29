@@ -1,6 +1,10 @@
 .aptitude_question {
   margin-left: 0px;
   margin-right: 0px;
+  border-top: 1px solid #dee2e6 !important;
+  border-left: 1px solid #dee2e6 !important;
+  border-right: 1px solid #dee2e6 !important;
+  background-color: white;
 }
 .aptitude_question .answer {
   margin-left: 0px;
@@ -13,4 +17,7 @@
 }
 .aptitude_question:hover {
   background-color: rgba(0, 0, 0, 0.05);
+}
+.aptitude_question:last-of-type {
+  border-bottom: 1px solid #dee2e6 !important;
 }/*# sourceMappingURL=aptitude_question_form.css.map */
