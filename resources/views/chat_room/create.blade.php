@@ -35,7 +35,7 @@
                                 {{ $office->office_name }}
                             </option>
                         @endforeach
-                        <option value="0">その他</option>
+                        <option value="0" @if (old("office_id") != null && old("office_id") == 0) selected @endif>その他</option>
                     </select>
                 </div>
                 @if ($errors->has("office_id"))

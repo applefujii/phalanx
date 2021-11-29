@@ -21,7 +21,13 @@
                 @foreach ($chatRooms as $chatRoom)
                     <tr>
                         <td class="room-title align-middle">{{ $chatRoom->room_title }}</td>
-                        <td class="align-middle">{{ $chatRoom->office->office_name }}</td>
+                        <td class="align-middle">
+                            @if ($chatRoom->office_id == 0)
+                                その他
+                            @else
+                                {{ $chatRoom->office->office_name }}
+                            @endif
+                        </td>
                         <td class="align-middle">
                             <div class="row gx-2 text-center">
                                 <div class="col">
