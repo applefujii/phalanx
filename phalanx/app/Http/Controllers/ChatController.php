@@ -159,7 +159,7 @@ class ChatController extends Controller
         // チャットテキストを取得
         $chat_room = ChatRoom::whereNull('deleted_at')
             ->with(['chat_texts' => function ($query) {
-                $query->whereNull('deleted_at')->orderByDesc('id')->limit(10);
+                $query->whereNull('deleted_at')->orderByDesc('id')->limit(config('const.chat_text_limit'));
             }])
             ->find($chat_room_id);
         
@@ -257,7 +257,7 @@ class ChatController extends Controller
         // $chat_text_idより古いテキストのみを取得
         $chat_room = ChatRoom::whereNull('deleted_at')
         ->with(['chat_texts' => function ($query) use ($chat_text_id) {
-            $query->where('id', '<', $chat_text_id)->whereNull('deleted_at')->orderByDesc('id')->limit(10);
+            $query->where('id', '<', $chat_text_id)->whereNull('deleted_at')->orderByDesc('id')->limit(config('const.chat_text_limit'));
         }])
         ->find($chat_room_id);
         
