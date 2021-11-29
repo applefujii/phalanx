@@ -209,18 +209,15 @@ class ChatController extends Controller
         $chat_room__user = ChatRoom__User::where('chat_room_id', $chat_room_id)->where('user_id', Auth::user()->id)->first();
         $newest_read_chat_text_id = $chat_room__user->newest_read_chat_text_id;
 
-        // 既読情報なしならnullを返す
-        if (empty($newest_read_chat_text_id)) {
-            return null;
-        }
-        
         // 未読がなければ最大10秒間待ってから値を返す
         foreach (range(1, 10) as $value) {
             // 未読のチャットテキストのみを取得
             $chat_room = ChatRoom::whereNull('deleted_at')
-            ->with(['chat_texts' => function ($query) use ($newest_read_chat_text_id) {
-                $query->where('id', '>', $newest_read_chat_text_id)->whereNull('deleted_at')->orderBy('id');
-            }])
+            ->when($newest_read_chat_text_id, function ($query) use ($newest_read_chat_text_id) {
+                $query->with(['chat_texts' => function ($query) use ($newest_read_chat_text_id) {
+                    $query->where('id', '>', $newest_read_chat_text_id)->whereNull('deleted_at')->orderBy('id');
+                }]);
+            })
             ->find($chat_room_id);
 
             // 未読があるとき
