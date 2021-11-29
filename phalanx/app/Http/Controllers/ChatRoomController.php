@@ -37,8 +37,8 @@ class ChatRoomController extends Controller
         $user = Auth::user();
         
         //表示する部屋の一覧を取得
-        $chatRooms = ChatRoom::where("distinction_number", 4)->where("office_id", "<>", "0")->whereNull("offices.deleted_at")
-            ->whereNull("chat_rooms.deleted_at")->leftJoin("offices", "chat_rooms.office_id", "=", "offices.id")->orderBy("offices.sort")
+        $chatRooms = ChatRoom::where("distinction_number", 4)->whereNull("offices.deleted_at")->whereNull("chat_rooms.deleted_at")
+            ->leftJoin("offices", "chat_rooms.office_id", "=", "offices.id")->orderBy("offices.sort")
                 ->orderBy("chat_rooms.room_title")->select("chat_rooms.*")->paginate(10);
 
 

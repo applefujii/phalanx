@@ -85,7 +85,7 @@
                 </button>
             </div>
             <div class="modal-body">
-                <form class="mx-5 my-2" action="{{ route('chat.multiStore') }}" method="post">
+                <form class="mx-md-5 my-2" action="{{ route('chat.multiStore') }}" method="post">
                     @csrf
                     <input type="hidden" name="chat_rooms" id="chatRoomsValue">
                     <div class="form-group">
