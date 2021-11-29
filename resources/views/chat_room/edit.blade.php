@@ -32,11 +32,11 @@
                         <option value="">選択してください</option>
                         @foreach ($offices as $office)
                             <option value="{{ $office->id }}"
-                                @if (old("office_id", $chatRoom->office->id) == $office->id) selected @endif>
+                                @if (old("office_id", $chatRoom->office_id) == $office->id) selected @endif>
                                 {{ $office->office_name }}
                             </option>
                         @endforeach
-                        <option value="0">その他</option>
+                        <option value="0" @if (old("office_id", $chatRoom->office_id) == 0) selected @endif>その他</option>
                     </select>
                 </div>
                 @if ($errors->has("office_id"))
