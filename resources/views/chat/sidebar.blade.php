@@ -131,7 +131,7 @@ if(isset($chat_room)) {
                 <i class="fas fa-chevron-right"></i>
             </button>
             <div class="modal fade" id="left-modal" tabindex="-1">
-                <div class="modal-dialog">
+                <div class="modal-dialog d-md-none">
                     <div class="modal-content h-100">
                         <div class="modal-body">
                             @if (Auth::user()->user_type_id == 1)
@@ -217,7 +217,7 @@ if(isset($chat_room)) {
                     <i class="fas fa-chevron-left"></i>
                 </button>
                 <div class="modal fade" id="right-modal" tabindex="-1">
-                    <div class="modal-dialog">
+                    <div class="modal-dialog d-md-none">
                         <div class="modal-content h-100">
                             <div class="modal-body">
                                 <div class="row">

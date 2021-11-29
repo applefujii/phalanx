@@ -95,7 +95,6 @@ main ul {
 #left-modal .modal-body, #right-modal .modal-body {
     position: sticky;
     top: 0;
-    height: calc(100vh - 57px);
     overflow-x: hidden;
     overflow-y: auto;
 }
