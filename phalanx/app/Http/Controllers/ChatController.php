@@ -45,7 +45,7 @@ class ChatController extends Controller
             $group = ChatRoom::where("distinction_number", 0)->whereNull("deleted_at")->orderBy("room_title")->first();
 
             //その他に入れるチャットルームを取得
-            $otherRooms = ChatRoom::where("office_id", 0)->whereNull("deleted_at")->get();
+            $otherRooms = ChatRoom::where("office_id", 0)->whereNull("deleted_at")->orderBy("room_title")->get();
 
             //ログイン中のユーザーが参加している部屋一覧を取得
             $joinRooms = ChatRoom::join("chat_room__user", "chat_rooms.id", "=", "chat_room__user.chat_room_id")
