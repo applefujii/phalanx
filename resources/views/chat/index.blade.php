@@ -1,4 +1,4 @@
-@extends("chat.sidebar2")
+@extends("chat.sidebar")
 @section("c_css")
 <link href="{{ asset('css/chat_index.css') }}" rel="stylesheet">
 @endsection
