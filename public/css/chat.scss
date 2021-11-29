@@ -11,6 +11,9 @@
     margin-top: 40px;
     margin-bottom: 60px;
     .chat_individual {
+        &:hover {
+            background-color: rgba(0, 0, 0, 0.075);
+        }
         .chat_header {
             margin-left: 20px;
             margin-top: 20px;
@@ -32,6 +35,11 @@
     height: 40px;
     position: fixed;
     bottom: 55px;
+}
+
+#to_bottom {
+    position: fixed;
+    bottom: 100px;
 }
 
 #chat_footer {
