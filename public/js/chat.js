@@ -8,18 +8,15 @@ $(() => {
     // 表示している中で最も古いチャットテキストのID
     let oldest_display_chat_text_id = 1;
 
-    // ウィンドウの高さ
-    let window_height = $(window).innerHeight();
-    // ドキュメントの高さ
-    let document_height = $(document).innerHeight();
-
     // 新着ありメッセージ非表示
     $('#new').hide();
 
     //スクロールしたら
     $("#center-scroll").on("scroll", () => {
+        
         //ウィンドウの一番下までスクロールしたら
-        if (bottom_height() - $("#center-scroll").scrollTop() < 10) {
+        // ヘッダーの高さ＋チャット表示部のスクロール長－スクロール量－ウィンドウ高さ
+        if ($('nav').innerHeight() + $("#center-scroll").get(0).scrollHeight - $("#center-scroll").scrollTop() - $(window).innerHeight() <= 10) {
             //新着ありメッセージ非表示
             $('#new').hide();
             // 最新チャットメッセージ閲覧済み
@@ -43,13 +40,7 @@ $(() => {
 
     // 最下ボタンを押したら最下に移動
     $("#to_bottom_button").on('click', () => {
-        $("#center-scroll").scrollTop(bottom_height());
-    });
-
-    // ウィンドウがリサイズされたとき
-    $(window).on('resize', () => {
-        // ウィンドウの高さ
-        window_height = $(window).innerHeight();
+        $("#center-scroll").scrollTop($("#center-scroll").get(0).scrollHeight);
     });
 
     // ----------------------------初回チャット読み込み----------------------------
@@ -80,6 +71,7 @@ $(() => {
 
             // チャットログを空に
             $("#chat_log").empty();
+            
             // チャットログ表示
             $.map(room.chat_texts.reverse(), (val, index) => {
                 displayChatText(val, index);
@@ -89,6 +81,7 @@ $(() => {
                     displayBookmark();
                 }
             });
+
             // もっとも古いチャットテキストのID更新
             oldest_display_chat_text_id = room.oldest_display_chat_text_id;
 
@@ -134,8 +127,6 @@ $(() => {
         // 過去ログ部分の高さ
         let old_height = $('#chat_log').innerHeight();
 
-        let scrollTop = $("#center-scroll").scrollTop();
-
         // Ajaxリクエスト
         $.ajaxSetup({
             headers: {
@@ -161,6 +152,9 @@ $(() => {
                     // 自分の書き込みがあるかの判定
                     let my_text = false;
 
+                    // 新着メッセージ取得時に最下までスクロールしていたかどうかの判定
+                    let is_scroll_bottom = $('nav').innerHeight() + $("#center-scroll").get(0).scrollHeight - $("#center-scroll").scrollTop() - $(window).innerHeight() <= 10;
+
                     // チャットログ表示
                     $.map(room.chat_texts, (val, index) => {
                         displayChatText(val, index);
@@ -171,19 +165,10 @@ $(() => {
                         }
                     });
 
-                    // テキスト取得前の高さ
-                    let old_bottom_height = bottom_height();
-
-                    // 過去ログ部分の高さの差分
-                    let difference = $('#chat_log').innerHeight() - old_height;
-
-                    // ドキュメントの高さ加算
-                    document_height += difference;
-
                     // 自分の書き込みがあるか最下までスクロールしていた場合
-                    if (my_text || old_bottom_height - scrollTop < 10) {
+                    if (my_text || is_scroll_bottom) {
                         // 末尾までスクロール
-                        $("#center-scroll").scrollTop(bottom_height());
+                        $("#center-scroll").scrollTop($("#center-scroll").get(0).scrollHeight);
                     } else {
                         // 新着ありメッセージ表示
                         $('#new').show();
@@ -229,13 +214,13 @@ $(() => {
                         let name_css = '';
                         // 自分の書き込みなら
                         if (val.user_id == user.id) {
-                            name_css = 'text-success font-weight-bold';
+                            name_css = 'text-primary font-weight-bold';
                             // 職員の書き込みなら
                         } else if (val.user.user_type_id == 1) {
                             name_css = 'text-danger font-weight-bold';
                             // それ以外
                         } else {
-                            name_css = 'text-primary font-weight-bold';
+                            name_css = 'text-success font-weight-bold';
                         }
 
                         let html = `
@@ -258,9 +243,6 @@ $(() => {
 
                     // スクロールを戻す
                     $("#center-scroll").scrollTop(difference);
-
-                    // ドキュメントの高さ加算
-                    document_height += difference;
                 }
             })
             // 失敗時
@@ -325,13 +307,13 @@ $(() => {
         let name_css = '';
         // 自分の書き込みなら
         if (val.user_id == user.id) {
-            name_css = 'text-success font-weight-bold';
+            name_css = 'text-primary font-weight-bold';
             // 職員の書き込みなら
         } else if (val.user.user_type_id == 1) {
             name_css = 'text-danger font-weight-bold';
             // それ以外
         } else {
-            name_css = 'text-primary font-weight-bold';
+            name_css = 'text-success font-weight-bold';
         }
         let html = `
             <div class="chat_individual">
@@ -353,10 +335,5 @@ $(() => {
                 </div>
                 `;
         $("#chat_log").append(html);
-    }
-
-    // ----------------------------最下の位置----------------------------
-    function bottom_height() {
-        return document_height - window_height + 75;
     }
 });
