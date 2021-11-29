@@ -9,7 +9,7 @@
 @section('content')
     <div class="container">
         <div class="col-md-10">
-            <h3 class="text-center">適性診断</h3>
+            <h3 class="">適性診断</h3>
         </div>
         @if ($errors->any())
             <div class="col-md-10">
