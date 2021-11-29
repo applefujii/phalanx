@@ -42,7 +42,7 @@
                                     <input id="{{ $option_key }}[{{ $aptitude_question->id }}]"
                                         class="form-check-input" type="radio"
                                         name="aptitude_questions[{{ $aptitude_question->id }}][answer]"
-                                        value="{{ $option_value }}" @if (!is_null(old("aptitude_questions.$aptitude_question->id.answer")) && (int) old("answers.$aptitude_question->id.answer") === $option_value) checked @endif>
+                                        value="{{ $option_value }}" @if (!is_null(old("aptitude_questions.$aptitude_question->id.answer")) && (int) old("aptitude_questions.$aptitude_question->id.answer") === $option_value) checked @endif>
                                     <label class="form-check-label"
                                         for="{{ $option_key }}[{{ $aptitude_question->id }}]">{{ config('const.option_japanese')[$option_key] }}</label>
                                 </div>
