@@ -45,7 +45,7 @@ class ChatController extends Controller
             $group = ChatRoom::where("distinction_number", 0)->whereNull("deleted_at")->orderBy("room_title")->first();
 
             //その他に入れるチャットルームを取得
-            $otherRooms = ChatRoom::where("office_id", 0)->whereNull("deleted_at")->get();
+            $otherRooms = ChatRoom::where("office_id", 0)->whereNull("deleted_at")->orderBy("room_title")->get();
 
             //ログイン中のユーザーが参加している部屋一覧を取得
             $joinRooms = ChatRoom::join("chat_room__user", "chat_rooms.id", "=", "chat_room__user.chat_room_id")
@@ -159,7 +159,7 @@ class ChatController extends Controller
         // チャットテキストを取得
         $chat_room = ChatRoom::whereNull('deleted_at')
             ->with(['chat_texts' => function ($query) {
-                $query->whereNull('deleted_at')->orderByDesc('id')->limit(10);
+                $query->whereNull('deleted_at')->orderByDesc('id')->limit(config('const.chat_text_limit'));
             }])
             ->find($chat_room_id);
         
@@ -257,7 +257,7 @@ class ChatController extends Controller
         // $chat_text_idより古いテキストのみを取得
         $chat_room = ChatRoom::whereNull('deleted_at')
         ->with(['chat_texts' => function ($query) use ($chat_text_id) {
-            $query->where('id', '<', $chat_text_id)->whereNull('deleted_at')->orderByDesc('id')->limit(10);
+            $query->where('id', '<', $chat_text_id)->whereNull('deleted_at')->orderByDesc('id')->limit(config('const.chat_text_limit'));
         }])
         ->find($chat_room_id);
         
