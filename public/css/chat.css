@@ -35,6 +35,11 @@
   bottom: 55px;
 }
 
+#to_bottom {
+  position: fixed;
+  bottom: 100px;
+}
+
 #chat_footer {
   background-color: white;
   height: 60px;

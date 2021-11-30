@@ -1,14 +1,12 @@
 .aptitude_question {
   margin-left: 0px;
   margin-right: 0px;
-}
-.aptitude_question .question {
-  background-color: #f8fafc;
-  border: 1px solid #dee2e6;
+  border-top: 1px solid #dee2e6 !important;
+  border-left: 1px solid #dee2e6 !important;
+  border-right: 1px solid #dee2e6 !important;
+  background-color: white;
 }
 .aptitude_question .answer {
-  background-color: #f8fafc;
-  border: 1px solid #dee2e6;
   margin-left: 0px;
   margin-right: 0px;
 }
@@ -17,6 +15,9 @@
   margin-right: 0px;
   padding-right: 0px;
 }
-.aptitude_question:nth-of-type(odd) .question, .aptitude_question:nth-of-type(odd) .answer {
+.aptitude_question:hover {
   background-color: rgba(0, 0, 0, 0.05);
+}
+.aptitude_question:last-of-type {
+  border-bottom: 1px solid #dee2e6 !important;
 }/*# sourceMappingURL=aptitude_question_form.css.map */
