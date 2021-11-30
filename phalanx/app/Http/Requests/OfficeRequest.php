@@ -24,7 +24,8 @@ class OfficeRequest extends FormRequest
     public function rules()
     {
         return [
-            "title" => "required|max:20"
+            'office_name' => ['required' ,Rule::unique('offices')->ignore($this->office->id)],
+            'sort' => ['required',Rule::unique('offices')->ignore($this->office->id)],
         ];
     }
 }
