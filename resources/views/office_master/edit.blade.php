@@ -18,7 +18,9 @@
                    <!--  <div class="row mt-2">
                         <ul class="pl-0" style="list-style: none"> -->
                             @foreach ($errors->get("office_name") as $error)
-                            <li class="text-danger">{{ $error }}</li> 
+                            <ul class="pl-0" style="list-style: none">
+                                <li class="text-danger">{{ $error }}</li>
+                            </ul> 
                             @endforeach
                         <!-- </ul>
                     </div> -->
@@ -31,7 +33,9 @@
                     <!-- <div class="row mt-2"> -->
                         <!-- <ul class="pl-0" style="list-style: none"> -->
                                 @foreach ($errors->get("sort") as $error)
+                                <ul class="pl-0" style="list-style: none">
                                     <li class="text-danger">{{ $error }}</li>
+                                </ul>
                                 @endforeach
                         <!-- </ul> -->
                     <!-- </div> -->
