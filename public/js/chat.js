@@ -72,9 +72,9 @@ $(() => {
             // チャットログを空に
             $("#chat_log").empty();
             
-            // チャットログ表示
             $.map(room.chat_texts.reverse(), (val, index) => {
-                displayChatText(val, index);
+                // チャット履歴表示
+                $("#chat_log").append(formChatText(val, index));
 
                 // ブックマーク追加
                 if (val.id == room.newest_read_chat_text_id) {
@@ -88,7 +88,7 @@ $(() => {
             // bookmarkがあれば
             if ($('#bookmark').length) {
                 // bookmarkまでスクロール
-                $("#center-scroll").scrollTop($('#bookmark').offset().top);
+                $("#center-scroll").scrollTop($('#bookmark').offset().top - $('#bookmark').outerHeight(true) - $('#chat_header').innerHeight());
             }
         })
         .fail(() => {
@@ -155,9 +155,9 @@ $(() => {
                     // 新着メッセージ取得時に最下までスクロールしていたかどうかの判定
                     let is_scroll_bottom = $('nav').innerHeight() + $("#center-scroll").get(0).scrollHeight - $("#center-scroll").scrollTop() - $(window).innerHeight() <= 10;
 
-                    // チャットログ表示
                     $.map(room.chat_texts, (val, index) => {
-                        displayChatText(val, index);
+                        // チャット履歴表示
+                        $("#chat_log").append(formChatText(val, index));
 
                         // 自分の書き込みなら
                         if (val.user_id == user.id) {
@@ -208,31 +208,9 @@ $(() => {
                 // 成功時
                 // 新着メッセージがある場合
                 if (room.chat_texts.length > 0) {
-                    // チャットログ表示
                     $.map(room.chat_texts, (val, index) => {
-                        // ユーザー名のCSS
-                        let name_css = '';
-                        // 自分の書き込みなら
-                        if (val.user_id == user.id) {
-                            name_css = 'text-primary font-weight-bold';
-                            // 職員の書き込みなら
-                        } else if (val.user.user_type_id == 1) {
-                            name_css = 'text-danger font-weight-bold';
-                            // それ以外
-                        } else {
-                            name_css = 'text-success font-weight-bold';
-                        }
-
-                        let html = `
-                            <div class="chat_individual">
-                                <div class="chat_header">
-                                    <span class="${name_css}">${val.user.name}</span>　${moment(val.created_at, "YYYY-MM-DD hh:mm:ss").locale('ja').format('llll')}
-                                </div>
-                                    
-                                <div class="chat_text">${val.chat_text}</div>
-                            </div>
-                        `;
-                        $("#chat_log").prepend(html);
+                        // チャット履歴表示
+                        $("#chat_log").prepend(formChatText(val, index));
 
                         // 最古チャットテキストID更新
                         oldest_display_chat_text_id = val.id;
@@ -290,7 +268,7 @@ $(() => {
                 }
             })
             // 失敗時
-            .fail((json) => {
+            .fail(() => {
                 $('#error_message').text('送信に失敗しました。');
                 $('#error').show();
             })
@@ -302,7 +280,7 @@ $(() => {
 
 
     // ----------------------------チャット履歴表示----------------------------
-    function displayChatText(val, index) {
+    function formChatText(val, index) {
         // ユーザー名のCSS
         let name_css = '';
         // 自分の書き込みなら
@@ -315,7 +293,7 @@ $(() => {
         } else {
             name_css = 'text-success font-weight-bold';
         }
-        let html = `
+        return `
             <div class="chat_individual">
                 <div class="chat_header">
                     <span class="${name_css}">${val.user.name}</span>　${moment(val.created_at, "YYYY-MM-DD hh:mm:ss").locale('ja').format('llll')}
@@ -324,7 +302,6 @@ $(() => {
                 <div class="chat_text">${val.chat_text}</div>
             </div>
         `;
-        $("#chat_log").append(html);
     }
 
     // ----------------------------ブックマーク表示----------------------------
