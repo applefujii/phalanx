@@ -4,7 +4,7 @@
 <link href="{{ asset('css/user-master/create_and_edit.css') }}" rel="stylesheet">
 @endsection
 @section('content')
-<div class="container-md">
+<div class="container">
     <h3>事業所マスター　新規登録</h3>
     <form method="POST" action="{{ route('office.store') }}">
         @csrf
@@ -17,7 +17,9 @@
                    <!--  <div class="row mt-2">
                         <ul class="pl-0" style="list-style: none"> -->
                             @foreach ($errors->get("office_name") as $error)
-                            <li class="text-danger">{{ $error }}</li> 
+                            <ul class="pl-0" style="list-style: none">
+                                <li class="text-danger">{{ $error }}</li>
+                            </ul> 
                             @endforeach
                         <!-- </ul>
                     </div> -->
@@ -30,7 +32,9 @@
                     <!-- <div class="row mt-2"> -->
                         <!-- <ul class="pl-0" style="list-style: none"> -->
                                 @foreach ($errors->get("sort") as $error)
+                                <ul class="pl-0" style="list-style: none">
                                     <li class="text-danger">{{ $error }}</li>
+                                </ul>
                                 @endforeach
                         <!-- </ul> -->
                     <!-- </div> -->
