@@ -1,4 +1,8 @@
 $(() => {
+    // スクロール可能な部分の高さ
+    const fixed_height = $('nav').innerHeight() + $('#chat_header').innerHeight() + $('#chat_footer').innerHeight();
+    $("#chat_scroll").css("height", `calc(100vh - 2px - ${fixed_height}px)`);
+
     // 最新チャットメッセージ取得中かどうか
     let is_getting_text = false;
 
@@ -12,11 +16,11 @@ $(() => {
     $('#new').hide();
 
     //スクロールしたら
-    $("#center-scroll").on("scroll", () => {
+    $("#chat_scroll").on("scroll", () => {
         
         //ウィンドウの一番下までスクロールしたら
         // ヘッダーの高さ＋チャット表示部のスクロール長－スクロール量－ウィンドウ高さ
-        if ($('nav').innerHeight() + $("#center-scroll").get(0).scrollHeight - $("#center-scroll").scrollTop() - $(window).innerHeight() <= 10) {
+        if ($('nav').innerHeight() + $("#chat_scroll").get(0).scrollHeight - $("#chat_scroll").scrollTop() - $(window).innerHeight() <= 10) {
             //新着ありメッセージ非表示
             $('#new').hide();
             // 最新チャットメッセージ閲覧済み
@@ -24,7 +28,7 @@ $(() => {
         }
 
         // 一番上までスクロールしたら
-        if ($("#center-scroll").scrollTop() == 0) {
+        if ($("#chat_scroll").scrollTop() == 0) {
             // 過去ログ表示
             getOldChatLog();
         }
@@ -40,7 +44,7 @@ $(() => {
 
     // 最下ボタンを押したら最下に移動
     $("#to_bottom_button").on('click', () => {
-        $("#center-scroll").scrollTop($("#center-scroll").get(0).scrollHeight);
+        $("#chat_scroll").scrollTop($("#chat_scroll").get(0).scrollHeight);
     });
 
     // ----------------------------初回チャット読み込み----------------------------
@@ -88,7 +92,7 @@ $(() => {
             // bookmarkがあれば
             if ($('#bookmark').length) {
                 // bookmarkまでスクロール
-                $("#center-scroll").scrollTop($('#bookmark').offset().top - $('#bookmark').outerHeight(true) - $('#chat_header').innerHeight());
+                $("#chat_scroll").scrollTop($('#bookmark').offset().top - $('#bookmark').outerHeight(true) - $('#chat_header').innerHeight());
             }
         })
         .fail(() => {
@@ -153,7 +157,7 @@ $(() => {
                     let my_text = false;
 
                     // 新着メッセージ取得時に最下までスクロールしていたかどうかの判定
-                    let is_scroll_bottom = $('nav').innerHeight() + $("#center-scroll").get(0).scrollHeight - $("#center-scroll").scrollTop() - $(window).innerHeight() <= 10;
+                    let is_scroll_bottom = $('nav').innerHeight() + $("#chat_scroll").get(0).scrollHeight - $("#chat_scroll").scrollTop() - $(window).innerHeight() <= 10;
 
                     $.map(room.chat_texts, (val, index) => {
                         // チャット履歴表示
@@ -168,7 +172,7 @@ $(() => {
                     // 自分の書き込みがあるか最下までスクロールしていた場合
                     if (my_text || is_scroll_bottom) {
                         // 末尾までスクロール
-                        $("#center-scroll").scrollTop($("#center-scroll").get(0).scrollHeight);
+                        $("#chat_scroll").scrollTop($("#chat_scroll").get(0).scrollHeight);
                     } else {
                         // 新着ありメッセージ表示
                         $('#new').show();
@@ -220,7 +224,7 @@ $(() => {
                     let difference = $('#chat_log').innerHeight() - old_height;
 
                     // スクロールを戻す
-                    $("#center-scroll").scrollTop(difference);
+                    $("#chat_scroll").scrollTop(difference);
                 }
             })
             // 失敗時

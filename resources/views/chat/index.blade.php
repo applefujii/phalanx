@@ -4,99 +4,101 @@
 @endsection
 
 @section('center')
-<div class="container-fluid pt-3 mb-5">
-    <h3>通所者一覧</h3>
-    <div class="d-flex flex-column text-center">
-        @foreach ($offices as $office)
-            @if ($office->id == Auth::user()->office_id)
-                <div class="d-flex flex-column">
-                    <div class="my-2">
-                        ───<input type="checkbox" class="mx-1 {{ $office->en_office_name }}-allCheck">
-                        <button type="button" class="btn btn-link offices-open" data-toggle="collapse" data-target="#{{ $office->en_office_name }}Collapse" aria-expanded="true">
-                            <i class="fas fa-chevron-up"></i>{{ $office->office_name }}
-                        </button>───
-                    </div>
-                    <div class="collapse show text-left row" id="{{ $office->en_office_name }}Collapse">
-                        @foreach ($userRooms as $userRoom)
-                            @if ($userRoom->user->user_type_id == 2 && $userRoom->user->office_id == $office->id)
-                                <div class="col-6 col-md-4 col-xl-3 my-1">
-                                    <input type="checkbox" class="mr-1 {{ $office->en_office_name }}-checkBox" name="user" value="{{ $userRoom->id }}">
-                                    <a href="{{ route('chat.show', $userRoom->id) }}">{{ $userRoom->room_title }}</a>
-                                </div>
-                            @endif
-                        @endforeach
-                    </div>
-                </div>
-            @else
-                <div class="d-flex flex-column">
-                    <div class="my-2">
-                        ───<input type="checkbox" class="mx-1 {{ $office->en_office_name }}-allCheck">
-                        <button type="button" class="btn btn-link offices-open" data-toggle="collapse" data-target="#{{ $office->en_office_name }}Collapse" aria-expanded="false">
-                            <i class="fas fa-chevron-down"></i>{{ $office->office_name }}
-                        </button>───
-                    </div>
-                    <div class="collapse text-left row" id="{{ $office->en_office_name }}Collapse">
-                        @foreach ($userRooms as $userRoom)
-                            @if ($userRoom->user->user_type_id == 2 && $userRoom->user->office_id == $office->id)
-                                <div class="col-6 col-md-4 col-xl-3 my-1">
-                                    <input type="checkbox" class="mr-1 {{ $office->en_office_name }}-checkBox" name="user" value="{{ $userRoom->id }}">
-                                    <a href="{{ route('chat.show', $userRoom->id) }}">{{ $userRoom->room_title }}</a>
-                                </div>
-                            @endif
-                        @endforeach
-                    </div>
-                </div>
-            @endif
-        @endforeach
-        <div class="d-flex flex-column">
-            <div class="my-2">
-                ───<input type="checkbox" class="mx-1 trial-allCheck">
-                <button type="button" class="btn btn-link offices-open" data-toggle="collapse" data-target="#trialsCollapse" aria-expanded="false">
-                    <i class="fas fa-chevron-down"></i>体験
-                </button>───
-            </div>
-            <div class="collapse text-left row" id="trialsCollapse">
-                @foreach ($userRooms as $userRoom)
-                    @if ($userRoom->user->user_type_id == 3)
-                        <div class="col-6 col-md-4 col-xl-3 my-1">
-                            <input type="checkbox" class="mr-1 trial-checkBox" name="user" value="{{ $userRoom->id }}">
-                            <a href="{{ route('chat.show', $userRoom->id) }}">{{ $userRoom->room_title }}</a>
+<div class="scroll-contents" id="center-scroll">
+    <div class="container-fluid pt-3 mb-5">
+        <h3>通所者一覧</h3>
+        <div class="d-flex flex-column text-center">
+            @foreach ($offices as $office)
+                @if ($office->id == Auth::user()->office_id)
+                    <div class="d-flex flex-column">
+                        <div class="my-2">
+                            ───<input type="checkbox" class="mx-1 {{ $office->en_office_name }}-allCheck">
+                            <button type="button" class="btn btn-link offices-open" data-toggle="collapse" data-target="#{{ $office->en_office_name }}Collapse" aria-expanded="true">
+                                <i class="fas fa-chevron-up"></i>{{ $office->office_name }}
+                            </button>───
                         </div>
-                    @endif
-                @endforeach
+                        <div class="collapse show text-left row" id="{{ $office->en_office_name }}Collapse">
+                            @foreach ($userRooms as $userRoom)
+                                @if ($userRoom->user->user_type_id == 2 && $userRoom->user->office_id == $office->id)
+                                    <div class="col-6 col-md-4 col-xl-3 my-1">
+                                        <input type="checkbox" class="mr-1 {{ $office->en_office_name }}-checkBox" name="user" value="{{ $userRoom->id }}">
+                                        <a href="{{ route('chat.show', $userRoom->id) }}">{{ $userRoom->room_title }}</a>
+                                    </div>
+                                @endif
+                            @endforeach
+                        </div>
+                    </div>
+                @else
+                    <div class="d-flex flex-column">
+                        <div class="my-2">
+                            ───<input type="checkbox" class="mx-1 {{ $office->en_office_name }}-allCheck">
+                            <button type="button" class="btn btn-link offices-open" data-toggle="collapse" data-target="#{{ $office->en_office_name }}Collapse" aria-expanded="false">
+                                <i class="fas fa-chevron-down"></i>{{ $office->office_name }}
+                            </button>───
+                        </div>
+                        <div class="collapse text-left row" id="{{ $office->en_office_name }}Collapse">
+                            @foreach ($userRooms as $userRoom)
+                                @if ($userRoom->user->user_type_id == 2 && $userRoom->user->office_id == $office->id)
+                                    <div class="col-6 col-md-4 col-xl-3 my-1">
+                                        <input type="checkbox" class="mr-1 {{ $office->en_office_name }}-checkBox" name="user" value="{{ $userRoom->id }}">
+                                        <a href="{{ route('chat.show', $userRoom->id) }}">{{ $userRoom->room_title }}</a>
+                                    </div>
+                                @endif
+                            @endforeach
+                        </div>
+                    </div>
+                @endif
+            @endforeach
+            <div class="d-flex flex-column">
+                <div class="my-2">
+                    ───<input type="checkbox" class="mx-1 trial-allCheck">
+                    <button type="button" class="btn btn-link offices-open" data-toggle="collapse" data-target="#trialsCollapse" aria-expanded="false">
+                        <i class="fas fa-chevron-down"></i>体験
+                    </button>───
+                </div>
+                <div class="collapse text-left row" id="trialsCollapse">
+                    @foreach ($userRooms as $userRoom)
+                        @if ($userRoom->user->user_type_id == 3)
+                            <div class="col-6 col-md-4 col-xl-3 my-1">
+                                <input type="checkbox" class="mr-1 trial-checkBox" name="user" value="{{ $userRoom->id }}">
+                                <a href="{{ route('chat.show', $userRoom->id) }}">{{ $userRoom->room_title }}</a>
+                            </div>
+                        @endif
+                    @endforeach
+                </div>
             </div>
         </div>
+        @if ($errors->any())
+            <div class="text-danger position-fixed" id="errorMessage">正しく送信できませんでした。</div>
+        @endif
+        <button type="button" class="btn btn-primary position-fixed broadcast" data-toggle="modal" data-target="#broadcastModal">一斉送信</button>
     </div>
-    @if ($errors->any())
-        <div class="text-danger position-fixed" id="errorMessage">正しく送信できませんでした。</div>
-    @endif
-    <button type="button" class="btn btn-primary position-fixed broadcast" data-toggle="modal" data-target="#broadcastModal">一斉送信</button>
-</div>
-@endsection
+    @endsection
 
-@section('c_modal')
-<div class="modal fade" id="broadcastModal" tabindex="-1" role="dialog" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title">一斉送信</h5>
-                <button class="close" type="button" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            <div class="modal-body">
-                <form class="mx-md-5 my-2" action="{{ route('chat.multiStore') }}" method="post">
-                    @csrf
-                    <input type="hidden" name="chat_rooms" id="chatRoomsValue">
-                    <div class="form-group">
-                        <label for="chatText" class="sr-only">チャットテキスト</label>
-                        <textarea class="form-control" name="chat_text" id="chatText" cols="40" rows="5" placeholder="テキスト"></textarea>
-                    </div>
-                    <div class="text-right">
-                        <div class="text-danger mr-2 d-none" id="notSelect">※送信先を選んでいません</div>
-                        <button class="btn btn-primary mt-1" id="broadcastSubmit" type="submit">一斉送信</button>
-                    </div>
-                </form>
+    @section('c_modal')
+    <div class="modal fade" id="broadcastModal" tabindex="-1" role="dialog" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">一斉送信</h5>
+                    <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form class="mx-md-5 my-2" action="{{ route('chat.multiStore') }}" method="post">
+                        @csrf
+                        <input type="hidden" name="chat_rooms" id="chatRoomsValue">
+                        <div class="form-group">
+                            <label for="chatText" class="sr-only">チャットテキスト</label>
+                            <textarea class="form-control" name="chat_text" id="chatText" cols="40" rows="5" placeholder="テキスト"></textarea>
+                        </div>
+                        <div class="text-right">
+                            <div class="text-danger mr-2 d-none" id="notSelect">※送信先を選んでいません</div>
+                            <button class="btn btn-primary mt-1" id="broadcastSubmit" type="submit">一斉送信</button>
+                        </div>
+                    </form>
+                </div>
             </div>
         </div>
     </div>

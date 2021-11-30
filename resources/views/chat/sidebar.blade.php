@@ -266,9 +266,9 @@ if(isset($chat_room)) {
                     </div>
                 </div>
             @endif
-            <div class="scroll-contents" id="center-scroll">
-                @yield('center')
-            </div>
+
+            @yield('center')
+            
             @yield("c_modal")
         </div>
         <div class="col-md-2 d-none d-md-block border border-dark pr-0">
@@ -335,7 +335,7 @@ if(isset($chat_room)) {
         //.scroll-contentsの高さを調整
         $(".scroll-contents").css("height", `calc(100vh - 2px - ${navHeight}px)`);
         $("main").css("height", `calc(100vh - 2px - ${navHeight}px)`);
-
+        
         $(".navbar-toggler").click(function() {
             setTimeout(function() {
                 navHeight = $("nav").innerHeight();
