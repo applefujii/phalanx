@@ -67,5 +67,5 @@
         // ログイン者のユーザー情報
         const user = @json(Auth::user());
     </script>
-    <script src="{{ asset('js/chat.js') }}"></script>
+    <script src="{{ asset('js/chat.min.js') }}"></script>
 @endsection
