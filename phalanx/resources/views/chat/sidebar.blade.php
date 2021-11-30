@@ -131,7 +131,7 @@ if(isset($chat_room)) {
                 <i class="fas fa-chevron-right"></i>
             </button>
             <div class="modal fade" id="left-modal" tabindex="-1">
-                <div class="modal-dialog">
+                <div class="modal-dialog d-md-none">
                     <div class="modal-content h-100">
                         <div class="modal-body">
                             @if (Auth::user()->user_type_id == 1)
@@ -145,6 +145,16 @@ if(isset($chat_room)) {
                                         <h5>リテラル</h5>
                                         <ul class="col-12 pt-1">
                                             <li><a href="{{ route("chat.show", $group->id) }}">全職員</a></li>
+                                        </ul>
+                                    </div>
+                                @endif
+                                @if (isset($otherRooms))
+                                    <div class="col-12 pt-3">
+                                        <h5>その他</h5>
+                                        <ul class="col-12 pt-1">
+                                            @foreach ($otherRooms as $otherRoom)
+                                                <li><a href="{{ route('chat.show', $otherRoom->id) }}">{{ $otherRoom->room_title }}</a></li>
+                                            @endforeach
                                         </ul>
                                     </div>
                                 @endif
@@ -207,7 +217,7 @@ if(isset($chat_room)) {
                     <i class="fas fa-chevron-left"></i>
                 </button>
                 <div class="modal fade" id="right-modal" tabindex="-1">
-                    <div class="modal-dialog">
+                    <div class="modal-dialog d-md-none">
                         <div class="modal-content h-100">
                             <div class="modal-body">
                                 <div class="row">
@@ -314,7 +324,7 @@ if(isset($chat_room)) {
 
 @section('script')
 {{-- jQuery読み込み --}}
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+<script src="{{ asset('js/jquery-3.6.0.min.js') }}"></script>
 
 <script>
     $(function() {

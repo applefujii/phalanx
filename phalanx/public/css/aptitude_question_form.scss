@@ -1,14 +1,13 @@
 .aptitude_question {
     margin-left: 0px;
     margin-right: 0px;
-    .question {
-        background-color: #f8fafc;
-        border: 1px solid #dee2e6;
-    }
+    border-top: 1px solid #dee2e6!important;
+    border-left: 1px solid #dee2e6!important;
+    border-right: 1px solid #dee2e6!important;
+    background-color: white;
+
 
     .answer {
-        background-color: #f8fafc;
-        border: 1px solid #dee2e6;
         margin-left: 0px;
         margin-right: 0px;
         .radio {
@@ -18,9 +17,11 @@
         }
     }
 
-    &:nth-of-type(odd) {
-        .question, .answer {
-            background-color: rgba(0, 0, 0, 0.05);
-        }
+    &:hover {
+        background-color: rgba(0, 0, 0, 0.05);
+    }
+
+    &:last-of-type {
+        border-bottom: 1px solid #dee2e6!important;
     }
 }
