@@ -25,9 +25,9 @@
         <span id="error_message" class="alert alert-danger d-flex align-items-center">エラーがあります。</span>
     </div>
 
-    <div id="to_bottom" class="col-md-8 p-0">
-        <div class="text-right mr-5">
-            <button id="to_bottom_button" class="btn btn-secondary">
+    <div id="to_bottom" class="col-md-8">
+        <div class="text-right">
+            <button id="to_bottom_button" class="btn btn-secondary rounded-circle">
                 <svg xmlns="{{ asset('image/chevron-double-down.svg') }}" width="16" height="16" fill="currentColor" class="bi bi-chevron-double-down" viewBox="0 0 16 16">
                     <path fill-rule="evenodd" d="M1.646 6.646a.5.5 0 0 1 .708 0L8 12.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z"></path>
                     <path fill-rule="evenodd" d="M1.646 2.646a.5.5 0 0 1 .708 0L8 8.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z"></path>
