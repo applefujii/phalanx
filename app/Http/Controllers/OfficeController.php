@@ -10,8 +10,10 @@ namespace App\Http\Controllers;
 
 use App\Http\Controllers\Controller;
 use App\Models\Office;
+use Illuminate\Validation\Rule;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Requests\OfficeRequest;
+use Illuminate\Support\Facades\Validator;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Http\Request;
@@ -46,12 +48,14 @@ class OfficeController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'office_name' => 'required',
-            'sort' => 'required'
+            'office_name' => 'required|unique:offices,office_name',
+            'sort' => 'required|unique:offices,sort'
         ],
         [
             'office_name.required' => '事業所名を入力してください。',
             'sort.required' => '表示する順番を数字で入力してください。',
+            'office_name.unique' => 'その事業所は既に登録されています。',
+            'sort.unique' => 'その番号は既に登録されています。'
      ]);
 
 
@@ -101,12 +105,14 @@ class OfficeController extends Controller
     public function update(Request $request, $id)
     {
         $request->validate([
-            'office_name' => 'required',
-            'sort' => 'required'
+            'office_name' => ['required',Rule::unique('offices')->ignore($id)],
+            'sort' => ['required',Rule::unique('offices')->ignore($id)]
         ],
         [
             'office_name.required' => '事業所名を入力してください。',
             'sort.required' => '表示する順番を数字で入力してください。',
+            'office_name.unique' => 'その事業所は既に登録されています。',
+            'sort.unique' => 'その番号は既に登録されています。'
      ]);
 
         //ログイン中のユーザーデータを取得
