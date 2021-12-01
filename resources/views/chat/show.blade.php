@@ -14,20 +14,20 @@
         <div id="chat_scroll">
             <div id="chat_log">
             </div>
-
-            <div id="new">
-                <span id="new_message" class="alert alert-success justify-content-center">新着があります。</span>
-            </div>
-
-            <div id="error">
-                <span id="error_message" class="alert alert-danger d-flex align-items-center">エラーがあります。</span>
-            </div>
         </div>
+    </div>
+    
+    <div id="new">
+        <span id="new_message" class="alert alert-success justify-content-center">新着があります。</span>
+    </div>
+
+    <div id="error">
+        <span id="error_message" class="alert alert-danger d-flex align-items-center">エラーがあります。</span>
     </div>
 
     <div id="to_bottom" class="col-md-8 p-0">
         <div class="text-right mr-5">
-            <button id="to_bottom_button" class="btn btn-success">
+            <button id="to_bottom_button" class="btn btn-secondary">
                 <svg xmlns="{{ asset('image/chevron-double-down.svg') }}" width="16" height="16" fill="currentColor" class="bi bi-chevron-double-down" viewBox="0 0 16 16">
                     <path fill-rule="evenodd" d="M1.646 6.646a.5.5 0 0 1 .708 0L8 12.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z"></path>
                     <path fill-rule="evenodd" d="M1.646 2.646a.5.5 0 0 1 .708 0L8 8.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z"></path>
@@ -39,7 +39,7 @@
     <div id="chat_footer" class="border col-md-8 d-flex align-items-center p-0">
         <div class="form-row col-12">
             <div class="col-11">
-                <textarea id="chat_text" name="chat_text" class="form-control border border-primary chat_textarea @error('chat_text') is-invalid @enderror" rows="1" required="required">{{ old('chat_text') }}</textarea>
+                <textarea id="chat_text" name="chat_text" class="form-control border border-primary @error('chat_text') is-invalid @enderror" rows="1" required="required">{{ old('chat_text') }}</textarea>
                 @error('chat_text')
                     <span class="invalid-feedback" role="alert">
                         <strong>{{ $message }}</strong>
