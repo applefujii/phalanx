@@ -1,4 +1,5 @@
 @extends("chat.sidebar")
+@section("title", "通所者一覧")
 @section("c_css")
 <link href="{{ asset('css/chat_index.css') }}" rel="stylesheet">
 @endsection
