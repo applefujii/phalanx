@@ -44,6 +44,12 @@ main ul {
     overflow-y: auto;
 }
 
+.sub-offices {
+    border-left: 0px;
+    border-right: 0px;
+    border-radius: 0px;
+}
+
 #left-open {
     left: 5%;
 }
