@@ -39,9 +39,10 @@
 
 
 {{-- jQuery読み込み --}}
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+<script src="{{ asset('js/jquery-3.6.0.min.js') }}"></script>
 
 <script>
+    var siteUrl = "{{ config('const.url') }}";
     // 画面幅
     var viewportWidth = $(window).width();
     // カラム数
@@ -73,18 +74,19 @@
     var aPeople = [];
     const officeHtml = '\
         <div class="f-office order-[OrderNo]">\n\
-            <div class="d-flex justify-content-center">\n\
-                <p>─── <a data-toggle="collapse" href="#list-[EnName]" class="collapse-trigger"><i class="fas fa-chevron-down"></i> <b>[Name]</b></a> <input id="[EnName]-all-check" class="all-check" type="checkbox" data-child-class="[EnName]"> ───</p>\n\
+            <div class="d-flex justify-content-center" style="position: relative">\n\
+                <hr color="black" width="90%" size: 2; align="center">\n\
+                <p style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); background-color: white; padding: 0 0.6rem;"><a data-toggle="collapse" href="#list-[EnName]" class="collapse-trigger"><i class="fas fa-chevron-down"></i> <b>[Name]</b></a> <input id="[EnName]-all-check" class="all-check" type="checkbox" style="margin: 0 0 0 0.2rem; vertical-align: middle;" data-child-class="[EnName]"></p>\n\
             </div>\n\
             <div id="list-[EnName]" class="collapse people_list">\n\
-                <div class="d-flex flex-row justify-content-between mb-3 insert-[EnName]">\n\
+                <div class="d-flex flex-row justify-content-between mt-1 mb-3 insert-[EnName]">\n\
                 </div>\n\
             </div>\n\
         </div>\n\
         ';
 
     const peopleHtmlNest = '<div class="flex-fill ml-3">';
-    const peopleHtml = '<p><input type="checkbox" class="[EnName] check-individual" data-people-id="[PeopleId]" data-group="[EnName]"> [PeopleName]</p>';
+    const peopleHtml = '<p><input type="checkbox" class="[EnName] check-individual" style="vertical-align: middle;" data-people-id="[PeopleId]" data-group="[EnName]"> [PeopleName]</p>';
     const ancompleted = '<p><b>読み込み中</b></p>';
     const noChuse = '<p class="text-danger">未選択</p>';
 
@@ -101,7 +103,7 @@
         //-- APIからメンバー情報を取得
         $.ajax({
             type: "POST",
-            url: "http://order.com/api/v1.0/get/users.json", // 送り先
+            url: siteUrl + "api/v1.0/get/users.json", // 送り先
             data: {},   // 渡したいデータをオブジェクトで渡す
             dataType : "json",  // データ形式を指定
             scriptCharset: 'utf-8'  // 文字コードを指定
@@ -118,7 +120,7 @@
         //-- APIから事業所情報を取得
         $.ajax({
             type: "POST",
-            url: "http://order.com/api/v1.0/get/offices.json",
+            url: siteUrl + "api/v1.0/get/offices.json",
             data: {},
             dataType : "json",
             scriptCharset: 'utf-8'
@@ -230,7 +232,7 @@
         });
         $('#' + $(this).data('group') + '-all-check').prop('checked', fAllCheck);
 
-        // 全チェックフラグ操作
+        //-- 全チェックフラグ操作
         if( fAllCheck )
             aIsAllCheck.push($(this).data('group')+'-'+targetUserType);
         else
@@ -361,12 +363,35 @@
 
     function updateUserList() {
         let insert = $('.insert-checked-people');
+        let names = [];
+        let aCheckListMinus = aCheckList;
         insert.empty();
         //-- idを昇順ソート
         aCheckList.sort(function(a,b){
             if( a < b ) return -1;
             if( a > b ) return 1;
             return 0;
+        });
+        //------ 事業所全員がチェックされているかチェック
+        let oOfficeUserId = {};
+        //-- 全体を事業所ごとに分ける
+        aPeople.forEach(value => {
+            if(value.user_type_id == 3) {
+                if(oOfficeUserId['体験'] == null) oOfficeUserId['体験'] = [];
+                oOfficeUserId['体験'].push(value.id);
+            }
+            else if(value.user_type_id != 2) return false;
+            if(oOfficeUserId[value.office.office_name] == null) oOfficeUserId[value.office.office_name]=[];
+            oOfficeUserId[value.office.office_name].push(value.id);
+        });
+        //-- 事業所ごとに、全員がいたら表示に +事業所名 -個人名
+        Object.keys(oOfficeUserId).forEach(key => {
+            if(oOfficeUserId[key].filter(e => !aCheckList.includes(e)).length == 0) {
+                names.push('【'+key+'】');
+                aCheckListMinus = aCheckListMinus.filter( e => {
+                    return !oOfficeUserId[key].includes(e);
+                });
+            }
         });
 
         if(aCheckList.length == 0) {
@@ -375,9 +400,12 @@
         }
 
         st = '<span>';
-        $.each(aCheckList, (index, element) => {
+        $.each(names, (index, element) => {
+            st += element;
+        });
+        $.each(aCheckListMinus, (index, element) => {
             if(index >= 20) {
-                st += ' ...他'+ String(aCheckList.length-index) +'名';
+                st += ' ...他'+ String(aCheckListMinus.length-index) +'名';
                 return false;
             }
             st += aPeople.find( (elem) => elem.id == element).name + '/ ';
