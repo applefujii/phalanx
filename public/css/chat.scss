@@ -13,15 +13,17 @@
 }
 
 #chat_scroll {
-    overflow:auto;
+    overflow-y: scroll;
+    -webkit-overflow-scrolling: touch;
 
     &::-webkit-scrollbar {
         width: 20px;
-        background: #eee;
+        z-index: 10;
     }
     &::-webkit-scrollbar-thumb {
         background: #6c757d;
     }
+    
 }
    
 #chat_log {
@@ -54,8 +56,18 @@
 }
 
 #to_bottom {
+    pointer-events: none;
+    padding-right: 35px;
     position: fixed;
     bottom: 100px;
+    opacity: 0.3;
+
+    &:hover {
+        opacity: 1;
+    }
+}
+#to_bottom_button {
+    pointer-events: auto;
 }
 
 #chat_footer {
@@ -63,7 +75,7 @@
     height: 60px;
     position: fixed;
     bottom: 0;
-    
+
     textarea {
         resize: none;
     }
