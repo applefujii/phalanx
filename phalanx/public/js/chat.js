@@ -42,7 +42,6 @@ $(() => {
 
     //スクロールしたら
     $("#chat_scroll").on("scroll", () => {
-        console.log($('#bookmark').offset().top);
         //ウィンドウの一番下までスクロールしたら
         // ヘッダーの高さ＋フッターの高さ＋チャット表示部のスクロール長－スクロール量－ウィンドウ高さ
         if (header_footer_height + $("#chat_scroll").get(0).scrollHeight - $("#chat_scroll").scrollTop() - $(window).height() <= 10) {
@@ -61,7 +60,7 @@ $(() => {
 
     // 最下ボタンを押したら最下に移動
     $("#to_bottom_button").on('click', () => {
-        $("#chat_scroll").scrollTop($("#chat_scroll").get(0).scrollHeight);
+        $("#chat_scroll").animate({scrollTop: $("#chat_scroll").get(0).scrollHeight}, 500, 'swing');
     });
 
     // ----------------------------初回チャット読み込み----------------------------
@@ -194,7 +193,7 @@ $(() => {
                     // 自分の書き込みがあるか最下までスクロールしていた場合
                     if (my_text || is_scroll_bottom) {
                         // 末尾までスクロール
-                        $("#chat_scroll").scrollTop($("#chat_scroll").get(0).scrollHeight);
+                        $("#chat_scroll").animate({scrollTop: $("#chat_scroll").get(0).scrollHeight}, 500, 'swing');
                     } else {
                         // 新着ありメッセージ表示
                         $('#new').show();
