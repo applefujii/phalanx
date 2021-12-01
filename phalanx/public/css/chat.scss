@@ -1,15 +1,30 @@
 #chat_header {
+    margin: 0px;
     background-color: white;
     position: fixed;
     height: 40px;
-    top: 35px;
-    margin-top: 20px;
-    margin-bottom: 20px;
 }
 
+#chat_main {
+    position: fixed;
+    top: 95px;
+    padding-left: 0px;
+    padding-right: 0px;
+}
+
+#chat_scroll {
+    overflow:auto;
+
+    &::-webkit-scrollbar {
+        width: 20px;
+        background: #eee;
+    }
+    &::-webkit-scrollbar-thumb {
+        background: #6c757d;
+    }
+}
+   
 #chat_log {
-    margin-top: 40px;
-    margin-bottom: 60px;
     .chat_individual {
         &:hover {
             background-color: rgba(0, 0, 0, 0.075);
@@ -31,7 +46,8 @@
     margin-bottom: 20px;
 }
 
-#new, #error {
+#new,
+#error {
     height: 40px;
     position: fixed;
     bottom: 55px;
@@ -48,7 +64,7 @@
     position: fixed;
     bottom: 0;
     
-    .chat_textarea {
+    textarea {
         resize: none;
     }
 }
