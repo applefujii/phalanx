@@ -74,18 +74,19 @@
     var aPeople = [];
     const officeHtml = '\
         <div class="f-office order-[OrderNo]">\n\
-            <div class="d-flex justify-content-center">\n\
-                <p>─── <a data-toggle="collapse" href="#list-[EnName]" class="collapse-trigger"><i class="fas fa-chevron-down"></i> <b>[Name]</b></a> <input id="[EnName]-all-check" class="all-check" type="checkbox" data-child-class="[EnName]"> ───</p>\n\
+            <div class="d-flex justify-content-center" style="position: relative">\n\
+                <hr color="black" width="90%" size: 2; align="center">\n\
+                <p style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); background-color: white; padding: 0 0.6rem;"><a data-toggle="collapse" href="#list-[EnName]" class="collapse-trigger"><i class="fas fa-chevron-down"></i> <b>[Name]</b></a> <input id="[EnName]-all-check" class="all-check" type="checkbox" style="margin: 0 0 0 0.2rem; vertical-align: middle;" data-child-class="[EnName]"></p>\n\
             </div>\n\
             <div id="list-[EnName]" class="collapse people_list">\n\
-                <div class="d-flex flex-row justify-content-between mb-3 insert-[EnName]">\n\
+                <div class="d-flex flex-row justify-content-between mt-1 mb-3 insert-[EnName]">\n\
                 </div>\n\
             </div>\n\
         </div>\n\
         ';
 
     const peopleHtmlNest = '<div class="flex-fill ml-3">';
-    const peopleHtml = '<p><input type="checkbox" class="[EnName] check-individual" data-people-id="[PeopleId]" data-group="[EnName]"> [PeopleName]</p>';
+    const peopleHtml = '<p><input type="checkbox" class="[EnName] check-individual" style="vertical-align: middle;" data-people-id="[PeopleId]" data-group="[EnName]"> [PeopleName]</p>';
     const ancompleted = '<p><b>読み込み中</b></p>';
     const noChuse = '<p class="text-danger">未選択</p>';
 
