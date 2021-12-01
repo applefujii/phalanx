@@ -1,4 +1,5 @@
 @extends('layouts.app')
+@section("title", "チャットルーム管理　新規作成")
 @section('css')
 <link href="https://use.fontawesome.com/releases/v5.6.1/css/all.css" rel="stylesheet">
 @endsection

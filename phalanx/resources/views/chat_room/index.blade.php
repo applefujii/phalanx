@@ -1,4 +1,5 @@
 @extends('layouts.app')
+@section("title", "チャットルーム管理　一覧")
 @section('css')
 <link rel="stylesheet" href="{{ asset('css/chat_room_index.css') }}">
 @endsection
