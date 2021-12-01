@@ -104,9 +104,19 @@ class RegisterController extends Controller
         //現在時刻を取得
         $now = carbon::now();
 
-        //作成されたユーザーが職員の場合対利用者のチャットルームに自動的に参加
+        //作成されたユーザーが職員の場合職員全体と対利用者のチャットルームに自動的に参加
         if($user->user_type_id == 1) {
-            $chatRooms = ChatRoom::whereNull("deleted_at")->whereIn("distinction_number", [0, 3])->where("office_id", $user->office_id)->get();
+            $group = ChatRoom::where("distinction_number", 0)->first();
+            $chatRoomUser = new ChatRoom__User();
+            $chatRoomUser->chat_room_id = $group->id;
+            $chatRoomUser->user_id = $user->id;
+            $chatRoomUser->create_user_id = Auth::id();
+            $chatRoomUser->update_user_id = Auth::id();
+            $chatRoomUser->created_at = $now;
+            $chatRoomUser->updated_at = $now;
+            $chatRoomUser->save();
+
+            $chatRooms = ChatRoom::whereNull("deleted_at")->where("distinction_number", 3)->where("office_id", $user->office_id)->get();
             foreach($chatRooms as $chatRoom) {
                 $chatRoomUser = new ChatRoom__User();
                 $chatRoomUser->chat_room_id = $chatRoom->id;
