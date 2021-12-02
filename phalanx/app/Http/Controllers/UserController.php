@@ -126,7 +126,7 @@ class UserController extends Controller
         if ($user->id == Auth::id()) {
             abort(403);
         }
-        $now = Carbon::now();
+        $now = Carbon::now()->isoFormat('YYYY-MM-DD HH:mm:ss');
         
         //削除するユーザーが職員の場合、ユーザーと結びついてたチャットルームユーザー中間テーブルを削除
         if($user->user_type_id == 1) {
@@ -162,7 +162,7 @@ class UserController extends Controller
             }
         }
 
-        $user->fill(['delete_user_id' => Auth::id(), 'deleted_at' => $now->isoFormat('YYYY-MM-DD HH:mm:ss')])->save();
+        $user->fill(['delete_user_id' => Auth::id(), 'deleted_at' => $now])->save();
         return redirect()->route('user.index');
     }
 }
