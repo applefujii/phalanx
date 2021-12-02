@@ -252,9 +252,9 @@ class NotificationController extends Controller
 
     //--------------------- ※テスト用 ----------------------
 
-    public function pepple_list()
+    public function api_test()
     {
         //
-        return view('people_list');
+        return view('api_test');
     }
 }

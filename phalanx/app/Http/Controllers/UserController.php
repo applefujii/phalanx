@@ -7,6 +7,8 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Office;
 use App\Models\UserType;
+use App\Models\ChatRoom;
+use App\Models\ChatRoom__User;
 use App\Http\Requests\EditUserRequest;
 use Illuminate\Support\Facades\Auth;
 use Carbon\Carbon;
@@ -124,6 +126,34 @@ class UserController extends Controller
             abort(403);
         }
         $now = Carbon::now();
+        
+        //削除するユーザーが職員の場合、ユーザーと結びついてたチャットルームユーザー中間テーブルを削除
+        if($user->user_type_id == 1) {
+            $charRoomUsers = ChatRoom__User::where("user_id", $user->id)->get();
+            foreach($charRoomUsers as $charRoomUser) {
+                $charRoomUser->delete();
+            }
+
+        //それ以外の場合、ユーザーと結びついてた対職員ルームとチャットルームユーザー中間テーブルを削除
+        } else {
+            $chatRooms = ChatRoom::whereNull("deleted_at")->where("user_id", $user->id)->get();
+            foreach($chatRooms as $chatRoom) {
+                $chatRoom->delete_user_id = Auth::id();
+                $chatRoom->deleted_at = $now;
+                $chatRoom->save();
+
+                $chatRoomUsers = ChatRoom__User::where("chat_room_id", $chatRoom->id)->get();
+                foreach($chatRoomUsers as $chatRoomUser) {
+                    $chatRoomUser->delete();
+                }
+
+                $chatRoomUsers = ChatRoom__User::where("user_id", $user->id)->get();
+                foreach($chatRoomUsers as $chatRoomUser) {
+                    $chatRoomUser->delete();
+                }
+            }
+        }
+
         $user->fill(['delete_user_id' => Auth::id(), 'deleted_at' => $now->isoFormat('YYYY-MM-DD HH:mm:ss')])->save();
         return redirect()->route('user.index');
     }
