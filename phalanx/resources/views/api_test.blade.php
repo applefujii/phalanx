@@ -43,6 +43,7 @@
 
         //--------------- APIのテスト
 
+        //-- API1
         $("#api1").on('click', function(){
             $.ajax({
                 type: "POST",
@@ -58,34 +59,70 @@
                 scriptCharset: 'utf-8'  // 文字コードを指定
             })
             .done( function(param){     // paramに処理後のデータが入って戻ってくる
-                $("#api1").parent().children('.result').val(param);
+                $("#api1").parent().children('.result').val(jsonMolding(param));
                 console.log(param);
                 })
             .fail( function(XMLHttpRequest, textStatus, errorThrown){   // エラーが起きた時はこちらが実行される
-                $("#api1").parent().children('.result').val(XMLHttpRequest);    // エラー内容表示
-                console.log(param);
+                $("#api1").parent().children('.result').val('!!!!!!!! error !!!!!!!!!\n\n'+XMLHttpRequest.responseText);    // エラー内容表示
+                console.log(XMLHttpRequest);
             });
         });
 
+        //-- API2
         $("#api2").on('click', function(){
             $.ajax({
                 type: "POST",
                 url: siteUrl + "api/v1.0/get/users.json", // 送り先
-                data: {},   // 渡したいデータをオブジェクトで渡す
+                data: {
+                    office_id : [1, 2],
+                    user_type_id : 2,
+                    sort : "-id"
+                },   // 渡したいデータをオブジェクトで渡す
                 dataType : "json",  // データ形式を指定
                 scriptCharset: 'utf-8'  // 文字コードを指定
             })
             .done( function(param){     // paramに処理後のデータが入って戻ってくる
-                $("#api2").parent().children('.result').val(JSON.stringify(param));
+                $("#api2").parent().children('.result').val(jsonMolding(param));
                 console.log(param);
             })
             .fail( function(XMLHttpRequest, textStatus, errorThrown){   // エラーが起きた時はこちらが実行される
-                $("#api2").parent().children('.result').val(param);
-                console.log(param);
+                $("#api2").parent().children('.result').val('!!!!!!!! error !!!!!!!!!\n\n'+XMLHttpRequest.responseText);
+                console.log(XMLHttpRequest);
             });
         });
 
     });
+
+    //-- json成形
+    function jsonMolding(json) {
+        let str
+        if( typeof(json) == 'object' ) str = JSON.stringify(json);
+        else if( typeof(json) != 'String' ) str = json;
+        str = str.replace(/(\]}])(?! *?, *?\n)/g, '$1\n');
+        str = str.replace(/([\[{,])(?! *?\n)/g, '$1\n');
+        str = str.replace(/([\]}])/g, '\n$1');
+        let row = str.split('\n');
+        let depth = 0;
+        let n;
+        str = '';
+        for( let i=0 ; i<row.length ; i++ ) {
+            n = row[i].match(/[\]}]/g);
+            if( n != null ) {
+                depth -= n.length;
+            }
+            
+            row[i] = row[i].trim();
+            for( let j=0 ; j<depth ; j++ ) str += '\t';
+            
+            n = row[i].match(/[\[{]/g);
+            if( n != null ) {
+                depth += n.length;
+            }
+
+            str += row[i] + '\n';
+        }
+        return str;
+    }
 
 </script>
 

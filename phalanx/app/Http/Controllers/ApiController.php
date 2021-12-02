@@ -78,7 +78,7 @@ class ApiController extends Controller
             $query->whereIn('office_id', $filter_office_id);
 
         if ($filter_user_type_id !== '')
-            $query->whereIn('user_type_id', '=', $filter_user_type_id);
+            $query->whereIn('user_type_id', $filter_user_type_id);
 
         if ($sort !== '') {
             foreach($sort as $s) {
@@ -324,10 +324,10 @@ class ApiController extends Controller
             try {
                 DB::transaction(function() use(&$ids, $con, $request) {
                     foreach($request->records as $r) {
-                        logger($r);
                         $id = $con->storeDetail( new Request($r) );
                         $ids .= strval($id) . ", ";
                     }
+                    $ids = preg_replace( "/, $/u", "", $ids );
                 });
             } catch( \Exception $e ) {
                 return json_encode( '{ result : "Failure" }' );
