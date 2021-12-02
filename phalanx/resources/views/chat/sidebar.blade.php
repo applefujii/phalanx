@@ -323,9 +323,6 @@ if(isset($chat_room)) {
 @endsection
 
 @section('script')
-{{-- jQuery読み込み --}}
-<script src="{{ asset('js/jquery-3.6.0.min.js') }}"></script>
-
 <script>
     $(function() {
 

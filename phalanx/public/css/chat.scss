@@ -20,6 +20,9 @@
         width: 20px;
         z-index: 10;
     }
+    &::-webkit-scrollbar-track-piece {
+        background: #f3f3f2;
+    }
     &::-webkit-scrollbar-thumb {
         background: #6c757d;
     }
@@ -75,8 +78,8 @@
     height: 60px;
     position: fixed;
     bottom: 0;
+}
 
-    textarea {
-        resize: none;
-    }
+#chat_text {
+    resize: none;
 }
