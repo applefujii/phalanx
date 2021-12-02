@@ -3,7 +3,7 @@
 @section('office_name', 'ミント大阪')
 
 @section('logo')
-src="{{ asset('image/mint.png') }}"
+src="{{ asset('css/images/mint.png') }}"
 @endsection
 
 @section('trial_form')

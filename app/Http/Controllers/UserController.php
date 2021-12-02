@@ -9,6 +9,7 @@ use App\Models\Office;
 use App\Models\UserType;
 use App\Models\ChatRoom;
 use App\Models\ChatRoom__User;
+use App\Models\ChatText;
 use App\Http\Requests\EditUserRequest;
 use Illuminate\Support\Facades\Auth;
 use Carbon\Carbon;
@@ -125,7 +126,7 @@ class UserController extends Controller
         if ($user->id == Auth::id()) {
             abort(403);
         }
-        $now = Carbon::now();
+        $now = Carbon::now()->isoFormat('YYYY-MM-DD HH:mm:ss');
         
         //削除するユーザーが職員の場合、ユーザーと結びついてたチャットルームユーザー中間テーブルを削除
         if($user->user_type_id == 1) {
@@ -142,6 +143,13 @@ class UserController extends Controller
                 $chatRoom->deleted_at = $now;
                 $chatRoom->save();
 
+                $chatTexts = ChatText::whereNull("deleted_at")->where("chat_room_id", $chatRoom->id)->get();
+                foreach($chatTexts as $chatText) {
+                    $chatText->delete_user_id = Auth::id();
+                    $chatText->deleted_at = $now;
+                    $chatText->save();
+                }
+
                 $chatRoomUsers = ChatRoom__User::where("chat_room_id", $chatRoom->id)->get();
                 foreach($chatRoomUsers as $chatRoomUser) {
                     $chatRoomUser->delete();
@@ -154,7 +162,7 @@ class UserController extends Controller
             }
         }
 
-        $user->fill(['delete_user_id' => Auth::id(), 'deleted_at' => $now->isoFormat('YYYY-MM-DD HH:mm:ss')])->save();
+        $user->fill(['delete_user_id' => Auth::id(), 'deleted_at' => $now])->save();
         return redirect()->route('user.index');
     }
 }

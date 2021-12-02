@@ -1,6 +1,7 @@
 @extends('chat.sidebar')
 
 @section('c_css')
+    <link href="{{ asset('css/jquery-ui.min.css') }}" rel="stylesheet">
     <link href="{{ asset('css/chat.css') }}" rel="stylesheet">
 @endsection
 
@@ -36,16 +37,9 @@
         </div>
     </div>
 
-    <div id="chat_footer" class="border col-md-8 d-flex align-items-center p-0">
-        <div class="form-row col-12">
-            <div class="col-11">
-                <textarea id="chat_text" name="chat_text" class="form-control border border-primary @error('chat_text') is-invalid @enderror" rows="1" required="required">{{ old('chat_text') }}</textarea>
-                @error('chat_text')
-                    <span class="invalid-feedback" role="alert">
-                        <strong>{{ $message }}</strong>
-                    </span>
-                @enderror
-            </div>
+    <div id="chat_footer" class="border col-md-8 d-flex align-items-stretch p-0">
+        <div class="form-row col-12 py-2">
+            <textarea id="chat_text" name="chat_text" class="form-control border border-primary col-11" rows="1"></textarea>
             <div class="col-1">
                 <button id="submit" class="btn btn-primary">
                     <svg xmlns="{{ asset('image/send-fill.svg') }}" width="16" height="16" fill="currentColor" class="bi bi-send-fill" viewBox="0 0 16 16">
@@ -59,13 +53,13 @@
 @endsection
 
 @section('c_script')
-    <script src="{{ asset('js/jquery-3.6.0.min.js') }}"></script>
-    <script src="{{ asset('js/moment-with-locales.min.js') }}"></script>
-    <script>
-        // チャットルームID
-        let chat_room_id = @json($chat_room->id);
-        // ログイン者のユーザー情報
-        const user = @json(Auth::user());
-    </script>
-    <script src="{{ asset('js/chat.js') }}"></script>
+<script src="{{ asset('js/jquery-ui.min.js') }}"></script>
+<script src="{{ asset('js/moment-with-locales.min.js') }}"></script>
+<script>
+    // チャットルームID
+    let chat_room_id = @json($chat_room->id);
+    // ログイン者のユーザー情報
+    const user = @json(Auth::user());
+</script>
+<script src="{{ asset('js/chat.js') }}"></script>
 @endsection

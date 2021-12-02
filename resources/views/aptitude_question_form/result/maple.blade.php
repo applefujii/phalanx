@@ -3,7 +3,7 @@
 @section('office_name', 'メープル関西')
 
 @section('logo')
-src="{{ asset('image/maple.png') }}"
+src="{{ asset('css/images/maple.png') }}"
 @endsection
 
 @section('trial_form')

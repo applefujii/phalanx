@@ -20,6 +20,9 @@
   width: 20px;
   z-index: 10;
 }
+#chat_scroll::-webkit-scrollbar-track-piece {
+  background: #f3f3f2;
+}
 #chat_scroll::-webkit-scrollbar-thumb {
   background: #6c757d;
 }
@@ -70,6 +73,7 @@
   position: fixed;
   bottom: 0;
 }
-#chat_footer textarea {
+
+#chat_text {
   resize: none;
 }/*# sourceMappingURL=chat.css.map */

@@ -102,7 +102,7 @@ class RegisterController extends Controller
         event(new Registered($user = $this->create($request->all())));
 
         //現在時刻を取得
-        $now = carbon::now();
+        $now = carbon::now()->isoFormat('YYYY-MM-DD HH:mm:ss');
 
         //作成されたユーザーが職員の場合職員全体と対利用者のチャットルームに自動的に参加
         if($user->user_type_id == 1) {
