@@ -268,8 +268,7 @@ if(isset($chat_room)) {
             @endif
 
             @yield('center')
-            
-            @yield("c_modal")
+
         </div>
         <div class="col-md-2 d-none d-md-block border border-dark pr-0">
             <div class="scroll-contents">
