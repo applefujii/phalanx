@@ -56,6 +56,7 @@ Route::resource('/aptitude_question_manage', App\Http\Controllers\AptitudeQuesti
 Route::resource('user', App\Http\Controllers\UserController::class)->only(['index', 'create', 'store', 'edit', 'update', 'destroy']);
 
 // 事業所マスター
+
 Route::resource('office', App\Http\Controllers\OfficeController::class)->only(['index', 'create', 'store', 'edit', 'update', 'destroy']);
 
 //ログイン後の画面
@@ -65,9 +66,8 @@ Route::get("/user_page", [App\Http\Controllers\UserpageController::class, "index
 Route::resource("chat_room", App\Http\Controllers\ChatRoomController::class)->only(["index", "create", "store", "edit", "update", "destroy"]);
 
 // チャット画面
-Route::get('/chat/{chat_room_id}/getChatLogJson', [App\Http\Controllers\ChatController::class, "getChatLogJson"]);
-Route::get('/chat/{chat_room_id}/getNewChatLogJson', [App\Http\Controllers\ChatController::class, "getNewChatLogJson"]);
-Route::get('/chat/{chat_room_id}/{chat_text_id}/getOldChatLogJson', [App\Http\Controllers\ChatController::class, "getOldChatLogJson"]);
+Route::get('/chat/{id}/getChatLogJson', [App\Http\Controllers\ChatController::class, "getChatLogJson"]);
+Route::get('/chat/{id}/getNewChatLogJson', [App\Http\Controllers\ChatController::class, "getNewChatLogJson"]);
 Route::post('/chat/{id}/storeChatJson', [App\Http\Controllers\ChatController::class, "storeChatJson"]);
 Route::post("/chat/multiStore", [App\Http\Controllers\ChatController::class, "multiStore"])->name("chat.multiStore");
 Route::resource("chat", App\Http\Controllers\ChatController::class)->only(["index", "show", "store"]);
