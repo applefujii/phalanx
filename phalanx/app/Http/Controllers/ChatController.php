@@ -45,7 +45,9 @@ class ChatController extends Controller
             $group = ChatRoom::where("distinction_number", 0)->whereNull("deleted_at")->orderBy("room_title")->first();
 
             //その他に入れるチャットルームを取得
-            $otherRooms = ChatRoom::where("office_id", 0)->whereNull("deleted_at")->orderBy("room_title")->get();
+            $otherRooms = ChatRoom::join("chat_room__user", "chat_rooms.id", "=", "chat_room__user.chat_room_id")
+                ->where("chat_room__user.user_id", $user->id)->whereNull("chat_rooms.deleted_at")->where("office_id", 0)
+                    ->where("chat_rooms.distinction_number",  4)->orderBy("chat_rooms.room_title")->get("chat_rooms.*");
 
             //ログイン中のユーザーが参加している部屋一覧を取得
             $joinRooms = ChatRoom::join("chat_room__user", "chat_rooms.id", "=", "chat_room__user.chat_room_id")
@@ -85,7 +87,9 @@ class ChatController extends Controller
         }
 
         //その他に入れるチャットルームを取得
-        $otherRooms = ChatRoom::where("office_id", 0)->whereNull("deleted_at")->orderBy("room_title")->get();
+        $otherRooms = ChatRoom::join("chat_room__user", "chat_rooms.id", "=", "chat_room__user.chat_room_id")
+            ->where("chat_room__user.user_id", $user->id)->whereNull("chat_rooms.deleted_at")->where("office_id", 0)
+                ->where("chat_rooms.distinction_number",  4)->orderBy("chat_rooms.room_title")->get("chat_rooms.*");
 
         //職員とそれ以外でサイドバーに必要なデータが異なるので場合分け
         if($user->user_type_id == 1) {
