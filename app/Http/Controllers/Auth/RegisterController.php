@@ -5,6 +5,9 @@ namespace App\Http\Controllers\Auth;
 use App\Http\Controllers\Controller;
 use App\Providers\RouteServiceProvider;
 use App\Models\User;
+use App\Models\Office;
+use App\Models\ChatRoom;
+use App\Models\ChatRoom__User;
 use Illuminate\Foundation\Auth\RegistersUsers;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
@@ -97,6 +100,71 @@ class RegisterController extends Controller
         $this->validator($request->all())->validate();
 
         event(new Registered($user = $this->create($request->all())));
+
+        //現在時刻を取得
+        $now = carbon::now();
+
+        //作成されたユーザーが職員の場合職員全体と対利用者のチャットルームに自動的に参加
+        if($user->user_type_id == 1) {
+            $group = ChatRoom::where("distinction_number", 0)->first();
+            $chatRoomUser = new ChatRoom__User();
+            $chatRoomUser->chat_room_id = $group->id;
+            $chatRoomUser->user_id = $user->id;
+            $chatRoomUser->create_user_id = Auth::id();
+            $chatRoomUser->update_user_id = Auth::id();
+            $chatRoomUser->created_at = $now;
+            $chatRoomUser->updated_at = $now;
+            $chatRoomUser->save();
+
+            $chatRooms = ChatRoom::whereNull("deleted_at")->where("distinction_number", 3)->where("office_id", $user->office_id)->get();
+            foreach($chatRooms as $chatRoom) {
+                $chatRoomUser = new ChatRoom__User();
+                $chatRoomUser->chat_room_id = $chatRoom->id;
+                $chatRoomUser->user_id = $user->id;
+                $chatRoomUser->create_user_id = Auth::id();
+                $chatRoomUser->update_user_id = Auth::id();
+                $chatRoomUser->created_at = $now;
+                $chatRoomUser->updated_at = $now;
+                $chatRoomUser->save();
+            }
+        
+        //ユーザー以外の場合職員対利用者のチャットルームを作成
+        } else {
+            $offices = Office::whereNull("deleted_at")->get();
+            foreach($offices as $office) {
+                $chatRoom = new ChatRoom();
+                $chatRoom->room_title = $user->name;
+                $chatRoom->distinction_number = 3;
+                $chatRoom->office_id = $office->id;
+                $chatRoom->user_id = $user->id;
+                $chatRoom->create_user_id = Auth::id();
+                $chatRoom->update_user_id = Auth::id();
+                $chatRoom->created_at = $now;
+                $chatRoom->updated_at = $now;
+                $chatRoom->save();
+
+                $chatRoomUser = new ChatRoom__User();
+                $chatRoomUser->chat_room_id = $chatRoom->id;
+                $chatRoomUser->user_id = $user->id;
+                $chatRoomUser->create_user_id = Auth::id();
+                $chatRoomUser->update_user_id = Auth::id();
+                $chatRoomUser->created_at = $now;
+                $chatRoomUser->updated_at = $now;
+                $chatRoomUser->save();
+
+                $officers = User::whereNull("deleted_at")->where("user_type_id", 1)->where("office_id", $office->id)->get();
+                foreach($officers as $officer) {
+                    $chatRoomUser = new ChatRoom__User();
+                    $chatRoomUser->chat_room_id = $chatRoom->id;
+                    $chatRoomUser->user_id = $officer->id;
+                    $chatRoomUser->create_user_id = Auth::id();
+                    $chatRoomUser->update_user_id = Auth::id();
+                    $chatRoomUser->created_at = $now;
+                    $chatRoomUser->updated_at = $now;
+                    $chatRoomUser->save();
+                }
+            }
+        }
 
         // $this->guard()->login($user);
 

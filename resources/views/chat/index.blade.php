@@ -12,16 +12,19 @@
             @foreach ($offices as $office)
                 @if ($office->id == Auth::user()->office_id)
                     <div class="d-flex flex-column">
-                        <div class="my-2">
-                            ───<input type="checkbox" class="mx-1 {{ $office->en_office_name }}-allCheck">
-                            <button type="button" class="btn btn-link offices-open" data-toggle="collapse" data-target="#{{ $office->en_office_name }}Collapse" aria-expanded="true">
-                                <i class="fas fa-chevron-up"></i>{{ $office->office_name }}
-                            </button>───
+                        <div class="my-2 position-relative">
+                            <hr color="black" width="90%">
+                            <p class="d-flex align-items-center collapse-open">
+                                <input type="checkbox" class="mx-2 {{ $office->en_office_name }}-allCheck">
+                                <button type="button" class="btn btn-link offices-open" data-toggle="collapse" data-target="#{{ $office->en_office_name }}Collapse" aria-expanded="true">
+                                    <i class="fas fa-chevron-up"></i>{{ $office->office_name }}
+                                </button>
+                            </p>
                         </div>
                         <div class="collapse show text-left row" id="{{ $office->en_office_name }}Collapse">
                             @foreach ($userRooms as $userRoom)
                                 @if ($userRoom->user->user_type_id == 2 && $userRoom->user->office_id == $office->id)
-                                    <div class="col-6 col-md-4 col-xl-3 my-1">
+                                    <div class="col-6 col-md-4 col-xl-3 my-1 d-flex align-items-center">
                                         <input type="checkbox" class="mr-1 {{ $office->en_office_name }}-checkBox" name="user" value="{{ $userRoom->id }}">
                                         <a href="{{ route('chat.show', $userRoom->id) }}">{{ $userRoom->room_title }}</a>
                                     </div>
@@ -31,16 +34,19 @@
                     </div>
                 @else
                     <div class="d-flex flex-column">
-                        <div class="my-2">
-                            ───<input type="checkbox" class="mx-1 {{ $office->en_office_name }}-allCheck">
-                            <button type="button" class="btn btn-link offices-open" data-toggle="collapse" data-target="#{{ $office->en_office_name }}Collapse" aria-expanded="false">
-                                <i class="fas fa-chevron-down"></i>{{ $office->office_name }}
-                            </button>───
+                        <div class="my-2 position-relative">
+                            <hr color="black" width="90%">
+                            <p class="d-flex align-items-center collapse-open">
+                                <input type="checkbox" class="mx-2 {{ $office->en_office_name }}-allCheck">
+                                <button type="button" class="btn btn-link offices-open" data-toggle="collapse" data-target="#{{ $office->en_office_name }}Collapse" aria-expanded="false">
+                                    <i class="fas fa-chevron-down"></i>{{ $office->office_name }}
+                                </button>
+                            </p>
                         </div>
                         <div class="collapse text-left row" id="{{ $office->en_office_name }}Collapse">
                             @foreach ($userRooms as $userRoom)
                                 @if ($userRoom->user->user_type_id == 2 && $userRoom->user->office_id == $office->id)
-                                    <div class="col-6 col-md-4 col-xl-3 my-1">
+                                    <div class="col-6 col-md-4 col-xl-3 my-1 d-flex align-items-center">
                                         <input type="checkbox" class="mr-1 {{ $office->en_office_name }}-checkBox" name="user" value="{{ $userRoom->id }}">
                                         <a href="{{ route('chat.show', $userRoom->id) }}">{{ $userRoom->room_title }}</a>
                                     </div>
@@ -51,16 +57,19 @@
                 @endif
             @endforeach
             <div class="d-flex flex-column">
-                <div class="my-2">
-                    ───<input type="checkbox" class="mx-1 trial-allCheck">
-                    <button type="button" class="btn btn-link offices-open" data-toggle="collapse" data-target="#trialsCollapse" aria-expanded="false">
-                        <i class="fas fa-chevron-down"></i>体験
-                    </button>───
+                <div class="my-2 position-relative">
+                    <hr color="black" width="90%">
+                    <p class="d-flex align-items-center collapse-open">
+                        <input type="checkbox" class="mx-2 trial-allCheck">
+                        <button type="button" class="btn btn-link offices-open" data-toggle="collapse" data-target="#trialsCollapse" aria-expanded="false">
+                            <i class="fas fa-chevron-down"></i>体験
+                        </button>
+                    </p>
                 </div>
                 <div class="collapse text-left row" id="trialsCollapse">
                     @foreach ($userRooms as $userRoom)
                         @if ($userRoom->user->user_type_id == 3)
-                            <div class="col-6 col-md-4 col-xl-3 my-1">
+                            <div class="col-6 col-md-4 col-xl-3 my-1 d-flex align-items-center">
                                 <input type="checkbox" class="mr-1 trial-checkBox" name="user" value="{{ $userRoom->id }}">
                                 <a href="{{ route('chat.show', $userRoom->id) }}">{{ $userRoom->room_title }}</a>
                             </div>

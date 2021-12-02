@@ -1,7 +1,24 @@
 $(() => {
+    // チャットルーム名表示位置調整
+    $("#chat_header").offset({
+        top: $('nav').innerHeight()
+    })
+    
+    // ヘッダーの高さ＋フッターの高さ
+    const header_footer_height = $('nav').innerHeight() + $('#chat_header').innerHeight() + $('#chat_footer').innerHeight();
+
     // スクロール可能な部分の高さ
-    const fixed_height = $('nav').innerHeight() + $('#chat_header').innerHeight() + $('#chat_footer').innerHeight();
-    $("#chat_scroll").css("height", `calc(100vh - 2px - ${fixed_height}px)`);
+    $("#chat_scroll").innerHeight(
+        $(window).height() - header_footer_height
+    );
+    
+    // 画面サイズが変更されたら
+    $(window).on('resize', () => {
+        // スクロール可能な部分の高さ
+        $("#chat_scroll").innerHeight(
+            $(window).height() - header_footer_height
+        );
+    });
 
     // 最新チャットメッセージ取得中かどうか
     let is_getting_text = false;
@@ -15,12 +32,19 @@ $(() => {
     // 新着ありメッセージ非表示
     $('#new').hide();
 
+    // エラーメッセージ非表示
+    $('#error').hide();
+
+    // 入力開始したらエラーメッセージ非表示
+    $("#chat_text").on('keydown', () => {
+        $('#error').hide();
+    });
+
     //スクロールしたら
     $("#chat_scroll").on("scroll", () => {
-        
         //ウィンドウの一番下までスクロールしたら
-        // ヘッダーの高さ＋チャット表示部のスクロール長－スクロール量－ウィンドウ高さ
-        if ($('nav').innerHeight() + $("#chat_scroll").get(0).scrollHeight - $("#chat_scroll").scrollTop() - $(window).innerHeight() <= 10) {
+        // ヘッダーの高さ＋フッターの高さ＋チャット表示部のスクロール長－スクロール量－ウィンドウ高さ
+        if (header_footer_height + $("#chat_scroll").get(0).scrollHeight - $("#chat_scroll").scrollTop() - $(window).height() <= 10) {
             //新着ありメッセージ非表示
             $('#new').hide();
             // 最新チャットメッセージ閲覧済み
@@ -34,17 +58,9 @@ $(() => {
         }
     });
 
-    // エラーメッセージ非表示
-    $('#error').hide();
-
-    // 入力開始したらエラーメッセージ非表示
-    $("#chat_text").on('keydown', () => {
-        $('#error').hide();
-    });
-
     // 最下ボタンを押したら最下に移動
     $("#to_bottom_button").on('click', () => {
-        $("#chat_scroll").scrollTop($("#chat_scroll").get(0).scrollHeight);
+        $("#chat_scroll").animate({scrollTop: $("#chat_scroll").get(0).scrollHeight}, 500, 'swing');
     });
 
     // ----------------------------初回チャット読み込み----------------------------
@@ -93,6 +109,9 @@ $(() => {
             if ($('#bookmark').length) {
                 // bookmarkまでスクロール
                 $("#chat_scroll").scrollTop($('#bookmark').offset().top - $('#bookmark').outerHeight(true) - $('#chat_header').innerHeight());
+            } else {
+                // 末尾までスクロール
+                $("#chat_scroll").scrollTop($("#chat_scroll").get(0).scrollHeight);
             }
         })
         .fail(() => {
@@ -109,6 +128,7 @@ $(() => {
         }
     }, 10000);
 
+    // ----------------------------チャット送信----------------------------
     // 送信ボタンを押したらチャット送信
     $("#submit").on('click', () => {
         submitText();
@@ -123,7 +143,8 @@ $(() => {
         }
     });
 
-    // ----------------------------新着メッセージ取得----------------------------
+    // ----------------------------関数----------------------------
+    // 新着メッセージ取得
     function getNewChatLog() {
         // 新着メッセージ取得中ならtrue
         is_getting_text = true;
@@ -157,7 +178,7 @@ $(() => {
                     let my_text = false;
 
                     // 新着メッセージ取得時に最下までスクロールしていたかどうかの判定
-                    let is_scroll_bottom = $('nav').innerHeight() + $("#chat_scroll").get(0).scrollHeight - $("#chat_scroll").scrollTop() - $(window).innerHeight() <= 10;
+                    let is_scroll_bottom = header_footer_height + $("#chat_scroll").get(0).scrollHeight - $("#chat_scroll").scrollTop() - $(window).height() <= 10;
 
                     $.map(room.chat_texts, (val, index) => {
                         // チャット履歴表示
@@ -172,7 +193,7 @@ $(() => {
                     // 自分の書き込みがあるか最下までスクロールしていた場合
                     if (my_text || is_scroll_bottom) {
                         // 末尾までスクロール
-                        $("#chat_scroll").scrollTop($("#chat_scroll").get(0).scrollHeight);
+                        $("#chat_scroll").animate({scrollTop: $("#chat_scroll").get(0).scrollHeight}, 500, 'swing');
                     } else {
                         // 新着ありメッセージ表示
                         $('#new').show();
@@ -193,7 +214,7 @@ $(() => {
             });
     }
 
-    // ----------------------------過去メッセージ取得----------------------------
+    // 過去メッセージ取得
     function getOldChatLog() {
         // 過去ログ部分の高さ
         let old_height = $('#chat_log').innerHeight();
@@ -234,7 +255,7 @@ $(() => {
             });
     }
 
-    // ----------------------------チャット送信----------------------------
+    // チャット送信
     function submitText() {
         // 入力値を取得
         let chat_text = $('#chat_text').val();
@@ -282,8 +303,7 @@ $(() => {
             });
     }
 
-
-    // ----------------------------チャット履歴表示----------------------------
+    // チャット履歴表示
     function formChatText(val, index) {
         // ユーザー名のCSS
         let name_css = '';
@@ -308,7 +328,7 @@ $(() => {
         `;
     }
 
-    // ----------------------------ブックマーク表示----------------------------
+    // ブックマーク表示
     function displayBookmark() {
         let html = `
                 <div id="bookmark" class="border border-success text-center">
