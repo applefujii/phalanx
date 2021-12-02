@@ -25,7 +25,8 @@ class ChatRoomController extends Controller
      * コンストラクタ
      */
     public function __construct() {
-        //ログインしているかどうかの判断
+
+        //ログインしているユーザーが職員かどうかの判断
         $this->middleware("staff");
     }
 
@@ -33,8 +34,6 @@ class ChatRoomController extends Controller
      * チャットルーム管理一覧画面
      */
     public function index() {
-        //ログイン中のユーザーデータを取得
-        $user = Auth::user();
         
         //表示する部屋の一覧を取得
         $chatRooms = ChatRoom::where("distinction_number", 4)->whereNull("offices.deleted_at")->whereNull("chat_rooms.deleted_at")
@@ -62,6 +61,7 @@ class ChatRoomController extends Controller
      * チャットルーム作成の実行部分
      */
     public function store(ChatRoomRequest $request) {
+
         //ログイン中のユーザーデータを取得
         $user = Auth::user();
         
@@ -104,6 +104,7 @@ class ChatRoomController extends Controller
      * チャットルームの編集
      */
     public function edit($id) {
+
         //編集するチャットルームのデータを取得
         $chatRoom = ChatRoom::where("id", $id)->whereNull("deleted_at")->first();
 
@@ -127,6 +128,7 @@ class ChatRoomController extends Controller
      * チャットルーム編集の実行部分
      */
     public function update(ChatRoomRequest $request, $id) {
+
         //ログイン中のユーザーデータを取得
         $user = Auth::user();
         
@@ -184,6 +186,7 @@ class ChatRoomController extends Controller
      * チャットルーム削除の実行部分
      */
     public function destroy($id) {
+        
         //ログイン中のユーザーデータを取得
         $user = Auth::user();
         
