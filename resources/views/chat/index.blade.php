@@ -15,7 +15,7 @@
                         <div class="my-2 position-relative">
                             <hr color="black" width="90%">
                             <p class="d-flex align-items-center collapse-open">
-                                <input type="checkbox" class="mx-1 my-auto {{ $office->en_office_name }}-allCheck">
+                                <input type="checkbox" class="mx-2 {{ $office->en_office_name }}-allCheck">
                                 <button type="button" class="btn btn-link offices-open" data-toggle="collapse" data-target="#{{ $office->en_office_name }}Collapse" aria-expanded="true">
                                     <i class="fas fa-chevron-up"></i>{{ $office->office_name }}
                                 </button>
@@ -37,7 +37,7 @@
                         <div class="my-2 position-relative">
                             <hr color="black" width="90%">
                             <p class="d-flex align-items-center collapse-open">
-                                <input type="checkbox" class="mx-1 {{ $office->en_office_name }}-allCheck">
+                                <input type="checkbox" class="mx-2 {{ $office->en_office_name }}-allCheck">
                                 <button type="button" class="btn btn-link offices-open" data-toggle="collapse" data-target="#{{ $office->en_office_name }}Collapse" aria-expanded="false">
                                     <i class="fas fa-chevron-down"></i>{{ $office->office_name }}
                                 </button>
@@ -60,7 +60,7 @@
                 <div class="my-2 position-relative">
                     <hr color="black" width="90%">
                     <p class="d-flex align-items-center collapse-open">
-                        <input type="checkbox" class="mx-1 trial-allCheck">
+                        <input type="checkbox" class="mx-2 trial-allCheck">
                         <button type="button" class="btn btn-link offices-open" data-toggle="collapse" data-target="#trialsCollapse" aria-expanded="false">
                             <i class="fas fa-chevron-down"></i>体験
                         </button>
