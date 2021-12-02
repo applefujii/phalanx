@@ -3,7 +3,7 @@
 @section('office_name', 'アップル梅田')
 
 @section('logo')
-src="{{ asset('image/apple.png') }}"
+src="{{ asset('css/images/apple.png') }}"
 @endsection
 
 @section('trial_form')

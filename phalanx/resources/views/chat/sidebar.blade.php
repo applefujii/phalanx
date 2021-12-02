@@ -268,8 +268,7 @@ if(isset($chat_room)) {
             @endif
 
             @yield('center')
-            
-            @yield("c_modal")
+
         </div>
         <div class="col-md-2 d-none d-md-block border border-dark pr-0">
             <div class="scroll-contents">
@@ -323,9 +322,6 @@ if(isset($chat_room)) {
 @endsection
 
 @section('script')
-{{-- jQuery読み込み --}}
-<script src="{{ asset('js/jquery-3.6.0.min.js') }}"></script>
-
 <script>
     $(function() {
 

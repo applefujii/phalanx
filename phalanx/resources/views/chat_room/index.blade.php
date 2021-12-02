@@ -1,7 +1,8 @@
 @extends('layouts.app')
 @section("title", "チャットルーム管理　一覧")
 @section('css')
-<link rel="stylesheet" href="{{ asset('css/chat_room_index.css') }}">
+<!-- <link href="{{ asset('css/chat_room_index.css') }}" rel="stylesheet"> -->
+<link href="{{ asset('css/office-table.css') }}" rel="stylesheet">
 @endsection
 @section('content')
 <div class="container-md">
@@ -10,9 +11,9 @@
         <button class="btn btn-primary my-3" type="submit">新規作成</button>
     </form>
     <div class="mt-3">
-        <table class="table table-striped table-bordered border-white">
+        <table class="table table-bordered border-white table-sm">
             <thead class="bg-primary text-white">
-                <tr class="text-center">
+                <tr class="table-header">
                     <th class="col-3 align-middle">ルーム名</th>
                     <th class="col-3 align-middle">事業所</th>
                     <th class="col-6 align-middle">操作</th>
