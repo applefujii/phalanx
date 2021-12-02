@@ -83,32 +83,30 @@
         @endif
         <button type="button" class="btn btn-primary position-fixed broadcast" data-toggle="modal" data-target="#broadcastModal">一斉送信</button>
     </div>
-    @endsection
+</div>
 
-    @section('c_modal')
-    <div class="modal fade" id="broadcastModal" tabindex="-1" role="dialog" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title">一斉送信</h5>
-                    <button class="close" type="button" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                <div class="modal-body">
-                    <form class="mx-md-5 my-2" action="{{ route('chat.multiStore') }}" method="post">
-                        @csrf
-                        <input type="hidden" name="chat_rooms" id="chatRoomsValue">
-                        <div class="form-group">
-                            <label for="chatText" class="sr-only">チャットテキスト</label>
-                            <textarea class="form-control" name="chat_text" id="chatText" cols="40" rows="5" placeholder="テキスト"></textarea>
-                        </div>
-                        <div class="text-right">
-                            <div class="text-danger mr-2 d-none" id="notSelect">※送信先を選んでいません</div>
-                            <button class="btn btn-primary mt-1" id="broadcastSubmit" type="submit">一斉送信</button>
-                        </div>
-                    </form>
-                </div>
+<div class="modal fade" id="broadcastModal" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">一斉送信</h5>
+                <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form class="mx-md-5 my-2" action="{{ route('chat.multiStore') }}" method="post">
+                    @csrf
+                    <input type="hidden" name="chat_rooms" id="chatRoomsValue">
+                    <div class="form-group">
+                        <label for="chatText" class="sr-only">チャットテキスト</label>
+                        <textarea class="form-control" name="chat_text" id="chatText" cols="40" rows="5" placeholder="テキスト"></textarea>
+                    </div>
+                    <div class="text-right">
+                        <div class="text-danger mr-2 d-none" id="notSelect">※送信先を選んでいません</div>
+                        <button class="btn btn-primary mt-1" id="broadcastSubmit" type="submit">一斉送信</button>
+                    </div>
+                </form>
             </div>
         </div>
     </div>
