@@ -11,7 +11,7 @@
         <a href="{{ route('office.create') }}" type="button" class="btn btn-primary my-3">新規作成</a>
         <table class="table table-striped table-bordered table-sm">
             <thead class="bg-primary text-white">
-                <tr class="table-header text-center">
+                <tr class="table-header">
                     <th class="table-header-sub col-xs-3 col-ms-3 col-md-4 col-lg-4" style="width: 20%">事業所名</th>
                     <th class="table-header-sub col-xs-3 col-ms-3 col-md-3 col-lg-4" style="width: 20%">表示順</th>
                     <th class="table-header-sub col-xs-1 col-ms-1 col-md-1 col-lg-1">操作</th>
@@ -20,9 +20,9 @@
             <tbody>
                 @foreach ($offices as $office)
                     <tr>
-                        <td class="text-center">{{ $office->office_name }}</td>
-                        <td class="text-center">{{ $office->sort }}</td>
-                        <td class="text-center">
+                        <td class="">{{ $office->office_name }}</td>
+                        <td class="">{{ $office->sort }}</td>
+                        <td class="">
                             <div class="table-body-action"><span><a href="{{ route('office.edit', $office->id) }}"
                                         type="button" class="btn btn-sm btn-primary edit-button">編集</a></span>
                                 <form method="post" action="{{ route('office.destroy', $office->id) }}"> @csrf
