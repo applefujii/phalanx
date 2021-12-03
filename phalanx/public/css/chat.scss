@@ -35,12 +35,12 @@
             background-color: rgba(0, 0, 0, 0.075);
         }
         .chat_header {
-            margin-left: 20px;
-            margin-top: 20px;
+            padding-left: 20px;
+            padding-top: 20px;
         }
         .chat_text {
-            margin-left: 40px;
-            margin-bottom: 20px;
+            padding-left: 40px;
+            padding-bottom: 20px;
             white-space: pre-wrap;
         }
     }
@@ -51,31 +51,32 @@
     margin-bottom: 20px;
 }
 
-#new,
-#error {
-    height: 40px;
-    position: fixed;
-    bottom: 55px;
-}
-
 #to_bottom {
     pointer-events: none;
-    padding-right: 35px;
     position: fixed;
-    bottom: 100px;
+    bottom: 80px;
+    height: 40px;
+}
+
+#new, #error {
+    pointer-events: auto;
+    padding: 0.3rem;
+    margin-bottom: 1rem;
+    border-radius: 0.25rem;
+}
+
+#to_bottom_button {
+    pointer-events: auto;
     opacity: 0.3;
 
     &:hover {
         opacity: 1;
     }
 }
-#to_bottom_button {
-    pointer-events: auto;
-}
 
 #chat_footer {
     background-color: white;
-    height: 60px;
+    height: 80px;
     position: fixed;
     bottom: 0;
 }
