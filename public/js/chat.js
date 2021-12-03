@@ -69,7 +69,7 @@ $(() => {
             // bookmarkがあれば
             if ($('#bookmark').length) {
                 // bookmarkまでスクロール
-                $("#chat_scroll").scrollTop($('#bookmark').offset().top - $('#bookmark').outerHeight() - $('#chat_header').innerHeight());
+                $("#chat_scroll").scrollTop($('#bookmark').offset().top - $('nav').outerHeight() - $('#chat_header').outerHeight());
             } else {
                 // 末尾までスクロール
                 $("#chat_scroll").scrollTop($("#chat_scroll").get(0).scrollHeight);
@@ -115,16 +115,33 @@ $(() => {
     });
 
     // // フッターのリサイズ
-    // $("#chat_footer").resizable({
-    //     handles: 'n',
-    //     minHeight: 58
-    // });
-
-    // $("#chat_footer").on("resize", ()=>{
-    //     $("#chat_scroll").innerHeight(
-    //         $(window).height() - $('nav').outerHeight() - $('#chat_header').outerHeight() - $('#chat_footer').outerHeight()
-    //     );
-    // });
+    $('#footer_button_close').hide();
+    $('#footer_button_open').on('click', () => {
+        $('#chat_footer').outerHeight(180);
+        $('#chat_text').prop('rows', 5);
+        $('#footer_button_close').show();
+        $('#footer_button_open').hide();
+        // スクロール可能な部分の高さ
+        $("#chat_scroll").innerHeight(
+            $(window).height() - $('nav').outerHeight() - $('#chat_header').outerHeight() - $('#chat_footer').outerHeight()
+        );
+        let scrollTop = $("#chat_scroll").scrollTop();
+        $("#chat_scroll").scrollTop(scrollTop + 100);
+        $("#to_bottom").css({bottom: 180});
+    });
+    $('#footer_button_close').on('click', () => {
+        $('#chat_footer').outerHeight(80);
+        $('#chat_text').prop('rows', 1);
+        $('#footer_button_open').show();
+        $('#footer_button_close').hide();
+        // スクロール可能な部分の高さ
+        $("#chat_scroll").innerHeight(
+            $(window).height() - $('nav').outerHeight() - $('#chat_header').outerHeight() - $('#chat_footer').outerHeight()
+        );
+        let scrollTop = $("#chat_scroll").scrollTop();
+        $("#chat_scroll").scrollTop(scrollTop + 100);
+        $("#to_bottom").css({bottom: 80});
+    });
 
     // 入力開始したらエラーメッセージ非表示
     $("#chat_text").on('keydown', () => {
