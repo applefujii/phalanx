@@ -35,10 +35,10 @@
 
     <div id="chat_footer" class="border col-md-8 m-0 p-0">
         <div class="col-12 p-0">
-            <button id="footer_button_open" type="button" class="btn btn-outline-secondary btn-block p-0">
+            <button id="footer_button_open" type="button" class="btn btn-outline-secondary btn-block rounded-0 m-0 p-0">
                 <i class="fas fa-chevron-up"></i>
             </button>
-            <button id="footer_button_close" type="button" class="btn btn-outline-secondary btn-block p-0">
+            <button id="footer_button_close" type="button" class="btn btn-outline-secondary btn-block rounded-0 m-0 p-0">
                 <i class="fas fa-chevron-down"></i>
             </button>
         </div>
