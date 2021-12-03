@@ -77,7 +77,7 @@ $(() => {
         })
         .fail(() => {
             // 失敗時
-            $('#error_message').text('メッセージの受信に失敗しました。');
+            $('#error').text('メッセージの受信に失敗しました。');
             $('#error').show();
         });
 
@@ -230,7 +230,7 @@ $(() => {
             })
             .fail(() => {
                 // 失敗時
-                $('#error_message').text('メッセージの受信に失敗しました。');
+                $('#error').text('メッセージの受信に失敗しました。');
                 $('#error').show();
             })
             .always(() => {
@@ -275,7 +275,7 @@ $(() => {
             })
             // 失敗時
             .fail(() => {
-                $('#error_message').text('メッセージの受信に失敗しました。');
+                $('#error').text('メッセージの受信に失敗しました。');
                 $('#error').show();
             });
     }
@@ -308,7 +308,7 @@ $(() => {
             // 成功時
             .then((json) => {
                 if (json.error) { // バリデーションエラー
-                    $('#error_message').text(json.error);
+                    $('#error').text(json.error);
                     $('#error').show();
                 } else { // 成功時
                     // 入力フォームを空に
@@ -319,7 +319,7 @@ $(() => {
             })
             // 失敗時
             .fail(() => {
-                $('#error_message').text('送信に失敗しました。');
+                $('#error').text('送信に失敗しました。');
                 $('#error').show();
             })
             .always(() => {
