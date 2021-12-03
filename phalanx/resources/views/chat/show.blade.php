@@ -65,7 +65,9 @@
     // チャットルームID
     let chat_room_id = @json($chat_room->id);
     // ログイン者のユーザー情報
-    const user = @json(Auth::user());
+    const auth_user_id = @json(Auth::user()->id);
+    const auth_user_type_id = @json(Auth::user()->user_type_id);
+    const auth_office_name = @json(Auth::user()->office->office_name);
 </script>
 <script src="{{ asset('js/chat.min.js') }}"></script>
 @endsection

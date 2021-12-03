@@ -40,8 +40,8 @@ $(() => {
             // ルーム名
             let room_title = "";
             // 個人用ルームかつログイン者が職員でないとき
-            if (room.user_id && user.user_type_id !== 1) {
-                room_title = user.office.office_name + ' 職員';
+            if (room.user_id && auth_user_type_id !== 1) {
+                room_title = auth_office_name + ' 職員';
             } else {
                 room_title = room.room_title;
             }
@@ -210,7 +210,7 @@ $(() => {
                         $("#chat_log").append(formChatText(val, index));
 
                         // 自分の書き込みなら
-                        if (val.user_id == user.id) {
+                        if (val.user_id == auth_user_id) {
                             my_text = true;
                         }
                     });
@@ -333,7 +333,7 @@ $(() => {
         // ユーザー名のCSS
         let name_css = '';
         // 自分の書き込みなら
-        if (val.user_id == user.id) {
+        if (val.user_id == auth_user_id) {
             name_css = 'text-primary font-weight-bold';
             // 職員の書き込みなら
         } else if (val.user.user_type_id == 1) {
