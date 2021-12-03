@@ -35,34 +35,35 @@
             background-color: rgba(0, 0, 0, 0.075);
         }
         .chat_header {
-            padding-left: 20px;
-            padding-top: 20px;
+            padding-left: 1rem;
+            padding-top: 0.5rem;
         }
         .chat_text {
-            padding-left: 40px;
-            padding-bottom: 20px;
+            padding-left: 2rem;
+            padding-bottom: 0.5rem;
             white-space: pre-wrap;
         }
     }
 }
 
 #bookmark {
-    margin-top: 20px;
-    margin-bottom: 20px;
-}
-
-#to_bottom {
-    pointer-events: none;
-    position: fixed;
-    bottom: 80px;
-    height: 40px;
+    margin-top: 0.5rem;
+    margin-bottom: 0.5rem;
 }
 
 #new, #error {
     pointer-events: auto;
     padding: 0.3rem;
+    padding-left: 1rem;
+    padding-right: 1rem;
     margin-bottom: 1rem;
     border-radius: 0.25rem;
+}
+
+#to_bottom {
+    pointer-events: none;
+    position: fixed;
+    bottom: 85px;
 }
 
 #to_bottom_button {

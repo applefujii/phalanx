@@ -20,8 +20,8 @@
 
     <div id="to_bottom" class="col-md-8 pl-0">
         <div class="col-md-12 d-flex pl-0">
-            <span id="new" class="alert-success border border-success">新着があります</span>
-            <span id="error" class="alert-danger border border-danger">エラーがあります</span>
+            <span id="new" class="bg-success text-light">新着があります</span>
+            <span id="error" class="bg-danger text-light">エラーがあります</span>
             <div class="ml-auto">
                 <button id="to_bottom_button" class="btn btn-secondary rounded-circle">
                     <svg xmlns="{{ asset('image/chevron-double-down.svg') }}" width="16" height="16" fill="currentColor" class="bi bi-chevron-double-down" viewBox="0 0 16 16">
@@ -35,10 +35,10 @@
 
     <div id="chat_footer" class="border col-md-8 m-0 p-0">
         <div class="col-12 p-0">
-            <button id="footer_button_open" type="button" class="btn btn-secondary btn-block p-0">
+            <button id="footer_button_open" type="button" class="btn btn-outline-secondary btn-block p-0">
                 <i class="fas fa-chevron-up"></i>
             </button>
-            <button id="footer_button_close" type="button" class="btn btn-secondary btn-block p-0">
+            <button id="footer_button_close" type="button" class="btn btn-outline-secondary btn-block p-0">
                 <i class="fas fa-chevron-down"></i>
             </button>
         </div>
