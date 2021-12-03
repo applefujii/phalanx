@@ -117,7 +117,7 @@ $(() => {
     // // フッターのリサイズ
     $('#footer_button_close').hide();
     $('#footer_button_open').on('click', () => {
-        $('#chat_footer').outerHeight(180);
+        $('#chat_footer').innerHeight(180);
         $('#chat_text').prop('rows', 5);
         $('#footer_button_close').show();
         $('#footer_button_open').hide();
@@ -127,10 +127,10 @@ $(() => {
         );
         let scrollTop = $("#chat_scroll").scrollTop();
         $("#chat_scroll").scrollTop(scrollTop + 100);
-        $("#to_bottom").css({bottom: 180});
+        $("#to_bottom").css({bottom: 185});
     });
     $('#footer_button_close').on('click', () => {
-        $('#chat_footer').outerHeight(80);
+        $('#chat_footer').innerHeight(80);
         $('#chat_text').prop('rows', 1);
         $('#footer_button_open').show();
         $('#footer_button_close').hide();
@@ -140,7 +140,7 @@ $(() => {
         );
         let scrollTop = $("#chat_scroll").scrollTop();
         $("#chat_scroll").scrollTop(scrollTop + 100);
-        $("#to_bottom").css({bottom: 80});
+        $("#to_bottom").css({bottom: 85});
     });
 
     // 入力開始したらエラーメッセージ非表示
@@ -356,8 +356,8 @@ $(() => {
     // ブックマーク表示
     function displayBookmark() {
         let html = `
-                <div id="bookmark" class="border border-success text-center">
-                    <span class="text-success">新着</span>
+                <div id="bookmark" class="bg-success text-center">
+                    <span class="text-light">新着</span>
                 </div>
                 `;
         $("#chat_log").append(html);
