@@ -5,6 +5,37 @@
  * @auth 藤井淳一
 */
 
+/*
+通知APIを参考に作成してください。
+
+【仕様】
+※例で2つ並んでいるのは、urlフォーマットとajaxで使うjsonフォーマット
+■取得系API
+　・使われるであろう絞り込み条件。複数指定可能。
+　　　例：
+　　　　「id=5」「{id : 5}」でIDの5番を取得。
+　　　　「id[]=5&id[]=6」「{id : [5,6]}」でIDの5と6番を取得。
+　・ソート。複数指定可能。
+　　　例：
+　　　　「sort=id」「{sort : id}」でID昇順、「sort=-id」「{sort : -id}」でID降順
+　　　　「sort[]=office_id&sort[]=-id」「{sort : [office_id, -id]}」でoffice_id昇順、第2条件id昇順
+
+■設定系API store, update, deleteが必要。対象のコントローラーを呼び出すことで実装。
+　・単体登録
+　　　例：1件登録
+　　　　「content="単体登録"&start_at="2022/01/01 00:00:00"&end_at="2022/01/01 00:00:00"&is_all_day="0"」
+　　　　「record : { content : "単体登録", start_at :"2022/01/01 00:00:00" , end_at : "2022/01/01 00:00:00", is_all_day : "0" }」
+　　　例：1件更新
+　　　　「record : { id : 5, content : "単体更新", start_at :"2022/01/01 00:00:00" , end_at : "2022/01/01 00:00:00", is_all_day : "0" }」
+　・複数登録
+　　　例：複数件登録
+　　　　「records : [
+            { content : "複数登録1", start_at :"2022/01/01 00:00:00" , end_at : "2022/01/01 00:00:00", is_all_day : "0" },
+            { content : "複数登録2", start_at :"2022/01/01 00:00:00" , end_at : "2022/01/01 00:00:00", is_all_day : "1" },
+            { content : "複数登録3", start_at :"2022/01/01 00:00:00" , end_at : "2022/01/01 00:00:00", is_all_day : "0" }
+        ]」
+*/
+
 namespace App\Http\Controllers;
 
 use App\Http\Controllers\Controller;
@@ -17,6 +48,7 @@ use App\Models\Office;
 use App\Models\User;
 use App\Models\UserType;
 use App\Http\Requests\EditUserRequest;
+use App\Http\Requests\NotificationRequest;
 use Illuminate\Contracts\Container\Container;
 use Illuminate\Foundation\Providers\FormRequestServiceProvider;
 use Illuminate\Routing\Redirector;
@@ -78,7 +110,7 @@ class ApiController extends Controller
             $query->whereIn('office_id', $filter_office_id);
 
         if ($filter_user_type_id !== '')
-            $query->whereIn('user_type_id', '=', $filter_user_type_id);
+            $query->whereIn('user_type_id', $filter_user_type_id);
 
         if ($sort !== '') {
             foreach($sort as $s) {
@@ -324,10 +356,10 @@ class ApiController extends Controller
             try {
                 DB::transaction(function() use(&$ids, $con, $request) {
                     foreach($request->records as $r) {
-                        logger($r);
                         $id = $con->storeDetail( new Request($r) );
                         $ids .= strval($id) . ", ";
                     }
+                    $ids = preg_replace( "/, $/u", "", $ids );
                 });
             } catch( \Exception $e ) {
                 return json_encode( '{ result : "Failure" }' );
@@ -349,7 +381,7 @@ class ApiController extends Controller
 
         if( isset($request->record) ) {
             try {
-                $con->update( new Request($request->record), $request->record["id"] );
+                $con->updateDetail( new Request($request->record), $request->record["id"] );
             } catch( \Exception $e ) {
                 return json_encode( '{ result : "Failure" }' );
             }
@@ -360,9 +392,10 @@ class ApiController extends Controller
             try {
                 DB::transaction(function() use(&$ids, $con, $request) {
                     foreach($request->records as $r) {
-                        $con->update( new Request($r), $r["id"] );
+                        $con->updateDetail( new Request($r), $r["id"] );
                         $ids .= $r["id"] . ", ";
                     }
+                    $ids = preg_replace( "/, $/u", "", $ids );
                 });
             } catch( \Exception $e ) {
                 return json_encode( '{ result : "Failure" }' );
@@ -398,6 +431,7 @@ class ApiController extends Controller
                         $con->destroy( $r["id"] );
                         $ids .= $r["id"] . ", ";
                     }
+                    $ids = preg_replace( "/, $/u", "", $ids );
                 });
             } catch( \Exception $e ) {
                 return json_encode( '{ result : "Failure" }' );
