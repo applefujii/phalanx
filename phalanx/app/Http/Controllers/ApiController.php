@@ -6,7 +6,9 @@
 */
 
 /*
-通知APIを参考に作成してください。
+【API作成について】
+通知(notification)APIを参考に作成してください。
+使用例、テストは「api_test.blade.php」、および「/api_test」を参照してください。
 
 【仕様】
 ※例で2つ並んでいるのは、urlフォーマットとajaxで使うjsonフォーマット
@@ -17,18 +19,20 @@
 　　　　「id[]=5&id[]=6」「{id : [5,6]}」でIDの5と6番を取得。
 　・ソート。複数指定可能。
 　　　例：
-　　　　「sort=id」「{sort : id}」でID昇順、「sort=-id」「{sort : -id}」でID降順
-　　　　「sort[]=office_id&sort[]=-id」「{sort : [office_id, -id]}」でoffice_id昇順、第2条件id昇順
+　　　　「?sort=id」「{sort : id}」でID昇順、「?sort=-id」「{sort : -id}」でID降順
+　　　　「?sort[]=office_id&sort[]=-id」「{sort : [office_id, -id]}」でoffice_id昇順、第2条件id昇順
 
 ■設定系API store, update, deleteが必要。対象のコントローラーを呼び出すことで実装。
 　・単体登録
 　　　例：1件登録
-　　　　「content="単体登録"&start_at="2022/01/01 00:00:00"&end_at="2022/01/01 00:00:00"&is_all_day="0"」
+　　　　「?record[content]="単体登録"&record[start_at]="2022/01/01 00:00:00"&record[end_at]="2022/01/01 00:00:00"&record[is_all_day]=0」
 　　　　「record : { content : "単体登録", start_at :"2022/01/01 00:00:00" , end_at : "2022/01/01 00:00:00", is_all_day : "0" }」
 　　　例：1件更新
+　　　　「?record[id]=5&record[content]="単体登録"&record[start_at]="2022/01/01 00:00:00"&record[end_at]="2022/01/01 00:00:00"&record[is_all_day]=0」
 　　　　「record : { id : 5, content : "単体更新", start_at :"2022/01/01 00:00:00" , end_at : "2022/01/01 00:00:00", is_all_day : "0" }」
 　・複数登録
 　　　例：複数件登録
+　　　　「records[0][content]="複数登録1"&records[0][start_at]="2022/01/01 00:00:00"&records[0][end_at]="2022/01/01 00:00:00"&records[0][is_all_day]=0&records[1][content]="複数登録2"&records[1][start_at]="2022/01/01 00:00:00"&records[1][end_at]="2022/01/01 00:00:00"&records[1][is_all_day]=1&records[2][content]="複数登録3"&records[2][start_at]="2022/01/01 00:00:00"&records[2][end_at]="2022/01/01 00:00:00"&records[2][is_all_day]=0」
 　　　　「records : [
             { content : "複数登録1", start_at :"2022/01/01 00:00:00" , end_at : "2022/01/01 00:00:00", is_all_day : "0" },
             { content : "複数登録2", start_at :"2022/01/01 00:00:00" , end_at : "2022/01/01 00:00:00", is_all_day : "1" },
