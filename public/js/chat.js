@@ -18,11 +18,8 @@ $(() => {
     // 表示している中で最も古いチャットテキストのID
     let oldest_display_chat_text_id = 1;
 
-    // 新着ありメッセージ非表示
-    $('#new').hide();
-
-    // エラーメッセージ非表示
-    $('#error').hide();
+    // 新着ログ部分の高さ
+    let new_height = 0;
 
     // ----------------------------初回チャット読み込み----------------------------
     // Ajaxリクエスト
@@ -77,7 +74,7 @@ $(() => {
         })
         .fail(() => {
             // 失敗時
-            $('#error').text('メッセージの受信に失敗しました。');
+            $('#error_message').text('メッセージの受信に失敗しました。');
             $('#error').show();
         });
 
@@ -114,7 +111,8 @@ $(() => {
         );
     });
 
-    // // フッターのリサイズ
+    // フッターのリサイズ
+    $('#chat_footer').innerHeight(80);
     $('#footer_button_close').hide();
     $('#footer_button_open').on('click', () => {
         $('#chat_footer').innerHeight(180);
@@ -128,6 +126,8 @@ $(() => {
         let scrollTop = $("#chat_scroll").scrollTop();
         $("#chat_scroll").scrollTop(scrollTop + 100);
         $("#to_bottom").css({bottom: 185});
+        $("#new").css({bottom: 185});
+        $("#error").css({bottom: 185});
     });
     $('#footer_button_close').on('click', () => {
         $('#chat_footer').innerHeight(80);
@@ -141,6 +141,8 @@ $(() => {
         let scrollTop = $("#chat_scroll").scrollTop();
         $("#chat_scroll").scrollTop(scrollTop + 100);
         $("#to_bottom").css({bottom: 85});
+        $("#new").css({bottom: 185});
+        $("#error").css({bottom: 185});
     });
 
     // 入力開始したらエラーメッセージ非表示
@@ -157,6 +159,7 @@ $(() => {
             $('#new').hide();
             // 最新チャットメッセージ閲覧済み
             is_checked_latest = true;
+            new_height = 0;
         }
 
         // 一番上までスクロールしたら
@@ -166,9 +169,14 @@ $(() => {
         }
     });
 
-    // 最下ボタンを押したら最下に移動
+    // 最下ボタンを押したら最下までスクロール
     $("#to_bottom_button").on('click', () => {
         $("#chat_scroll").animate({scrollTop: $("#chat_scroll").get(0).scrollHeight}, 500, 'swing');
+    });
+
+    // 新着ボタンを押したらbookmarkまでスクロール
+    $("#new").on('click', () => {
+        $("#chat_scroll").animate({scrollTop: $("#chat_scroll").get(0).scrollHeight - $('#bookmark').outerHeight() - new_height}, 500, 'swing');
     });
 
     // ----------------------------関数----------------------------
@@ -176,6 +184,9 @@ $(() => {
     function getNewChatLog() {
         // 新着メッセージ取得中ならtrue
         is_getting_text = true;
+
+        // 過去ログ部分の高さ
+        let old_height = $('#chat_log').innerHeight();
 
         // Ajaxリクエスト
         $.ajaxSetup({
@@ -214,6 +225,11 @@ $(() => {
                             my_text = true;
                         }
                     });
+                    
+                    
+                    // 新着ログ部分の高さの差分
+                    let difference = $('#chat_log').innerHeight() - old_height;
+                    new_height += difference;
 
                     // 自分の書き込みがあるか最下までスクロールしていた場合
                     if (my_text || is_scroll_bottom) {
@@ -230,7 +246,7 @@ $(() => {
             })
             .fail(() => {
                 // 失敗時
-                $('#error').text('メッセージの受信に失敗しました。');
+                $('#error_message').text('メッセージの受信に失敗しました。');
                 $('#error').show();
             })
             .always(() => {
@@ -275,7 +291,7 @@ $(() => {
             })
             // 失敗時
             .fail(() => {
-                $('#error').text('メッセージの受信に失敗しました。');
+                $('#error_message').text('メッセージの受信に失敗しました。');
                 $('#error').show();
             });
     }
@@ -308,7 +324,7 @@ $(() => {
             // 成功時
             .then((json) => {
                 if (json.error) { // バリデーションエラー
-                    $('#error').text(json.error);
+                    $('#error_message').text(json.error);
                     $('#error').show();
                 } else { // 成功時
                     // 入力フォームを空に
@@ -319,7 +335,7 @@ $(() => {
             })
             // 失敗時
             .fail(() => {
-                $('#error').text('送信に失敗しました。');
+                $('#error_message').text('送信に失敗しました。');
                 $('#error').show();
             })
             .always(() => {
