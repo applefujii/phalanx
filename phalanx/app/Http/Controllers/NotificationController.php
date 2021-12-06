@@ -32,6 +32,12 @@ class NotificationController extends Controller
      */
     public function index( Request $request )
     {
+        //-- 古い通知を消す
+        $dt = new \DateTime( "now" );
+        Notification::whereRaw( "end_at <= DATE_SUB( CURDATE(),INTERVAL 1 DAY )" )->update([
+            'deleted_at' => $dt->format('Y-m-d H:i:s')
+        ]);
+
         //
         $filter_office_id = $request->input('office', '');
         $filter_office_id ??= '';
@@ -101,7 +107,7 @@ class NotificationController extends Controller
                 $aItem = [];
                 foreach( $request->target_users as $tu ) {
                     array_push($aItem, [
-                        'notification_id' => $notifications->id,
+                        'notification_id' => $notification->id,
                         'user_id' => $tu,
                         'create_user_id' => Auth::user()->id,
                         'created_at' => $dt->format('Y-m-d H:i:s')
