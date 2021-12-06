@@ -60,7 +60,15 @@ if(isset($chat_room)) {
                         <div class="col-12 pt-3">
                             <h5>リテラル</h5>
                             <ul class="col-12 pt-1">
-                                <li><a href="{{ route("chat.show", $group->id) }}">全職員</a></li>
+                                <li><a href="{{ route("chat.show", $group->id) }}"
+                                    @if($group->chat_texts()->first() !== null)
+                                        @if($group->chat_room__user()->where("user_id", Auth::id())->first()->newest_read_chat_text_id != $group->chat_texts()->orderBy("id", "desc")->first()->id)
+                                            class="text-danger"
+                                        @endif
+                                    @endif
+                                >
+                                    全職員
+                                </a></li>
                             </ul>
                         </div>
                     @endif
@@ -69,7 +77,15 @@ if(isset($chat_room)) {
                             <h5>その他</h5>
                             <ul class="col-12 pt-1">
                                 @foreach ($otherRooms as $otherRoom)
-                                    <li><a href="{{ route('chat.show', $otherRoom->id) }}">{{ $otherRoom->room_title }}</a></li>
+                                    <li><a href="{{ route('chat.show', $otherRoom->id) }}"
+                                        @if($otherRoom->chat_texts()->first() !== null)
+                                            @if($otherRoom->chat_room__user()->where("user_id", Auth::id())->first()->newest_read_chat_text_id != $otherRoom->chat_texts()->orderBy("id", "desc")->first()->id)
+                                                class="text-danger"
+                                            @endif
+                                        @endif
+                                    >
+                                        {{ $otherRoom->room_title }}
+                                    </a></li>
                                 @endforeach
                             </ul>
                         </div>
@@ -83,9 +99,25 @@ if(isset($chat_room)) {
                                         @if ($joinRoom->office_id == $office->id)
                                             <li>
                                                 @if ($joinRoom->distinction_number == 4)
-                                                    <a href="{{ route('chat.show', $joinRoom->id) }}">{{ $joinRoom->room_title }}</a>
+                                                    <a href="{{ route('chat.show', $joinRoom->id) }}"
+                                                        @if($joinRoom->chat_texts()->first() !== null)
+                                                            @if($joinRoom->chat_room__user()->where("user_id", Auth::id())->first()->newest_read_chat_text_id != $joinRoom->chat_texts()->orderBy("id", "desc")->first()->id)
+                                                                class="text-danger"
+                                                            @endif
+                                                        @endif
+                                                    >
+                                                        {{ $joinRoom->room_title }}
+                                                    </a>
                                                 @else
-                                                    <a href="{{ route('chat.show', $joinRoom->id) }}">{{ $office->office_name }}職員</a>
+                                                    <a href="{{ route('chat.show', $joinRoom->id) }}"
+                                                        @if($joinRoom->chat_texts()->first() !== null)
+                                                            @if($joinRoom->chat_room__user()->where("user_id", Auth::id())->first()->newest_read_chat_text_id != $joinRoom->chat_texts()->orderBy("id", "desc")->first()->id)
+                                                                class="text-danger"
+                                                            @endif
+                                                        @endif
+                                                    >
+                                                        {{ $office->office_name }}職員
+                                                    </a>
                                                 @endif
                                             </li>
                                         @endif
@@ -110,9 +142,25 @@ if(isset($chat_room)) {
                                                 @if ($joinRoom->office_id == $office->id)
                                                     <li>
                                                         @if ($joinRoom->distinction_number == 4)
-                                                            <a href="{{ route('chat.show', $joinRoom->id) }}">{{ $joinRoom->room_title }}</a>
+                                                            <a href="{{ route('chat.show', $joinRoom->id) }}"
+                                                                @if($joinRoom->chat_texts()->first() !== null)
+                                                                    @if($joinRoom->chat_room__user()->where("user_id", Auth::id())->first()->newest_read_chat_text_id != $joinRoom->chat_texts()->orderBy("id", "desc")->first()->id)
+                                                                        class="text-danger"
+                                                                    @endif
+                                                                @endif
+                                                            >
+                                                                {{ $joinRoom->room_title }}
+                                                            </a>
                                                         @else
-                                                            <a href="{{ route('chat.show', $joinRoom->id) }}">{{ $office->office_name }}職員</a>
+                                                            <a href="{{ route('chat.show', $joinRoom->id) }}"
+                                                                @if($joinRoom->chat_texts()->first() !== null)
+                                                                    @if($joinRoom->chat_room__user()->where("user_id", Auth::id())->first()->newest_read_chat_text_id != $joinRoom->chat_texts()->orderBy("id", "desc")->first()->id)
+                                                                        class="text-danger"
+                                                                    @endif
+                                                                @endif
+                                                            >
+                                                                {{ $office->office_name }}職員
+                                                            </a>
                                                         @endif
                                                     </li>
                                                 @endif
@@ -144,7 +192,15 @@ if(isset($chat_room)) {
                                     <div class="col-12 pt-3">
                                         <h5>リテラル</h5>
                                         <ul class="col-12 pt-1">
-                                            <li><a href="{{ route("chat.show", $group->id) }}">全職員</a></li>
+                                            <li><a href="{{ route("chat.show", $group->id) }}"
+                                                @if($group->chat_texts()->first() !== null)
+                                                    @if($group->chat_room__user()->where("user_id", Auth::id())->first()->newest_read_chat_text_id != $group->chat_texts()->orderBy("id", "desc")->first()->id)
+                                                        class="text-danger"
+                                                    @endif
+                                                @endif
+                                            >
+                                                全職員
+                                            </a></li>
                                         </ul>
                                     </div>
                                 @endif
@@ -153,7 +209,15 @@ if(isset($chat_room)) {
                                         <h5>その他</h5>
                                         <ul class="col-12 pt-1">
                                             @foreach ($otherRooms as $otherRoom)
-                                                <li><a href="{{ route('chat.show', $otherRoom->id) }}">{{ $otherRoom->room_title }}</a></li>
+                                                <li><a href="{{ route('chat.show', $otherRoom->id) }}"
+                                                    @if($otherRoom->chat_texts()->first() !== null)
+                                                        @if($otherRoom->chat_room__user()->where("user_id", Auth::id())->first()->newest_read_chat_text_id != $otherRoom->chat_texts()->orderBy("id", "desc")->first()->id)
+                                                            class="text-danger"
+                                                        @endif
+                                                    @endif
+                                                >
+                                                    {{ $otherRoom->room_title }}
+                                                </a></li>
                                             @endforeach
                                         </ul>
                                     </div>
@@ -167,9 +231,25 @@ if(isset($chat_room)) {
                                                     @if ($joinRoom->office_id == $office->id)
                                                         <li>
                                                             @if ($joinRoom->distinction_number == 4)
-                                                                <a href="{{ route('chat.show', $joinRoom->id) }}">{{ $joinRoom->room_title }}</a>
+                                                                <a href="{{ route('chat.show', $joinRoom->id) }}"
+                                                                    @if($joinRoom->chat_texts()->first() !== null)
+                                                                        @if($joinRoom->chat_room__user()->where("user_id", Auth::id())->first()->newest_read_chat_text_id != $joinRoom->chat_texts()->orderBy("id", "desc")->first()->id)
+                                                                            class="text-danger"
+                                                                        @endif
+                                                                    @endif
+                                                                >
+                                                                    {{ $joinRoom->room_title }}
+                                                                </a>
                                                             @else
-                                                                <a href="{{ route('chat.show', $joinRoom->id) }}">{{ $office->office_name }}職員</a>
+                                                                <a href="{{ route('chat.show', $joinRoom->id) }}"
+                                                                    @if($joinRoom->chat_texts()->first() !== null)
+                                                                        @if($joinRoom->chat_room__user()->where("user_id", Auth::id())->first()->newest_read_chat_text_id != $joinRoom->chat_texts()->orderBy("id", "desc")->first()->id)
+                                                                            class="text-danger"
+                                                                        @endif
+                                                                    @endif
+                                                                >
+                                                                    {{ $office->office_name }}職員
+                                                                </a>
                                                             @endif
                                                         </li>
                                                     @endif
@@ -194,9 +274,25 @@ if(isset($chat_room)) {
                                                             @if ($joinRoom->office_id == $office->id)
                                                                 <li>
                                                                     @if ($joinRoom->distinction_number == 4)
-                                                                        <a href="{{ route('chat.show', $joinRoom->id) }}">{{ $joinRoom->room_title }}</a>
+                                                                        <a href="{{ route('chat.show', $joinRoom->id) }}"
+                                                                            @if($joinRoom->chat_texts()->first() !== null)
+                                                                                @if($joinRoom->chat_room__user()->where("user_id", Auth::id())->first()->newest_read_chat_text_id != $joinRoom->chat_texts()->orderBy("id", "desc")->first()->id)
+                                                                                    class="text-danger"
+                                                                                @endif
+                                                                            @endif
+                                                                        >
+                                                                            {{ $joinRoom->room_title }}
+                                                                        </a>
                                                                     @else
-                                                                        <a href="{{ route('chat.show', $joinRoom->id) }}">{{ $office->office_name }}職員</a>
+                                                                        <a href="{{ route('chat.show', $joinRoom->id) }}"
+                                                                            @if($joinRoom->chat_texts()->first() !== null)
+                                                                                @if($joinRoom->chat_room__user()->where("user_id", Auth::id())->first()->newest_read_chat_text_id != $joinRoom->chat_texts()->orderBy("id", "desc")->first()->id)
+                                                                                    class="text-danger"
+                                                                                @endif
+                                                                            @endif
+                                                                        >
+                                                                            {{ $office->office_name }}職員
+                                                                        </a>
                                                                     @endif
                                                                 </li>
                                                             @endif
