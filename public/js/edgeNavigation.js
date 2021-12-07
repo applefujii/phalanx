@@ -117,12 +117,12 @@ class navigationManager {
         let cl = this;
         //------ クリック時の動作
         $(document).on('click', this.navButton, function(){
-            console.log('click navButton');
+            // console.log('click navButton');
             if( $(cl.navButton).data('is-open') == 'true' ) cl.setOpen(false, true);
             else cl.setOpen(true, true);
         });
-        $(document).on('click', this.nav+' a', function() {
-            console.log('clicl a');
+        $(document).on('click', this.nav+' a:not(.no-close)', function() {
+            // console.log('clicl a');
             cl.setOpen(false, true);
         });
     }

@@ -72,10 +72,9 @@
         $("#api2").on('click', function(){
             $.ajax({
                 type: "POST",
-                url: siteUrl + "api/v1.0/get/users.json", // 送り先
+                url: siteUrl + "api/v1.0/get/notifications.json", // 送り先
                 data: {
-                    office_id : [1, 2],
-                    user_type_id : 2,
+                    target_id : 4,
                     sort : "-id"
                 },   // 渡したいデータをオブジェクトで渡す
                 dataType : "json",  // データ形式を指定

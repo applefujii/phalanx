@@ -13,24 +13,24 @@ if(isset($chat_room)) {
 
                 //$officersにすでにoffice_idと同じキーの配列があればその配列の後ろに入れ、なければ作る
                 if(isset($officers[$chatRoomUser->user->office_id])) {
-                    arary_push($officers[$chatRoomUser->user->office_id], $chatRoomUser->user->name);
+                    arary_push($officers[$chatRoomUser->user->office_id], $chatRoomUser->user);
                 } else {
-                    $officers[$chatRoomUser->user->office_id] = [$chatRoomUser->user->name];
+                    $officers[$chatRoomUser->user->office_id] = [$chatRoomUser->user];
                 }
             } 
             
             //利用者も同様に処理する
             else if($chatRoomUser->user->user_type_id == 2) {
                 if(isset($users[$chatRoomUser->user->office_id])) {
-                    arary_push($users[$chatRoomUser->user->office_id], $chatRoomUser->user->name);
+                    arary_push($users[$chatRoomUser->user->office_id], $chatRoomUser->user);
                 } else {
-                    $users[$chatRoomUser->user->office_id] = [$chatRoomUser->user->name];
+                    $users[$chatRoomUser->user->office_id] = [$chatRoomUser->user];
                 }
             }
 
             //体験者を$trialsに入れる
             else {
-                $trials[] = $chatRoomUser->user->name;
+                $trials[] = $chatRoomUser->user;
             }
         }
     }
@@ -124,43 +124,49 @@ if(isset($chat_room)) {
     <nav id="nav-right" class="edge-nav">
         <div class="m-2">
             @if (isset($chat_room))
-                <div class="">
-                    <h5 class="col-12 pt-3">参加者 - {{ $chatRoomUsers->count() }}人</h5>
+                <div class="row">
+                    <h5 class="col-12 pt-3 font-weight-bold">参加者 ({{ $chatRoomUsers->count() }})</h5>
                 </div>
-                <div class="">
+                <div class="row">
                     @foreach ($offices as $office)
                         @if (isset($officers[$office->id]))
                             <div>
-                                <h5 class="col-12 pt-3">{{ $office->office_name }}職員 - {{ count($officers[$office->id]) }}人</h5>
-                                <ul class="col-12 pt-1">
+                                <a data-toggle="collapse" href="#staff-{{ $office->id }}" class="no-close">
+                                    <h5 class="col-12 pt-3 text-danger font-weight-bold">{{ $office->office_name }}職員 ({{ count($officers[$office->id]) }})</h5>
+                                </a>
+                                <ul id="staff-{{ $office->id }}" class="col-12 pt-1 collapse show">
                                     @foreach ($officers[$office->id] as $officer)
-                                        <li>{{ $officer }}</li>
+                                        <li class="{{ $officer->id==Auth::user()->id ? 'text-primary' : 'text-danger' }}">{{ $officer->name }}</li>
                                     @endforeach
                                 </ul>
                             </div>
                         @endif
                     @endforeach
                 </div>
-                <div class="">
+                <div class="row">
                     @foreach ($offices as $office)
                         @if (isset($users[$office->id]))
                             <div>
-                                <h5 class="col-12 pt-3">{{ $office->office_name }}通所者 - {{ count($users[$office->id]) }}人</h5>
-                                <ul class="col-12 pt-1">
+                                <a data-toggle="collapse" href="#user-{{ $office->id }}" class="no-close">
+                                    <h5 class="col-12 pt-3 text-success font-weight-bold">{{ $office->office_name }}通所者 ({{ count($users[$office->id]) }})</h5>
+                                </a>
+                                <ul id="user-{{ $office->id }}" class="col-12 pt-1  collapse show">
                                     @foreach ($users[$office->id] as $user)
-                                        <li>{{ $user }}</li>
+                                        <li class="{{ $officer->id==Auth::user()->id ? 'text-primary' : 'text-success' }}">{{ $user->name }}</li>
                                     @endforeach
                                 </ul>
                             </div>
                         @endif
                     @endforeach
                 </div>
-                <div class="">
+                <div class="row">
                     @if (isset($trials[0]))
-                        <h5 class="col-12 pt-3">体験者 - {{ count($trials) }}人</h5>
-                        <ul class="col-12 pt-1">
+                        <a data-toggle="collapse" href="#trial-{{ $office->id }}" class="no-close">
+                            <h5 class="col-12 pt-3 text-success font-weight-bold">体験者 ({{ count($trials) }})</h5>
+                        </a>
+                        <ul id="trial-{{ $office->id }}" class="col-12 pt-1  collapse show">
                             @foreach ($trials as $trial)
-                                <li>{{ $trial }}</li>
+                                <li class="{{ $officer->id==Auth::user()->id ? 'text-primary' : 'text-success' }}">{{ $trial->name }}</li>
                             @endforeach
                         </ul>
                     @endif
@@ -266,16 +272,18 @@ if(isset($chat_room)) {
             <div class="scroll-contents">
                 @if (isset($chat_room))
                     <div class="row">
-                        <h5 class="col-12 pt-3">参加者 - {{ $chatRoomUsers->count() }}人</h5>
+                        <h5 class="col-12 pt-3 font-weight-bold">参加者 ({{ $chatRoomUsers->count() }})</h5>
                     </div>
                     <div class="row">
                         @foreach ($offices as $office)
                             @if (isset($officers[$office->id]))
                                 <div>
-                                    <h5 class="col-12 pt-3">{{ $office->office_name }}職員 - {{ count($officers[$office->id]) }}人</h5>
-                                    <ul class="col-12 pt-1">
+                                    <a data-toggle="collapse" href="#staff-{{ $office->id }}">
+                                        <h5 class="col-12 pt-3 text-danger font-weight-bold">{{ $office->office_name }}職員 ({{ count($officers[$office->id]) }})</h5>
+                                    </a>
+                                    <ul id="staff-{{ $office->id }}" class="col-12 pt-1 collapse show">
                                         @foreach ($officers[$office->id] as $officer)
-                                            <li>{{ $officer }}</li>
+                                            <li class="{{ $officer->id==Auth::user()->id ? 'text-primary' : 'text-danger' }}">{{ $officer->name }}</li>
                                         @endforeach
                                     </ul>
                                 </div>
@@ -286,10 +294,12 @@ if(isset($chat_room)) {
                         @foreach ($offices as $office)
                             @if (isset($users[$office->id]))
                                 <div>
-                                    <h5 class="col-12 pt-3">{{ $office->office_name }}通所者 - {{ count($users[$office->id]) }}人</h5>
-                                    <ul class="col-12 pt-1">
+                                    <a data-toggle="collapse" href="#user-{{ $office->id }}">
+                                        <h5 class="col-12 pt-3 text-success font-weight-bold">{{ $office->office_name }}通所者 ({{ count($users[$office->id]) }})</h5>
+                                    </a>
+                                    <ul id="user-{{ $office->id }}" class="col-12 pt-1  collapse show">
                                         @foreach ($users[$office->id] as $user)
-                                            <li>{{ $user }}</li>
+                                            <li class="{{ $officer->id==Auth::user()->id ? 'text-primary' : 'text-success' }}">{{ $user->name }}</li>
                                         @endforeach
                                     </ul>
                                 </div>
@@ -298,10 +308,12 @@ if(isset($chat_room)) {
                     </div>
                     <div class="row">
                         @if (isset($trials[0]))
-                            <h5 class="col-12 pt-3">体験者 - {{ count($trials) }}人</h5>
-                            <ul class="col-12 pt-1">
+                            <a data-toggle="collapse" href="#trial-{{ $office->id }}">
+                                <h5 class="col-12 pt-3 text-success font-weight-bold">体験者 ({{ count($trials) }})</h5>
+                            </a>
+                            <ul id="trial-{{ $office->id }}" class="col-12 pt-1  collapse show">
                                 @foreach ($trials as $trial)
-                                    <li>{{ $trial }}</li>
+                                    <li class="{{ $officer->id==Auth::user()->id ? 'text-primary' : 'text-success' }}">{{ $trial->name }}</li>
                                 @endforeach
                             </ul>
                         @endif
@@ -336,8 +348,8 @@ if(isset($chat_room)) {
         toutch.addStartCallBack(navManager.toutchStart, navManager);
         toutch.addMoveCallBack(navManager.toutchMove, navManager);
         toutch.addEndCallBack(navManager.toutchEnd, navManager);
-        navManager.add( 'left', 4, 32, 20 );
-        if(fRightNav) navManager.add( 'right', 2, 32, 20 );
+        navManager.add( 'left', 4, 32, 16 );
+        if(fRightNav) navManager.add( 'right', 2, 32, 16 );
 
         // ※アニメーション確認用
         // const observer = new MutationObserver((mutationsList, observer) => {
