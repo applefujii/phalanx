@@ -39,17 +39,9 @@
     </div>
 
     <div id="chat_footer" class="border col-md-8 m-0 p-0">
-        <div class="col-12 p-0">
-            <button id="footer_button_open" type="button" class="btn btn-outline-secondary btn-block rounded-0 m-0 p-0">
-                <i class="fas fa-chevron-up"></i>
-            </button>
-            <button id="footer_button_close" type="button" class="btn btn-outline-secondary btn-block rounded-0 m-0 p-0">
-                <i class="fas fa-chevron-down"></i>
-            </button>
-        </div>
         <div class="d-flex align-items-center p-0">
             <div class="form-row col-12 pt-2">
-                <textarea id="chat_text" name="chat_text" class="form-control border border-primary col-11" rows="1"></textarea>
+                <textarea id="chat_text" name="chat_text" class="form-control border border-primary col-11"></textarea>
                 <div class="col-1">
                     <button id="submit" class="btn btn-primary rounded-circle">
                         <svg xmlns="{{ asset('image/send-fill.svg') }}" width="16" height="16" fill="currentColor" class="bi bi-send-fill" viewBox="0 0 16 16">

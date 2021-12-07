@@ -111,43 +111,25 @@ $(() => {
         );
     });
 
-    // フッターのリサイズ
-    $('#chat_footer').innerHeight(80);
-    $('#footer_button_close').hide();
-    $('#footer_button_open').on('click', () => {
-        $('#chat_footer').innerHeight(180);
-        $('#chat_text').prop('rows', 5);
-        $('#footer_button_close').show();
-        $('#footer_button_open').hide();
-        // スクロール可能な部分の高さ
-        $("#chat_scroll").innerHeight(
-            $(window).height() - $('nav').outerHeight() - $('#chat_header').outerHeight() - $('#chat_footer').outerHeight()
-        );
-        let scrollTop = $("#chat_scroll").scrollTop();
-        $("#chat_scroll").scrollTop(scrollTop + 100);
-        $("#to_bottom").css({bottom: 185});
-        $("#new").css({bottom: 185});
-        $("#error").css({bottom: 185});
-    });
-    $('#footer_button_close').on('click', () => {
-        $('#chat_footer').innerHeight(80);
-        $('#chat_text').prop('rows', 1);
-        $('#footer_button_open').show();
-        $('#footer_button_close').hide();
-        // スクロール可能な部分の高さ
-        $("#chat_scroll").innerHeight(
-            $(window).height() - $('nav').outerHeight() - $('#chat_header').outerHeight() - $('#chat_footer').outerHeight()
-        );
-        let scrollTop = $("#chat_scroll").scrollTop();
-        $("#chat_scroll").scrollTop(scrollTop + 100);
-        $("#to_bottom").css({bottom: 85});
-        $("#new").css({bottom: 185});
-        $("#error").css({bottom: 185});
-    });
-
-    // 入力開始したらエラーメッセージ非表示
-    $("#chat_text").on('keydown', () => {
+    
+    // 入力開始したら
+    $("#chat_text").on('keydown', (event) => {
+        // エラーメッセージ非表示
         $('#error').hide();
+        // 行数
+        let rows = $("#chat_text").val().split('\n').length;
+        let height = 23 * (rows -1);
+        let scrollTop = $("#chat_scroll").scrollTop();
+        $('#chat_text').innerHeight(37.05 + height);
+        $('#chat_footer').innerHeight(60 + height);
+        // スクロール可能な部分の高さ
+        $("#chat_scroll").innerHeight(
+            $(window).height() - $('nav').outerHeight() - $('#chat_header').outerHeight() - $('#chat_footer').outerHeight()
+        );
+        $("#chat_scroll").scrollTop(scrollTop + height);
+        $("#to_bottom").css({bottom: 85 + height});
+        $("#new").css({bottom: 85 + height});
+        $("#error").css({bottom: 85 + height});
     });
 
     //スクロールしたら
