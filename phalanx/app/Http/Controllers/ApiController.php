@@ -460,6 +460,33 @@ class ApiController extends Controller
 
 
 
+    ///////////////////////////////// チャットルーム //////////////////////////////////////////
+
+    /**
+     * チャットルーム 取得
+     * @param array $request 検索条件[id, distinction_number, office_id, user_id, sort]
+     * @return json 実行結果
+     */
+    public function ApiGetChatRooms(Request $request)
+    {
+        $filter_chat_room_id = $request->input("id", "");
+        if($filter_chat_room_id != "" && !is_array($filter_chat_room_id))
+            $filter_chat_room_id = compact("filter_chat_room_id");
+        $filter_distinction_number = $request->input("distinction_number", "");
+        if($filter_distinction_number != "" && !is_array($filter_distinction_number))
+            $filter_distinction_number = compact("filter_distinction_number");
+        $filter_office_id = $request->input("office_id", "");
+        if($filter_office_id != "" && !is_array($filter_office_id))
+            $filter_office_id = compact("filter_office_id");
+        $filter_user_id = $request->input("user_id", "");
+        if($filter_user_id != "" && !is_array($filter_user_id))
+            $filter_user_id = compact("filter_user_id");
+        
+        $sort = "";
+        
+}
+
+
 
     ///////////////////////////////// リレーション //////////////////////////////////////////
 
