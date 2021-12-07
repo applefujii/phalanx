@@ -51,6 +51,7 @@ use App\Models\Notification__User;
 use App\Models\Office;
 use App\Models\User;
 use App\Models\UserType;
+use App\Models\ChatRoom;
 use App\Http\Requests\EditUserRequest;
 use App\Http\Requests\NotificationRequest;
 use Illuminate\Contracts\Container\Container;
@@ -450,7 +451,7 @@ class ApiController extends Controller
 
     /**
      * チャットルーム 取得
-     * @param array $request 検索条件[id, distinction_number, office_id, user_id, sort]
+     * @param Request $request 検索条件[id, distinction_number, office_id, user_id, sort]
      * @return json 実行結果
      */
     public function ApiGetChatRooms(Request $request)
@@ -469,8 +470,44 @@ class ApiController extends Controller
             $filter_user_id = compact("filter_user_id");
         
         $sort = "";
+        $t_sort = $request->input("sort", "");
+        if($t_sort != "") {
+            $sort = [[]];
+            if(!is_array($t_sort)) compact("t_sort");
+            $i = 0;
+            foreach($t_sort as $s) {
+                $order = "asc";
+                if(preg_match("/^-/i", $s)) $order = "desc";
+                $sort[$i] = ["order" => $order, "subject" => preg_replace("/^-/i", "", $s)];
+                $i ++;
+            }
+        }
+
+        $query = ChatRoom::whereNull("deleted_at");
         
-}
+        if($filter_chat_room_id != "")
+            $query->whereIn("id", $filter_chat_room_id);
+        if($filter_distinction_number != "")
+            $query->whereIn("distinction_number", $filter_distinction_number);
+        if($filter_office_id != "")
+            $query->whereIn("office_id", $filter_office_id);
+        if($filter_user_id != "")
+            $query->whereIn("user_id", $filter_user_id);
+        
+        if($sort != "") {
+            foreach($sort as $s) {
+                $query->orderBy($s["subject"], $s["order"]);
+            }
+        } else {
+            $query->orderBy("id", "asc");
+        }
+
+        $chatRoom = $query->get();
+
+        return json_encode($chatRoom);
+    }
+
+    
 
 
 
