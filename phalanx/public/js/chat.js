@@ -123,16 +123,7 @@ $(() => {
             rows = 10;
         }
         let height = 23 * (rows -1);
-        let scrollTop = $("#chat_scroll").scrollTop();
-        $('#chat_text').innerHeight(37.05 + height);
-        $('#chat_footer').innerHeight(60 + height);
-        $("#chat_scroll").innerHeight(
-            $(window).height() - $('nav').outerHeight() - $('#chat_header').outerHeight() - $('#chat_footer').outerHeight()
-        );
-        $("#chat_scroll").scrollTop(scrollTop + height);
-        $("#to_bottom").css({bottom: 85 + height});
-        $("#new").css({bottom: 85 + height});
-        $("#error").css({bottom: 85 + height});
+        changeHeights(height);
     });
 
     //スクロールしたら
@@ -314,6 +305,8 @@ $(() => {
                 } else { // 成功時
                     // 入力フォームを空に
                     $('#chat_text').val('');
+                    // フッター等の高さ調整
+                    changeHeights(0);
                     //最新チャット取得
                     getNewChatLog();
                 }
@@ -362,5 +355,19 @@ $(() => {
                 </div>
                 `;
         $("#chat_log").append(html);
+    }
+
+    // フッター等の高さ調整
+    function changeHeights(height) {
+        let scrollTop = $("#chat_scroll").scrollTop();
+        $('#chat_text').innerHeight(37.05 + height);
+        $('#chat_footer').innerHeight(60 + height);
+        $("#chat_scroll").innerHeight(
+            $(window).height() - $('nav').outerHeight() - $('#chat_header').outerHeight() - $('#chat_footer').outerHeight()
+        );
+        $("#chat_scroll").scrollTop(scrollTop + height);
+        $("#to_bottom").css({bottom: 85 + height});
+        $("#new").css({bottom: 85 + height});
+        $("#error").css({bottom: 85 + height});
     }
 });
