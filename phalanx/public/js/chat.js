@@ -38,7 +38,7 @@ $(() => {
             let room_title = "";
             // 個人用ルームかつログイン者が職員でないとき
             if (room.user_id && auth_user_type_id !== 1) {
-                room_title = auth_office_name + ' 職員';
+                room_title = chat_room_office_name + ' 職員';
             } else {
                 room_title = room.room_title;
             }
@@ -111,18 +111,21 @@ $(() => {
         );
     });
 
-    
     // 入力開始したら
-    $("#chat_text").on('keydown', (event) => {
+    $("#chat_text").on('change keyup keydown paste cut', () => {
         // エラーメッセージ非表示
         $('#error').hide();
-        // 行数
+        // 入力値の行数
         let rows = $("#chat_text").val().split('\n').length;
+        
+        // 行数に応じてフッター等の高さ調整（最大10行）
+        if (rows > 10) {
+            rows = 10;
+        }
         let height = 23 * (rows -1);
         let scrollTop = $("#chat_scroll").scrollTop();
         $('#chat_text').innerHeight(37.05 + height);
         $('#chat_footer').innerHeight(60 + height);
-        // スクロール可能な部分の高さ
         $("#chat_scroll").innerHeight(
             $(window).height() - $('nav').outerHeight() - $('#chat_header').outerHeight() - $('#chat_footer').outerHeight()
         );
