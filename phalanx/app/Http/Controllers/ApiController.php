@@ -288,6 +288,33 @@ class ApiController extends Controller
         return json_encode($offices);
     }
 
+    /**
+     * 事業所 登録
+     * @param Request $request 登録情報[※記入]
+     * @return json 実行結果
+     */
+    public function ApiStoreOffices( Request $request )
+    {
+    }
+
+    /**
+     * 事業所 更新
+     * @param Request $request 登録情報[※記入]
+     * @return json 実行結果
+     */
+    public function ApiUpdateOffices( Request $request )
+    {
+    }
+
+    /**
+     * 事業所 削除
+     * @param Request $request 登録情報[id]
+     * @return json 実行結果
+     */
+    public function ApiDeleteOffices( Request $request )
+    {
+    }
+
 
 
     ///////////////////////////////// 予定通知 //////////////////////////////////////////
@@ -464,7 +491,7 @@ class ApiController extends Controller
 
     /**
      * チャットルーム 取得
-     * @param array $request 検索条件[id, distinction_number, office_id, user_id, sort]
+     * @param Request $request 検索条件[id, distinction_number, office_id, user_id, sort]
      * @return json 実行結果
      */
     public function ApiGetChatRooms(Request $request)
