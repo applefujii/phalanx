@@ -79,7 +79,7 @@ class ApiController extends Controller
 
     /**
      * ユーザー 取得
-     * @param array $request 検索条件[id, office_id, user_type_id, sort]
+     * @param Request $request 検索条件[id, office_id, user_type_id, sort]
      * @return json 取得したユーザー
      */
     public function ApiGetUsers( Request $request )
@@ -132,7 +132,7 @@ class ApiController extends Controller
 
         /**
      * ユーザー 登録
-     * @param array $request 登録情報[user_type_id, office_id, name, name_katakana, login_name, password]
+     * @param Request $request 登録情報[user_type_id, office_id, name, name_katakana, login_name, password]
      * @return json 実行結果
      */
     public function ApiStoreUsers( Request $request )
@@ -170,7 +170,7 @@ class ApiController extends Controller
 
     /**
      * ユーザー 更新
-     * @param array $request 登録情報[id, user_type_id, office_id, name, name_katakana, login_name, password]
+     * @param Request $request 登録情報[id, user_type_id, office_id, name, name_katakana, login_name, password]
      * @return json 実行結果
      */
     public function ApiUpdateUsers( Request $request )
@@ -249,7 +249,7 @@ class ApiController extends Controller
 
     /**
      * 事業所 取得
-     * @param array $request 検索条件[id, sort]
+     * @param Request $request 検索条件[id, sort]
      * @return json 取得した事業所
      */
     public function ApiGetOffices( Request $request )
@@ -289,27 +289,56 @@ class ApiController extends Controller
         return json_encode($offices);
     }
 
+    /**
+     * 事業所 登録
+     * @param Request $request 登録情報[※記入]
+     * @return json 実行結果
+     */
+    public function ApiStoreOffices( Request $request )
+    {
+    }
+
+    /**
+     * 事業所 更新
+     * @param Request $request 登録情報[※記入]
+     * @return json 実行結果
+     */
+    public function ApiUpdateOffices( Request $request )
+    {
+    }
+
+    /**
+     * 事業所 削除
+     * @param Request $request 登録情報[id]
+     * @return json 実行結果
+     */
+    public function ApiDeleteOffices( Request $request )
+    {
+    }
+
 
 
     ///////////////////////////////// 予定通知 //////////////////////////////////////////
 
     /**
      * 予定通知 取得
-     * @param array $request 検索条件[id, target_id, sort]
+     * @param Request $request 検索条件[id, target_id, sort]
      * @return json 実行結果
      */
     public function ApiGetNotifications( Request $request )
     {
-        $filter_notification_id = $request->input('id', '');
-        if ($filter_notification_id != ""  &&  !is_array($filter_notification_id))
+        //---- requestから要素を取り出す。配列にする。
+        $filter_notification_id = $request->input('id', null);
+        if ($filter_notification_id != null  &&  !is_array($filter_notification_id))
             $filter_notification_id = compact("filter_notification_id");
-        $filter_target_id = $request->input('target_id', '');
-        if ($filter_target_id != ""  &&  !is_array($filter_target_id))
+        $filter_target_id = $request->input('target_id', null);
+        if ($filter_target_id != null  &&  !is_array($filter_target_id))
             $filter_target_id = compact("filter_target_id");
 
-        $sort = "";
-        $t_sort = $request->input('sort', '');
-        if ($t_sort != ""){
+        //-- ソートは、昇順降順と要素名に分けて配列に格納しておく。
+        $sort = null;
+        $t_sort = $request->input('sort', null);
+        if ($t_sort != null){
             $sort = [[]];
             if(!is_array($t_sort)) $t_sort = compact("t_sort");
             $i = 0;
@@ -322,32 +351,41 @@ class ApiController extends Controller
         }
 
 
+        //---- データベースから取得
         $query = Notification::whereNull('deleted_at');
-        if ($filter_notification_id !== '')
+        if ($filter_notification_id !== null)
             $query->whereIn('id', $filter_notification_id);
+        if ($filter_target_id !== null)
+            $query->whereHas('notification__user', function($n__u) use($filter_target_id){
+                $n__u->whereIn('user_id', $filter_target_id);
+            });
 
-        if ($sort !== '') {
+        if ($sort !== null) {
             foreach($sort as $s) {
                 $query->orderBy($s["subject"], $s["order"]);
             }
         }
+        //-- ソート順指定がなければ、デフォルトはID昇順
         else
             $query->orderBy('id', 'asc');
 
         $notifications = $query->get();
 
+        // json形式にして返す
         return json_encode($notifications);
     }
 
     /**
      * 予定通知 登録
-     * @param array $request 登録情報[content, start_at, end_at, is_all_day]
+     * @param Request $request 登録情報[content, start_at, end_at, is_all_day]
      * @return json 実行結果
      */
     public function ApiStoreNotifications( Request $request )
     {
+        // $conで通知コントローラーを使える
         $con = app()->make("App\Http\Controllers\NotificationController");
         
+        //-- 1件
         if( isset($request->record) ) {
             try {
                 $id = $con->storeDetail( new Request($request->record) );
@@ -356,6 +394,7 @@ class ApiController extends Controller
             }
             return json_encode( '{ result : "Success", id : '.$id.' }' );
         }
+        //-- 複数件
         else if( isset($request->records) ) {
             $ids = "";
             try {
@@ -377,11 +416,12 @@ class ApiController extends Controller
 
     /**
      * 予定通知 更新
-     * @param array $request 登録情報[id, content, start_at, end_at, is_all_day]
+     * @param Request $request 登録情報[id, content, start_at, end_at, is_all_day]
      * @return json 実行結果
      */
     public function ApiUpdateNotifications( Request $request )
     {
+        // $conで通知コントローラーを使える
         $con = app()->make("App\Http\Controllers\NotificationController");
 
         if( isset($request->record) ) {
@@ -413,11 +453,12 @@ class ApiController extends Controller
 
     /**
      * 予定通知 削除
-     * @param array $request 登録情報[id]
+     * @param Request $request 登録情報[id]
      * @return json 実行結果
      */
     public function ApiDeleteNotifications( Request $request )
     {
+        // $conで通知コントローラーを使える
         $con = app()->make("App\Http\Controllers\NotificationController");
 
         if( isset($request->record) ) {
@@ -518,7 +559,7 @@ class ApiController extends Controller
 
     /**
      * 予定通知__ユーザー 取得
-     * @param array $request 検索条件[id, notification_id, user_id, sort]
+     * @param Request $request 検索条件[id, notification_id, user_id, sort]
      * @return json 実行結果
      */
     public function ApiGetNotificationUser( Request $request )
@@ -571,7 +612,7 @@ class ApiController extends Controller
 
     /**
      * 予定通知__ユーザー 登録
-     * @param array $request 登録情報[notification_id, user_id]
+     * @param Request $request 登録情報[notification_id, user_id]
      * @return json 実行結果
      */
     public function ApiStoreNotificationUser( Request $request )
@@ -584,7 +625,7 @@ class ApiController extends Controller
 
     /**
      * 予定通知__ユーザー 削除
-     * @param array $request 登録情報[id]
+     * @param Request $request 登録情報[id]
      * @return json 実行結果
      */
     public function ApiDeleteNotificationUser( Request $request )
