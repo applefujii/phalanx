@@ -18,11 +18,8 @@ $(() => {
     // 表示している中で最も古いチャットテキストのID
     let oldest_display_chat_text_id = 1;
 
-    // 新着ありメッセージ非表示
-    $('#new').hide();
-
-    // エラーメッセージ非表示
-    $('#error').hide();
+    // 新着ログ部分の高さ
+    let new_height = 0;
 
     // ----------------------------初回チャット読み込み----------------------------
     // Ajaxリクエスト
@@ -41,7 +38,7 @@ $(() => {
             let room_title = "";
             // 個人用ルームかつログイン者が職員でないとき
             if (room.user_id && auth_user_type_id !== 1) {
-                room_title = auth_office_name + ' 職員';
+                room_title = chat_room_office_name + ' 職員';
             } else {
                 room_title = room.room_title;
             }
@@ -77,7 +74,7 @@ $(() => {
         })
         .fail(() => {
             // 失敗時
-            $('#error').text('メッセージの受信に失敗しました。');
+            $('#error_message').text('メッセージの受信に失敗しました。');
             $('#error').show();
         });
 
@@ -114,38 +111,19 @@ $(() => {
         );
     });
 
-    // // フッターのリサイズ
-    $('#footer_button_close').hide();
-    $('#footer_button_open').on('click', () => {
-        $('#chat_footer').innerHeight(180);
-        $('#chat_text').prop('rows', 5);
-        $('#footer_button_close').show();
-        $('#footer_button_open').hide();
-        // スクロール可能な部分の高さ
-        $("#chat_scroll").innerHeight(
-            $(window).height() - $('nav').outerHeight() - $('#chat_header').outerHeight() - $('#chat_footer').outerHeight()
-        );
-        let scrollTop = $("#chat_scroll").scrollTop();
-        $("#chat_scroll").scrollTop(scrollTop + 100);
-        $("#to_bottom").css({bottom: 185});
-    });
-    $('#footer_button_close').on('click', () => {
-        $('#chat_footer').innerHeight(80);
-        $('#chat_text').prop('rows', 1);
-        $('#footer_button_open').show();
-        $('#footer_button_close').hide();
-        // スクロール可能な部分の高さ
-        $("#chat_scroll").innerHeight(
-            $(window).height() - $('nav').outerHeight() - $('#chat_header').outerHeight() - $('#chat_footer').outerHeight()
-        );
-        let scrollTop = $("#chat_scroll").scrollTop();
-        $("#chat_scroll").scrollTop(scrollTop + 100);
-        $("#to_bottom").css({bottom: 85});
-    });
-
-    // 入力開始したらエラーメッセージ非表示
-    $("#chat_text").on('keydown', () => {
+    // 入力開始したら
+    $("#chat_text").on('change keyup keydown paste cut', () => {
+        // エラーメッセージ非表示
         $('#error').hide();
+        // 入力値の行数
+        let rows = $("#chat_text").val().split('\n').length;
+        
+        // 行数に応じてフッター等の高さ調整（最大10行）
+        if (rows > 10) {
+            rows = 10;
+        }
+        let height = 23 * (rows -1);
+        changeHeights(height);
     });
 
     //スクロールしたら
@@ -157,6 +135,7 @@ $(() => {
             $('#new').hide();
             // 最新チャットメッセージ閲覧済み
             is_checked_latest = true;
+            new_height = 0;
         }
 
         // 一番上までスクロールしたら
@@ -166,9 +145,14 @@ $(() => {
         }
     });
 
-    // 最下ボタンを押したら最下に移動
+    // 最下ボタンを押したら最下までスクロール
     $("#to_bottom_button").on('click', () => {
         $("#chat_scroll").animate({scrollTop: $("#chat_scroll").get(0).scrollHeight}, 500, 'swing');
+    });
+
+    // 新着ボタンを押したらbookmarkまでスクロール
+    $("#new").on('click', () => {
+        $("#chat_scroll").animate({scrollTop: $("#chat_scroll").get(0).scrollHeight - $('#bookmark').outerHeight() - new_height}, 500, 'swing');
     });
 
     // ----------------------------関数----------------------------
@@ -176,6 +160,9 @@ $(() => {
     function getNewChatLog() {
         // 新着メッセージ取得中ならtrue
         is_getting_text = true;
+
+        // 過去ログ部分の高さ
+        let old_height = $('#chat_log').innerHeight();
 
         // Ajaxリクエスト
         $.ajaxSetup({
@@ -214,6 +201,11 @@ $(() => {
                             my_text = true;
                         }
                     });
+                    
+                    
+                    // 新着ログ部分の高さの差分
+                    let difference = $('#chat_log').innerHeight() - old_height;
+                    new_height += difference;
 
                     // 自分の書き込みがあるか最下までスクロールしていた場合
                     if (my_text || is_scroll_bottom) {
@@ -230,7 +222,7 @@ $(() => {
             })
             .fail(() => {
                 // 失敗時
-                $('#error').text('メッセージの受信に失敗しました。');
+                $('#error_message').text('メッセージの受信に失敗しました。');
                 $('#error').show();
             })
             .always(() => {
@@ -275,7 +267,7 @@ $(() => {
             })
             // 失敗時
             .fail(() => {
-                $('#error').text('メッセージの受信に失敗しました。');
+                $('#error_message').text('メッセージの受信に失敗しました。');
                 $('#error').show();
             });
     }
@@ -308,18 +300,20 @@ $(() => {
             // 成功時
             .then((json) => {
                 if (json.error) { // バリデーションエラー
-                    $('#error').text(json.error);
+                    $('#error_message').text(json.error);
                     $('#error').show();
                 } else { // 成功時
                     // 入力フォームを空に
                     $('#chat_text').val('');
+                    // フッター等の高さ調整
+                    changeHeights(0);
                     //最新チャット取得
                     getNewChatLog();
                 }
             })
             // 失敗時
             .fail(() => {
-                $('#error').text('送信に失敗しました。');
+                $('#error_message').text('送信に失敗しました。');
                 $('#error').show();
             })
             .always(() => {
@@ -361,5 +355,19 @@ $(() => {
                 </div>
                 `;
         $("#chat_log").append(html);
+    }
+
+    // フッター等の高さ調整
+    function changeHeights(height) {
+        let scrollTop = $("#chat_scroll").scrollTop();
+        $('#chat_text').innerHeight(37.05 + height);
+        $('#chat_footer').innerHeight(60 + height);
+        $("#chat_scroll").innerHeight(
+            $(window).height() - $('nav').outerHeight() - $('#chat_header').outerHeight() - $('#chat_footer').outerHeight()
+        );
+        $("#chat_scroll").scrollTop(scrollTop + height);
+        $("#to_bottom").css({bottom: 85 + height});
+        $("#new").css({bottom: 85 + height});
+        $("#error").css({bottom: 85 + height});
     }
 });
