@@ -21,6 +21,12 @@ $(() => {
     // 新着ログ部分の高さ
     let new_height = 0;
 
+    // フッターのデフォルト高さ
+    const footer_height_default = $('#chat_footer').outerHeight();
+
+    // 入力部のデフォルト高さ
+    const chat_text_height_default = $('#chat_text').outerHeight();
+
     // ----------------------------初回チャット読み込み----------------------------
     // Ajaxリクエスト
     $.ajaxSetup({
@@ -118,11 +124,11 @@ $(() => {
         // 入力値の行数
         let rows = $("#chat_text").val().split('\n').length;
         
-        // 行数に応じてフッター等の高さ調整（最大10行）
-        if (rows > 10) {
-            rows = 10;
+        // 行数に応じてフッター等の高さ調整
+        if (rows > maxRows()) {
+            rows = maxRows();
         }
-        let height = 23 * (rows -1);
+        let height = $("#chat_text").css('line-height').replace(/[^0-9.]/g, '') * (rows -1);
         changeHeights(height);
     });
 
@@ -360,14 +366,23 @@ $(() => {
     // フッター等の高さ調整
     function changeHeights(height) {
         let scrollTop = $("#chat_scroll").scrollTop();
-        $('#chat_text').innerHeight(37.05 + height);
-        $('#chat_footer').innerHeight(60 + height);
+        $('#chat_text').innerHeight(chat_text_height_default + height);
+        $('#chat_footer').innerHeight(footer_height_default + height);
         $("#chat_scroll").innerHeight(
             $(window).height() - $('nav').outerHeight() - $('#chat_header').outerHeight() - $('#chat_footer').outerHeight()
         );
         $("#chat_scroll").scrollTop(scrollTop + height);
-        $("#to_bottom").css({bottom: 85 + height});
-        $("#new").css({bottom: 85 + height});
-        $("#error").css({bottom: 85 + height});
+        $("#to_bottom").css({bottom: footer_height_default + height});
+        $("#new").css({bottom: footer_height_default + height});
+        $("#error").css({bottom: footer_height_default + height});
+    }
+
+    // フッターの最大行数
+    function maxRows() {
+        let maxRows = 1;
+        while ($(window).height()/2 > footer_height_default + $("#chat_text").css('line-height').replace(/[^0-9.]/g, '') * (maxRows -1)) {
+            maxRows++;
+        }
+        return maxRows;
     }
 });
