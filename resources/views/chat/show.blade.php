@@ -59,8 +59,9 @@
 <script src="{{ asset('js/jquery-ui.min.js') }}"></script>
 <script src="{{ asset('js/moment-with-locales.min.js') }}"></script>
 <script>
-    // チャットルームID
+    // チャットルーム情報
     let chat_room_id = @json($chat_room->id);
+    const chat_room_office_name = @json($chat_room->office->office_name);
     // ログイン者のユーザー情報
     const auth_user_id = @json(Auth::user()->id);
     const auth_user_type_id = @json(Auth::user()->user_type_id);
