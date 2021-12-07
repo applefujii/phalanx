@@ -20,8 +20,6 @@
 
     <div id="to_bottom" class="col-md-8 pl-0">
         <div class="col-md-12 d-flex pl-0">
-            <span id="new" class="bg-success text-light m-0">新着があります</span>
-            <span id="error" class="bg-danger text-light m-0">エラーがあります</span>
             <div class="ml-auto">
                 <button id="to_bottom_button" class="btn btn-secondary rounded-circle">
                     <svg xmlns="{{ asset('image/chevron-double-down.svg') }}" width="16" height="16" fill="currentColor" class="bi bi-chevron-double-down" viewBox="0 0 16 16">
@@ -33,18 +31,17 @@
         </div>
     </div>
 
+    <div id="new" class="bg-success">
+        <span id="new_message" class="text-light m-0">新着があります</span>
+    </div>
+    <div id="error" class="bg-danger">
+        <span id="error_message" class="text-light m-0">エラーがあります</span>
+    </div>
+
     <div id="chat_footer" class="border col-md-8 m-0 p-0">
-        <div class="col-12 p-0">
-            <button id="footer_button_open" type="button" class="btn btn-outline-secondary btn-block rounded-0 m-0 p-0">
-                <i class="fas fa-chevron-up"></i>
-            </button>
-            <button id="footer_button_close" type="button" class="btn btn-outline-secondary btn-block rounded-0 m-0 p-0">
-                <i class="fas fa-chevron-down"></i>
-            </button>
-        </div>
         <div class="d-flex align-items-center p-0">
             <div class="form-row col-12 pt-2">
-                <textarea id="chat_text" name="chat_text" class="form-control border border-primary col-11" rows="1"></textarea>
+                <textarea id="chat_text" name="chat_text" class="form-control border border-primary col-11"></textarea>
                 <div class="col-1">
                     <button id="submit" class="btn btn-primary rounded-circle">
                         <svg xmlns="{{ asset('image/send-fill.svg') }}" width="16" height="16" fill="currentColor" class="bi bi-send-fill" viewBox="0 0 16 16">
@@ -62,8 +59,9 @@
 <script src="{{ asset('js/jquery-ui.min.js') }}"></script>
 <script src="{{ asset('js/moment-with-locales.min.js') }}"></script>
 <script>
-    // チャットルームID
+    // チャットルーム情報
     let chat_room_id = @json($chat_room->id);
+    const chat_room_office_name = @json($chat_room->office->office_name);
     // ログイン者のユーザー情報
     const auth_user_id = @json(Auth::user()->id);
     const auth_user_type_id = @json(Auth::user()->user_type_id);
