@@ -32,6 +32,12 @@ class NotificationController extends Controller
      */
     public function index( Request $request )
     {
+        //-- 古い通知を消す
+        $dt = new \DateTime( "now" );
+        Notification::whereRaw( "end_at <= DATE_SUB( CURDATE(),INTERVAL 1 DAY )" )->update([
+            'deleted_at' => $dt->format('Y-m-d H:i:s')
+        ]);
+
         //
         $filter_office_id = $request->input('office', '');
         $filter_office_id ??= '';
@@ -82,11 +88,11 @@ class NotificationController extends Controller
      */
     public function storeDetail(Request $request)
     {
-        $notifications = null;
-        DB::transaction(function() use($request, &$notifications) {
+        $notification = null;
+        DB::transaction(function() use($request, &$notification) {
 
             $dt = new \DateTime( "now" );
-            $notifications = Notification::create([
+            $notification = Notification::create([
                 'content' => $request->content,
                 'start_at' => $request->start_at,
                 'end_at' => $request->end_at,
@@ -101,7 +107,7 @@ class NotificationController extends Controller
                 $aItem = [];
                 foreach( $request->target_users as $tu ) {
                     array_push($aItem, [
-                        'notification_id' => $notifications->id,
+                        'notification_id' => $notification->id,
                         'user_id' => $tu,
                         'create_user_id' => Auth::user()->id,
                         'created_at' => $dt->format('Y-m-d H:i:s')
@@ -115,7 +121,7 @@ class NotificationController extends Controller
             }
         });
 
-        if(isset($notifications)) return $notifications->id;
+        if(isset($notification)) return $notification->id;
         return -1;
     }
 
@@ -156,9 +162,17 @@ class NotificationController extends Controller
      */
     public function update(NotificationRequest $request, $id)
     {
+        $id = $this->updateDetail($request, $id);
+
+        return redirect()->route("notification.index", $parameters = [], $status = 302, $headers = []);
+    }
+
+    public function updateDetail(Request $request, $id)
+    {
+        $notification = null;
         DB::transaction(function() use($request, $id) {
             $dt = new \DateTime( "now" );
-            Notification::where("id", $id)->update([
+            $notification = Notification::where("id", $id)->update([
                 'content' => $request->content,
                 'start_at' => $request->start_at,
                 'end_at' => $request->end_at,
@@ -168,35 +182,38 @@ class NotificationController extends Controller
             ]);
 
             //-- 対象ユーザー登録
-            $aItem = [];
-            foreach( $request->target_users as $tu ) {
-                //-- 既に登録されていたら飛ばす
-                $fFind = Notification__User::where('notification_id', $id)->where('user_id', $tu)->first();
-                if( $fFind != null ) continue;
+            if(isset($request->old_users)) {
+                $aItem = [];
+                foreach( $request->target_users as $tu ) {
+                    //-- 既に登録されていたら飛ばす
+                    $fFind = Notification__User::where('notification_id', $id)->where('user_id', $tu)->first();
+                    if( $fFind != null ) continue;
 
-                array_push($aItem, [
-                    'notification_id' => $id,
-                    'user_id' => $tu,
-                    'create_user_id' => Auth::user()->id,
-                    'created_at' => $dt->format('Y-m-d H:i:s'),
-                ]);
-            }
-            $aChunk = array_chunk($aItem, 100);
-            foreach($aChunk as $chunk){
-                Notification__User::insert($chunk);
-            }
+                    array_push($aItem, [
+                        'notification_id' => $id,
+                        'user_id' => $tu,
+                        'create_user_id' => Auth::user()->id,
+                        'created_at' => $dt->format('Y-m-d H:i:s'),
+                    ]);
+                }
+                $aChunk = array_chunk($aItem, 100);
+                foreach($aChunk as $chunk){
+                    Notification__User::insert($chunk);
+                }
 
-            //-- 対象外ユーザー削除
-            $reduction = array_filter($request->old_target_users, function($e) use($request) {
-                if(in_array($e, $request->target_users)) return false;
-                return true;
-            });
-            foreach( $reduction as $tu ) {
-                Notification__User::where("user_id", $tu)->delete();
+                //-- 対象外ユーザー削除
+                $reduction = array_filter($request->old_target_users, function($e) use($request) {
+                    if(in_array($e, $request->target_users)) return false;
+                    return true;
+                });
+                foreach( $reduction as $tu ) {
+                    Notification__User::where("user_id", $tu)->delete();
+                }
             }
         });
 
-        return redirect()->route("notification.index", $parameters = [], $status = 302, $headers = []);
+        if(isset($notification)) return $notification->id;
+        return -1;
     }
 
     /**

@@ -13,24 +13,24 @@ if(isset($chat_room)) {
 
                 //$officersにすでにoffice_idと同じキーの配列があればその配列の後ろに入れ、なければ作る
                 if(isset($officers[$chatRoomUser->user->office_id])) {
-                    array_push($officers[$chatRoomUser->user->office_id], $chatRoomUser->user->name);
+                    array_push($officers[$chatRoomUser->user->office_id], $chatRoomUser->user);
                 } else {
-                    $officers[$chatRoomUser->user->office_id] = [$chatRoomUser->user->name];
+                    $officers[$chatRoomUser->user->office_id] = [$chatRoomUser->user];
                 }
             } 
             
             //利用者も同様に処理する
             else if($chatRoomUser->user->user_type_id == 2) {
                 if(isset($users[$chatRoomUser->user->office_id])) {
-                    array_push($users[$chatRoomUser->user->office_id], $chatRoomUser->user->name);
+                    array_push($users[$chatRoomUser->user->office_id], $chatRoomUser->user);
                 } else {
-                    $users[$chatRoomUser->user->office_id] = [$chatRoomUser->user->name];
+                    $users[$chatRoomUser->user->office_id] = [$chatRoomUser->user];
                 }
             }
 
             //体験者を$trialsに入れる
             else {
-                $trials[] = $chatRoomUser->user->name;
+                $trials[] = $chatRoomUser->user;
             }
         }
     }
@@ -60,7 +60,15 @@ if(isset($chat_room)) {
                         <div class="col-12 pt-3">
                             <h5>リテラル</h5>
                             <ul class="col-12 pt-1">
-                                <li><a href="{{ route("chat.show", $group->id) }}">全職員</a></li>
+                                <li><a href="{{ route("chat.show", $group->id) }}"
+                                    @if($group->chat_texts()->whereNull("deleted_at")->where("create_user_id", "<>", Auth::id())->first() !== null)
+                                        @if($group->chat_room__user()->where("user_id", Auth::id())->first()->newest_read_chat_text_id < $group->chat_texts()->whereNull("deleted_at")->where("create_user_id", "<>", Auth::id())->orderBy("id", "desc")->first()->id)
+                                            class="text-danger"
+                                        @endif
+                                    @endif
+                                >
+                                    全職員
+                                </a></li>
                             </ul>
                         </div>
                     @endif
@@ -69,7 +77,15 @@ if(isset($chat_room)) {
                             <h5>その他</h5>
                             <ul class="col-12 pt-1">
                                 @foreach ($otherRooms as $otherRoom)
-                                    <li><a href="{{ route('chat.show', $otherRoom->id) }}">{{ $otherRoom->room_title }}</a></li>
+                                    <li><a href="{{ route('chat.show', $otherRoom->id) }}"
+                                        @if($otherRoom->chat_texts()->whereNull("deleted_at")->where("create_user_id", "<>", Auth::id())->first() !== null)
+                                            @if($otherRoom->chat_room__user()->where("user_id", Auth::id())->first()->newest_read_chat_text_id != $otherRoom->chat_texts()->whereNull("deleted_at")->where("create_user_id", "<>", Auth::id())->orderBy("id", "desc")->first()->id)
+                                                class="text-danger"
+                                            @endif
+                                        @endif
+                                    >
+                                        {{ $otherRoom->room_title }}
+                                    </a></li>
                                 @endforeach
                             </ul>
                         </div>
@@ -83,9 +99,25 @@ if(isset($chat_room)) {
                                         @if ($joinRoom->office_id == $office->id)
                                             <li>
                                                 @if ($joinRoom->distinction_number == 4)
-                                                    <a href="{{ route('chat.show', $joinRoom->id) }}">{{ $joinRoom->room_title }}</a>
+                                                    <a href="{{ route('chat.show', $joinRoom->id) }}"
+                                                        @if($joinRoom->chat_texts()->whereNull("deleted_at")->where("create_user_id", "<>", Auth::id())->first() !== null)
+                                                            @if($joinRoom->chat_room__user()->where("user_id", Auth::id())->first()->newest_read_chat_text_id != $joinRoom->chat_texts()->whereNull("deleted_at")->where("create_user_id", "<>", Auth::id())->orderBy("id", "desc")->first()->id)
+                                                                class="text-danger"
+                                                            @endif
+                                                        @endif
+                                                    >
+                                                        {{ $joinRoom->room_title }}
+                                                    </a>
                                                 @else
-                                                    <a href="{{ route('chat.show', $joinRoom->id) }}">{{ $office->office_name }}職員</a>
+                                                    <a href="{{ route('chat.show', $joinRoom->id) }}"
+                                                        @if($joinRoom->chat_texts()->whereNull("deleted_at")->where("create_user_id", "<>", Auth::id())->first() !== null)
+                                                            @if($joinRoom->chat_room__user()->where("user_id", Auth::id())->first()->newest_read_chat_text_id != $joinRoom->chat_texts()->whereNull("deleted_at")->where("create_user_id", "<>", Auth::id())->orderBy("id", "desc")->first()->id)
+                                                                class="text-danger"
+                                                            @endif
+                                                        @endif
+                                                    >
+                                                        {{ $office->office_name }}職員
+                                                    </a>
                                                 @endif
                                             </li>
                                         @endif
@@ -110,9 +142,25 @@ if(isset($chat_room)) {
                                                 @if ($joinRoom->office_id == $office->id)
                                                     <li>
                                                         @if ($joinRoom->distinction_number == 4)
-                                                            <a href="{{ route('chat.show', $joinRoom->id) }}">{{ $joinRoom->room_title }}</a>
+                                                            <a href="{{ route('chat.show', $joinRoom->id) }}"
+                                                                @if($joinRoom->chat_texts()->whereNull("deleted_at")->where("create_user_id", "<>", Auth::id())->first() !== null)
+                                                                    @if($joinRoom->chat_room__user()->where("user_id", Auth::id())->first()->newest_read_chat_text_id != $joinRoom->chat_texts()->whereNull("deleted_at")->where("create_user_id", "<>", Auth::id())->orderBy("id", "desc")->first()->id)
+                                                                        class="text-danger"
+                                                                    @endif
+                                                                @endif
+                                                            >
+                                                                {{ $joinRoom->room_title }}
+                                                            </a>
                                                         @else
-                                                            <a href="{{ route('chat.show', $joinRoom->id) }}">{{ $office->office_name }}職員</a>
+                                                            <a href="{{ route('chat.show', $joinRoom->id) }}"
+                                                                @if($joinRoom->chat_texts()->whereNull("deleted_at")->where("create_user_id", "<>", Auth::id())->first() !== null)
+                                                                    @if($joinRoom->chat_room__user()->where("user_id", Auth::id())->first()->newest_read_chat_text_id != $joinRoom->chat_texts()->whereNull("deleted_at")->where("create_user_id", "<>", Auth::id())->orderBy("id", "desc")->first()->id)
+                                                                        class="text-danger"
+                                                                    @endif
+                                                                @endif
+                                                            >
+                                                                {{ $office->office_name }}職員
+                                                            </a>
                                                         @endif
                                                     </li>
                                                 @endif
@@ -144,7 +192,15 @@ if(isset($chat_room)) {
                                     <div class="col-12 pt-3">
                                         <h5>リテラル</h5>
                                         <ul class="col-12 pt-1">
-                                            <li><a href="{{ route("chat.show", $group->id) }}">全職員</a></li>
+                                            <li><a href="{{ route("chat.show", $group->id) }}"
+                                                @if($group->chat_texts()->whereNull("deleted_at")->where("create_user_id", "<>", Auth::id())->first() !== null)
+                                                    @if($group->chat_room__user()->where("user_id", Auth::id())->first()->newest_read_chat_text_id != $group->chat_texts()->whereNull("deleted_at")->where("create_user_id", "<>", Auth::id())->orderBy("id", "desc")->first()->id)
+                                                        class="text-danger"
+                                                    @endif
+                                                @endif
+                                            >
+                                                全職員
+                                            </a></li>
                                         </ul>
                                     </div>
                                 @endif
@@ -153,7 +209,15 @@ if(isset($chat_room)) {
                                         <h5>その他</h5>
                                         <ul class="col-12 pt-1">
                                             @foreach ($otherRooms as $otherRoom)
-                                                <li><a href="{{ route('chat.show', $otherRoom->id) }}">{{ $otherRoom->room_title }}</a></li>
+                                                <li><a href="{{ route('chat.show', $otherRoom->id) }}"
+                                                    @if($otherRoom->chat_texts()->whereNull("deleted_at")->where("create_user_id", "<>", Auth::id())->first() !== null)
+                                                        @if($otherRoom->chat_room__user()->where("user_id", Auth::id())->first()->newest_read_chat_text_id != $otherRoom->chat_texts()->whereNull("deleted_at")->where("create_user_id", "<>", Auth::id())->orderBy("id", "desc")->first()->id)
+                                                            class="text-danger"
+                                                        @endif
+                                                    @endif
+                                                >
+                                                    {{ $otherRoom->room_title }}
+                                                </a></li>
                                             @endforeach
                                         </ul>
                                     </div>
@@ -167,9 +231,25 @@ if(isset($chat_room)) {
                                                     @if ($joinRoom->office_id == $office->id)
                                                         <li>
                                                             @if ($joinRoom->distinction_number == 4)
-                                                                <a href="{{ route('chat.show', $joinRoom->id) }}">{{ $joinRoom->room_title }}</a>
+                                                                <a href="{{ route('chat.show', $joinRoom->id) }}"
+                                                                    @if($joinRoom->chat_texts()->whereNull("deleted_at")->where("create_user_id", "<>", Auth::id())->first() !== null)
+                                                                        @if($joinRoom->chat_room__user()->where("user_id", Auth::id())->first()->newest_read_chat_text_id != $joinRoom->chat_texts()->whereNull("deleted_at")->where("create_user_id", "<>", Auth::id())->orderBy("id", "desc")->first()->id)
+                                                                            class="text-danger"
+                                                                        @endif
+                                                                    @endif
+                                                                >
+                                                                    {{ $joinRoom->room_title }}
+                                                                </a>
                                                             @else
-                                                                <a href="{{ route('chat.show', $joinRoom->id) }}">{{ $office->office_name }}職員</a>
+                                                                <a href="{{ route('chat.show', $joinRoom->id) }}"
+                                                                    @if($joinRoom->chat_texts()->whereNull("deleted_at")->where("create_user_id", "<>", Auth::id())->first() !== null)
+                                                                        @if($joinRoom->chat_room__user()->where("user_id", Auth::id())->first()->newest_read_chat_text_id != $joinRoom->chat_texts()->whereNull("deleted_at")->where("create_user_id", "<>", Auth::id())->orderBy("id", "desc")->first()->id)
+                                                                            class="text-danger"
+                                                                        @endif
+                                                                    @endif
+                                                                >
+                                                                    {{ $office->office_name }}職員
+                                                                </a>
                                                             @endif
                                                         </li>
                                                     @endif
@@ -194,9 +274,25 @@ if(isset($chat_room)) {
                                                             @if ($joinRoom->office_id == $office->id)
                                                                 <li>
                                                                     @if ($joinRoom->distinction_number == 4)
-                                                                        <a href="{{ route('chat.show', $joinRoom->id) }}">{{ $joinRoom->room_title }}</a>
+                                                                        <a href="{{ route('chat.show', $joinRoom->id) }}"
+                                                                            @if($joinRoom->chat_texts()->whereNull("deleted_at")->where("create_user_id", "<>", Auth::id())->first() !== null)
+                                                                                @if($joinRoom->chat_room__user()->where("user_id", Auth::id())->first()->newest_read_chat_text_id != $joinRoom->chat_texts()->whereNull("deleted_at")->where("create_user_id", "<>", Auth::id())->orderBy("id", "desc")->first()->id)
+                                                                                    class="text-danger"
+                                                                                @endif
+                                                                            @endif
+                                                                        >
+                                                                            {{ $joinRoom->room_title }}
+                                                                        </a>
                                                                     @else
-                                                                        <a href="{{ route('chat.show', $joinRoom->id) }}">{{ $office->office_name }}職員</a>
+                                                                        <a href="{{ route('chat.show', $joinRoom->id) }}"
+                                                                            @if($joinRoom->chat_texts()->whereNull("deleted_at")->where("create_user_id", "<>", Auth::id())->first() !== null)
+                                                                                @if($joinRoom->chat_room__user()->where("user_id", Auth::id())->first()->newest_read_chat_text_id != $joinRoom->chat_texts()->whereNull("deleted_at")->where("create_user_id", "<>", Auth::id())->orderBy("id", "desc")->first()->id)
+                                                                                    class="text-danger"
+                                                                                @endif
+                                                                            @endif
+                                                                        >
+                                                                            {{ $office->office_name }}職員
+                                                                        </a>
                                                                     @endif
                                                                 </li>
                                                             @endif
@@ -220,47 +316,55 @@ if(isset($chat_room)) {
                     <div class="modal-dialog d-md-none">
                         <div class="modal-content h-100">
                             <div class="modal-body">
-                                <div class="row">
-                                    <h5 class="col-12 pt-3">参加者 - {{ $chatRoomUsers->count() }}人</h5>
-                                </div>
-                                <div class="row">
-                                    @foreach ($offices as $office)
-                                        @if (isset($officers[$office->id]))
-                                            <div>
-                                                <h5 class="col-12 pt-3">{{ $office->office_name }}職員 - {{ count($officers[$office->id]) }}人</h5>
-                                                <ul class="col-12 pt-1">
-                                                    @foreach ($officers[$office->id] as $officer)
-                                                        <li>{{ $officer }}</li>
-                                                    @endforeach
-                                                </ul>
-                                            </div>
+                                @if (isset($chat_room))
+                                    <div class="row">
+                                        <h5 class="col-12 pt-3 font-weight-bold">参加者 ({{ $chatRoomUsers->count() }})</h5>
+                                    </div>
+                                    <div class="row">
+                                        @foreach ($offices as $office)
+                                            @if (isset($officers[$office->id]))
+                                                <div>
+                                                    <a data-toggle="collapse" href="#staff-{{ $office->id }}">
+                                                        <h5 class="col-12 pt-3 text-danger font-weight-bold">{{ $office->office_name }}職員 ({{ count($officers[$office->id]) }})</h5>
+                                                    </a>
+                                                    <ul id="staff-{{ $office->id }}" class="col-12 pt-1 collapse show">
+                                                        @foreach ($officers[$office->id] as $officer)
+                                                            <li class="{{ $officer->id==Auth::user()->id ? 'text-primary' : 'text-danger' }}">{{ $officer->name }}</li>
+                                                        @endforeach
+                                                    </ul>
+                                                </div>
+                                            @endif
+                                        @endforeach
+                                    </div>
+                                    <div class="row">
+                                        @foreach ($offices as $office)
+                                            @if (isset($users[$office->id]))
+                                                <div>
+                                                    <a data-toggle="collapse" href="#user-{{ $office->id }}">
+                                                        <h5 class="col-12 pt-3 text-success font-weight-bold">{{ $office->office_name }}通所者 ({{ count($users[$office->id]) }})</h5>
+                                                    </a>
+                                                    <ul id="user-{{ $office->id }}" class="col-12 pt-1  collapse show">
+                                                        @foreach ($users[$office->id] as $user)
+                                                            <li class="{{ $officer->id==Auth::user()->id ? 'text-primary' : 'text-success' }}">{{ $user->name }}</li>
+                                                        @endforeach
+                                                    </ul>
+                                                </div>
+                                            @endif
+                                        @endforeach
+                                    </div>
+                                    <div class="row">
+                                        @if (isset($trials[0]))
+                                            <a data-toggle="collapse" href="#trial-{{ $office->id }}">
+                                                <h5 class="col-12 pt-3 text-success font-weight-bold">体験者 ({{ count($trials) }})</h5>
+                                            </a>
+                                            <ul id="trial-{{ $office->id }}" class="col-12 pt-1  collapse show">
+                                                @foreach ($trials as $trial)
+                                                    <li class="{{ $officer->id==Auth::user()->id ? 'text-primary' : 'text-success' }}">{{ $trial->name }}</li>
+                                                @endforeach
+                                            </ul>
                                         @endif
-                                    @endforeach
-                                </div>
-                                <div class="row">
-                                    @foreach ($offices as $office)
-                                        @if (isset($users[$office->id]))
-                                            <div>
-                                                <h5 class="col-12 pt-3">{{ $office->office_name }}通所者 - {{ count($users[$office->id]) }}人</h5>
-                                                <ul class="col-12 pt-1">
-                                                    @foreach ($users[$office->id] as $user)
-                                                        <li>{{ $user }}</li>
-                                                    @endforeach
-                                                </ul>
-                                            </div>
-                                        @endif
-                                    @endforeach
-                                </div>
-                                <div class="row">
-                                    @if (isset($trials[0]))
-                                        <h5 class="col-12 pt-3">体験者 - {{ count($trials) }}人</h5>
-                                        <ul class="col-12 pt-1">
-                                            @foreach ($trials as $trial)
-                                                <li>{{ $trial }}</li>
-                                            @endforeach
-                                        </ul>
-                                    @endif
-                                </div>
+                                    </div>
+                                @endif
                             </div>
                         </div>
                     </div>
@@ -274,16 +378,18 @@ if(isset($chat_room)) {
             <div class="scroll-contents">
                 @if (isset($chat_room))
                     <div class="row">
-                        <h5 class="col-12 pt-3">参加者 - {{ $chatRoomUsers->count() }}人</h5>
+                        <h5 class="col-12 pt-3 font-weight-bold">参加者 ({{ $chatRoomUsers->count() }})</h5>
                     </div>
                     <div class="row">
                         @foreach ($offices as $office)
                             @if (isset($officers[$office->id]))
                                 <div>
-                                    <h5 class="col-12 pt-3">{{ $office->office_name }}職員 - {{ count($officers[$office->id]) }}人</h5>
-                                    <ul class="col-12 pt-1">
+                                    <a data-toggle="collapse" href="#staff-{{ $office->id }}">
+                                        <h5 class="col-12 pt-3 text-danger font-weight-bold">{{ $office->office_name }}職員 ({{ count($officers[$office->id]) }})</h5>
+                                    </a>
+                                    <ul id="staff-{{ $office->id }}" class="col-12 pt-1 collapse show">
                                         @foreach ($officers[$office->id] as $officer)
-                                            <li>{{ $officer }}</li>
+                                            <li class="{{ $officer->id==Auth::user()->id ? 'text-primary' : 'text-danger' }}">{{ $officer->name }}</li>
                                         @endforeach
                                     </ul>
                                 </div>
@@ -294,10 +400,12 @@ if(isset($chat_room)) {
                         @foreach ($offices as $office)
                             @if (isset($users[$office->id]))
                                 <div>
-                                    <h5 class="col-12 pt-3">{{ $office->office_name }}通所者 - {{ count($users[$office->id]) }}人</h5>
-                                    <ul class="col-12 pt-1">
+                                    <a data-toggle="collapse" href="#user-{{ $office->id }}">
+                                        <h5 class="col-12 pt-3 text-success font-weight-bold">{{ $office->office_name }}通所者 ({{ count($users[$office->id]) }})</h5>
+                                    </a>
+                                    <ul id="user-{{ $office->id }}" class="col-12 pt-1  collapse show">
                                         @foreach ($users[$office->id] as $user)
-                                            <li>{{ $user }}</li>
+                                            <li class="{{ $officer->id==Auth::user()->id ? 'text-primary' : 'text-success' }}">{{ $user->name }}</li>
                                         @endforeach
                                     </ul>
                                 </div>
@@ -306,10 +414,12 @@ if(isset($chat_room)) {
                     </div>
                     <div class="row">
                         @if (isset($trials[0]))
-                            <h5 class="col-12 pt-3">体験者 - {{ count($trials) }}人</h5>
-                            <ul class="col-12 pt-1">
+                            <a data-toggle="collapse" href="#trial-{{ $office->id }}">
+                                <h5 class="col-12 pt-3 text-success font-weight-bold">体験者 ({{ count($trials) }})</h5>
+                            </a>
+                            <ul id="trial-{{ $office->id }}" class="col-12 pt-1  collapse show">
                                 @foreach ($trials as $trial)
-                                    <li>{{ $trial }}</li>
+                                    <li class="{{ $officer->id==Auth::user()->id ? 'text-primary' : 'text-success' }}">{{ $trial->name }}</li>
                                 @endforeach
                             </ul>
                         @endif
@@ -322,9 +432,6 @@ if(isset($chat_room)) {
 @endsection
 
 @section('script')
-{{-- jQuery読み込み --}}
-<script src="{{ asset('js/jquery-3.6.0.min.js') }}"></script>
-
 <script>
     $(function() {
 
