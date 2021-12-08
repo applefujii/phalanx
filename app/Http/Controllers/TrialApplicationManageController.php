@@ -33,7 +33,7 @@ class TrialApplicationManageController extends Controller
      */
     public function index(TrialApplicationSearchRequest $request)
     {
-        $office_id = $request->input('office_id') ?? Auth::user()->office_id;
+        $office_id = $request->input('office_id');
         $check_done = $request->input('check_done');
         $check_yet = $request->input('check_yet');
 
@@ -57,6 +57,8 @@ class TrialApplicationManageController extends Controller
             ->paginate(config('const.pagination'));
         
         $offices = Office::whereNull('deleted_at')->orderBy('sort')->get();
+        //検索条件を引き継ぐために一覧画面のURLを取得
+        session()->put('index_url.trial_application_manage', url()->full());
 
         return view('trial_application_manage/index', compact('offices', 'office_id', 'check_done', 'check_yet', 'trial_applications'));
     }
