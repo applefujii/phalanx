@@ -43,7 +43,7 @@ align-items-center justify-content-center rounded"><h1>チ ャ ッ ト</h1></a>
 align-items-center justify-content-center rounded"><h1>チ ャ ッ ト</h1></a>
 <a href="{{ route('trial_application_manage.index') }}" type="button" class="tkn btn-primary text-center d-flex 
 align-items-center justify-content-center rounded"><h4>体験・見学申込一覧</h4></a>
-<a href="{{ route('office.create') }}" type="button" class="mst btn-primary text-center d-flex 
+<a href="{{ route('office.index') }}" type="button" class="mst btn-primary text-center d-flex 
 align-items-center justify-content-center rounded"><h4>マスタ管理</h4></a>
 <a href="{{ route('chat_room.index') }}" type="button" class="room btn-primary text-center d-flex 
 align-items-center justify-content-center rounded"><h4>チャットルーム管理</h4></a>
