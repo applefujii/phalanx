@@ -98,7 +98,14 @@ class TrialApplicationManageController extends Controller
         $trial_application->update_user_id = Auth::user()->id;
         $trial_application->updated_at = $now->isoFormat('YYYY-MM-DD HH:mm:ss');
         $trial_application->save();
-        return redirect()->route('trial_application_manage.index');
+
+        // 前回表示時の一覧画面のURL
+        $index_url = session()->get('index_url.trial_application_manage');
+        if ($index_url) {
+            return redirect()->to( $index_url );
+        } else {
+            return redirect()->route('trial_application_manage.index');
+        }
     }
 
     /**
@@ -116,7 +123,14 @@ class TrialApplicationManageController extends Controller
         $trial_application->delete_user_id = Auth::user()->id;
         $trial_application->deleted_at = $now->isoFormat('YYYY-MM-DD HH:mm:ss');
         $trial_application->save();
-        return redirect()->route('trial_application_manage.index');
+
+        // 前回表示時の一覧画面のURL
+        $index_url = session()->get('index_url.trial_application_manage');
+        if ($index_url) {
+            return redirect()->to( $index_url );
+        } else {
+            return redirect()->route('trial_application_manage.index');
+        }
     }
 
     /**
@@ -149,6 +163,13 @@ class TrialApplicationManageController extends Controller
         $trial_application->update_user_id = Auth::user()->id;
         $trial_application->updated_at = $now->isoFormat('YYYY-MM-DD HH:mm:ss');
         $trial_application->save();
-        return redirect()->route('trial_application_manage.index');
+        
+        // 前回表示時の一覧画面のURL
+        $index_url = session()->get('index_url.trial_application_manage');
+        if ($index_url) {
+            return redirect()->to( $index_url );
+        } else {
+            return redirect()->route('trial_application_manage.index');
+        }
     }
 }
