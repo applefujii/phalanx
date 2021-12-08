@@ -39,6 +39,7 @@
 
 
 
+
 <script>
     var siteUrl = "{{ config('const.url') }}";
     // 画面幅
@@ -149,11 +150,8 @@
     //-- モーダルが呼び出されたとき
     $(document).ready(function(){
         $(document).on('show.bs.modal','#peopleListModal', function ( event ) {
-            // console.log("in");
-            // let button = $(event.relatedTarget) //モーダルを呼び出すときに使われたボタンを取得
-            // let targetGroup = button.data('target-group');
-            let targetGroup = "user";
-            console.log(targetGroup);
+            let button = $(event.relatedTarget) //モーダルを呼び出すときに使われたボタンを取得
+            let targetGroup = button.data('target-group');
 
             //職員ボタンから
             if( targetGroup == "staff" ) {
