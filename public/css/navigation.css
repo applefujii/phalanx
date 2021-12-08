@@ -16,8 +16,8 @@
 #nav-left{
     /*ナビのスタート位置と形状*/
 	top:0;
-    left: -20rem;
-	width: 20rem;
+    left: -16rem;
+	width: 16rem;
     height: 100vh;/*ナビの高さ*/
     border-right: solid 1px #888;
 }
@@ -30,8 +30,8 @@
 #nav-right{
     /*ナビのスタート位置と形状*/
 	top:0;
-    right: -20rem;
-	width: 20rem;
+    right: -16rem;
+	width: 16rem;
     height: 100vh;/*ナビの高さ*/
     border-left: solid 1px #888;
 }
@@ -90,7 +90,7 @@
 }
 
 #nav-button-left.active{
-    left: 20rem;
+    left: 16rem;
 }
 
 #nav-button-right{
@@ -104,5 +104,5 @@
 }
 
 #nav-button-right.active{
-    right: 20rem;
+    right: 16rem;
 }
