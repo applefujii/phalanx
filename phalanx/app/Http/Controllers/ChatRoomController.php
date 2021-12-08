@@ -62,40 +62,7 @@ class ChatRoomController extends Controller
      */
     public function store(ChatRoomRequest $request) {
 
-        //ログイン中のユーザーデータを取得
-        $user = Auth::user();
-        
-        //各種リクエストのデータを取得
-        $roomTitle = $request->input("room_title");
-        $officeId = $request->input("office_id");
-        $targetUsers = $request->input("target_users");
-        $joinUsersId = explode(",", $targetUsers);
-
-        //現在時刻を取得
-        $now = Carbon::now()->isoFormat('YYYY-MM-DD HH:mm:ss');
-
-        //Chat_roomインスタンスを作成、各種データを挿入後登録
-        $chatRoom = new ChatRoom();
-        $chatRoom->room_title = $roomTitle;
-        $chatRoom->distinction_number = 4;
-        $chatRoom->office_id = $officeId;
-        $chatRoom->create_user_id = $user->id;
-        $chatRoom->update_user_id = $user->id;
-        $chatRoom->created_at = $now;
-        $chatRoom->updated_at = $now;
-        $chatRoom->save();
-
-        //チャット参加者ごとにチャットルーム-ユーザー中間テーブルのデータを作成
-        foreach($joinUsersId as $joinUserId) {
-            $chatRoomUser = new ChatRoom__User();
-            $chatRoomUser->chat_room_id = $chatRoom->id;
-            $chatRoomUser->user_id = $joinUserId;
-            $chatRoomUser->create_user_id = $user->id;
-            $chatRoomUser->update_user_id = $user->id;
-            $chatRoomUser->created_at = $now;
-            $chatRoomUser->updated_at = $now;
-            $chatRoomUser->save();
-        }
+        $id = $this->storeDetail($request);
 
         return redirect()->route("chat_room.index");
     }
