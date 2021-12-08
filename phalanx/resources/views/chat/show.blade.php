@@ -38,9 +38,9 @@
         <span id="error_message" class="text-light m-0">エラーがあります</span>
     </div>
 
-    <div id="chat_footer" class="d-flex align-items-center border col-md-8 m-0 p-0">
-        <div class="col-12 form-row ml-2 p-0">
-            <textarea id="chat_text" name="chat_text" class="form-control border border-primary col-11"></textarea>
+    <div id="chat_footer" class="d-flex align-items-center border col-md-8">
+        <div class="col-12 form-row">
+            <textarea id="chat_text" name="chat_text" class="col-11 form-control border border-primary"></textarea>
             <div class="col-1">
                 <button id="submit" class="btn btn-primary rounded-circle">
                     <svg xmlns="{{ asset('image/send-fill.svg') }}" width="16" height="16" fill="currentColor" class="bi bi-send-fill" viewBox="0 0 16 16">
