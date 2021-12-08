@@ -38,7 +38,7 @@ class TrialApplicationManageController extends Controller
         $check_yet = $request->input('check_yet');
 
         $trial_applications = TrialApplication::whereNull('deleted_at')
-        ->with('office')
+            ->with('office')
             ->when($office_id, function ($query) use ($office_id) {
                 return $query->where('office_id', $office_id);
             })
@@ -57,6 +57,8 @@ class TrialApplicationManageController extends Controller
             ->paginate(config('const.pagination'));
         
         $offices = Office::whereNull('deleted_at')->orderBy('sort')->get();
+        //検索条件を引き継ぐために一覧画面のURLを取得
+        session()->put('index_url.trial_application_manage', url()->full());
 
         return view('trial_application_manage/index', compact('offices', 'office_id', 'check_done', 'check_yet', 'trial_applications'));
     }
@@ -96,7 +98,14 @@ class TrialApplicationManageController extends Controller
         $trial_application->update_user_id = Auth::user()->id;
         $trial_application->updated_at = $now->isoFormat('YYYY-MM-DD HH:mm:ss');
         $trial_application->save();
-        return redirect()->route('trial_application_manage.index');
+
+        // 前回表示時の一覧画面のURL
+        $index_url = session()->get('index_url.trial_application_manage');
+        if ($index_url) {
+            return redirect()->to( $index_url );
+        } else {
+            return redirect()->route('trial_application_manage.index');
+        }
     }
 
     /**
@@ -114,7 +123,14 @@ class TrialApplicationManageController extends Controller
         $trial_application->delete_user_id = Auth::user()->id;
         $trial_application->deleted_at = $now->isoFormat('YYYY-MM-DD HH:mm:ss');
         $trial_application->save();
-        return redirect()->route('trial_application_manage.index');
+
+        // 前回表示時の一覧画面のURL
+        $index_url = session()->get('index_url.trial_application_manage');
+        if ($index_url) {
+            return redirect()->to( $index_url );
+        } else {
+            return redirect()->route('trial_application_manage.index');
+        }
     }
 
     /**
@@ -147,6 +163,13 @@ class TrialApplicationManageController extends Controller
         $trial_application->update_user_id = Auth::user()->id;
         $trial_application->updated_at = $now->isoFormat('YYYY-MM-DD HH:mm:ss');
         $trial_application->save();
-        return redirect()->route('trial_application_manage.index');
+        
+        // 前回表示時の一覧画面のURL
+        $index_url = session()->get('index_url.trial_application_manage');
+        if ($index_url) {
+            return redirect()->to( $index_url );
+        } else {
+            return redirect()->route('trial_application_manage.index');
+        }
     }
 }
