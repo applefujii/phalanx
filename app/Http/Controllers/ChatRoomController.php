@@ -16,6 +16,7 @@ use App\Models\ChatText;
 use App\Models\Office;
 use App\Models\User;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use App\Http\Requests\ChatRoomRequest;
 use Carbon\Carbon;
 
@@ -113,7 +114,7 @@ class ChatRoomController extends Controller
                     ]);
                 }
 
-                $aChunk = array_chunk($aitem, 100);
+                $aChunk = array_chunk($aItem, 100);
                 foreach($aChunk as $chunk) {
                     ChatRoom__User::insert($chunk);
                 }
