@@ -38,8 +38,6 @@
 </div>
 
 
-{{-- jQuery読み込み --}}
-<script src="{{ asset('js/jquery-3.6.0.min.js') }}"></script>
 
 <script>
     var siteUrl = "{{ config('const.url') }}";
@@ -151,8 +149,11 @@
     //-- モーダルが呼び出されたとき
     $(document).ready(function(){
         $(document).on('show.bs.modal','#peopleListModal', function ( event ) {
-            let button = $(event.relatedTarget) //モーダルを呼び出すときに使われたボタンを取得
-            let targetGroup = button.data('target-group');
+            // console.log("in");
+            // let button = $(event.relatedTarget) //モーダルを呼び出すときに使われたボタンを取得
+            // let targetGroup = button.data('target-group');
+            let targetGroup = "user";
+            console.log(targetGroup);
 
             //職員ボタンから
             if( targetGroup == "staff" ) {
