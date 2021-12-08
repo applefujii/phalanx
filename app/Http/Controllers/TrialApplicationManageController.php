@@ -33,12 +33,12 @@ class TrialApplicationManageController extends Controller
      */
     public function index(TrialApplicationSearchRequest $request)
     {
-        $office_id = $request->input('office_id');
+        $office_id = $request->input('office_id') ?? Auth::user()->office_id;
         $check_done = $request->input('check_done');
         $check_yet = $request->input('check_yet');
 
         $trial_applications = TrialApplication::whereNull('deleted_at')
-        ->with('office')
+            ->with('office')
             ->when($office_id, function ($query) use ($office_id) {
                 return $query->where('office_id', $office_id);
             })
