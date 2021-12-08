@@ -58,7 +58,7 @@ class ChatRoomController extends Controller
     }
 
     /**
-     * チャットルーム作成の実行部分
+     * チャットルーム作成の受け取り部分
      */
     public function store(ChatRoomRequest $request) {
 
@@ -98,6 +98,63 @@ class ChatRoomController extends Controller
         }
 
         return redirect()->route("chat_room.index");
+    }
+
+    /**
+     * チャットルーム作成の実行部分
+     * @param Request $request
+     * @return int id
+     */
+    public function storeDetail(Request $request) {
+
+        //ログイン中のユーザーデータを取得
+        $user = Auth::user();
+        
+        //各種リクエストのデータを取得
+        $roomTitle = $request->input("room_title");
+        $officeId = $request->input("office_id");
+        $targetUsers = $request->input("target_users");
+        if(isset($targetUsers))
+            $joinUsersId = explode(",", $targetUsers);
+
+        //現在時刻を取得
+        $now = Carbon::now()->isoFormat('YYYY-MM-DD HH:mm:ss');
+
+        //データをデータベースに登録
+        $chatRoom = null;
+        DB::transaction(function () use($user, $roomTitle, $officeId, $joinUsersId, $now) {
+            $chatRoom = ChatRoom::create([
+                "room_title" => $roomTitle,
+                "distinction_number" => 4,
+                "office_id" => $officeId,
+                "create_user_id" => $user->id,
+                "update_user_id" => $user->id,
+                "created_at" => $now,
+                "updated_at" => $now
+            ]);
+
+            if(isset($joinUsersId)) {
+                $aItem = [];
+                foreach($joinUsersId as $joinUserId) {
+                    array_push($aItem, [
+                        "chat_room_id" => $chatRoom->id,
+                        "user_id" => $joinUserId,
+                        "create_user_id" => $user->id,
+                        "update_user_id" => $user->id,
+                        "created_at" => $now,
+                        "updated_at" => $now
+                    ]);
+                }
+
+                $aChunk = array_chunk($aitem, 100);
+                foreach($aChunk as $chunk) {
+                    ChatRoom__User::insert($chunk);
+                }
+            }
+        });
+
+        if(isset($chatRoom)) return $chatRoom->id;
+        return -1;
     }
 
     /**
