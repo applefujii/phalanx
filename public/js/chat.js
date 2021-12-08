@@ -27,6 +27,12 @@ $(() => {
     // 入力部のデフォルト高さ
     const chat_text_height_default = $('#chat_text').outerHeight();
 
+    // 入力部の１行の高さ
+    const chat_text_line_height = $("#chat_text").css('line-height').replace(/[^0-9.]/g, '');
+
+    // 最下ボタンのデフォルト位置のフッターとの差分
+    const to_bottom_position_difference = $('#to_bottom').css('bottom').replace(/[^0-9.]/g, '') - footer_height_default;
+
     // ----------------------------初回チャット読み込み----------------------------
     // Ajaxリクエスト
     $.ajaxSetup({
@@ -124,12 +130,13 @@ $(() => {
         // 入力値の行数
         let rows = $("#chat_text").val().split('\n').length;
         
-        // 行数に応じてフッター等の高さ調整
         if (rows > maxRows()) {
             rows = maxRows();
         }
-        let height = $("#chat_text").css('line-height').replace(/[^0-9.]/g, '') * (rows -1);
-        changeHeights(height);
+        // 増やす高さ
+        let add_height = chat_text_line_height * (rows -1);
+        // 行数に応じてフッター等の高さ調整
+        changeHeights(add_height);
     });
 
     //スクロールしたら
@@ -364,17 +371,15 @@ $(() => {
     }
 
     // フッター等の高さ調整
-    function changeHeights(height) {
-        let scrollTop = $("#chat_scroll").scrollTop();
-        $('#chat_text').innerHeight(chat_text_height_default + height);
-        $('#chat_footer').innerHeight(footer_height_default + height);
+    function changeHeights(add_height) {
+        $('#chat_text').innerHeight(chat_text_height_default + add_height);
+        $('#chat_footer').innerHeight(footer_height_default + add_height);
+        $("#to_bottom").css({bottom: footer_height_default + to_bottom_position_difference + add_height});
+        $("#new").css({bottom: footer_height_default + to_bottom_position_difference + add_height});
+        $("#error").css({bottom: footer_height_default + to_bottom_position_difference + add_height});
         $("#chat_scroll").innerHeight(
             $(window).height() - $('nav').outerHeight() - $('#chat_header').outerHeight() - $('#chat_footer').outerHeight()
         );
-        $("#chat_scroll").scrollTop(scrollTop + height);
-        $("#to_bottom").css({bottom: footer_height_default + height});
-        $("#new").css({bottom: footer_height_default + height});
-        $("#error").css({bottom: footer_height_default + height});
     }
 
     // フッターの最大行数
