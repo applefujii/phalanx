@@ -11,7 +11,7 @@
 @section('button_name', '更新')
 
 @section('back')
-href="{{ route('trial_application_manage.index') }}"
+href="{{ session()->get('index_url.trial_application_manage') ?? route('trial_application_manage.index') }}"
 @endsection
 
 @section('back_name', '取り消し')
