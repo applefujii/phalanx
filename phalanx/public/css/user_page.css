@@ -1,112 +1,148 @@
-body{
-  font-family:"Yu Gothic", "游ゴシック", YuGothic, "游ゴシック体", "ヒラギノ角ゴ Pro W3", "メイリオ", sans-serif;
+.pagelayout {
+  display: flex;
+  justify-content: center;
 }
 
-.btn{
+.buttons-container {
+  display:flex;
+  width: 100%;
+  justify-content: center;
+}
+
+.buttons-first-column,
+.buttons-second-column {
+  display:flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.buttons-first-column > button,
+.buttons-second-column > button {
+  height: 60px;
+  font-size: 1rem;
+  display: block;
+  margin: 0.5rem;
+  border-radius: 0.5rem;
+}
+
+
+.sidebar {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  text-align: center;
+}
+
+.sidebar-position-base {
+  width: 100%;
+  position: relative;
+}
+
+.sidebar-container {
+  overflow: auto;
+  width: 100%;
+}
+
+.sidebar-container * {
+  margin: 1rem;
+}
+
+.notification-date-header {
+  display: flex;
+  align-items: center;
+  background: radial-gradient(#f8fafc, #f8fafcb6, #f8fafc00);
+}
+
+.notification-date-header:before,
+.notification-date-header:after {
+  content: "";
+  height: 1px;
+  flex-grow: 1;
+  background-color:mediumblue;
+  margin: 1rem;
+}
+
+.notification-content {
+  border: 2px solid black;
+  border-radius: 1rem;
+  white-space:pre;
+  padding: 1rem;
+  font-size: 1rem;
+  text-align: left;
+}
+
+@media only screen and (min-width: 768px) {
+  .buttons-first-column > button {
     width: 300px;
-    height: 300px;
-    top: 60px;
-    left:250px;
-    border-radius: 1000px;
-    position:relative;
-}
+  }
 
-.btnb{
-  width: 300px;
-  height: 250px;
-  top: 0px;
-  left:100px;
-  border-radius: 1000px;
-  position:relative;
-}
+  .buttons-second-column > button {
+    width: 200px;
+  }
 
-.btn:after {
-    margin: 0 1rem;
+  .chat-link-button {
+    height: 280px!important;
+    font-size: 3rem!important; 
+    border-radius: 3rem!important;
+  }
+
+  .sidebar:before {
     content: "";
     width: 1px;
-    height: 150%;
-    background-color: #000;
+    height: 70vh;
+    flex-grow: 1;
+    background-color: black;
+  }
+
+  .sidebar-container {
+    overflow: auto;
+    height: 80vh;
+  }
+  
+  .notification {
+    width: 60%;
+  }
+
+  .sidebar-top {
     position: absolute;
-    left: 150%;
+    margin: 0;
+    top: 2.5rem;
+    width: 100%;
+    height: 30px;
+    background: linear-gradient(#f8fafc 20%, #ffffff00 100%);
   }
 
-  .btnb:after {
-    margin: 0 1rem;
-    content: "";
-    width: 1px;
-    height: 180%;
-    background-color: #000;
+  .sidebar-bottom {
     position: absolute;
-    left: 180%;
-    top:  -10%;
+    margin: 0;
+    top: calc(80vh + 1rem);
+    width: 100%;
+    height: 30px;
+    background: linear-gradient(rgba(255,255,255,0) 0, #f8fafc 70%);
   }
-
-  .scj{
-    top: -300px;
-    left:950px;
-    position:relative;
-  }
-
-  .scjb{
-    top: -430px;
-    left:950px;
-    position:relative;
-  }
-
-  .txt{
-    display:inline-block;
-    width: 250px;
-    height:110px;
-    border-radius: 10px;
-    padding: 0.5em 1em;
-    margin: 2em 0;
-   /*  font-weight: bold; */
-    border: solid 1px #000000;
-    margin: 0; 
-    padding: 0;
-    top: -260px;
-    left:850px;
-    position:relative;
-  }
-
-  .txtb{
-    display:inline-block;
-    width: 250px;
-    height:110px;
-    border-radius: 10px;
-    padding: 0.5em 1em;
-    margin: 2em 0;
-   /*  font-weight: bold; */
-    border: solid 1px #000000;
-    margin: 0; 
-    padding: 0;
-    top: -400px;
-    left:850px;
-    position:relative;
-  }
-
-  .tkn{
-    width: 300px;
-    height: 50px;
-    top: 30px;
-    left:100px;
-    border-radius: 1000px;
-    position:relative;
-}
-.mst{
-    width: 300px;
-    height: 50px;
-    top: 50px;
-    left:100px;
-    border-radius: 1000px;
-    position:relative;
 }
 
-.room{
-    width: 190px;
-    height: 70px;
-    top: -350px;
-    left:430px;
-    border-radius: 1000px;
-    position:relative;
+@media only screen and (max-width: 767px) {
+  .pagelayout {
+    flex-direction: column-reverse;
+  }
+
+  .buttons-container {
+    flex-direction: column;
+  }
+
+  .buttons-first-column > button,
+  .buttons-second-column > button {
+    width: 80%;
+  }
+
+  .chat-link-button {
+    font-size: 3rem!important;
+    width: 100%!important;
+    height: 80px!important;
+  }
+  
+  .notification {
+    width: 100%;
+  }
 }
