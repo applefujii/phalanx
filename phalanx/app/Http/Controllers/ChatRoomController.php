@@ -58,9 +58,21 @@ class ChatRoomController extends Controller
     }
 
     /**
-     * チャットルーム作成の実行部分
+     * チャットルーム作成の受け取り部分
      */
     public function store(ChatRoomRequest $request) {
+
+        $id = $this->storeDetail($request);
+
+        return redirect()->route("chat_room.index");
+    }
+
+    /**
+     * チャットルーム作成の実行部分
+     * @param Request $request
+     * @return int id
+     */
+    public function storeDetail(Request $request) {
 
         //ログイン中のユーザーデータを取得
         $user = Auth::user();
@@ -69,35 +81,47 @@ class ChatRoomController extends Controller
         $roomTitle = $request->input("room_title");
         $officeId = $request->input("office_id");
         $targetUsers = $request->input("target_users");
-        $joinUsersId = explode(",", $targetUsers);
+        if(isset($targetUsers))
+            $joinUsersId = explode(",", $targetUsers);
 
         //現在時刻を取得
         $now = Carbon::now()->isoFormat('YYYY-MM-DD HH:mm:ss');
 
-        //Chat_roomインスタンスを作成、各種データを挿入後登録
-        $chatRoom = new ChatRoom();
-        $chatRoom->room_title = $roomTitle;
-        $chatRoom->distinction_number = 4;
-        $chatRoom->office_id = $officeId;
-        $chatRoom->create_user_id = $user->id;
-        $chatRoom->update_user_id = $user->id;
-        $chatRoom->created_at = $now;
-        $chatRoom->updated_at = $now;
-        $chatRoom->save();
+        //データをデータベースに登録
+        $chatRoom = null;
+        DB::transaction(function () use($user, $roomTitle, $officeId, $joinUsersId, $now) {
+            $chatRoom = ChatRoom::create([
+                "room_title" => $roomTitle,
+                "distinction_number" => 4,
+                "office_id" => $officeId,
+                "create_user_id" => $user->id,
+                "update_user_id" => $user->id,
+                "created_at" => $now,
+                "updated_at" => $now
+            ]);
 
-        //チャット参加者ごとにチャットルーム-ユーザー中間テーブルのデータを作成
-        foreach($joinUsersId as $joinUserId) {
-            $chatRoomUser = new ChatRoom__User();
-            $chatRoomUser->chat_room_id = $chatRoom->id;
-            $chatRoomUser->user_id = $joinUserId;
-            $chatRoomUser->create_user_id = $user->id;
-            $chatRoomUser->update_user_id = $user->id;
-            $chatRoomUser->created_at = $now;
-            $chatRoomUser->updated_at = $now;
-            $chatRoomUser->save();
-        }
+            if(isset($joinUsersId)) {
+                $aItem = [];
+                foreach($joinUsersId as $joinUserId) {
+                    array_push($aItem, [
+                        "chat_room_id" => $chatRoom->id,
+                        "user_id" => $joinUserId,
+                        "create_user_id" => $user->id,
+                        "update_user_id" => $user->id,
+                        "created_at" => $now,
+                        "updated_at" => $now
+                    ]);
+                }
 
-        return redirect()->route("chat_room.index");
+                $aChunk = array_chunk($aitem, 100);
+                foreach($aChunk as $chunk) {
+                    ChatRoom__User::insert($chunk);
+                }
+            }
+        });
+
+        if(isset($chatRoom)) return $chatRoom->id;
+        return -1;
     }
 
     /**
