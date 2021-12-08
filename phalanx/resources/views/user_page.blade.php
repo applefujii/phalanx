@@ -1,64 +1,52 @@
 @extends('layouts.app')
+@section('css')
+<link href="{{ asset('css/user_page.css') }}" rel="stylesheet">
+@endsection
 @section('content')
-
-<!--@author Yubaru Nozato-->
-
-<!DOCTYPE html>
-<html lang="ja">
-<head>
-<meta charset="UTF-8">
-<link rel="stylesheet" 
-    href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" 
-    integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z" 
-    crossorigin="anonymous">
-    <link rel="stylesheet" 
-    href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" 
-    integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z" 
-    crossorigin="anonymous">
-  <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
-  <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery.tablesorter/2.31.0/js/jquery.tablesorter.min.js"></script>
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jquery.tablesorter/2.31.0/css/theme.default.min.css">
-  <link href="{{asset('/css/user_page.css?202111124')}}" rel="stylesheet">
-</head>
-
-<body>
-@if (Auth::user()->user_type_id === 2 or Auth::user()->user_type_id === 3)
-<br>
-<a href="{{ route('chat.index') }}" type="button" class="btn btn-primary text-center d-flex 
-align-items-center justify-content-center rounded"><h1>チ ャ ッ ト</h1></a>
-<div class="line"></div>
-<h3 class="scj">予定</h3>
-<div class="txt">
-&nbsp&nbsp2020/03/16 12:45～<br>
-&nbsp&nbsp2020/03/16 14:30<br><br>
-
-&nbsp&nbspアップル梅田体験
-
+<div class="container">
+  <div class="pagelayout">
+    <div class="buttons-container">
+      <div class="buttons-first-column">
+        <button class="btn btn-primary chat-link-button" onclick="location.href='{{ route("chat.index") }}'">チャット</button>
+        <button class="btn btn-primary" onclick="location.href='{{ route("chat_room.index") }}'">チャットルーム管理</button>
+        <button class="btn btn-primary" onclick="location.href='{{ route("notification.index") }}'">通知管理</button>
+        <button class="btn btn-primary" onclick="location.href='{{ route("trial_application_manage.index") }}'">体験・見学申込一覧</button>
+      </div>
+      <div class="buttons-second-column">
+        <button class="btn btn-primary" onclick="location.href='{{ route("user.index") }}'">ユーザーマスタ管理</button>
+        <button class="btn btn-primary" onclick="location.href='{{ route("office.index") }}'">事業所マスタ管理</button>
+      </div>
+    </div>
+    <div class="notification">
+      <div class="sidebar">
+        <div class="sidebar-position-base">
+          <h2>予定</h2>
+          <div class="sidebar-container">
+            <div>
+              <div class="notification-date-header sticky-top">今週</div>
+              <div class="notification-content">{{ "2020/03/16 12:45～\n2020/03/16 14:30\n\nアップル梅田体験" }}</div>
+            </div>
+            <div>
+              <div class="notification-date-header sticky-top">来週以降</div>
+              <div class="notification-content">{{ "2020/08/05\n\n休日開所" }}</div>
+              <div class="notification-content">{{ "2020/08/06 ～\n2020/08/08\n\nアップル梅田体験" }}</div>
+              <div class="notification-content">{{ "2020/08/06 ～\n2020/08/08\n\nアップル梅田体験" }}</div>
+              <div class="notification-content">{{ "2020/08/06 ～\n2020/08/08\n\nアップル梅田体験" }}</div>
+              <div class="notification-content">{{ "2020/08/06 ～\n2020/08/08\n\nアップル梅田体験" }}</div>
+              <div class="notification-content">{{ "2020/08/06 ～\n2020/08/08\n\nアップル梅田体験" }}</div>
+              <div class="notification-content">{{ "2020/08/06 ～\n2020/08/08\n\nアップル梅田体験" }}</div>
+              <div class="notification-content">{{ "2020/08/06 ～\n2020/08/08\n\nアップル梅田体験" }}</div>
+              <div class="notification-content">{{ "2020/08/06 ～\n2020/08/08\n\nアップル梅田体験" }}</div>
+              <div class="notification-content">{{ "2020/08/06 ～\n2020/08/08\n\nアップル梅田体験" }}</div>
+              <div class="notification-content">{{ "2020/08/06 ～\n2020/08/08\n\nアップル梅田体験" }}</div>
+              <div class="notification-content">{{ "2020/08/06 ～\n2020/08/08\n\nアップル梅田体験" }}</div>
+            </div>
+          </div>
+          <div class="sidebar-top"></div>
+          <div class="sidebar-bottom"></div>
+        </div>
+      </div>
+    </div>
+  </div>
 </div>
-@endif
-
-@if (Auth::user()->user_type_id === 1)
-<br>
-<a href="{{ route('chat.index') }}" type="button" class="btnb btn-primary text-center d-flex 
-align-items-center justify-content-center rounded"><h1>チ ャ ッ ト</h1></a>
-<a href="{{ route('trial_application_manage.index') }}" type="button" class="tkn btn-primary text-center d-flex 
-align-items-center justify-content-center rounded"><h4>体験・見学申込一覧</h4></a>
-<a href="{{ route('office.create') }}" type="button" class="mst btn-primary text-center d-flex 
-align-items-center justify-content-center rounded"><h4>マスタ管理</h4></a>
-<a href="{{ route('chat_room.index') }}" type="button" class="room btn-primary text-center d-flex 
-align-items-center justify-content-center rounded"><h4>チャットルーム管理</h4></a>
-
-
-<div class="line"></div>
-<h3 class="scjb">予定</h3>
-<div class="txtb">
-&nbsp&nbsp2020/03/16 12:45～<br>
-&nbsp&nbsp2020/03/16 14:30<br><br>
-
-&nbsp&nbspアップル梅田体験
-
-</div>
-
-@endif
-</body>
 @endsection
