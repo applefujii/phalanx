@@ -24,8 +24,8 @@ class CreateTrialApplicationsTable extends Migration
             $table->string('name_kana', 512);
             $table->unsignedBigInteger('office_id');
             $table->date('desired_date');
-            $table->string('email', 512);
-            $table->string('phone_number', 255);
+            $table->string('email', 512)->nullable()->default(null);
+            $table->string('phone_number', 255)->nullable()->default(null);
             $table->boolean('is_checked')->default(false);
             $table->unsignedBigInteger('update_user_id')->nullable()->default(null);
             $table->unsignedBigInteger('delete_user_id')->nullable()->default(null);

@@ -11,10 +11,6 @@
     overflow-wrap: normal;
 }
 
-.information, .invalid-feedback {
-    max-width: 200px;
-}
-
 .btn {
     min-width: 100px;
 }
