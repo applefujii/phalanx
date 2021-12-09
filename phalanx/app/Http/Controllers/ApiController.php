@@ -44,6 +44,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\DB;
 
 use App\Models\Notification;
@@ -384,13 +385,23 @@ class ApiController extends Controller
     {
         // $conで通知コントローラーを使える
         $con = app()->make("App\Http\Controllers\NotificationController");
+
+        $rules = [
+            "content" => "required|max:500",
+            "start_at" => "required|date",//date_format:'Y-m-d H:i:s'
+            "end_at" => "required|date|after:start_at",//date_format:'Y-m-d H:i:s'
+            "is_all_day" => "required|boolean"
+        ];
         
         //-- 1件
         if( isset($request->record) ) {
             try {
-                $id = $con->storeDetail( new Request($request->record) );
+                $r = new Request($request->record);
+                $validator = Validator::make($r->query(), $rules);
+                if($validator->fails()) throw( new \Exception("バリデーションエラー") );
+                $id = $con->storeDetail( $r );
             } catch(\Exception $e) {
-                return json_encode( '{ result : "Failure" }' );
+                return json_encode( '{ result : "Failure", errorMsg : ' . $e . ' }' );
             }
             return json_encode( '{ result : "Success", id : '.$id.' }' );
         }
@@ -398,15 +409,18 @@ class ApiController extends Controller
         else if( isset($request->records) ) {
             $ids = "";
             try {
-                DB::transaction(function() use(&$ids, $con, $request) {
+                DB::transaction(function() use(&$ids, $con, $request, $rules) {
                     foreach($request->records as $r) {
-                        $id = $con->storeDetail( new Request($r) );
+                        $r = new Request($r);
+                        $validator = Validator::make($r->query(), $rules);
+                        if($validator->fails()) throw( new \Exception("バリデーションエラー") );
+                        $id = $con->storeDetail( $r );
                         $ids .= strval($id) . ", ";
                     }
                     $ids = preg_replace( "/, $/u", "", $ids );
                 });
             } catch( \Exception $e ) {
-                return json_encode( '{ result : "Failure" }' );
+                return json_encode( '{ result : "Failure", errorMsg : ' . $e . ' }' );
             }
             return json_encode( '{ result : "Success", ids : ['. $ids .'] }' );
         }
@@ -424,26 +438,39 @@ class ApiController extends Controller
         // $conで通知コントローラーを使える
         $con = app()->make("App\Http\Controllers\NotificationController");
 
+        $rules = [
+            "content" => "required|max:500",
+            "start_at" => "required|date",//date_format:'Y-m-d H:i:s'
+            "end_at" => "required|date|after:start_at",//date_format:'Y-m-d H:i:s'
+            "is_all_day" => "required|boolean"
+        ];
+
         if( isset($request->record) ) {
             try {
-                $con->updateDetail( new Request($request->record), $request->record["id"] );
+                $r = new Request($request->record);
+                $validator = Validator::make($r->query(), $rules);
+                if($validator->fails()) throw( new \Exception("バリデーションエラー") );
+                $con->updateDetail( $r, $r->id );
             } catch( \Exception $e ) {
-                return json_encode( '{ result : "Failure" }' );
+                return json_encode( '{ result : "Failure", errorMsg : ' . $e . ' }' );
             }
-            return json_encode( '{ result : "Success", id : ['. $request->record["id"] .'] }' );
+            return json_encode( '{ result : "Success", id : ['. $r->id .'] }' );
         }
         else if( isset($request->records) ) {
             $ids = "";
             try {
-                DB::transaction(function() use(&$ids, $con, $request) {
+                DB::transaction(function() use(&$ids, $con, $request, $rules) {
                     foreach($request->records as $r) {
-                        $con->updateDetail( new Request($r), $r["id"] );
+                        $r = new Request($r);
+                        $validator = Validator::make($r->query(), $rules);
+                        if($validator->fails()) throw( new \Exception("バリデーションエラー") );
+                        $con->updateDetail( $r, $r["id"] );
                         $ids .= $r["id"] . ", ";
                     }
                     $ids = preg_replace( "/, $/u", "", $ids );
                 });
             } catch( \Exception $e ) {
-                return json_encode( '{ result : "Failure" }' );
+                return json_encode( '{ result : "Failure", errorMsg : ' . $e . ' }' );
             }
             return json_encode( '{ result : "Success", ids : ['. $ids .'] }' );
         }
