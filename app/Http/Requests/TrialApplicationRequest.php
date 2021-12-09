@@ -32,7 +32,7 @@ class TrialApplicationRequest extends FormRequest
             ],
             'name_kana' => [
                 'required',
-                'regex:/^[ァ-ヴー]+$/u',
+                'regex:/^[ァ-ヴー\s　]+$/u',
                 'max:50',
             ],
             'office_id' => [
@@ -47,11 +47,13 @@ class TrialApplicationRequest extends FormRequest
                 new HolidayRule(),
             ],
             'email' => [
-                'required',
+                'required_without:phone_number',
+                'nullable',
                 'email:rfc',
             ],
             'phone_number' => [
-                'required',
+                'required_without:email',
+                'nullable',
                 'regex:/^[0-9-]+$/u',
             ],
         ];
