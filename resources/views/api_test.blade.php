@@ -46,13 +46,13 @@
         //-- API1
         $("#api1").on('click', function(){
             $.ajax({
-                type: "POST",
+                type: "PUT",
                 url: siteUrl + "api/v1.0/set/notifications.json", // 送り先
                 data: {
                     records : [
-                        { content : "API複数登録1", start_at :"2022/01/01 00:00:00" , end_at : "2022/01/01 00:00:00", is_all_day : "0" },
-                        { content : "API複数登録2", start_at :"2022/01/01 00:00:00" , end_at : "2022/01/01 00:00:00", is_all_day : "1" },
-                        { content : "API複数登録3", start_at :"2022/01/01 00:00:00" , end_at : "2022/01/01 00:00:00", is_all_day : "0" }
+                        { id:3, content : "API複数更新1", start_at :"2022/01/01 00:00:00" , end_at : "2022/01/02 00:00:00", is_all_day : "0" },
+                        { id:4,content : "API複数更新2", start_at :"2022/01/01 00:00:00" , end_at : "2022/01/02 00:00:00", is_all_day : "1" },
+                        { id:5,content : "API複数更新3", start_at :"2022/01/01 00:00:00" , end_at : "2022/01/02 00:00:00", is_all_day : "0" }
                     ]
                 },   // 渡したいデータをオブジェクトで渡す
                 dataType : "json",  // データ形式を指定
