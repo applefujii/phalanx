@@ -6,6 +6,10 @@
 src="{{ asset('css/images/apple.png') }}"
 @endsection
 
+@section('official')
+href="https://apple-osaka.com/"
+@endsection
+
 @section('trial_form')
 href="{{ route('trial_application_form.index', ['office_id' => 1]) }}"
 @endsection
