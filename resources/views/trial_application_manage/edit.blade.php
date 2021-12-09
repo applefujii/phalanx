@@ -8,10 +8,10 @@
         @csrf
 @endsection
 
-@section('button_name', '更新')
-
-@section('back')
-href="{{ session()->get('index_url.trial_application_manage') ?? route('trial_application_manage.index') }}"
+@section('submit_button')
+<button class="btn btn-primary" type="submit">編集</button>
 @endsection
 
-@section('back_name', '取り消し')
+@section('back_button')
+<a href="{{ session()->get('index_url.trial_application_manage') ?? route('trial_application_manage.index') }}" class="btn btn-secondary back-button">取り消し</a>
+@endsection
