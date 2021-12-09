@@ -140,7 +140,7 @@ class AptitudeQuestionsSeeder extends Seeder
                 'created_at' => '2021-04-01 12:34:56',
             ],
             [
-                'question' => 'どんな仕事があるのか/自分にできる仕事があるのかわからない',
+                'question' => 'どんな仕事があるのか、自分にできる仕事があるのかわからない',
                 'sort' => 120,
                 'score_apple' => 50,
                 'score_mint' => 100,
