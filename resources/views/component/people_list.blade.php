@@ -38,8 +38,7 @@
 </div>
 
 
-{{-- jQuery読み込み --}}
-<script src="{{ asset('js/jquery-3.6.0.min.js') }}"></script>
+
 
 <script>
     var siteUrl = "{{ config('const.url') }}";

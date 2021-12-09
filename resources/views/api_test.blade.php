@@ -74,7 +74,6 @@
                 type: "POST",
                 url: siteUrl + "api/v1.0/get/notifications.json", // 送り先
                 data: {
-                    target_id : 4,
                     sort : "-id"
                 },   // 渡したいデータをオブジェクトで渡す
                 dataType : "json",  // データ形式を指定

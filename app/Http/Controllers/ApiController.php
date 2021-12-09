@@ -548,8 +548,110 @@ class ApiController extends Controller
         return json_encode($chatRoom);
     }
 
-    
+    /**
+     * チャットルーム 登録
+     * @param Request $request 登録情報[room_title, distinction_number, office_id, user_id]
+     * @return json 実行結果
+     */
+    public function ApiStoreChatRooms(Request $request)
+    {
+        $con = app()->make("App\Http\Controllers\ChatRoomController");
+        
+        if( isset($request->record) ) {
+            try {
+                $id = $con->storeDetail( new Request($request->record) );
+            } catch(\Exception $e) {
+                return json_encode( '{ result : "Failure" }' );
+            }
+            return json_encode( '{ result : "Success", id : '.$id.' }' );
+        } else if( isset($request->records) ) {
+            $ids = [];
+            try {
+                DB::transaction(function() use(&$ids, $con, $request) {
+                    foreach($request->records as $r) {
+                        $id = $con->storeDetail( new Request($r) );
+                        $ids[] = $id;
+                    }
+                    $ids = implode(", ", $ids);
+                });
+            } catch( \Exception $e ) {
+                return json_encode( '{ result : "Failure" }' );
+            }
+            return json_encode( '{ result : "Success", ids : ['. $ids .'] }' );
+        }
+        
+        return json_encode( '{ result : "Failure" }' );
+    }
 
+    /**
+     * チャットルーム 更新
+     * @param Request $request 登録情報[id, room_title, office_id]
+     * @return json 実行結果
+     */
+    public function ApiUpdateChatRooms( Request $request )
+    {
+        $con = app()->make("App\Http\Controllers\ChatRoomController");
+
+        if( isset($request->record) ) {
+            try {
+                $id = $con->updateDetail( new Request($request->record), $request->record["id"] );
+            } catch( \Exception $e ) {
+                return json_encode( '{ result : "Failure" }' );
+            }
+            return json_encode( '{ result : "Success", id : ['. $id .'] }' );
+        } else if( isset($request->records) ) {
+            $ids = [];
+            try {
+                DB::transaction(function() use(&$ids, $con, $request) {
+                    foreach($request->records as $r) {
+                        $id = $con->updateDetail( new Request($r), $r["id"] );
+                        $ids[] = $id;
+                    }
+                    $ids = implode(", ", $ids);
+                });
+            } catch( \Exception $e ) {
+                return json_encode( '{ result : "Failure" }' );
+            }
+            return json_encode( '{ result : "Success", ids : ['. $ids .'] }' );
+        }
+
+        return json_encode( '{ result : "Failure" }' );
+    }
+
+    /**
+     * チャットルーム 削除
+     * @param Request $request 登録情報[id]
+     * @return json 実行結果
+     */
+    public function ApiDeleteChatRooms(Request $request)
+    {
+        $con = app()->make("App\Http\Controllers\ChatRoomController");
+
+        if(isset($request->record)) {
+            try {
+                $con->destroy($request->record["id"]);
+            } catch(\Exception $e) {
+                return json_encode('{ result : "Failure" }');
+            }
+            return json_encode('{ result : "Success", id : ['. $request->record["id"] .'] }');
+        } else if(isset($request->records)) {
+            $ids = [];
+            try {
+                DB::transaction(function() use(&$ids, $con, $request) {
+                    foreach($request->records as $r) {
+                        $con->destroy(new Request($r), $r["id"]);
+                        $ids[] = $r["id"];
+                    }
+                    $ids = implode(", ", $ids);
+                });
+            } catch(\Exception $e) {
+                return json_encode('{ result : "Failure" }');
+            }
+            return json_encode( '{ result : "Success", ids : ['. $ids .'] }' );
+        }
+
+        return json_encode('{ result : "Failure" }');
+    }
 
 
     ///////////////////////////////// リレーション //////////////////////////////////////////
