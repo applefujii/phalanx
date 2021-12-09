@@ -80,7 +80,9 @@ class ChatRoomController extends Controller
         
         //各種リクエストのデータを取得
         $roomTitle = $request->input("room_title");
+        $distinctionNumber = $request->input("distinction_number", 4);
         $officeId = $request->input("office_id");
+        $userId = $request->input("user_id", null);
         $targetUsers = $request->input("target_users");
         if(isset($targetUsers))
             $joinUsersId = explode(",", $targetUsers);
@@ -90,11 +92,12 @@ class ChatRoomController extends Controller
 
         //データをデータベースに登録
         $chatRoom = null;
-        DB::transaction(function () use($user, $roomTitle, $officeId, $joinUsersId, $now) {
+        DB::transaction(function () use($user, $roomTitle, $distinctionNumber, $officeId, $userId, $joinUsersId, $now) {
             $chatRoom = ChatRoom::create([
                 "room_title" => $roomTitle,
-                "distinction_number" => 4,
+                "distinction_number" => $distinctionNumber,
                 "office_id" => $officeId,
+                "user_id" => $userId,
                 "create_user_id" => $user->id,
                 "update_user_id" => $user->id,
                 "created_at" => $now,
@@ -150,7 +153,7 @@ class ChatRoomController extends Controller
     }
 
     /**
-     * チャットルーム編集の実行部分
+     * チャットルーム編集の受け取り部分
      */
     public function update(ChatRoomRequest $request, $id) {
 
@@ -205,6 +208,43 @@ class ChatRoomController extends Controller
         }
 
         return redirect()->route("chat_room.index");
+    }
+
+    /**
+     * チャットルーム更新の実行部分
+     * @param Request $request
+     * @return int id
+     */
+    public function updateDetail(Request $request, $id) {
+
+        //ログイン中のユーザーデータを取得
+        $user = Auth::user();
+        
+        //各種リクエストのデータを取得
+        $roomTitle = $request->input("room_title");
+        $officeId = $request->input("office_id");
+        $targetUsers = $request->input("target_users");
+        if(isser($targetUsers))
+            $joinUsersId = explode(",", $targetUsers);
+
+        //現在時刻を取得
+        $now = Carbon::now()->isoFormat('YYYY-MM-DD HH:mm:ss');
+
+        //データをデータベースに登録
+        $chatRoom = null;
+        DB::transaction(function() use(&$chatRoom, $id, $user, $roomTitle, $officeId, $joinUsersId) {
+            $chatRoom = ChatRoom::where("id", $id)->update([
+                "room_title" => $roomTitle,
+                "officeId" => $officeId,
+                "update_user_id" => $user->id,
+                "updated_at" => $now
+            ]);
+
+            //参加者から外されたユーザーのデータを中間テーブルから削除
+            ChatRoom__User::where("chat_room_id", $id)->whereNotIn("user_id", $joinUsersId)->delete();
+
+            
+        });
     }
 
     /**

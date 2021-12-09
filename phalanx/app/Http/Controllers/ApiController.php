@@ -612,7 +612,7 @@ class ApiController extends Controller
 
     /**
      * チャットルーム 更新
-     * @param Request $request 登録情報[id, room_title, office_id, user_id]
+     * @param Request $request 登録情報[id, room_title, office_id]
      * @return json 実行結果
      */
     public function ApiUpdateChatRooms( Request $request )

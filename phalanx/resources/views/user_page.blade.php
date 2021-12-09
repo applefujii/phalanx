@@ -11,6 +11,7 @@
         <button class="btn btn-primary" onclick="location.href='{{ route("chat_room.index") }}'">チャットルーム管理</button>
         <button class="btn btn-primary" onclick="location.href='{{ route("notification.index") }}'">通知管理</button>
         <button class="btn @if ($new_trial_applications) btn-warning @else btn-primary @endif" onclick="location.href='{{ route("trial_application_manage.index", ["office_id" => Auth::user()->office_id]) }}'">体験・見学申込一覧</button>
+        <button class="btn btn-primary" onclick="location.href='{{ route("aptitude_question_manage.index") }}'">適性診断質問管理</button>
       </div>
       <div class="buttons-second-column">
         <button class="btn btn-primary" onclick="location.href='{{ route("user.index") }}'">ユーザーマスタ管理</button>
