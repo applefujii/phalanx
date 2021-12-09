@@ -108,7 +108,7 @@
                 @endforeach
             </tbody>
         </table>
-        {{ $trial_applications->appends(request()->query())->links() }}
+        {{ $trial_applications->appends(request()->query())->links('vendor/pagination/pagination_view') }}
         <p>
             <a class="btn btn-secondary" role="button" href="{{ route('user_page') }}">ホームに戻る</a>
         </p>
