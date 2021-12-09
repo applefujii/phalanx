@@ -34715,19 +34715,6 @@ var __WEBPACK_AMD_DEFINE_RESULT__;/**
 
 /***/ }),
 
-/***/ "./resources/css/trial-application-manager/index.css":
-/*!***********************************************************!*\
-  !*** ./resources/css/trial-application-manager/index.css ***!
-  \***********************************************************/
-/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-// extracted by mini-css-extract-plugin
-
-
-/***/ }),
-
 /***/ "./resources/css/notification/index.css":
 /*!**********************************************!*\
   !*** ./resources/css/notification/index.css ***!
@@ -50047,8 +50034,7 @@ module.exports = JSON.parse('{"_args":[["axios@0.21.4","C:\\\\Users\\\\user\\\\D
 /******/ 			"css/user-master/index": 0,
 /******/ 			"css/index-table": 0,
 /******/ 			"css/notification/create_and_edit": 0,
-/******/ 			"css/notification/index": 0,
-/******/ 			"css/trial-application-manager/index": 0
+/******/ 			"css/notification/index": 0
 /******/ 		};
 /******/ 		
 /******/ 		// no chunk on demand loading
@@ -50098,14 +50084,13 @@ module.exports = JSON.parse('{"_args":[["axios@0.21.4","C:\\\\Users\\\\user\\\\D
 /******/ 	// startup
 /******/ 	// Load entry module and return exports
 /******/ 	// This entry module depends on other loaded chunks and execution need to be delayed
-/******/ 	__webpack_require__.O(undefined, ["css/app","css/user-master/create_and_edit","css/user-master/index","css/index-table","css/notification/create_and_edit","css/notification/index","css/trial-application-manager/index"], () => (__webpack_require__("./resources/js/app.js")))
-/******/ 	__webpack_require__.O(undefined, ["css/app","css/user-master/create_and_edit","css/user-master/index","css/index-table","css/notification/create_and_edit","css/notification/index","css/trial-application-manager/index"], () => (__webpack_require__("./resources/sass/app.scss")))
-/******/ 	__webpack_require__.O(undefined, ["css/app","css/user-master/create_and_edit","css/user-master/index","css/index-table","css/notification/create_and_edit","css/notification/index","css/trial-application-manager/index"], () => (__webpack_require__("./resources/css/index-table.css")))
-/******/ 	__webpack_require__.O(undefined, ["css/app","css/user-master/create_and_edit","css/user-master/index","css/index-table","css/notification/create_and_edit","css/notification/index","css/trial-application-manager/index"], () => (__webpack_require__("./resources/css/user-master/index.css")))
-/******/ 	__webpack_require__.O(undefined, ["css/app","css/user-master/create_and_edit","css/user-master/index","css/index-table","css/notification/create_and_edit","css/notification/index","css/trial-application-manager/index"], () => (__webpack_require__("./resources/css/user-master/create_and_edit.css")))
-/******/ 	__webpack_require__.O(undefined, ["css/app","css/user-master/create_and_edit","css/user-master/index","css/index-table","css/notification/create_and_edit","css/notification/index","css/trial-application-manager/index"], () => (__webpack_require__("./resources/css/trial-application-manager/index.css")))
-/******/ 	__webpack_require__.O(undefined, ["css/app","css/user-master/create_and_edit","css/user-master/index","css/index-table","css/notification/create_and_edit","css/notification/index","css/trial-application-manager/index"], () => (__webpack_require__("./resources/css/notification/index.css")))
-/******/ 	var __webpack_exports__ = __webpack_require__.O(undefined, ["css/app","css/user-master/create_and_edit","css/user-master/index","css/index-table","css/notification/create_and_edit","css/notification/index","css/trial-application-manager/index"], () => (__webpack_require__("./resources/css/notification/create_and_edit.css")))
+/******/ 	__webpack_require__.O(undefined, ["css/app","css/user-master/create_and_edit","css/user-master/index","css/index-table","css/notification/create_and_edit","css/notification/index"], () => (__webpack_require__("./resources/js/app.js")))
+/******/ 	__webpack_require__.O(undefined, ["css/app","css/user-master/create_and_edit","css/user-master/index","css/index-table","css/notification/create_and_edit","css/notification/index"], () => (__webpack_require__("./resources/sass/app.scss")))
+/******/ 	__webpack_require__.O(undefined, ["css/app","css/user-master/create_and_edit","css/user-master/index","css/index-table","css/notification/create_and_edit","css/notification/index"], () => (__webpack_require__("./resources/css/index-table.css")))
+/******/ 	__webpack_require__.O(undefined, ["css/app","css/user-master/create_and_edit","css/user-master/index","css/index-table","css/notification/create_and_edit","css/notification/index"], () => (__webpack_require__("./resources/css/user-master/index.css")))
+/******/ 	__webpack_require__.O(undefined, ["css/app","css/user-master/create_and_edit","css/user-master/index","css/index-table","css/notification/create_and_edit","css/notification/index"], () => (__webpack_require__("./resources/css/user-master/create_and_edit.css")))
+/******/ 	__webpack_require__.O(undefined, ["css/app","css/user-master/create_and_edit","css/user-master/index","css/index-table","css/notification/create_and_edit","css/notification/index"], () => (__webpack_require__("./resources/css/notification/index.css")))
+/******/ 	var __webpack_exports__ = __webpack_require__.O(undefined, ["css/app","css/user-master/create_and_edit","css/user-master/index","css/index-table","css/notification/create_and_edit","css/notification/index"], () => (__webpack_require__("./resources/css/notification/create_and_edit.css")))
 /******/ 	__webpack_exports__ = __webpack_require__.O(__webpack_exports__);
 /******/ 	
 /******/ })()
