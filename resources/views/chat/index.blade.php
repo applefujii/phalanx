@@ -26,13 +26,7 @@
                                 @if ($userRoom->user->user_type_id == 2 && $userRoom->user->office_id == $office->id)
                                     <div class="col-6 col-md-4 col-xl-3 my-1 d-flex align-items-center">
                                         <input type="checkbox" class="mr-1 {{ $office->en_office_name }}-checkBox" name="user" value="{{ $userRoom->id }}">
-                                        <a href="{{ route('chat.show', $userRoom->id) }}"
-                                            @if($userRoom->chat_texts()->whereNull("deleted_at")->where("create_user_id", "<>", Auth::id())->first() !== null)
-                                                @if($userRoom->chat_room__user()->where("user_id", Auth::id())->first()->newest_read_chat_text_id != $userRoom->chat_texts()->whereNull("deleted_at")->where("create_user_id", "<>", Auth::id())->orderBy("id", "desc")->first()->id)
-                                                    class="text-danger"
-                                                @endif
-                                            @endif
-                                        >
+                                        <a href="{{ route('chat.show', $userRoom->id) }}" class="{{ $userRoom->id }}">
                                             {{ $userRoom->room_title }}
                                         </a>
                                     </div>
@@ -56,13 +50,7 @@
                                 @if ($userRoom->user->user_type_id == 2 && $userRoom->user->office_id == $office->id)
                                     <div class="col-6 col-md-4 col-xl-3 my-1 d-flex align-items-center">
                                         <input type="checkbox" class="mr-1 {{ $office->en_office_name }}-checkBox" name="user" value="{{ $userRoom->id }}">
-                                        <a href="{{ route('chat.show', $userRoom->id) }}"
-                                            @if($userRoom->chat_texts()->whereNull("deleted_at")->where("create_user_id", "<>", Auth::id())->first() !== null)
-                                                @if($userRoom->chat_room__user()->where("user_id", Auth::id())->first()->newest_read_chat_text_id != $userRoom->chat_texts()->whereNull("deleted_at")->where("create_user_id", "<>", Auth::id())->orderBy("id", "desc")->first()->id)
-                                                    class="text-danger"
-                                                @endif
-                                            @endif
-                                        >
+                                        <a href="{{ route('chat.show', $userRoom->id) }}" class="{{ $userRoom->id }}">
                                             {{ $userRoom->room_title }}
                                         </a>
                                     </div>
@@ -87,13 +75,7 @@
                         @if ($userRoom->user->user_type_id == 3)
                             <div class="col-6 col-md-4 col-xl-3 my-1 d-flex align-items-center">
                                 <input type="checkbox" class="mr-1 trial-checkBox" name="user" value="{{ $userRoom->id }}">
-                                <a href="{{ route('chat.show', $userRoom->id) }}"
-                                    @if($userRoom->chat_texts()->whereNull("deleted_at")->where("create_user_id", "<>", Auth::id())->first() !== null)
-                                        @if($userRoom->chat_room__user()->where("user_id", Auth::id())->first()->newest_read_chat_text_id != $userRoom->chat_texts()->whereNull("deleted_at")->where("create_user_id", "<>", Auth::id())->orderBy("id", "desc")->first()->id)
-                                            class="text-danger"
-                                        @endif
-                                    @endif
-                                >
+                                <a href="{{ route('chat.show', $userRoom->id) }}" class="{{ $userRoom->id }}">
                                     {{ $userRoom->room_title }}
                                 </a>
                             </div>

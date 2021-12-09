@@ -215,7 +215,7 @@ class ChatRoomController extends Controller
             }
         });
 
-        if(isset($chatRoom)) return ChatRoom::where("id", $id)->first()->id;
+        if(isset($chatRoom)) return $id;
         return -1;
     }
 
