@@ -60,13 +60,7 @@ if(isset($chat_room)) {
                         <div class="col-12 pt-3">
                             <h5>リテラル</h5>
                             <ul class="col-12 pt-1">
-                                <li><a href="{{ route("chat.show", $group->id) }}"
-                                    @if($group->chat_texts()->whereNull("deleted_at")->where("create_user_id", "<>", Auth::id())->first() !== null)
-                                        @if($group->chat_room__user()->where("user_id", Auth::id())->first()->newest_read_chat_text_id < $group->chat_texts()->whereNull("deleted_at")->where("create_user_id", "<>", Auth::id())->orderBy("id", "desc")->first()->id)
-                                            class="text-danger"
-                                        @endif
-                                    @endif
-                                >
+                                <li><a href="{{ route("chat.show", $group->id) }}" class="{{ $group->id }}">
                                     全職員
                                 </a></li>
                             </ul>
@@ -77,13 +71,7 @@ if(isset($chat_room)) {
                             <h5>その他</h5>
                             <ul class="col-12 pt-1">
                                 @foreach ($otherRooms as $otherRoom)
-                                    <li><a href="{{ route('chat.show', $otherRoom->id) }}"
-                                        @if($otherRoom->chat_texts()->whereNull("deleted_at")->where("create_user_id", "<>", Auth::id())->first() !== null)
-                                            @if($otherRoom->chat_room__user()->where("user_id", Auth::id())->first()->newest_read_chat_text_id != $otherRoom->chat_texts()->whereNull("deleted_at")->where("create_user_id", "<>", Auth::id())->orderBy("id", "desc")->first()->id)
-                                                class="text-danger"
-                                            @endif
-                                        @endif
-                                    >
+                                    <li><a href="{{ route('chat.show', $otherRoom->id) }}" class="{{ $otherRoom->id }}">
                                         {{ $otherRoom->room_title }}
                                     </a></li>
                                 @endforeach
@@ -99,23 +87,11 @@ if(isset($chat_room)) {
                                         @if ($joinRoom->office_id == $office->id)
                                             <li>
                                                 @if ($joinRoom->distinction_number == 4)
-                                                    <a href="{{ route('chat.show', $joinRoom->id) }}"
-                                                        @if($joinRoom->chat_texts()->whereNull("deleted_at")->where("create_user_id", "<>", Auth::id())->first() !== null)
-                                                            @if($joinRoom->chat_room__user()->where("user_id", Auth::id())->first()->newest_read_chat_text_id != $joinRoom->chat_texts()->whereNull("deleted_at")->where("create_user_id", "<>", Auth::id())->orderBy("id", "desc")->first()->id)
-                                                                class="text-danger"
-                                                            @endif
-                                                        @endif
-                                                    >
+                                                    <a href="{{ route('chat.show', $joinRoom->id) }}" class="{{ $joinRoom->id }}">
                                                         {{ $joinRoom->room_title }}
                                                     </a>
                                                 @else
-                                                    <a href="{{ route('chat.show', $joinRoom->id) }}"
-                                                        @if($joinRoom->chat_texts()->whereNull("deleted_at")->where("create_user_id", "<>", Auth::id())->first() !== null)
-                                                            @if($joinRoom->chat_room__user()->where("user_id", Auth::id())->first()->newest_read_chat_text_id != $joinRoom->chat_texts()->whereNull("deleted_at")->where("create_user_id", "<>", Auth::id())->orderBy("id", "desc")->first()->id)
-                                                                class="text-danger"
-                                                            @endif
-                                                        @endif
-                                                    >
+                                                    <a href="{{ route('chat.show', $joinRoom->id) }}" class="{{ $joinRoom->id }}">
                                                         {{ $office->office_name }}職員
                                                     </a>
                                                 @endif
@@ -142,23 +118,11 @@ if(isset($chat_room)) {
                                                 @if ($joinRoom->office_id == $office->id)
                                                     <li>
                                                         @if ($joinRoom->distinction_number == 4)
-                                                            <a href="{{ route('chat.show', $joinRoom->id) }}"
-                                                                @if($joinRoom->chat_texts()->whereNull("deleted_at")->where("create_user_id", "<>", Auth::id())->first() !== null)
-                                                                    @if($joinRoom->chat_room__user()->where("user_id", Auth::id())->first()->newest_read_chat_text_id != $joinRoom->chat_texts()->whereNull("deleted_at")->where("create_user_id", "<>", Auth::id())->orderBy("id", "desc")->first()->id)
-                                                                        class="text-danger"
-                                                                    @endif
-                                                                @endif
-                                                            >
+                                                            <a href="{{ route('chat.show', $joinRoom->id) }}" class="{{ $joinRoom->id }}">
                                                                 {{ $joinRoom->room_title }}
                                                             </a>
                                                         @else
-                                                            <a href="{{ route('chat.show', $joinRoom->id) }}"
-                                                                @if($joinRoom->chat_texts()->whereNull("deleted_at")->where("create_user_id", "<>", Auth::id())->first() !== null)
-                                                                    @if($joinRoom->chat_room__user()->where("user_id", Auth::id())->first()->newest_read_chat_text_id != $joinRoom->chat_texts()->whereNull("deleted_at")->where("create_user_id", "<>", Auth::id())->orderBy("id", "desc")->first()->id)
-                                                                        class="text-danger"
-                                                                    @endif
-                                                                @endif
-                                                            >
+                                                            <a href="{{ route('chat.show', $joinRoom->id) }}" class="{{ $joinRoom->id }}">
                                                                 {{ $office->office_name }}職員
                                                             </a>
                                                         @endif
@@ -192,13 +156,7 @@ if(isset($chat_room)) {
                                     <div class="col-12 pt-3">
                                         <h5>リテラル</h5>
                                         <ul class="col-12 pt-1">
-                                            <li><a href="{{ route("chat.show", $group->id) }}"
-                                                @if($group->chat_texts()->whereNull("deleted_at")->where("create_user_id", "<>", Auth::id())->first() !== null)
-                                                    @if($group->chat_room__user()->where("user_id", Auth::id())->first()->newest_read_chat_text_id != $group->chat_texts()->whereNull("deleted_at")->where("create_user_id", "<>", Auth::id())->orderBy("id", "desc")->first()->id)
-                                                        class="text-danger"
-                                                    @endif
-                                                @endif
-                                            >
+                                            <li><a href="{{ route("chat.show", $group->id) }}" class="{{ $group->id }}">
                                                 全職員
                                             </a></li>
                                         </ul>
@@ -209,13 +167,7 @@ if(isset($chat_room)) {
                                         <h5>その他</h5>
                                         <ul class="col-12 pt-1">
                                             @foreach ($otherRooms as $otherRoom)
-                                                <li><a href="{{ route('chat.show', $otherRoom->id) }}"
-                                                    @if($otherRoom->chat_texts()->whereNull("deleted_at")->where("create_user_id", "<>", Auth::id())->first() !== null)
-                                                        @if($otherRoom->chat_room__user()->where("user_id", Auth::id())->first()->newest_read_chat_text_id != $otherRoom->chat_texts()->whereNull("deleted_at")->where("create_user_id", "<>", Auth::id())->orderBy("id", "desc")->first()->id)
-                                                            class="text-danger"
-                                                        @endif
-                                                    @endif
-                                                >
+                                                <li><a href="{{ route('chat.show', $otherRoom->id) }}" class="{{ $otherRoom->id }}">
                                                     {{ $otherRoom->room_title }}
                                                 </a></li>
                                             @endforeach
@@ -231,23 +183,11 @@ if(isset($chat_room)) {
                                                     @if ($joinRoom->office_id == $office->id)
                                                         <li>
                                                             @if ($joinRoom->distinction_number == 4)
-                                                                <a href="{{ route('chat.show', $joinRoom->id) }}"
-                                                                    @if($joinRoom->chat_texts()->whereNull("deleted_at")->where("create_user_id", "<>", Auth::id())->first() !== null)
-                                                                        @if($joinRoom->chat_room__user()->where("user_id", Auth::id())->first()->newest_read_chat_text_id != $joinRoom->chat_texts()->whereNull("deleted_at")->where("create_user_id", "<>", Auth::id())->orderBy("id", "desc")->first()->id)
-                                                                            class="text-danger"
-                                                                        @endif
-                                                                    @endif
-                                                                >
+                                                                <a href="{{ route('chat.show', $joinRoom->id) }}" class="{{ $joinRoom->id }}">
                                                                     {{ $joinRoom->room_title }}
                                                                 </a>
                                                             @else
-                                                                <a href="{{ route('chat.show', $joinRoom->id) }}"
-                                                                    @if($joinRoom->chat_texts()->whereNull("deleted_at")->where("create_user_id", "<>", Auth::id())->first() !== null)
-                                                                        @if($joinRoom->chat_room__user()->where("user_id", Auth::id())->first()->newest_read_chat_text_id != $joinRoom->chat_texts()->whereNull("deleted_at")->where("create_user_id", "<>", Auth::id())->orderBy("id", "desc")->first()->id)
-                                                                            class="text-danger"
-                                                                        @endif
-                                                                    @endif
-                                                                >
+                                                                <a href="{{ route('chat.show', $joinRoom->id) }}" class="{{ $joinRoom->id }}">
                                                                     {{ $office->office_name }}職員
                                                                 </a>
                                                             @endif
@@ -274,23 +214,11 @@ if(isset($chat_room)) {
                                                             @if ($joinRoom->office_id == $office->id)
                                                                 <li>
                                                                     @if ($joinRoom->distinction_number == 4)
-                                                                        <a href="{{ route('chat.show', $joinRoom->id) }}"
-                                                                            @if($joinRoom->chat_texts()->whereNull("deleted_at")->where("create_user_id", "<>", Auth::id())->first() !== null)
-                                                                                @if($joinRoom->chat_room__user()->where("user_id", Auth::id())->first()->newest_read_chat_text_id != $joinRoom->chat_texts()->whereNull("deleted_at")->where("create_user_id", "<>", Auth::id())->orderBy("id", "desc")->first()->id)
-                                                                                    class="text-danger"
-                                                                                @endif
-                                                                            @endif
-                                                                        >
+                                                                        <a href="{{ route('chat.show', $joinRoom->id) }}" class="{{ $joinRoom->id }}">
                                                                             {{ $joinRoom->room_title }}
                                                                         </a>
                                                                     @else
-                                                                        <a href="{{ route('chat.show', $joinRoom->id) }}"
-                                                                            @if($joinRoom->chat_texts()->whereNull("deleted_at")->where("create_user_id", "<>", Auth::id())->first() !== null)
-                                                                                @if($joinRoom->chat_room__user()->where("user_id", Auth::id())->first()->newest_read_chat_text_id != $joinRoom->chat_texts()->whereNull("deleted_at")->where("create_user_id", "<>", Auth::id())->orderBy("id", "desc")->first()->id)
-                                                                                    class="text-danger"
-                                                                                @endif
-                                                                            @endif
-                                                                        >
+                                                                        <a href="{{ route('chat.show', $joinRoom->id) }}" class="{{ $joinRoom->id }}">
                                                                             {{ $office->office_name }}職員
                                                                         </a>
                                                                     @endif
@@ -432,6 +360,9 @@ if(isset($chat_room)) {
 @endsection
 
 @section('script')
+
+@yield("c_script")
+
 <script>
     $(function() {
 
@@ -469,8 +400,12 @@ if(isset($chat_room)) {
                 fas.addClass("fa-chevron-down");
             }
         });
+
+        //未読テキストがあるチャットルームのリンクの色を変更
+        @foreach ($unreadId as $unread)
+            @if(isset($chat_room) && $unread == $chat_room->id) continue @endif
+            $(".{{ $unread }}").addClass("text-danger");
+        @endforeach
     });
 </script>
-
-@yield("c_script")
 @endsection
