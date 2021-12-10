@@ -54,11 +54,22 @@ class ChatController extends Controller
                 ->where("chat_room__user.user_id", $user->id)->whereNull("chat_rooms.deleted_at")->where("office_id", "<>", 0)
                     ->where("chat_rooms.distinction_number", 4)->orderBy("chat_rooms.distinction_number")->orderBy("chat_rooms.room_title")->get("chat_rooms.*");
 
+            //未読があるチャットルームのidを取得
+            $unreadId = [];
+            $cuFinds = ChatRoom__User::where("user_id", $user->id)->get();
+            foreach($cuFinds as $cuFind) {
+                $ctFind = ChatText::whereNull("deleted_at")->where("chat_room_id", $cuFind->chat_room_id)->where("user_id", "<>", $user->id)
+                    ->orderBy("id", "desc")->first();
+                if(isset($ctFind) && $cuFind->newest_read_chat_text_id < $ctFind->id) {
+                    $unreadId[] = $cuFind->chat_room_id;
+                }
+            }
+
             //事業所一覧を取得
             $offices = Office::whereNull("deleted_at")->orderBy("sort")->get();
 
             //chat_room.indexが出来次第変える
-            return view("chat.index", compact("userRooms", "group", "joinRooms", "offices", "otherRooms"));
+            return view("chat.index", compact("userRooms", "group", "joinRooms", "offices", "otherRooms", "unreadId"));
         }
 
         //chat_roomsテーブルのuser_idが$userIdと一致するものを検索
@@ -111,10 +122,22 @@ class ChatController extends Controller
                 ->where("chat_room__user.user_id", $user->id)->whereNull("chat_rooms.deleted_at")->where("office_id", "<>", 0)
                     ->whereIn("chat_rooms.distinction_number", [3, 4])->orderBy("chat_rooms.distinction_number")->orderBy("chat_rooms.room_title")->get("chat_rooms.*");
         }
+
+        //未読があるチャットルームのidを取得
+        $unreadId = [];
+        $cuFinds = ChatRoom__User::where("user_id", $user->id)->get();
+        foreach($cuFinds as $cuFind) {
+            $ctFind = ChatText::whereNull("deleted_at")->where("chat_room_id", $cuFind->chat_room_id)->where("user_id", "<>", $user->id)
+                ->orderBy("id", "desc")->first();
+            if(isset($ctFind) && $cuFind->newest_read_chat_text_id < $ctFind->id) {
+                $unreadId[] = $cuFind->chat_room_id;
+            }
+        }
+
         //事業所一覧を取得
         $offices = Office::whereNull("deleted_at")->orderBy("sort")->get();
 
-        return view('chat/show', compact('chat_room', "group", "joinRooms", "offices", "otherRooms"));
+        return view('chat/show', compact('chat_room', "group", "joinRooms", "offices", "otherRooms", "unreadId"));
     }
 
     /**
