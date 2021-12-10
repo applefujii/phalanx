@@ -27,29 +27,33 @@
       <div class="sidebar">
         <div class="sidebar-position-base">
           <h2>予定</h2>
-          <div class="sidebar-container">
-            <div>
-              <div class="notification-date-header sticky-top">今週</div>
-              <div class="notification-content">{{ "2020/03/16 12:45～\n2020/03/16 14:30\n\nアップル梅田体験" }}</div>
+          @if ($notifications_groups->count() === 0)
+            <div class="non-notifications">予定なし</div>
+          @else
+            <div class="sidebar-container">
+              @foreach ($notifications_groups as $key => $notifications)
+                <div>
+                  <div class="notification-date-header sticky-top">{{ $key }}</div>
+                  @foreach ($notifications as $notification)
+                    <div class="notification-card">
+                      @if ($notification->is_all_day)
+                      <span class="notification-start-at">{{ $notification->date_if_allday() }}</span>
+                      <br>
+                      @else
+                        <span class="notification-start-at">{{ $notification->start_at }}</span>
+                        <br>
+                        <span class="notification-end-at">{{ $notification->end_at }}</span>
+                        <br>
+                      @endif
+                      <div class="notification-content">{{ $notification->content }}</div>
+                    </div>
+                  @endforeach
+                </div>
+              @endforeach
             </div>
-            <div>
-              <div class="notification-date-header sticky-top">来週以降</div>
-              <div class="notification-content">{{ "2020/08/05\n\n休日開所" }}</div>
-              <div class="notification-content">{{ "2020/08/06 ～\n2020/08/08\n\nアップル梅田体験" }}</div>
-              <div class="notification-content">{{ "2020/08/06 ～\n2020/08/08\n\nアップル梅田体験" }}</div>
-              <div class="notification-content">{{ "2020/08/06 ～\n2020/08/08\n\nアップル梅田体験" }}</div>
-              <div class="notification-content">{{ "2020/08/06 ～\n2020/08/08\n\nアップル梅田体験" }}</div>
-              <div class="notification-content">{{ "2020/08/06 ～\n2020/08/08\n\nアップル梅田体験" }}</div>
-              <div class="notification-content">{{ "2020/08/06 ～\n2020/08/08\n\nアップル梅田体験" }}</div>
-              <div class="notification-content">{{ "2020/08/06 ～\n2020/08/08\n\nアップル梅田体験" }}</div>
-              <div class="notification-content">{{ "2020/08/06 ～\n2020/08/08\n\nアップル梅田体験" }}</div>
-              <div class="notification-content">{{ "2020/08/06 ～\n2020/08/08\n\nアップル梅田体験" }}</div>
-              <div class="notification-content">{{ "2020/08/06 ～\n2020/08/08\n\nアップル梅田体験" }}</div>
-              <div class="notification-content">{{ "2020/08/06 ～\n2020/08/08\n\nアップル梅田体験" }}</div>
-            </div>
-          </div>
-          <div class="sidebar-top"></div>
-          <div class="sidebar-bottom"></div>
+            <div class="sidebar-top"></div>
+            <div class="sidebar-bottom"></div>
+          @endif
         </div>
       </div>
     </div>
