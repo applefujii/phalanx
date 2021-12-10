@@ -40,10 +40,8 @@
                       <span class="notification-start-at">{{ $notification->date_if_allday() }}</span>
                       <br>
                       @else
-                        <span class="notification-start-at">{{ $notification->start_at }}</span>
-                        <br>
-                        <span class="notification-end-at">{{ $notification->end_at }}</span>
-                        <br>
+                        <div class="notification-start-at">{{ $notification->start_at }}</div>
+                        <div class="notification-end-at">～ {{ $notification->end_at }}</div>
                       @endif
                       <div class="notification-content">{{ $notification->content }}</div>
                     </div>
