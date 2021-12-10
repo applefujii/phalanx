@@ -74,6 +74,9 @@ $(() => {
 
             // もっとも古いチャットテキストのID更新
             oldest_display_chat_text_id = room.oldest_display_chat_text_id;
+            
+            // サイドバーのルーム名の文字色変更
+            $(`#chat_room[${chat_room_id}]`).removeClass('text-danger');
 
             // bookmarkがあれば
             if ($('#bookmark').length) {
