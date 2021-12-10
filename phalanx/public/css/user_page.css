@@ -72,8 +72,11 @@
   text-align: left;
 }
 
+.notification-start-at {
+  margin: 0 1rem 0 1rem;
+}
 .notification-end-at {
-  margin-left: 1rem;
+  margin: 0 1rem 0 2rem;
 }
 
 .notification-content {
