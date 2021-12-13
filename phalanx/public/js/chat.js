@@ -344,13 +344,13 @@ $(() => {
         let name_css = '';
         // 自分の書き込みなら
         if (val.user_id == auth_user_id) {
-            name_css = 'text-primary font-weight-bold';
+            name_css = 'text-success font-weight-bold';
             // 職員の書き込みなら
         } else if (val.user.user_type_id == 1) {
             name_css = 'text-danger font-weight-bold';
             // それ以外
         } else {
-            name_css = 'text-success font-weight-bold';
+            name_css = 'text-primary font-weight-bold';
         }
         return `
             <div class="chat_individual">
