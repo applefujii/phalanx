@@ -6,6 +6,10 @@
 src="{{ asset('css/images/maple.png') }}"
 @endsection
 
+@section('official')
+href="https://maple-osaka.jp/"
+@endsection
+
 @section('trial_form')
 href="{{ route('trial_application_form.index', ['office_id' => 3]) }}"
 @endsection

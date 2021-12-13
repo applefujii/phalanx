@@ -107,62 +107,51 @@ class RegisterController extends Controller
         //作成されたユーザーが職員の場合職員全体と対利用者のチャットルームに自動的に参加
         if($user->user_type_id == 1) {
             $group = ChatRoom::where("distinction_number", 0)->first();
-            $chatRoomUser = new ChatRoom__User();
-            $chatRoomUser->chat_room_id = $group->id;
-            $chatRoomUser->user_id = $user->id;
-            $chatRoomUser->create_user_id = Auth::id();
-            $chatRoomUser->update_user_id = Auth::id();
-            $chatRoomUser->created_at = $now;
-            $chatRoomUser->updated_at = $now;
-            $chatRoomUser->save();
+            if(isset($group)) {
+                ChatRoom__User::create([
+                    "chat_room_id" => $group->id,
+                    "user_id" => $user->id,
+                    "create_user_id" => Auth::id(),
+                    "update_user_id" => Auth::id(),
+                    "created_at" => $now,
+                    "updated_at" => $now
+                ]);
+            }
 
             $chatRooms = ChatRoom::whereNull("deleted_at")->where("distinction_number", 3)->where("office_id", $user->office_id)->get();
-            foreach($chatRooms as $chatRoom) {
-                $chatRoomUser = new ChatRoom__User();
-                $chatRoomUser->chat_room_id = $chatRoom->id;
-                $chatRoomUser->user_id = $user->id;
-                $chatRoomUser->create_user_id = Auth::id();
-                $chatRoomUser->update_user_id = Auth::id();
-                $chatRoomUser->created_at = $now;
-                $chatRoomUser->updated_at = $now;
-                $chatRoomUser->save();
+            if(isset($chatRooms)) {
+                foreach($chatRooms as $chatRoom) {
+                    ChatRoom__User::create([
+                        "chat_room_id" => $group->id,
+                        "user_id" => $user->id,
+                        "create_user_id" => Auth::id(),
+                        "update_user_id" => Auth::id(),
+                        "created_at" => $now,
+                        "updated_at" => $now
+                    ]);
+                }
             }
+        }
         
-        //ユーザー以外の場合職員対利用者のチャットルームを作成
-        } else {
+        //職員以外の場合職員対利用者のチャットルームを作成
+        else {
+            $con = app()->make("App\Http\Controllers\ChatRoomController");
             $offices = Office::whereNull("deleted_at")->get();
             foreach($offices as $office) {
-                $chatRoom = new ChatRoom();
-                $chatRoom->room_title = $user->name;
-                $chatRoom->distinction_number = 3;
-                $chatRoom->office_id = $office->id;
-                $chatRoom->user_id = $user->id;
-                $chatRoom->create_user_id = Auth::id();
-                $chatRoom->update_user_id = Auth::id();
-                $chatRoom->created_at = $now;
-                $chatRoom->updated_at = $now;
-                $chatRoom->save();
-
-                $chatRoomUser = new ChatRoom__User();
-                $chatRoomUser->chat_room_id = $chatRoom->id;
-                $chatRoomUser->user_id = $user->id;
-                $chatRoomUser->create_user_id = Auth::id();
-                $chatRoomUser->update_user_id = Auth::id();
-                $chatRoomUser->created_at = $now;
-                $chatRoomUser->updated_at = $now;
-                $chatRoomUser->save();
-
+                $targetUsers = [$user->id];
                 $officers = User::whereNull("deleted_at")->where("user_type_id", 1)->where("office_id", $office->id)->get();
                 foreach($officers as $officer) {
-                    $chatRoomUser = new ChatRoom__User();
-                    $chatRoomUser->chat_room_id = $chatRoom->id;
-                    $chatRoomUser->user_id = $officer->id;
-                    $chatRoomUser->create_user_id = Auth::id();
-                    $chatRoomUser->update_user_id = Auth::id();
-                    $chatRoomUser->created_at = $now;
-                    $chatRoomUser->updated_at = $now;
-                    $chatRoomUser->save();
+                    array_push($targetUsers, $officer->id);
                 }
+                $targetUsers = implode(",", $targetUsers);
+
+                $id = $con->storeDetail(new Request([
+                    "room_title" => $user->name,
+                    "distinction_number" => 3,
+                    "office_id" => $office->id,
+                    "user_id" => $user->id,
+                    "target_users" => $targetUsers
+                ]));
             }
         }
 

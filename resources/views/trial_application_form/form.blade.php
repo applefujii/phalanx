@@ -7,10 +7,10 @@
     @csrf
 @endsection
 
-@section('button_name', '申請')
-
-@section('back')
-href="{{ route('top') }}"
+@section('submit_button')
+<button class="btn btn-primary" type="submit">申請</button>
 @endsection
 
-@section('back_name', 'トップに戻る')
+@section('back_button')
+<a href="{{ route('top') }}" class="btn btn-secondary back-button">トップに戻る</a>
+@endsection

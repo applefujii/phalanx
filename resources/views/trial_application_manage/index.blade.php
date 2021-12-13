@@ -2,7 +2,7 @@
 
 @section('css')
     <link href="{{ asset('css/index-table.css') }}" rel="stylesheet">
-    <link href="{{ asset('css/trial-application-manager/index.css') }}" rel="stylesheet">
+    <link href="{{ asset('css/trial_application_manager.scss') }}" rel="stylesheet">
 @endsection
 
 @section('title')体験・見学申込管理 一覧@endsection
@@ -31,7 +31,7 @@
                     <div class="col2"></div>
                 </div>
                 <div class="row justify-content-start mx-auto my-2">
-                    <label for="office_id" class="text-md-left label">確認状況</label>
+                    <label class="text-md-left label">本人への連絡</label>
                     <div class="form-select">
                         <span class="form-select-element">
                             <input id="check_yet" name="check_yet" type="checkbox" @if ($check_yet) checked @endif>
@@ -63,7 +63,7 @@
                     <th class="table-header-sub">事業所</th>
                     <th class="table-header-sub">体験希望日</th>
                     <th>氏名</th>
-                    <th class="table-header-sub-mini">確認状況</th>
+                    <th class="table-header-sub">本人への連絡</th>
                     <th class="table-header-sub">操作</th>
                 </tr>
             </thead>
@@ -89,7 +89,7 @@
                             <div class="table-body-action">
                                 <span>
                                     <a class="btn btn-sm btn-success" role="button"
-                                        href="{{ route('trial_application_manage.check', $trial_application->id) }}">確認</a>
+                                        href="{{ route('trial_application_manage.check', $trial_application->id) }}">連絡</a>
                                 </span>
                                 <div>
                                     <a class="btn btn-sm btn-primary" role="button"
@@ -108,7 +108,7 @@
                 @endforeach
             </tbody>
         </table>
-        {{ $trial_applications->appends(request()->query())->links() }}
+        {{ $trial_applications->appends(request()->query())->links('vendor/pagination/pagination_view') }}
         <p>
             <a class="btn btn-secondary" role="button" href="{{ route('user_page') }}">ホームに戻る</a>
         </p>

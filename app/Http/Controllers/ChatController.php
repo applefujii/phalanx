@@ -15,6 +15,7 @@ use App\Models\ChatText;
 use App\Models\ChatRoom__User;
 use App\Models\Office;
 use App\Models\User;
+use App\Models\UserType;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Carbon\Carbon;
@@ -38,33 +39,34 @@ class ChatController extends Controller
         //ログイン中のユーザーが職員かどうかの判別(職員のuser_type_idを1と仮定)
         if($user->user_type_id == 1) {
 
-            //利用者対職員の個人チャットを取得
-            $userRooms = ChatRoom::where("distinction_number", 3)->where("office_id", $user->office_id)->whereNull("deleted_at")->get();
+            //未読があるチャットルームのidを取得
+            $unreadId = [];
+            $cuFinds = ChatRoom__User::where("user_id", $user->id)->get();
+            foreach($cuFinds as $cuFind) {
+                $ctFind = ChatText::whereNull("deleted_at")->where("chat_room_id", $cuFind->chat_room_id)->where("user_id", "<>", $user->id)
+                    ->orderBy("id", "desc")->first();
+                if(isset($ctFind) && $cuFind->newest_read_chat_text_id < $ctFind->id) {
+                    $unreadId[] = $cuFind->chat_room_id;
+                }
+            }
 
-            //職員全体のチャットルームを取得
-            $group = ChatRoom::where("distinction_number", 0)->whereNull("deleted_at")->orderBy("room_title")->first();
-
-            //その他に入れるチャットルームを取得
-            $otherRooms = ChatRoom::join("chat_room__user", "chat_rooms.id", "=", "chat_room__user.chat_room_id")
-                ->where("chat_room__user.user_id", $user->id)->whereNull("chat_rooms.deleted_at")->where("office_id", 0)
-                    ->where("chat_rooms.distinction_number",  4)->orderBy("chat_rooms.room_title")->get("chat_rooms.*");
-
-            //ログイン中のユーザーが参加している部屋一覧を取得
-            $joinRooms = ChatRoom::join("chat_room__user", "chat_rooms.id", "=", "chat_room__user.chat_room_id")
-                ->where("chat_room__user.user_id", $user->id)->whereNull("chat_rooms.deleted_at")->where("office_id", "<>", 0)
-                    ->where("chat_rooms.distinction_number", 4)->orderBy("chat_rooms.distinction_number")->orderBy("chat_rooms.room_title")->get("chat_rooms.*");
+            // 所属しているチャットルームを取得
+            $join_chat_rooms = ChatRoom::whereNull("deleted_at")
+                ->whereHas('users', function($query) use ($user) {
+                    $query->where('user_id', $user->id);
+                })
+                ->get();
 
             //事業所一覧を取得
             $offices = Office::whereNull("deleted_at")->orderBy("sort")->get();
 
-            //chat_room.indexが出来次第変える
-            return view("chat.index", compact("userRooms", "group", "joinRooms", "offices", "otherRooms"));
+            return view("chat.index", compact('join_chat_rooms', "offices", "unreadId"));
+        } else {
+            //chat_roomsテーブルのuser_idが$userIdと一致するものを検索
+            $chat_room = ChatRoom::where("user_id", $user->id)->first();
+
+            return redirect()->route("chat.show", $chat_room->id);
         }
-
-        //chat_roomsテーブルのuser_idが$userIdと一致するものを検索
-        $chatRoom = ChatRoom::where("user_id", $user->id)->first();
-
-        return redirect()->route("chat.show", $chatRoom->id);
     }
 
     /**
@@ -74,47 +76,41 @@ class ChatController extends Controller
      */
     public function show($id)
     {
-        $chat_room = ChatRoom::whereNull('deleted_at')->findOrFail($id);
         //ログイン中のユーザーのidを取得
         $user = Auth::user();
 
-        //表示するチャットルームにログイン中のユーザーが参加しているかの判別
-        $check = $chat_room->chat_room__user->where("user_id", $user->id)->first();
+        $chat_room = ChatRoom::whereNull('deleted_at')
+            ->whereHas('users', function($query) use ($user) {
+                //表示するチャットルームにログイン中のユーザーが参加しているかの判別
+                $query->where('user_id', $user->id);
+            })
+            ->findOrFail($id);
 
-        //参加していなかった場合indexにリダイレクト
-        if(is_null($check)) {
-            return redirect()->route("chat.index");
+        //未読があるチャットルームのidを取得
+        $unreadId = [];
+        $cuFinds = ChatRoom__User::where("user_id", $user->id)->get();
+        foreach($cuFinds as $cuFind) {
+            $ctFind = ChatText::whereNull("deleted_at")->where("chat_room_id", $cuFind->chat_room_id)->where("user_id", "<>", $user->id)
+                ->orderBy("id", "desc")->first();
+            if(isset($ctFind) && $cuFind->newest_read_chat_text_id < $ctFind->id) {
+                $unreadId[] = $cuFind->chat_room_id;
+            }
         }
 
-        //その他に入れるチャットルームを取得
-        $otherRooms = ChatRoom::join("chat_room__user", "chat_rooms.id", "=", "chat_room__user.chat_room_id")
-            ->where("chat_room__user.user_id", $user->id)->whereNull("chat_rooms.deleted_at")->where("office_id", 0)
-                ->where("chat_rooms.distinction_number",  4)->orderBy("chat_rooms.room_title")->get("chat_rooms.*");
+        // 所属しているチャットルームを取得
+        $join_chat_rooms = ChatRoom::whereNull("deleted_at")
+            ->whereHas('users', function($query) use ($user) {
+                $query->where('user_id', $user->id);
+            })
+            ->get();
 
-        //職員とそれ以外でサイドバーに必要なデータが異なるので場合分け
-        if($user->user_type_id == 1) {
-
-            //職員全体のチャットルームを取得
-            $group = ChatRoom::where("distinction_number", 0)->whereNull("deleted_at")->first();
-
-            //ログイン中のユーザーが参加している部屋一覧を取得
-            $joinRooms = ChatRoom::join("chat_room__user", "chat_rooms.id", "=", "chat_room__user.chat_room_id")
-                ->where("chat_room__user.user_id", $user->id)->whereNull("chat_rooms.deleted_at")->where("office_id", "<>", 0)
-                    ->where("chat_rooms.distinction_number",  4)->orderBy("chat_rooms.distinction_number")->orderBy("chat_rooms.room_title")->get("chat_rooms.*");
-        } else {
-
-            //issetでfalseを返すようにnullを入れる
-            $group = null;
-
-            //ログイン中のユーザーが参加している部屋一覧を取得
-            $joinRooms = ChatRoom::join("chat_room__user", "chat_rooms.id", "=", "chat_room__user.chat_room_id")
-                ->where("chat_room__user.user_id", $user->id)->whereNull("chat_rooms.deleted_at")->where("office_id", "<>", 0)
-                    ->whereIn("chat_rooms.distinction_number", [3, 4])->orderBy("chat_rooms.distinction_number")->orderBy("chat_rooms.room_title")->get("chat_rooms.*");
-        }
         //事業所一覧を取得
         $offices = Office::whereNull("deleted_at")->orderBy("sort")->get();
 
-        return view('chat/show', compact('chat_room', "group", "joinRooms", "offices", "otherRooms"));
+        // ユーザー種別一覧
+        $user_types = UserType::whereNull("deleted_at")->orderBy("id")->get();
+
+        return view('chat/show', compact('join_chat_rooms', 'chat_room', 'user_types', 'offices', "unreadId"));
     }
 
     /**
