@@ -89,6 +89,11 @@ Route::POST('/api/v1.0/set/notifications.json', [App\Http\Controllers\APIControl
 Route::PUT('/api/v1.0/set/notifications.json', [App\Http\Controllers\APIController::class, "ApiUpdateNotifications"]);
 Route::DELETE('/api/v1.0/set/notifications.json', [App\Http\Controllers\APIController::class, "ApiDeleteNotifications"]);
 
+// チャットルーム
+Route::POST('/api/v1.0/get/chatrooms.json', [App\Http\Controllers\APIController::class, "ApiGetChatRooms"]);
+Route::POST('/api/v1.0/set/chatrooms.json', [App\Http\Controllers\APIController::class, "ApiStoreChatRooms"]);
+Route::PUT('/api/v1.0/set/chatrooms.json', [App\Http\Controllers\APIController::class, "ApiUpdateChatRooms"]);
+Route::DELETE('/api/v1.0/set/chatrooms.json', [App\Http\Controllers\APIController::class, "ApiDeleteChatRooms"]);
 
 //---------- リレーション -----------------------
 

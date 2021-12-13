@@ -130,36 +130,26 @@ class UserController extends Controller
         
         //削除するユーザーが職員の場合、ユーザーと結びついてたチャットルームユーザー中間テーブルを削除
         if($user->user_type_id == 1) {
-            $charRoomUsers = ChatRoom__User::where("user_id", $user->id)->get();
-            foreach($charRoomUsers as $charRoomUser) {
-                $charRoomUser->delete();
-            }
+            $charRoomUsers = ChatRoom__User::where("user_id", $user->id)->delete();
+        }
 
         //それ以外の場合、ユーザーと結びついてた対職員ルームとチャットルームユーザー中間テーブルを削除
-        } else {
+        else {
             $chatRooms = ChatRoom::whereNull("deleted_at")->where("user_id", $user->id)->get();
             foreach($chatRooms as $chatRoom) {
                 $chatRoom->delete_user_id = Auth::id();
                 $chatRoom->deleted_at = $now;
                 $chatRoom->save();
 
-                $chatTexts = ChatText::whereNull("deleted_at")->where("chat_room_id", $chatRoom->id)->get();
-                foreach($chatTexts as $chatText) {
-                    $chatText->delete_user_id = Auth::id();
-                    $chatText->deleted_at = $now;
-                    $chatText->save();
-                }
+                $chatTexts = ChatText::whereNull("deleted_at")->where("chat_room_id", $chatRoom->id)->update([
+                    "delete_user_id" => Auth::id(),
+                    "deleted_at" => $now
+                ]);
 
-                $chatRoomUsers = ChatRoom__User::where("chat_room_id", $chatRoom->id)->get();
-                foreach($chatRoomUsers as $chatRoomUser) {
-                    $chatRoomUser->delete();
-                }
-
-                $chatRoomUsers = ChatRoom__User::where("user_id", $user->id)->get();
-                foreach($chatRoomUsers as $chatRoomUser) {
-                    $chatRoomUser->delete();
-                }
+                $chatRoomUsers = ChatRoom__User::where("chat_room_id", $chatRoom->id)->delete();
             }
+
+            $chatRoomUsers = ChatRoom__User::where("user_id", $user->id)->delete();
         }
 
         $user->fill(['delete_user_id' => Auth::id(), 'deleted_at' => $now])->save();

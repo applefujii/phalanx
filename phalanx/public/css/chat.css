@@ -49,7 +49,7 @@
   display: none;
   position: fixed;
   pointer-events: auto;
-  bottom: 85px;
+  bottom: 70px;
   padding: 0.5rem 1rem;
   border-radius: 0.25rem;
 }
@@ -57,7 +57,7 @@
 #to_bottom {
   pointer-events: none;
   position: fixed;
-  bottom: 85px;
+  bottom: 70px;
 }
 
 #to_bottom_button {
@@ -78,4 +78,5 @@
 #chat_text {
   resize: none;
   height: 37.05px;
+  line-height: 23.04px;
 }/*# sourceMappingURL=chat.css.map */

@@ -37,5 +37,5 @@
 @endsection
 
 @section('form_under')
-<p><a class="btn btn-secondary" role="button" href="{{ route('home') }}">ホームに戻る</a></p>
+<p><a class="btn btn-secondary" role="button" href="{{ route('user_page') }}">ホームに戻る</a></p>
 @endsection
