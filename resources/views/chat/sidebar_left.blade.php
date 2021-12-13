@@ -14,7 +14,7 @@
             </ul>
         </div>
     @endif
-    @if ($join_chat_rooms->where("office_id", 0)->isNotEmpty())
+    @if ($join_chat_rooms->where("distinction_number", 4)->where("office_id", 0)->isNotEmpty())
         <div class="col-12 pt-3">
             <h5>その他</h5>
             <ul class="col-12 pt-1">
@@ -33,7 +33,7 @@
             <div class="col-12 pt-3">
                 <h5>{{ $office->office_name }}</h5>
                 <ul class="col-12 pt-1">
-                    @foreach ($join_chat_rooms as $join_chat_room)
+                    @foreach ($join_chat_rooms->where("distinction_number", 4) as $join_chat_room)
                         @if ($join_chat_room->office_id == $office->id)
                             <li>
                                 <a id="chat_room[{{ $join_chat_room->id }}]" href="{{ route('chat.show', $join_chat_room->id) }}" class="{{ $join_chat_room->id }}">
@@ -58,7 +58,7 @@
                     <div class="col-12 pt-3">
                         <h5>{{ $office->office_name }}</h5>
                         <ul class="col-12 pt-1">
-                            @foreach ($join_chat_rooms as $join_chat_room)
+                            @foreach ($join_chat_rooms->where("distinction_number", 4) as $join_chat_room)
                                 @if ($join_chat_room->office_id == $office->id)
                                     <li>
                                         <a id="chat_room[{{ $join_chat_room->id }}]" href="{{ route('chat.show', $join_chat_room->id) }}" class="{{ $join_chat_room->id }}">
