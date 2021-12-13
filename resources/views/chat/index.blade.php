@@ -15,14 +15,14 @@
                         <hr color="black" width="90%">
                         <p class="d-flex align-items-center collapse-open">
                             <input type="checkbox" class="mx-2 {{ $office->en_office_name }}-allCheck">
-                            <button type="button" class="btn btn-link offices-open" data-toggle="collapse" data-target="#{{ $office->en_office_name }}Collapse" aria-expanded="@if ($office->id == Auth::user()->office_id)true @else false @endif">
-                                <i class="fas @if ($office->id == Auth::user()->office_id)fa-chevron-up @else fa-chevron-down @endif"></i>{{ $office->office_name }}
+                            <button type="button" class="btn btn-link offices-open" data-toggle="collapse" data-target="#{{ $office->en_office_name }}Collapse" aria-expanded="@if ($office->id === Auth::user()->office_id)true @else false @endif">
+                                <i class="fas @if ($office->id === Auth::user()->office_id)fa-chevron-up @else fa-chevron-down @endif"></i>{{ $office->office_name }}
                             </button>
                         </p>
                     </div>
-                    <div class="collapse @if ($office->id == Auth::user()->office_id)show @endif" id="{{ $office->en_office_name }}Collapse">
+                    <div class="collapse @if ($office->id === Auth::user()->office_id)show @endif" id="{{ $office->en_office_name }}Collapse">
                         @foreach ($join_chat_rooms as $join_chat_room)
-                            @if ($join_chat_room->user_id == 2 && $join_chat_room->office_id == $office->id)
+                            @if ($join_chat_room->user_id === 2 && $join_chat_room->office_id === Auth::user()->office_id)
                                 <div class="col-6 col-md-4 col-xl-3 my-1 d-flex align-items-center">
                                     <input type="checkbox" class="mr-1 {{ $office->en_office_name }}-checkBox" name="user" value="{{ $join_chat_room->id }}">
                                     <a href="{{ route('chat.show', $join_chat_room->id) }}" class="{{ $join_chat_room->id }}">
@@ -46,7 +46,7 @@
                 </div>
                 <div class="collapse text-left row" id="trialsCollapse">
                     @foreach ($join_chat_rooms as $join_chat_room)
-                        @if ($join_chat_room->user_id == 3)
+                        @if ($join_chat_room->user_id === 3)
                             <div class="col-6 col-md-4 col-xl-3 my-1 d-flex align-items-center">
                                 <input type="checkbox" class="mr-1 trial-checkBox" name="user" value="{{ $join_chat_room->id }}">
                                 <a href="{{ route('chat.show', $join_chat_room->id) }}" class="{{ $join_chat_room->id }}">
