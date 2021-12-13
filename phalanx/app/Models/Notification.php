@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Carbon\Carbon;
 
 class Notification extends Model
 {
@@ -17,5 +18,14 @@ class Notification extends Model
     
     public function notification__user() {
         return $this->hasMany(Notification__User::class);
+    }
+
+    // 終日の場合その日付を返す。それ以外の場合nullを返す
+    public function date_if_allday() {
+        if (!$this->is_all_day) {
+            return null;
+        } else {
+            return (new Carbon($this->start_at))->format('Y-m-d');
+        }
     }
 }

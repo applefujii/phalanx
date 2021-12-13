@@ -60,13 +60,6 @@ class User extends Authenticatable
      */
     protected $casts = [];
 
-    /**
-     * 常にロードする必要があるリレーション
-     *
-     * @var array
-     */
-    protected $with = ['office'];
-
     public function user_type() {
         return $this->belongsTo(UserType::class);
     }
