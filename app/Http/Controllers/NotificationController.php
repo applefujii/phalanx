@@ -170,7 +170,7 @@ class NotificationController extends Controller
     public function updateDetail(Request $request, $id)
     {
         $notification = null;
-        DB::transaction(function() use($request, $id) {
+        DB::transaction(function() use($request, $id, $notification) {
             $dt = new \DateTime( "now" );
             $notification = Notification::where("id", $id)->update([
                 'content' => $request->content,
@@ -212,7 +212,7 @@ class NotificationController extends Controller
             }
         });
 
-        if(isset($notification)) return $notification->id;
+        if(isset($notification)) return $id;
         return -1;
     }
 
