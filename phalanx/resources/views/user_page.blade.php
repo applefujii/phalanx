@@ -57,33 +57,5 @@
     </div>
   </div>
 </div>
-<<<<<<< HEAD
-@endif
 
-@if (Auth::user()->user_type_id === 1)
-<br>
-<a href="{{ route('chat.index') }}" type="button" class="btnb btn-primary text-center d-flex 
-align-items-center justify-content-center rounded"><h1>チ ャ ッ ト</h1></a>
-<a href="{{ route('trial_application_manage.index') }}" type="button" class="tkn btn-primary text-center d-flex 
-align-items-center justify-content-center rounded"><h4>体験・見学申込一覧</h4></a>
-<a href="{{ route('office.index') }}" type="button" class="mst btn-primary text-center d-flex 
-align-items-center justify-content-center rounded"><h4>マスタ管理</h4></a>
-<a href="{{ route('chat_room.index') }}" type="button" class="room btn-primary text-center d-flex 
-align-items-center justify-content-center rounded"><h4>チャットルーム管理</h4></a>
-
-
-<div class="line"></div>
-<h3 class="scjb">予定</h3>
-<div class="txtb">
-&nbsp&nbsp2020/03/16 12:45～<br>
-&nbsp&nbsp2020/03/16 14:30<br><br>
-
-&nbsp&nbspアップル梅田体験
-
-</div>
-
-@endif
-</body>
-=======
->>>>>>> 9ef69a012d247008f6e6d1f19c6b5ca440b2d572
 @endsection
