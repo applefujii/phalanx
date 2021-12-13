@@ -47,3 +47,8 @@ table th {
     white-space: nowrap;
     width: 100px;
 }
+
+.col > * > .btn {
+    display: inline-block;
+    max-width: 80%;
+}
