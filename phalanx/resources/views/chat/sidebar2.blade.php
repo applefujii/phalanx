@@ -327,11 +327,9 @@ if(isset($chat_room)) {
 @endsection
 
 @section('script')
-{{-- jQuery読み込み --}}
-<script src="{{ asset('js/jquery-3.6.0.min.js') }}"></script>
 {{-- クラス読み込み --}}
 <script src="{{ asset('js/cover.js') }}"></script>
-<script src="{{ asset('js/toutchInfo.js') }}"></script>
+<script src="{{ asset('js/touchInfo.js') }}"></script>
 <script src="{{ asset('js/edgeNavigation.js') }}"></script>
 
 <script>
@@ -343,11 +341,11 @@ if(isset($chat_room)) {
         //------------ ナビゲーションバーの動作 ------------------------------------------
 
         // インスタンス作成
-        var toutch = new toutchInfo(5);
+        var touch = new touchInfo(5);
         var navManager = new navigationManager();
-        toutch.addStartCallBack(navManager.toutchStart, navManager);
-        toutch.addMoveCallBack(navManager.toutchMove, navManager);
-        toutch.addEndCallBack(navManager.toutchEnd, navManager);
+        touch.addStartCallBack(navManager.touchStart, navManager);
+        touch.addMoveCallBack(navManager.touchMove, navManager);
+        touch.addEndCallBack(navManager.touchEnd, navManager);
         navManager.add( 'left', 4, 32, 16 );
         if(fRightNav) navManager.add( 'right', 2, 32, 16 );
 
