@@ -226,43 +226,32 @@ class ChatRoomController extends Controller
         
         //ログイン中のユーザーデータを取得
         $user = Auth::user();
-        
-        //削除するチャットルームのデータを取得
-        $chatRoom = ChatRoom::where("id", $id)->whereNull("deleted_at")->first();
-
-        //存在しないチャットルームを削除しようとした時listにリダイレクト
-        if(is_null($chatRoom)) {
-            return redirect()->route("chat_room.index");
-        }
 
         //現在時刻を取得
         $now = Carbon::now()->isoFormat('YYYY-MM-DD HH:mm:ss');
 
-        //チャットルームテーブルのデータの削除を実行
-        $chatRoom->delete_user_id = $user->id;
-        $chatRoom->deleted_at = $now;
-        $chatRoom->save();
+        DB::transaction(function () use($id, $user, $now) {
 
-        //削除するチャットルーム-ユーザー中間テーブルのデータを取得
-        $chatRoomUsers = ChatRoom__User::where("chat_room_id", $id)->get();
+            //チャットルームを削除
+            ChatRoom::where("id", $id)->update([
+                "delete_user_id" => $user->id,
+                "deleted_at" => $now
+            ]);
 
-        //削除を実行
-        if(isset($chatRoomUsers)) {
-            foreach($chatRoomUsers as $chatRoomUser) {
-                $chatRoomUser->delete();
+            //関連するチャットルーム-ユーザー中間テーブルを削除
+            $chatRoomUsers = ChatRoom__User::where("chat_room_id", $id)->delete();
+
+            //削除するチャットテキストテーブルのデータを取得
+            $chatTexts = ChatText::whereNull("deleted_at")->where("chat_room_id", $id)->get();
+
+            //削除するデータが存在する場合のみ削除を実行
+            if(isset($chatTexts)) {
+                $chatTexts->update([
+                    "delete_user_id" => $user->id,
+                    "deleted_at" => $now
+                ]);
             }
-        }
-
-        //削除するチャットテキストテーブルのデータを取得
-        $chatTexts = ChatText::whereNull("deleted_at")->where("chat_room_id", $id)->get();
-
-        //削除するデータが存在する場合のみ削除を実行
-        if(isset($chatTexts)) {
-            foreach($chatTexts as $chatText) {
-                $chatText->delete_user_id = $user->id;
-                $chatText->deleted_at = $now;
-            }
-        }
+        });
 
         return redirect()->route("chat_room.index");
     }
