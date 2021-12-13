@@ -135,18 +135,14 @@ class UserController extends Controller
 
         //それ以外の場合、ユーザーと結びついてた対職員ルームとチャットルームユーザー中間テーブルを削除
         else {
+            $con = app()->make("App\Http\Controllers\ChatRoomController");
             $chatRooms = ChatRoom::whereNull("deleted_at")->where("user_id", $user->id)->get();
             foreach($chatRooms as $chatRoom) {
-                $chatRoom->delete_user_id = Auth::id();
-                $chatRoom->deleted_at = $now;
-                $chatRoom->save();
-
-                $chatTexts = ChatText::whereNull("deleted_at")->where("chat_room_id", $chatRoom->id)->update([
-                    "delete_user_id" => Auth::id(),
-                    "deleted_at" => $now
-                ]);
-
-                $chatRoomUsers = ChatRoom__User::where("chat_room_id", $chatRoom->id)->delete();
+                try {
+                    $con->destroy($chatRoom->id);
+                } catch(\Exception $e) {
+                    continue;
+                }
             }
 
             $chatRoomUsers = ChatRoom__User::where("user_id", $user->id)->delete();
