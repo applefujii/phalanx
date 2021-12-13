@@ -30,6 +30,12 @@ class UserpageController extends Controller
 
     public function index()
     {
+        //-- 古い通知を消す
+        $dt = new \DateTime( "now" );
+        Notification::whereRaw( "end_at <= DATE_SUB( CURDATE(),INTERVAL 1 DAY )" )->update([
+            'deleted_at' => $dt->format('Y-m-d H:i:s')
+        ]);
+        
         // 体験申込の新規チェック
         $trial_applications = TrialApplication::whereNull('deleted_at')->where('office_id', Auth::user()->office_id)->where('is_checked', false)->get();
         $new_trial_applications = $trial_applications->isNotEmpty();
