@@ -1,4 +1,4 @@
-@extends('chat.sidebar2')
+@extends('chat.sidebar')
 
 @section('c_css')
     <link href="{{ asset('css/jquery-ui.min.css') }}" rel="stylesheet">
