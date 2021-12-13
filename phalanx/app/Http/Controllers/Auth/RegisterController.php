@@ -145,7 +145,13 @@ class RegisterController extends Controller
                 }
                 $targetUsers = implode(",", $targetUsers);
 
-                $con->storeDetail([]);
+                $id = $con->storeDetail(new Request([
+                    "room_title" => $user->name,
+                    "distinction_number" => 3,
+                    "office_id" => $office->id,
+                    "user_id" => $user->id,
+                    "target_users" => $targetUsers
+                ]));
             }
         }
 

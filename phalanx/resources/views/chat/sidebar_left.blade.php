@@ -8,7 +8,7 @@
         <div class="col-12 pt-3">
             <h5>リテラル</h5>
             <ul class="col-12 pt-1">
-                <li><a href="{{ route("chat.show", $group->id) }}" class="{{ $group->id }}">
+                <li><a href="{{ route("chat.show", $join_chat_rooms->where("distinction_number", 0)->first()->id) }}" class="{{ $join_chat_rooms->where("distinction_number", 0)->first()->id }}">
                     全職員
                 </a></li>
             </ul>
