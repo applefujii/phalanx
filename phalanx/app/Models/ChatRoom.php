@@ -46,7 +46,15 @@ class ChatRoom extends Model
     }
 
     /**
-     * 関連するユーザーマスタのデータを取得
+     * ルーム所属者のユーザーマスタのデータを取得
+     */
+    public function users()
+    {
+        return $this->belongsToMany(User::class, 'chat_room__user');
+    }
+
+    /**
+     * 個人ルームの場合、個人のユーザーマスタのデータを取得
      */
     public function user() {
         return $this->belongsTo(User::class);
