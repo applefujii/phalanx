@@ -19,7 +19,37 @@ class ChatRoomsSeeder extends Seeder
         $now = Carbon::now();
         DB::table('chat_rooms')->insert([
             [
-                "room_title" => 'ユーザー０１',
+                "room_title" => '全職員',
+                "distinction_number" => 0,
+                'create_user_id' => 1,
+                'office_id' => 1,
+                'create_user_id' => 1,
+                'update_user_id' => 1,
+                'updated_at' => $now->isoFormat('YYYY-MM-DD HH:mm:ss'),
+                'created_at' => $now->isoFormat('YYYY-MM-DD HH:mm:ss'),
+            ],
+            [
+                "room_title" => "アップル梅田職員",
+                "distinction_number" => 1,
+                'create_user_id' => 1,
+                'office_id' => 1,
+                'create_user_id' => 1,
+                'update_user_id' => 1,
+                'updated_at' => $now->isoFormat('YYYY-MM-DD HH:mm:ss'),
+                'created_at' => $now->isoFormat('YYYY-MM-DD HH:mm:ss'),
+            ],
+            [
+                "room_title" => "ミント大阪職員",
+                "distinction_number" => 1,
+                'create_user_id' => 1,
+                'office_id' => 1,
+                'create_user_id' => 1,
+                'update_user_id' => 1,
+                'updated_at' => $now->isoFormat('YYYY-MM-DD HH:mm:ss'),
+                'created_at' => $now->isoFormat('YYYY-MM-DD HH:mm:ss'),
+            ],
+            [
+                "room_title" => "メープル関西職員",
                 "distinction_number" => 1,
                 'create_user_id' => 1,
                 'office_id' => 1,

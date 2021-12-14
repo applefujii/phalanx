@@ -122,7 +122,7 @@ class RegisterController extends Controller
             if(isset($chatRooms)) {
                 foreach($chatRooms as $chatRoom) {
                     ChatRoom__User::create([
-                        "chat_room_id" => $group->id,
+                        "chat_room_id" => $chatRoom->id,
                         "user_id" => $user->id,
                         "create_user_id" => Auth::id(),
                         "update_user_id" => Auth::id(),
