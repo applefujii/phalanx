@@ -118,12 +118,10 @@ class navigationManager {
         let cl = this;
         //------ クリック時の動作
         $(document).on('click', this.navButton, function(){
-            // console.log('click navButton');
             if( $(cl.navButton).data('is-open') == 'true' ) cl.setOpen(false, true);
             else cl.setOpen(true, true);
         });
         $(document).on('click', this.nav+' a:not(.no-close)', function() {
-            // console.log('clicl a');
             cl.setOpen(false, true);
         });
     }
@@ -134,11 +132,12 @@ class navigationManager {
         let posX = clTouch.aPosX[0];
         let posY = clTouch.aPosY[0];
 
-        //-- 開いていない状態で画面端タッチなら動作させる。開いた状態で他部分をタッチしたら動作させる。
+        //-- 開いた状態で他部分をタッチしたら動作させる。
         switch(this.direction) {
             case 1:
                 break
             case 2:
+                // 画面端なら動作
                 // if( !this.manager.fAnyoneOpen  &&  !this.manager.fAnyoneMotion  &&  !this.fOpen  &&  posX >= (this.manager.viewportWidth-this.touchSize)) {
                 //     this.fInMotion = true;
                 //     this.manager.fAnyoneMotion = true;
@@ -186,13 +185,15 @@ class navigationManager {
     touchMove( event, clTouch ) {
         if(this.fEnable == false) return;
         //-- 条件を満たすと動き始める
-        if(!this.fAnyoneMotion  &&  !this.fAnyoneOpen) {
+        if(!this.manager.fAnyoneMotion) {
             switch(clTouch.swipeDirection) {
                 case 2:
-                    if(!this.manager.fAnyoneOpen  &&  !this.manager.fAnyoneMotion  &&  this.direction == 4) this.fInMotion = true;
+                    if(!this.manager.fAnyoneOpen  &&  this.direction == 4) this.setFInMotion(true);
+                    if(this.fOpen  &&  this.direction == 2) this.setFInMotion(true);
                     break;
                 case 4:
-                    if(!this.manager.fAnyoneOpen  &&  !this.manager.fAnyoneMotion  &&  this.direction == 2) this.fInMotion = true;
+                    if(!this.manager.fAnyoneOpen  &&  this.direction == 2) this.setFInMotion(true);
+                    if(this.fOpen  &&  this.direction == 4) this.setFInMotion(true);
                     break;
             }
         }
@@ -202,47 +203,70 @@ class navigationManager {
         //---- 動かす
         let  movePx = Math.abs(clTouch.amountMovementX);
         if(clTouch.swipeDirection == 1  &&  clTouch.swipeDirection == 3) movePx = Math.abs(clTouch.amountMovementY);
+
         //-- 閉じている状態から
         if( !this.fOpened ) {
-            console.log('closed');
-            if(movePx > this.navSizePixel) {
-                movePx = this.navSizePixel;
-                this.fOpen = true;
-            } else if( movePx < 0 ) {
-                movePx = 0;
-                this.fOpen = false;
-            }
-        }
-        //-- 開いている状態から
-        else {
-            console.log('opened');
-            movePx = this.navSizePixel - movePx;
+            // console.log('closed');
             switch(this.direction) {
                 case 1:
                     break
                 case 2:
                     if( clTouch.amountMovementX <= 0 ) {
-                        movePx = this.navSizePixel;
-                        this.fOpen = true;
-                    } else {
                         this.fOpen = false;
-                        if( movePx > this.navSizePixel ) movePx = 0;
-                    }
+                        if( movePx > this.navSizePixel ){
+                            movePx = this.navSizePixel;
+                            this.fOpen = true;
+                        }
+                    } else movePx = 0;
                     break
                 case 3:
                     break
                 case 4:
                     if( clTouch.amountMovementX >= 0 ) {
+                        this.fOpen = false;
+                        if( movePx > this.navSizePixel ){
+                            movePx = this.navSizePixel;
+                            this.fOpen = true;
+                        }
+                    } else movePx = 0;
+                    break
+            }
+        }
+        //-- 開いている状態から
+        else {
+            // console.log('opened');
+            movePx = this.navSizePixel - movePx;
+            switch(this.direction) {
+                case 1:
+                    break
+                case 2:
+                    if( clTouch.amountMovementX >= 0 ) {
+                        this.fOpen = false;
+                        if( movePx < 0 ){
+                            movePx = 0;
+                        }
+                    } else {
                         movePx = this.navSizePixel;
                         this.fOpen = true;
-                    } else {
+                    }
+                    break
+                case 3:
+                    break
+                case 4:
+                    if( clTouch.amountMovementX <= 0 ) {
                         this.fOpen = false;
-                        if( movePx > this.navSizePixel ) movePx = 0;
+                        if( movePx < 0){
+                            movePx = 0;
+                        }
+                    } else {
+                        movePx = this.navSizePixel;
+                        this.fOpen = true;
                     }
                     break
             }
         }
 
+        this.setTransition("all 0s");
         this.setTransform( movePx );
     }
     /*
@@ -328,8 +352,7 @@ class navigationManager {
         }
         this.setTransform( 0 );
 
-        this.fInMotion = false;
-        this.manager.fAnyoneMotion = false;
+        this.setFInMotion(false);
     }
 
     changeViewport( wid, hei ) {
@@ -364,7 +387,6 @@ class navigationManager {
             $(this.nav).addClass('panelactive');
             cover.on(0,0,0,88);
             this.fOpen = true;
-            this.fOpened = true;
             this.manager.setAnyoneOpen(true);
             $(this.navButton).data('is-open', 'true');
         } else {
@@ -372,13 +394,11 @@ class navigationManager {
             $(this.navButton).removeClass('active');
             $(this.nav).removeClass('panelactive');
             cover.on(0,0,0,0);
-            let cl = this;
             setTimeout(function() {
                 cover.off();
-                cl.manager.setAnyoneOpen(false);
             }, 600);
             this.fOpen = false;
-            this.fOpened = false;   //※trueから変更。動作がおかしい
+            this.manager.setAnyoneOpen(false);
             $(this.navButton).data('is-open', 'false');
         }
     }
@@ -431,6 +451,12 @@ class navigationManager {
             this.fEnable = true;
             this.setOpen(false);
         }
+    }
+
+    setFInMotion(flag) {
+        this.fOpened = this.fOpen;
+        this.fInMotion = flag;
+        this.manager.fAnyoneMotion = flag;
     }
 
 }
