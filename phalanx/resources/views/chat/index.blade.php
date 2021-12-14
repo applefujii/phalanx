@@ -21,7 +21,12 @@
                         </p>
                     </div>
                     <div class="collapse row @if ($office->id == Auth::user()->office_id)show @endif" id="{{ $office->en_office_name }}Collapse">
-                        @foreach ($join_chat_rooms->where("office_id", Auth::user()->office_id) as $join_chat_room)
+                        @foreach (
+                            $join_chat_rooms->where("office_id", Auth::user()->office_id)
+                                ->sort(function ($first, $second) {
+                                    return $first['user']['name_katakana'] <=> $second['user']['name_katakana'];
+                                }) as $join_chat_room
+                            )
                             @if (optional($join_chat_room->user)->user_type_id == 2 && $join_chat_room->user->office_id == $office->id)
                                 <div class="col-6 col-md-4 col-xl-3 my-1 d-flex align-items-center">
                                     <input type="checkbox" class="mr-1 {{ $office->en_office_name }}-checkBox" name="user" value="{{ $join_chat_room->id }}">
@@ -45,7 +50,12 @@
                     </p>
                 </div>
                 <div class="collapse text-left row" id="trialsCollapse">
-                    @foreach ($join_chat_rooms as $join_chat_room)
+                    @foreach (
+                            $join_chat_rooms->where("office_id", Auth::user()->office_id)
+                                ->sort(function ($first, $second) {
+                                    return $first['user']['name_katakana'] <=> $second['user']['name_katakana'];
+                                }) as $join_chat_room
+                        )
                         @if (optional($join_chat_room->user)->user_type_id == 3)
                             <div class="col-6 col-md-4 col-xl-3 my-1 d-flex align-items-center">
                                 <input type="checkbox" class="mr-1 trial-checkBox" name="user" value="{{ $join_chat_room->id }}">
