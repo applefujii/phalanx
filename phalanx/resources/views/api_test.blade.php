@@ -24,12 +24,8 @@
 
 
 @section('script')
-{{-- jQuery読み込み --}}
-<script src="{{ asset('js/jquery-3.6.0.min.js') }}"></script>
 
 <script>
-
-    var siteUrl = "{{ config('const.url') }}";
 
     //-- 読み込まれたタイミングで実行
     $(function(){
@@ -47,7 +43,7 @@
         $("#api1").on('click', function(){
             $.ajax({
                 type: "PUT",
-                url: siteUrl + "api/v1.0/set/notifications.json", // 送り先
+                url: "/api/v1.0/set/notifications.json", // 送り先
                 data: {
                     records : [
                         { id:3, content : "API複数更新1", start_at :"2022/01/01 00:00:00" , end_at : "2022/01/02 00:00:00", is_all_day : "0" },
@@ -72,7 +68,7 @@
         $("#api2").on('click', function(){
             $.ajax({
                 type: "POST",
-                url: siteUrl + "api/v1.0/get/notifications.json", // 送り先
+                url: "/api/v1.0/get/notifications.json", // 送り先
                 data: {
                     sort : "-id"
                 },   // 渡したいデータをオブジェクトで渡す
