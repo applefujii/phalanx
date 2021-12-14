@@ -22,7 +22,7 @@
                     </div>
                     <div class="collapse row @if ($office->id == Auth::user()->office_id)show @endif" id="{{ $office->en_office_name }}Collapse">
                         @foreach (
-                            $join_chat_rooms->where("office_id", Auth::user()->office_id)
+                            $join_chat_rooms->where("office_id", Auth::user()->office_id)->whereNotNull("user_id")
                                 ->sort(function ($first, $second) {
                                     return $first['user']['name_katakana'] <=> $second['user']['name_katakana'];
                                 }) as $join_chat_room
@@ -51,7 +51,7 @@
                 </div>
                 <div class="collapse text-left row" id="trialsCollapse">
                     @foreach (
-                            $join_chat_rooms->where("office_id", Auth::user()->office_id)
+                            $join_chat_rooms->where("office_id", Auth::user()->office_id)->whereNotNull("user_id")
                                 ->sort(function ($first, $second) {
                                     return $first['user']['name_katakana'] <=> $second['user']['name_katakana'];
                                 }) as $join_chat_room
