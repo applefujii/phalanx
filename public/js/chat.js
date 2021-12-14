@@ -2,7 +2,7 @@ $(() => {
     // チャットルーム名表示位置調整
     $("#chat_header").offset({
         top: $('nav').outerHeight()
-    })
+    });
 
     // スクロール可能な部分の高さ
     $("#chat_scroll").innerHeight(
