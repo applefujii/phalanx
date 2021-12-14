@@ -2,7 +2,7 @@ $(() => {
     // チャットルーム名表示位置調整
     $("#chat_header").offset({
         top: $('nav').outerHeight()
-    })
+    });
 
     // スクロール可能な部分の高さ
     $("#chat_scroll").innerHeight(
@@ -21,17 +21,14 @@ $(() => {
     // 新着ログ部分の高さ
     let new_height = 0;
 
+    // 入力値の行数
+    let rows = 1;
+
     // フッターのデフォルト高さ
     const footer_height_default = $('#chat_footer').outerHeight();
 
-    // 入力部のデフォルト高さ
-    const chat_text_height_default = $('#chat_text').outerHeight();
-
     // 入力部の１行の高さ
     const chat_text_line_height = $("#chat_text").css('line-height').replace(/[^0-9.]/g, '');
-
-    // 最下ボタンのデフォルト位置のフッターとの差分
-    const to_bottom_position_difference = $('#to_bottom').css('bottom').replace(/[^0-9.]/g, '') - footer_height_default;
 
     // ----------------------------初回チャット読み込み----------------------------
     // Ajaxリクエスト
@@ -130,21 +127,12 @@ $(() => {
     $("#chat_text").on('change keyup keydown paste cut', () => {
         // エラーメッセージ非表示
         $('#error').hide();
-        // 入力値の行数
-        let rows = $("#chat_text").val().split('\n').length;
-        
-        if (rows > maxRows()) {
-            rows = maxRows();
-        }
-        // 増やす高さ
-        let add_height = chat_text_line_height * (rows -1);
-        // 行数に応じてフッター等の高さ調整
-        changeHeights(add_height);
+        changeHeights();
     });
 
     //スクロールしたら
     $("#chat_scroll").on("scroll", () => {
-        //ウィンドウの一番下までスクロールしたら
+        // 一番下までスクロールしたら
         // ヘッダーの高さ＋フッターの高さ＋チャット表示部のスクロール長－スクロール量－ウィンドウ高さ
         if ($('nav').outerHeight() + $('#chat_header').outerHeight() + $('#chat_footer').outerHeight() + $("#chat_scroll").get(0).scrollHeight - $("#chat_scroll").scrollTop() - $(window).height() <= 10) {
             //新着ありメッセージ非表示
@@ -322,7 +310,7 @@ $(() => {
                     // 入力フォームを空に
                     $('#chat_text').val('');
                     // フッター等の高さ調整
-                    changeHeights(0);
+                    changeHeights();
                     //最新チャット取得
                     getNewChatLog();
                 }
@@ -344,13 +332,13 @@ $(() => {
         let name_css = '';
         // 自分の書き込みなら
         if (val.user_id == auth_user_id) {
-            name_css = 'text-primary font-weight-bold';
+            name_css = 'text-success font-weight-bold';
             // 職員の書き込みなら
         } else if (val.user.user_type_id == 1) {
             name_css = 'text-danger font-weight-bold';
             // それ以外
         } else {
-            name_css = 'text-success font-weight-bold';
+            name_css = 'text-primary font-weight-bold';
         }
         return `
             <div class="chat_individual">
@@ -374,15 +362,49 @@ $(() => {
     }
 
     // フッター等の高さ調整
-    function changeHeights(add_height) {
-        $('#chat_text').innerHeight(chat_text_height_default + add_height);
-        $('#chat_footer').innerHeight(footer_height_default + add_height);
-        $("#to_bottom").css({bottom: footer_height_default + to_bottom_position_difference + add_height});
-        $("#new").css({bottom: footer_height_default + to_bottom_position_difference + add_height});
-        $("#error").css({bottom: footer_height_default + to_bottom_position_difference + add_height});
-        $("#chat_scroll").innerHeight(
-            $(window).height() - $('nav').outerHeight() - $('#chat_header').outerHeight() - $('#chat_footer').outerHeight()
-        );
+    function changeHeights() {
+        // 入力値の行数
+        let new_rows = $("#chat_text").val().split('\n').length;
+        
+        if (new_rows > maxRows()) {
+            new_rows = maxRows();
+        }
+
+        // 変化した行数
+        let rows_difference = new_rows - rows;
+        // 行数に変化があれば
+        if (rows_difference !== 0) {
+            // スクロール量
+            let scrollTop = $("#chat_scroll").scrollTop();
+            // 最下までスクロールしているか
+            let is_scroll_bottom = $('nav').outerHeight() + $('#chat_header').outerHeight() + $('#chat_footer').outerHeight() + $("#chat_scroll").get(0).scrollHeight - scrollTop - $(window).height() <= 10;
+            
+            // 変化した高さ
+            let height_difference = chat_text_line_height * rows_difference;
+
+            // 現在のフッター等の高さ
+            let chat_text_height = $('#chat_text').innerHeight();
+            let chat_footer_height = $('#chat_footer').innerHeight();
+            let to_bottom_bottom = $("#to_bottom").css('bottom');
+        
+            // 行数に応じてフッター等の高さ調整
+            $('#chat_text').innerHeight(chat_text_height + height_difference);
+            $('#chat_footer').innerHeight(chat_footer_height + height_difference);
+            $("#to_bottom").css({bottom: to_bottom_bottom + height_difference});
+            $("#new").css({bottom: to_bottom_bottom + height_difference});
+            $("#error").css({bottom: to_bottom_bottom + height_difference});
+            $("#chat_scroll").innerHeight(
+                $(window).height() - $('nav').outerHeight() - $('#chat_header').outerHeight() - $('#chat_footer').outerHeight()
+            );
+
+            // 一番下までスクロールしていたら
+            if (is_scroll_bottom) {
+                // スクロール位置修正
+                $("#chat_scroll").scrollTop(scrollTop + height_difference);
+            }
+            // 現在の行数を保存
+            rows = new_rows;
+        }
     }
 
     // フッターの最大行数

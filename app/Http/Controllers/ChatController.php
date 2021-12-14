@@ -52,9 +52,13 @@ class ChatController extends Controller
 
             // 所属しているチャットルームを取得
             $join_chat_rooms = ChatRoom::whereNull("deleted_at")
+                ->with('user')
+                ->with('users')
                 ->whereHas('users', function($query) use ($user) {
                     $query->where('user_id', $user->id);
                 })
+                ->orderBy('distinction_number')
+                ->orderBy('id')
                 ->get();
 
             //事業所一覧を取得
@@ -99,9 +103,13 @@ class ChatController extends Controller
 
         // 所属しているチャットルームを取得
         $join_chat_rooms = ChatRoom::whereNull("deleted_at")
+            ->with('user')
+            ->with('users')
             ->whereHas('users', function($query) use ($user) {
                 $query->where('user_id', $user->id);
             })
+            ->orderBy('distinction_number')
+            ->orderBy('id')
             ->get();
 
         //事業所一覧を取得
@@ -121,27 +129,44 @@ class ChatController extends Controller
      */
     public function multiStore(ChatTextRequest $request) {
 
-        //現在時刻の取得
-        $now = Carbon::now();
-
-        //Requestから渡されたchat-roomsを配列に変換し、foreachで処理を回す
+        //Requestから渡されたchat_roomsを配列に変換し、データを挿入
         $chatRooms = $request->input("chat_rooms");
         $roomsId = explode(",", $chatRooms);
-        foreach($roomsId as $roomId) {
+        DB::transaction(function () use($roomsId, $request) {
+            $now = Carbon::now()->isoFormat('YYYY-MM-DD HH:mm:ss');
+            $aItem = [];
+            foreach($roomsId as $roomId) {
 
-            //各種データを挿入
-            $chat_text = new ChatText();
-            $chat_text->chat_text = $request->input("chat_text");
-            $chat_text->chat_room_id = $roomId;
-            $chat_text->user_id = Auth::user()->id;
-            $chat_text->create_user_id = Auth::user()->id;
-            $chat_text->update_user_id = Auth::user()->id;
-            $chat_text->created_at = $now->isoFormat('YYYY-MM-DD HH:mm:ss');
-            $chat_text->updated_at = $now->isoFormat('YYYY-MM-DD HH:mm:ss');
-            $chat_text->save();
-        }
+                //各種データを$aItemに挿入
+                array_push($aItem, [
+                    "chat_text" => $request->input("chat_text"),
+                    "chat_room_id" => $roomId,
+                    "user_id" => Auth::id(),
+                    "create_user_id" => Auth::id(),
+                    "update_user_id" => Auth::id(),
+                    "created_at" => $now,
+                    "updated_at" => $now
+                ]);
+            }
+
+            $aChunk = array_chunk($aItem, 100);
+            foreach($aChunk as $chunk) {
+                ChatText::insert($chunk);
+            }
+        });
+        
 
         return redirect()->route("chat.index");
+    }
+
+    /**
+     * チャットテキスト作成の実行部分
+     * 
+     * @param Request $request
+     * @return int $id
+     */
+    public function storeDetail(Request $request) {
+        
     }
 
     /**
