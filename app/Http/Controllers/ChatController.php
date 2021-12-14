@@ -52,12 +52,12 @@ class ChatController extends Controller
 
             // 所属しているチャットルームを取得
             $join_chat_rooms = ChatRoom::whereNull("deleted_at")
+                ->with('user')
                 ->with('users')
                 ->whereHas('users', function($query) use ($user) {
                     $query->where('user_id', $user->id);
                 })
                 ->orderBy('distinction_number')
-                ->orderBy('user_id')
                 ->orderBy('id')
                 ->get();
 
@@ -103,12 +103,12 @@ class ChatController extends Controller
 
         // 所属しているチャットルームを取得
         $join_chat_rooms = ChatRoom::whereNull("deleted_at")
+            ->with('user')
             ->with('users')
             ->whereHas('users', function($query) use ($user) {
                 $query->where('user_id', $user->id);
             })
             ->orderBy('distinction_number')
-            ->orderBy('user_id')
             ->orderBy('id')
             ->get();
 
