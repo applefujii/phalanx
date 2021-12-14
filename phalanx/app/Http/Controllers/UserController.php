@@ -112,6 +112,9 @@ class UserController extends Controller
         $now = Carbon::now();
         $user->fill(['update_user_id' => Auth::id(), 'updated_at' => $now->isoFormat('YYYY-MM-DD HH:mm:ss')]);
         $user->save();
+        ChatRoom::whereNull("deleted_at")->where("user_id", $user->id)->update([
+            "room_title" => $user->name
+        ]);
         return redirect()->route('user.index');
     }
 
