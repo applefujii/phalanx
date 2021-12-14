@@ -12,7 +12,7 @@
             @foreach ($offices as $office)
                 <div class="d-flex flex-column">
                     <div class="my-2 position-relative">
-                        <hr color="black" width="90%">
+                        <hr color="black" width="100%">
                         <p class="d-flex align-items-center collapse-open">
                             <input type="checkbox" class="mx-2 {{ $office->en_office_name }}-allCheck">
                             <button type="button" class="btn btn-link offices-open" data-toggle="collapse" data-target="#{{ $office->en_office_name }}Collapse" aria-expanded="@if ($office->id == Auth::user()->office_id)true @else false @endif">
@@ -41,7 +41,7 @@
             @endforeach
             <div class="d-flex flex-column">
                 <div class="my-2 position-relative">
-                    <hr color="black" width="90%">
+                    <hr color="black" width="100%">
                     <p class="d-flex align-items-center collapse-open">
                         <input type="checkbox" class="mx-2 trial-allCheck">
                         <button type="button" class="btn btn-link offices-open" data-toggle="collapse" data-target="#trialsCollapse" aria-expanded="false">
