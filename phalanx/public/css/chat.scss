@@ -1,0 +1,89 @@
+#chat_header {
+    margin: 0px;
+    background-color: white;
+    position: fixed;
+    height: 40px;
+}
+
+#chat_main {
+    position: fixed;
+    top: 95px;
+    padding-left: 0px;
+    padding-right: 0px;
+}
+
+#chat_scroll {
+    overflow-y: scroll;
+    -webkit-overflow-scrolling: touch;
+
+    &::-webkit-scrollbar {
+        width: 20px;
+        z-index: 10;
+    }
+    &::-webkit-scrollbar-track-piece {
+        background: #f3f3f2;
+    }
+    &::-webkit-scrollbar-thumb {
+        background: #6c757d;
+    }
+    
+}
+   
+#chat_log {
+    .chat_individual {
+        &:hover {
+            background-color: rgba(0, 0, 0, 0.075);
+        }
+        .chat_header {
+            padding-left: 1rem;
+            padding-top: 0.5rem;
+        }
+        .chat_text {
+            padding-left: 2rem;
+            padding-bottom: 0.5rem;
+            white-space: pre-wrap;
+        }
+    }
+}
+
+#bookmark {
+    margin-top: 0.5rem;
+    margin-bottom: 0.5rem;
+}
+
+#new, #error {
+    display: none;
+    position: fixed;
+    pointer-events: auto;
+    bottom: 70px;
+    padding: 0.5rem 1rem;
+    border-radius: 0.25rem;
+}
+
+#to_bottom {
+    pointer-events: none;
+    position: fixed;
+    bottom: 70px;
+}
+
+#to_bottom_button {
+    pointer-events: auto;
+    opacity: 0.3;
+
+    &:hover {
+        opacity: 1;
+    }
+}
+
+#chat_footer {
+    background-color: white;
+    position: fixed;
+    bottom: 0;
+    height: 60px;
+}
+
+#chat_text {
+    resize: none;
+    height: 37.05px;
+    line-height: 23.04px;
+}

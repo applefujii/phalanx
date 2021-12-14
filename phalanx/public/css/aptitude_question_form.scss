@@ -1,0 +1,27 @@
+.aptitude_question {
+    margin-left: 0px;
+    margin-right: 0px;
+    border-top: 1px solid #dee2e6!important;
+    border-left: 1px solid #dee2e6!important;
+    border-right: 1px solid #dee2e6!important;
+    background-color: white;
+
+
+    .answer {
+        margin-left: 0px;
+        margin-right: 0px;
+        .radio {
+            margin-left: 0px;
+            margin-right: 0px;
+            padding-right: 0px;
+        }
+    }
+
+    &:hover {
+        background-color: rgba(0, 0, 0, 0.05);
+    }
+
+    &:last-of-type {
+        border-bottom: 1px solid #dee2e6!important;
+    }
+}

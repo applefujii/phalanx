@@ -1,0 +1,12 @@
+.table-header-width {
+    text-align: center;
+    tr {
+        &:nth-child(1) {
+            th {
+                &:nth-child(1) {
+                    min-width: 500px;
+                }
+            }
+        }
+    }
+}

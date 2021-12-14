@@ -1,0 +1,171 @@
+.pagelayout {
+  display: flex;
+  justify-content: center;
+}
+
+.buttons-container {
+  display:flex;
+  width: 100%;
+  justify-content: center;
+  margin-top: auto;
+  margin-bottom: auto;
+}
+
+.buttons-first-column,
+.buttons-second-column {
+  display:flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.buttons-first-column > button,
+.buttons-second-column > button {
+  height: 60px;
+  font-size: 1rem;
+  display: block;
+  margin: 0.5rem;
+  border-radius: 0.5rem;
+}
+
+
+.sidebar {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  text-align: center;
+}
+
+.sidebar-position-base {
+  width: 100%;
+  position: relative;
+}
+
+.sidebar-container {
+  overflow: auto;
+  width: 100%;
+}
+
+.sidebar-container * {
+  margin: 1rem;
+}
+
+.notification-date-header {
+  display: flex;
+  align-items: center;
+  background: radial-gradient(#f8fafc, #f8fafcb6, #f8fafc00);
+}
+
+.notification-date-header:before,
+.notification-date-header:after {
+  content: "";
+  height: 1px;
+  flex-grow: 1;
+  background-color:mediumblue;
+  margin: 1rem;
+}
+
+.notification-card {
+  border: 2px solid black;
+  border-radius: 1rem;
+  padding: 1rem;
+  font-size: 1rem;
+  text-align: left;
+}
+
+.notification-start-at {
+  margin: 0 1rem 0 1rem;
+}
+.notification-end-at {
+  margin: 0 1rem 0 2rem;
+}
+
+.notification-content {
+  white-space: pre-line;
+}
+
+.non-notifications {
+  width: 100%;
+  text-align: center;
+  font-size: 3rem;
+}
+
+@media only screen and (min-width: 768px) {
+  .buttons-first-column > button {
+    width: 300px;
+  }
+
+  .buttons-second-column > button {
+    width: 200px;
+  }
+
+  .chat-link-button {
+    height: 280px!important;
+    font-size: 3rem!important; 
+    border-radius: 3rem!important;
+  }
+
+  .sidebar:before {
+    content: "";
+    width: 1px;
+    height: 70vh;
+    flex-grow: 1;
+    background-color: black;
+  }
+
+  .sidebar-container {
+    overflow: auto;
+    height: 80vh;
+  }
+  
+  .notification {
+    width: 60%;
+  }
+
+  .sidebar-top {
+    position: absolute;
+    margin: 0;
+    top: 2.5rem;
+    width: 100%;
+    height: 30px;
+    background: linear-gradient(#f8fafc 20%, #ffffff00 100%);
+  }
+
+  .sidebar-bottom {
+    position: absolute;
+    margin: 0;
+    top: calc(80vh + 1rem);
+    width: 100%;
+    height: 30px;
+    background: linear-gradient(rgba(255,255,255,0) 0, #f8fafc 70%);
+  }
+
+  .non-notifications {
+    height: 80vh;
+    line-height: 80vh;
+  }
+}
+
+@media only screen and (max-width: 767px) {
+  .pagelayout {
+    flex-direction: column-reverse;
+  }
+
+  .buttons-container {
+    flex-direction: column;
+  }
+
+  .buttons-first-column > button,
+  .buttons-second-column > button {
+    width: 80%;
+  }
+
+  .chat-link-button {
+    font-size: 3rem!important;
+    width: 100%!important;
+    height: 80px!important;
+  }
+  
+  .notification {
+    width: 100%;
+  }
+}

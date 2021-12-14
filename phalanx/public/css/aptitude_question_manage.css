@@ -1,0 +1,6 @@
+.table-header-width {
+  text-align: center;
+}
+.table-header-width tr:nth-child(1) th:nth-child(1) {
+  min-width: 500px;
+}/*# sourceMappingURL=aptitude_question_manage.css.map */

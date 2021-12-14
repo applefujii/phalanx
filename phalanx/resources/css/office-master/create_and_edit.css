@@ -1,0 +1,24 @@
+.form-element {
+    width: 200px;
+}
+
+.back-button {
+    margin-left: 30px;
+}
+
+.information > span {
+    font-size: 0.5rem;
+    overflow-wrap: normal;
+}
+
+.information, .invalid-feedbacsk {
+    max-width: 200px;
+}
+
+.btn {
+    width: 100px;
+}
+
+/* .text-danger{
+    list-style: none;
+} */

@@ -1,0 +1,54 @@
+.label {
+    width: 100px;
+}
+
+.form-select {
+    width: 150px;
+    display: flex;
+}
+
+.form-select-element {
+    flex: 1;
+}
+
+.filter-button {
+    margin-left: 50px;
+}
+
+.table-header {
+    font-size: 120%;
+    background-color: MidnightBlue;
+    color: white;
+}
+
+.table-body-action {
+    text-align: center;
+    display: flex;
+    margin: auto;
+}
+
+.table-body-action > * {
+    flex: 1;
+}
+
+.table-body-action > * {
+    display: inline;
+}
+
+.table-body-action > * > .btn {
+    display: inline-block;
+    max-width: 80%;
+}
+
+table {
+    width: 100%;
+}
+table th {
+    white-space: nowrap;
+    width: 100px;
+}
+
+.col > * > .btn {
+    display: inline-block;
+    max-width: 80%;
+}

@@ -1,0 +1,16 @@
+.form-element {
+    width: 200px;
+}
+
+.back-button {
+    margin-left: 30px;
+}
+
+.information > span {
+    font-size: 0.5rem;
+    overflow-wrap: normal;
+}
+
+.btn {
+    min-width: 100px;
+}

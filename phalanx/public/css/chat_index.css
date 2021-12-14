@@ -1,0 +1,29 @@
+@media (min-width: 768px) {
+    .broadcast {
+        right: 20% !important;
+    }
+}
+
+.broadcast {
+    bottom: 3%;
+    right: 5%;
+}
+
+.collapse-open {
+    position: absolute;
+    background-color: white;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    -webkit-transform: translate(-50%, -50%);
+    -ms-transform: translate(-50%, -50%);
+}
+
+#errorMessage {
+    bottom: 3%;
+}
+
+textarea {
+    resize: none;
+    font-size: 1.2rem !important;
+}
