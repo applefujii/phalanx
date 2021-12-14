@@ -103,6 +103,7 @@ class ChatController extends Controller
             ->whereHas('users', function($query) use ($user) {
                 $query->where('user_id', $user->id);
             })
+            ->orderBy('distinction_number')
             ->get();
 
         //事業所一覧を取得
