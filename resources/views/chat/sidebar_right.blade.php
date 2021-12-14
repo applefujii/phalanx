@@ -6,7 +6,7 @@
         @foreach ($offices as $office)
             @if ($user_type->id < 3 && $chat_room->users->where('user_type_id', $user_type->id)->where('office_id', $office->id)->count())
                 <div>
-                    <a data-toggle="collapse" @if($user_type->id === 1)href="#staff-{{ $office->id }}" @elseif ($user_type->id === 2) href="#user-{{ $office->id }}" @endif>
+                    <a data-toggle="collapse" class="no-close" @if($user_type->id === 1)href="#staff-{{ $office->id }}" @elseif ($user_type->id === 2) href="#user-{{ $office->id }}" @endif>
                         <h5 class="col-12 pt-3 text-dark font-weight-bold">{{ $office->office_name }}{{ $user_type->alias }} ({{ $chat_room->users->where('user_type_id', $user_type->id)->where('office_id', $office->id)->count() }})</h5>
                     </a>
                     <ul @if($user_type->id === 1)id="staff-{{ $office->id }}" @elseif ($user_type->id === 2) id="user-{{ $office->id }}" @endif class="col-12 pt-1 collapse show">
