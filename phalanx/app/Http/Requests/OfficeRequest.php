@@ -25,9 +25,15 @@ class OfficeRequest extends FormRequest
     public function rules()
     {
         return [
-            'office_name' => ['required',"max:255",  Rule::unique('offices')->ignore($this->office)],
-            "en_office_name" => ["required", "alpha_dash", "max:255", Rule::unique("offices")->ignore($this->office)],
-            'sort' => ['required', "numeric", Rule::unique('offices')->ignore($this->office)],
+            'office_name' => ['required',"max:255",  Rule::unique('offices')->where(function($o) {
+                $o->whereNull("deleted_at");
+            })->ignore($this->office)],
+            "en_office_name" => ["required", "alpha_dash", "max:255", Rule::unique("offices")->where(function($o) {
+                $o->whereNull("deleted_at");
+            })->ignore($this->office)],
+            'sort' => ['required', "numeric", Rule::unique('offices')->where(function($o) {
+                $o->whereNull("deleted_at");
+            })->ignore($this->office)],
         ];
     }
 }

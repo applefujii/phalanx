@@ -11,6 +11,7 @@ namespace App\Http\Controllers;
 use App\Http\Controllers\Controller;
 use App\Models\Office;
 use App\Models\ChatRoom;
+use App\Models\User;
 use Illuminate\Validation\Rule;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -31,7 +32,7 @@ class OfficeController extends Controller
      */
     public function index()
     {
-        $offices = Office::orderBy("id")->get();
+        $offices = Office::whereNull("deleted_at")->orderBy("id")->get();
         return view("office_master/index",compact("offices"));
     }
 
@@ -129,21 +130,19 @@ class OfficeController extends Controller
             $now = Carbon::now()->isoFormat('YYYY-MM-DD HH:mm:ss');
             $office = Office::whereNull("deleted_at")->where("id", $id)->first();
 
-            if(isset($office)) {
-                $office->update([
-                    "office_name" => $request->input("office_name"),
-                    "en_office_name" => $request->input("en_office_name"),
-                    "sort" => $request->input("sort"),
-                    "update_user_id" => Auth::id(),
-                    "updated_at" => $now
-                ]);
+            $office->update([
+                "office_name" => $request->input("office_name"),
+                "en_office_name" => $request->input("en_office_name"),
+                "sort" => $request->input("sort"),
+                "update_user_id" => Auth::id(),
+                "updated_at" => $now
+            ]);
 
-                ChatRoom::whereNull("deleted_at")->where("distinction_number", 1)->where("office_id", $office->id)->update([
-                    "room_title" => $office->office_name . "職員",
-                    "update_user_id" => Auth::id(),
-                    "updated_at" => $now
-                ]);
-            }
+            ChatRoom::whereNull("deleted_at")->where("distinction_number", 1)->where("office_id", $office->id)->update([
+                "room_title" => $office->office_name . "職員",
+                "update_user_id" => Auth::id(),
+                "updated_at" => $now
+            ]);
         });
 
         if(isset($office)) return $id;
@@ -157,18 +156,19 @@ class OfficeController extends Controller
     {
         DB::transaction(function () use($id) {
             $now = Carbon::now()->isoFormat('YYYY-MM-DD HH:mm:ss');
-            $office = whereNull("deleted_at")->where("id", $id);
+            Office::where("id", $id)->update([
+                "delete_user_id" => Auth::id(),
+                "deleted_at" => $now
+            ]);
 
-            if(isset($office)) {
-                $office->update([
-                    "delete_user_id" => Auth::id(),
-                    "deleted_at" => $now
-                ]);
+            $con = app()->make("App\Http\Controllers\ChatRoomController");
+            $chatRoom = ChatRoom::whereNull("deleted_at")->where("distinction_number", 1)->where("office_id", $id)->first();
+            $con->destroy($chatRoom->id);
 
-                $con = app()->make("App\Http\Controllers\ChatRoomController");
-                $chatRoom = ChatRoom::whereNull("deleted_at")->where("distinction_number", 1)->where("office_id", $office->id)->first();
-                $con->destroy($chatRoom->id);
-            }
+            User::whereNull("deleted_at")->where("office_id", $id)->update([
+                "delete_user_id" => Auth::id(),
+                "deleted_at" => $now
+            ]);
         });
 
         return redirect()->route("office.index");
