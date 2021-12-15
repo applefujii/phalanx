@@ -120,15 +120,20 @@ class RegisterController extends Controller
 
             $chatRooms = ChatRoom::whereNull("deleted_at")->where("distinction_number", 3)->where("office_id", $user->office_id)->get();
             if(isset($chatRooms)) {
+                $aItem = [];
                 foreach($chatRooms as $chatRoom) {
-                    ChatRoom__User::create([
+                    array_push($aItem, [
                         "chat_room_id" => $chatRoom->id,
                         "user_id" => $user->id,
-                        "create_user_id" => Auth::id(),
-                        "update_user_id" => Auth::id(),
+                        "create_user_id" => $user->id,
+                        "update_user_id" => $user->id,
                         "created_at" => $now,
                         "updated_at" => $now
                     ]);
+                }
+                $aChunk = array_chunk($aItem, 100);
+                foreach($aChunk as $chunk) {
+                    ChatRoom__User::insert($chunk);
                 }
             }
         }
