@@ -3,6 +3,7 @@
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 
 class OfficeRequest extends FormRequest
 {
@@ -24,8 +25,9 @@ class OfficeRequest extends FormRequest
     public function rules()
     {
         return [
-            'office_name' => ['required' ,Rule::unique('offices')->ignore($this->office->id)],
-            'sort' => ['required',Rule::unique('offices')->ignore($this->office->id)],
+            'office_name' => ['required',"max:255",  Rule::unique('offices')->ignore($this->office)],
+            "en_office_name" => ["required", "alpha_dash", "max:255", Rule::unique("offices")->ignore($this->office)],
+            'sort' => ['required', "numeric", Rule::unique('offices')->ignore($this->office)],
         ];
     }
 }
