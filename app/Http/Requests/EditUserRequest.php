@@ -28,7 +28,7 @@ class EditUserRequest extends FormRequest
     public function rules()
     {
         return [
-            'user_type_id' => ['required', 'exists:user_types,id'],
+            'user_type_id' => ['prohibited'],
             'office_id' => ['required', 'exists:offices,id'],
             'name' => ['required', 'string', 'max:255'],
             'name_katakana' => ['required', 'string', 'max:255', new KatakanaRule],
