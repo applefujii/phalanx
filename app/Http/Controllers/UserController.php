@@ -114,20 +114,22 @@ class UserController extends Controller
                 $c->where("distinction_number", 3);
             })->delete();
             $chatRooms = ChatRoom::whereNull("deleted_at")->where("distinction_number", 3)->where("office_id", $request->input("office_id"))->get();
-            $aItem = [];
-            foreach($chatRooms as $chatRoom) {
-                array_push($aItem, [
-                    "chat_room_id" => $chatRoom->id,
-                    "user_id" => $user->id,
-                    "create_user_id" => $user->id,
-                    "update_user_id" => $user->id,
-                    "created_at" => $now->isoFormat("YYYY-MM-DD HH:mm:ss"),
-                    "updated_at" => $now->isoFormat("YYYY-MM-DD HH:mm:ss")
-                ]);
-            }
-            $aChunk = array_chunk($aItem, 100);
-            foreach($aChunk as $chunk) {
-                ChatRoom__User::insert($chunk);
+            if(isset($chatRooms)) {
+                $aItem = [];
+                foreach($chatRooms as $chatRoom) {
+                    array_push($aItem, [
+                        "chat_room_id" => $chatRoom->id,
+                        "user_id" => $user->id,
+                        "create_user_id" => $user->id,
+                        "update_user_id" => $user->id,
+                        "created_at" => $now->isoFormat("YYYY-MM-DD HH:mm:ss"),
+                        "updated_at" => $now->isoFormat("YYYY-MM-DD HH:mm:ss")
+                    ]);
+                }
+                $aChunk = array_chunk($aItem, 100);
+                foreach($aChunk as $chunk) {
+                    ChatRoom__User::insert($chunk);
+                }
             }
         }
         $user->fill(array_merge($validated, ['password' => Hash::make($request->password)]));
