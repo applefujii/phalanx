@@ -10,6 +10,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Controllers\Controller;
 use App\Models\Office;
+use App\Models\ChatRoom;
 use Illuminate\Validation\Rule;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Requests\OfficeRequest;
@@ -56,7 +57,7 @@ class OfficeController extends Controller
             'sort.required' => '表示する順番を数字で入力してください。',
             'office_name.unique' => 'その事業所は既に登録されています。',
             'sort.unique' => 'その番号は既に登録されています。'
-     ]);
+        ]);
 
 
         //ログイン中のユーザーデータを取得
@@ -78,6 +79,14 @@ class OfficeController extends Controller
         $office->created_at = $now;
         $office->updated_at = $now;
         $office->save();
+
+        $con = app()->make("App\Http\Controllers\ChatRoomController");
+        $id = $con->storeDetail(new Request([
+            "room_title" => $office->office_name . "職員",
+            "distinction_number" => 1,
+            "office_id" => $office->id,
+        ]));
+
         return redirect()->route("office.index");
     }
 
@@ -113,7 +122,7 @@ class OfficeController extends Controller
             'sort.required' => '表示する順番を数字で入力してください。',
             'office_name.unique' => 'その事業所は既に登録されています。',
             'sort.unique' => 'その番号は既に登録されています。'
-     ]);
+        ]);
 
         //ログイン中のユーザーデータを取得
         $user = Auth::user();
@@ -131,6 +140,11 @@ class OfficeController extends Controller
         $office->update_user_id = $user->id;
         $office->updated_at = $now;
         $office->save();
+
+        ChatRoom::whereNull("deleted_at")->where("distinction_number", 1)->where("office_id", $office->id)->update([
+            "room_title" => $office->office_name . "職員"
+        ]);
+
         return redirect()->route("office.index");
     }
 
@@ -147,6 +161,11 @@ class OfficeController extends Controller
 
         //削除を実行
         $office = Office::findOrFail($id);
+
+        $con = app()->make("App\Http\Controllers\ChatRoomController");
+        $chatRoom = ChatRoom::whereNull("deleted_at")->where("distinction_number", 1)->where("office_id", $office->id)->first();
+        $con->destroy($chatRoom->id);
+
         $office->delete();
         return redirect()->route("office.index");
     }
