@@ -83,7 +83,7 @@ class ChatRoomController extends Controller
         $distinctionNumber = $request->input("distinction_number", 4);
         $officeId = $request->input("office_id");
         $userId = $request->input("user_id", null);
-        $targetUsers = $request->input("target_users");
+        $targetUsers = $request->input("target_users", null);
         if(isset($targetUsers))
             $joinUsersId = explode(",", $targetUsers);
 
