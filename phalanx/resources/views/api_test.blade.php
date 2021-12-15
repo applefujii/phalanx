@@ -27,8 +27,6 @@
 
 <script>
 
-    var siteUrl = "{{ config('const.url') }}";
-
     //-- 読み込まれたタイミングで実行
     $(function(){
 
@@ -45,7 +43,7 @@
         $("#api1").on('click', function(){
             $.ajax({
                 type: "PUT",
-                url: siteUrl + "api/v1.0/set/offices.json", // 送り先
+                url: "/api/v1.0/set/notifications.json", // 送り先
                 data: {
                     records : [
                         { id:4,office_name : "事業所A", sort :200},
@@ -70,7 +68,7 @@
         $("#api2").on('click', function(){
             $.ajax({
                 type: "POST",
-                url: siteUrl + "api/v1.0/get/notifications.json", // 送り先
+                url: "/api/v1.0/get/notifications.json", // 送り先
                 data: {
                     sort : -id
                 },   // 渡したいデータをオブジェクトで渡す

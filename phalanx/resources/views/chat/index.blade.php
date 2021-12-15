@@ -1,4 +1,4 @@
-@extends("chat.sidebar")
+@extends("chat.sidebar2")
 @section("title", "通所者一覧")
 @section("c_css")
 <link href="{{ asset('css/chat_index.css') }}" rel="stylesheet">
@@ -12,7 +12,7 @@
             @foreach ($offices as $office)
                 <div class="d-flex flex-column">
                     <div class="my-2 position-relative">
-                        <hr color="black" width="90%">
+                        <hr color="black" width="100%">
                         <p class="d-flex align-items-center collapse-open">
                             <input type="checkbox" class="mx-2 {{ $office->en_office_name }}-allCheck">
                             <button type="button" class="btn btn-link offices-open" data-toggle="collapse" data-target="#{{ $office->en_office_name }}Collapse" aria-expanded="@if ($office->id == Auth::user()->office_id)true @else false @endif">
@@ -20,9 +20,14 @@
                             </button>
                         </p>
                     </div>
-                    <div class="collapse @if ($office->id == Auth::user()->office_id)show @endif" id="{{ $office->en_office_name }}Collapse">
-                        @foreach ($join_chat_rooms as $join_chat_room)
-                            @if ($join_chat_room->user_id == 2 && $join_chat_room->office_id == $office->id)
+                    <div class="collapse row @if ($office->id == Auth::user()->office_id)show @endif" id="{{ $office->en_office_name }}Collapse">
+                        @foreach (
+                            $join_chat_rooms->where("office_id", Auth::user()->office_id)->whereNotNull("user_id")
+                                ->sort(function ($first, $second) {
+                                    return $first['user']['name_katakana'] <=> $second['user']['name_katakana'];
+                                }) as $join_chat_room
+                            )
+                            @if (optional($join_chat_room->user)->user_type_id == 2 && $join_chat_room->user->office_id == $office->id)
                                 <div class="col-6 col-md-4 col-xl-3 my-1 d-flex align-items-center">
                                     <input type="checkbox" class="mr-1 {{ $office->en_office_name }}-checkBox" name="user" value="{{ $join_chat_room->id }}">
                                     <a href="{{ route('chat.show', $join_chat_room->id) }}" class="{{ $join_chat_room->id }}">
@@ -36,7 +41,7 @@
             @endforeach
             <div class="d-flex flex-column">
                 <div class="my-2 position-relative">
-                    <hr color="black" width="90%">
+                    <hr color="black" width="100%">
                     <p class="d-flex align-items-center collapse-open">
                         <input type="checkbox" class="mx-2 trial-allCheck">
                         <button type="button" class="btn btn-link offices-open" data-toggle="collapse" data-target="#trialsCollapse" aria-expanded="false">
@@ -45,8 +50,13 @@
                     </p>
                 </div>
                 <div class="collapse text-left row" id="trialsCollapse">
-                    @foreach ($join_chat_rooms as $join_chat_room)
-                        @if ($join_chat_room->user_id == 3)
+                    @foreach (
+                            $join_chat_rooms->where("office_id", Auth::user()->office_id)->whereNotNull("user_id")
+                                ->sort(function ($first, $second) {
+                                    return $first['user']['name_katakana'] <=> $second['user']['name_katakana'];
+                                }) as $join_chat_room
+                        )
+                        @if (optional($join_chat_room->user)->user_type_id == 3)
                             <div class="col-6 col-md-4 col-xl-3 my-1 d-flex align-items-center">
                                 <input type="checkbox" class="mr-1 trial-checkBox" name="user" value="{{ $join_chat_room->id }}">
                                 <a href="{{ route('chat.show', $join_chat_room->id) }}" class="{{ $join_chat_room->id }}">

@@ -1,4 +1,4 @@
-@extends('chat.sidebar')
+@extends('chat.sidebar2')
 
 @section('c_css')
     <link href="{{ asset('css/jquery-ui.min.css') }}" rel="stylesheet">
@@ -59,11 +59,11 @@
 <script>
     // チャットルーム情報
     let chat_room_id = @json($chat_room->id);
-    const chat_room_office_name = @json($chat_room->office->office_name);
+    const chat_room_office_name = @json(optional($chat_room->office)->office_name);
     // ログインユーザー情報
     const auth_user_id = @json(Auth::user()->id);
     const auth_user_type_id = @json(Auth::user()->user_type_id);
-    const auth_office_name = @json(Auth::user()->office->office_name);
+    const auth_office_name = @json(optional(Auth::user()->office)->office_name);
 </script>
 <script src="{{ asset('js/chat.min.js') }}"></script>
 @endsection

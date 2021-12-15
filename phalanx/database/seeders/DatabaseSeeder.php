@@ -20,7 +20,6 @@ class DatabaseSeeder extends Seeder
         $this->call(UserTypesSeeder::class);
         $this->call(NotificationsSeeder::class);// 予定通知テーブル
         $this->call(TestUsersSeeder::class);// ログインテスト用ユーザー
-        \App\Models\ChatRoom::factory(50)->create();// チャットルーム
         $this->call(ChatRoomsSeeder::class);// チャットルーム
         \App\Models\ChatText::factory(1000)->create();// チャットテキスト
         foreach ([3, 2, 1] as $office_id) { // テスト用
@@ -37,6 +36,5 @@ class DatabaseSeeder extends Seeder
                 'office_id' => $office_id,
             ]); // 体験者
         }
-        $this->call(ChatRoom__UserSeeder::class);// チャットルームユーザー中間テーブル
     }
 }
