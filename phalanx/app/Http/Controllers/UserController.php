@@ -110,7 +110,7 @@ class UserController extends Controller
         $validated = $request->validated();
         $now = Carbon::now();
         if($user->user_type_id == 1 && $request->input("office_id") != $user->office_id) {
-            ChatRoom__User::whereHas("chat_room", function($c) {
+            ChatRoom__User::where("user_id", $user->id)->whereHas("chat_room", function($c) {
                 $c->where("distinction_number", 3);
             })->delete();
             $chatRooms = ChatRoom::whereNull("deleted_at")->where("distinction_number", 3)->where("office_id", $request->input("office_id"))->get();
