@@ -33,7 +33,7 @@
             <div class="row justify-content-start mx-auto my-4">
                 <div class="mx-4">
                     <label for="user_typeid" class="text-md-left form-element">ユーザー種別</label><br />
-                    <select id="user_typeid" class="form-control form-element @error('user_type_id') is-invalid @enderror" name="user_type_id">
+                    <select id="user_typeid" class="form-control form-element @error('user_type_id') is-invalid @enderror" name="user_type_id" disabled>
                         @foreach ($user_types as $user_type)
                             <option value="{{ $user_type->id }}" @if ($user_type->id == old('user_type_id', $user->user_type_id)) selected @endif>{{ $user_type->alias }}</option>
                         @endforeach
