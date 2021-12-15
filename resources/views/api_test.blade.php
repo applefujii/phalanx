@@ -24,8 +24,6 @@
 
 
 @section('script')
-{{-- jQuery読み込み --}}
-<script src="{{ asset('js/jquery-3.6.0.min.js') }}"></script>
 
 <script>
 
@@ -47,12 +45,12 @@
         $("#api1").on('click', function(){
             $.ajax({
                 type: "PUT",
-                url: siteUrl + "api/v1.0/set/notifications.json", // 送り先
+                url: siteUrl + "api/v1.0/set/offices.json", // 送り先
                 data: {
                     records : [
-                        { id:3, content : "API複数更新1", start_at :"2022/01/01 00:00:00" , end_at : "2022/01/02 00:00:00", is_all_day : "0" },
-                        { id:4,content : "API複数更新2", start_at :"2022/01/01 00:00:00" , end_at : "2022/01/02 00:00:00", is_all_day : "1" },
-                        { id:5,content : "API複数更新3", start_at :"2022/01/01 00:00:00" , end_at : "2022/01/02 00:00:00", is_all_day : "0" }
+                        { id:4,office_name : "事業所A", sort :200},
+                        { id:5,office_name : "事業所B", sort :300},
+                        { id:6,office_name : "事業所C", sort :400}
                     ]
                 },   // 渡したいデータをオブジェクトで渡す
                 dataType : "json",  // データ形式を指定
@@ -74,7 +72,7 @@
                 type: "POST",
                 url: siteUrl + "api/v1.0/get/notifications.json", // 送り先
                 data: {
-                    sort : "-id"
+                    sort : -id
                 },   // 渡したいデータをオブジェクトで渡す
                 dataType : "json",  // データ形式を指定
                 scriptCharset: 'utf-8'  // 文字コードを指定

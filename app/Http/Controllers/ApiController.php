@@ -300,7 +300,7 @@ class ApiController extends Controller
         $con = app()->make("App\Http\Controllers\Auth\OfficeController");
         if( isset($request->record) ) {
             try {
-                $record_confirm = array_merge($request->record);
+                $record_confirm = $request->record;
                 $id = $con->register_return_id( new Request($record_confirm) );
             } catch(\Exception $e) {
                 Log::debug($e);
@@ -313,7 +313,7 @@ class ApiController extends Controller
             try {
                 DB::transaction(function() use(&$ids, $con, $request) {
                     foreach($request->records as $r) {
-                        $record_confirm = array_merge($r, ['password_confirmation' => $r["password"]]);
+                        $record_confirm = $r;
                         $id = $con->register_return_id( new Request($record_confirm) );
                         $ids .= strval($id) . ", ";
                     }
@@ -330,7 +330,7 @@ class ApiController extends Controller
 
     /**
      * 事業所 更新
-     * @param Request $request 登録情報[※記入]
+     * @param Request $request 登録情報[id,office_name,sort]
      * @return json 実行結果
      */
     public function ApiUpdateOffices( Request $request )
@@ -340,7 +340,7 @@ class ApiController extends Controller
         if( isset($request->record) ) {
             try {
                 $user = User::where("id", $request->record["id"])->first();
-                $record_confirm = array_merge($request->record, ['password_confirmation' => $request->record["password"]]);
+                $record_confirm = $request->record;
                 $eud = EditUserRequest::create($uri=route('user.update', $request->record["id"]), $method="PUT", $parameters=$record_confirm);
                 $eud->user = $user;
                 $eud->setContainer(app())->setRedirector(app()->make(Redirector::class));
@@ -358,7 +358,7 @@ class ApiController extends Controller
                 DB::transaction(function() use(&$ids, $con, $request) {
                     foreach($request->records as $r) {
                         $user = User::where("id", $r["id"])->first();
-                        $record_confirm = array_merge($r, ['password_confirmation' => $r["password"]]);
+                        $record_confirm = $r;
                         $eud = EditUserRequest::create($uri=route('user.update', $r["id"]), $method="PUT", $parameters=$record_confirm);
                         $eud->user = $user;
                         $eud->setContainer(app())->setRedirector(app()->make(Redirector::class));
