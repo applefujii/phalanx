@@ -41,7 +41,6 @@
 
 
 <script>
-    var siteUrl = "{{ config('const.url') }}";
     // 画面幅
     var viewportWidth = $(window).width();
     // カラム数
@@ -102,7 +101,7 @@
         //-- APIからメンバー情報を取得
         $.ajax({
             type: "POST",
-            url: siteUrl + "api/v1.0/get/users.json", // 送り先
+            url: "/api/v1.0/get/users.json", // 送り先
             data: {},   // 渡したいデータをオブジェクトで渡す
             dataType : "json",  // データ形式を指定
             scriptCharset: 'utf-8'  // 文字コードを指定
@@ -119,7 +118,7 @@
         //-- APIから事業所情報を取得
         $.ajax({
             type: "POST",
-            url: siteUrl + "api/v1.0/get/offices.json",
+            url: "/api/v1.0/get/offices.json",
             data: {},
             dataType : "json",
             scriptCharset: 'utf-8'

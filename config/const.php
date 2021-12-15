@@ -1,9 +1,6 @@
 <?php
 
 return [
-    //サイトのURL
-    'url' => "http://order.com/",
-
     //ページネーション
     'pagination' => 25,
 
