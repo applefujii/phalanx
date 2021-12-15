@@ -84,6 +84,7 @@ class ChatRoomController extends Controller
         $officeId = $request->input("office_id");
         $userId = $request->input("user_id", null);
         $targetUsers = $request->input("target_users", null);
+        $joinUsersId = null;
         if(isset($targetUsers))
             $joinUsersId = explode(",", $targetUsers);
 
@@ -176,6 +177,7 @@ class ChatRoomController extends Controller
         $roomTitle = $request->input("room_title");
         $officeId = $request->input("office_id");
         $targetUsers = $request->input("target_users");
+        $joinUsersId = null;
         if(isset($targetUsers))
             $joinUsersId = explode(",", $targetUsers);
 
@@ -241,16 +243,11 @@ class ChatRoomController extends Controller
             //関連するチャットルーム-ユーザー中間テーブルを削除
             $chatRoomUsers = ChatRoom__User::where("chat_room_id", $id)->delete();
 
-            //削除するチャットテキストテーブルのデータを取得
-            $chatTexts = ChatText::whereNull("deleted_at")->where("chat_room_id", $id)->get();
-
-            //削除するデータが存在する場合のみ削除を実行
-            if(isset($chatTexts)) {
-                $chatTexts->update([
-                    "delete_user_id" => $user->id,
-                    "deleted_at" => $now
-                ]);
-            }
+            //削除するチャットテキストテーブルのデータを取得、削除
+            $chatTexts = ChatText::whereNull("deleted_at")->where("chat_room_id", $id)->update([
+                "delete_user_id" => $user->id,
+                "deleted_at" => $now
+            ]);
         });
 
         return redirect()->route("chat_room.index");

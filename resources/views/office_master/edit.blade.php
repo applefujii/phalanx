@@ -13,7 +13,7 @@
             <div class="row justify-content-start mx-auto my-4">
                 <div class="col-md-5">
                     <label for="officename" class="form-element">事業所名</label>
-                    <input type="text" id="officename" class="form-control form-element" name="office_name" value="{{ old('office_name', $office->office_name) }}">
+                    <input type="text" id="officename" class="w-100 form-control form-element" name="office_name" value="{{ old('office_name', $office->office_name) }}">
                     @if ($errors->has("office_name"))
                         <ul class="pl-0" style="list-style: none">
                             @foreach ($errors->get("office_name") as $error)
@@ -24,11 +24,18 @@
                 </div>
                 <div class="col-md-5">
                     <label for="enOfficeName" class="form-element">英語事業所名</label>
-                    <input type="text" id="enOfficeName" name="en_office_name" class="form-control form-element" value="{{ old('en_office_name', $office->en_office_name) }}">
+                    <input type="text" id="enOfficeName" name="en_office_name" class="w-100 form-control form-element" value="{{ old('en_office_name', $office->en_office_name) }}">
+                    @error("en_office_name")
+                        <ul class="pl-0" style="list-style: none">
+                            @foreach ($errors->get("en_office_name") as $error)
+                                <li class="text-danger">{{ $error }}</li>
+                            @endforeach
+                        </ul>
+                    @enderror
                 </div>
                 <div class="col-md-2">
                     <label for="sort" class="form-element">表示順</label>
-                    <input type="number" id="sort" class="form-control form-element" name="sort" value="{{old('sort',$office->sort) }}">
+                    <input type="number" id="sort" class="w-100 form-control form-element" name="sort" value="{{old('sort',$office->sort) }}">
                     @if ($errors->has("sort"))
                         <ul class="pl-0" style="list-style: none">
                             @foreach ($errors->get("sort") as $error)
