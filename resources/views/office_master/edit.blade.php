@@ -11,40 +11,43 @@
         @method('PATCH')
         <div class="form-group">
             <div class="row justify-content-start mx-auto my-4">
-                <div class="mx-4">
-                    <label for="text" class="text-md-left form-element">事業所名</label><br />
-                    <input type="text" id="officename" class="form-control form-element" name="office_name" value="{{ old('office_name', $office->office_name) }}"><br>
-                @if ($errors->has("office_name"))
-                   <!--  <div class="row mt-2">
-                        <ul class="pl-0" style="list-style: none"> -->
+                <div class="col-md-5">
+                    <label for="officename" class="form-element">事業所名</label>
+                    <input type="text" id="officename" class="w-100 form-control form-element" name="office_name" value="{{ old('office_name', $office->office_name) }}">
+                    @if ($errors->has("office_name"))
+                        <ul class="pl-0" style="list-style: none">
                             @foreach ($errors->get("office_name") as $error)
-                            <ul class="pl-0" style="list-style: none">
                                 <li class="text-danger">{{ $error }}</li>
-                            </ul> 
                             @endforeach
-                        <!-- </ul>
-                    </div> -->
-                @endif
+                        </ul>
+                    @endif
                 </div>
-                <div class="mx-4">
-                    <label for="text" class="text-md-left form-element">表示順</label><br />
-                    <input type="number" id="sort" class="form-control form-element" name="sort" value="{{old('sort',$office->sort) }}"><br>
-                @if ($errors->has("sort"))
-                    <!-- <div class="row mt-2"> -->
-                        <!-- <ul class="pl-0" style="list-style: none"> -->
-                                @foreach ($errors->get("sort") as $error)
-                                <ul class="pl-0" style="list-style: none">
-                                    <li class="text-danger">{{ $error }}</li>
-                                </ul>
-                                @endforeach
-                        <!-- </ul> -->
-                    <!-- </div> -->
-                @endif
-
+                <div class="col-md-5">
+                    <label for="enOfficeName" class="form-element">英語事業所名</label>
+                    <input type="text" id="enOfficeName" name="en_office_name" class="w-100 form-control form-element" value="{{ old('en_office_name', $office->en_office_name) }}">
+                    @error("en_office_name")
+                        <ul class="pl-0" style="list-style: none">
+                            @foreach ($errors->get("en_office_name") as $error)
+                                <li class="text-danger">{{ $error }}</li>
+                            @endforeach
+                        </ul>
+                    @enderror
+                </div>
+                <div class="col-md-2">
+                    <label for="sort" class="form-element">表示順</label>
+                    <input type="number" id="sort" class="w-100 form-control form-element" name="sort" value="{{old('sort',$office->sort) }}">
+                    @if ($errors->has("sort"))
+                        <ul class="pl-0" style="list-style: none">
+                            @foreach ($errors->get("sort") as $error)
+                                <li class="text-danger">{{ $error }}</li>
+                            @endforeach
+                        </ul>
+                    @endif
                 </div>
             </div>
-
-        <input type="submit" class="btn btn-primary" value="更新"><a href="{{ route('office.index') }}" class="btn btn-secondary back-button">戻る</a>
+        </div>
+        <input type="submit" class="btn btn-primary" value="更新">
+        <a href="{{ route('office.index') }}" class="btn btn-secondary back-button">戻る</a>
     </form>
 </div>
 
