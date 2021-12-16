@@ -121,6 +121,8 @@ $(() => {
         $("#chat_scroll").innerHeight(
             $(window).height() - $('nav').outerHeight() - $('#chat_header').outerHeight() - $('#chat_footer').outerHeight()
         );
+        // 入力部の高さ変更
+        changeHeights();
     });
 
     // 入力開始したら
