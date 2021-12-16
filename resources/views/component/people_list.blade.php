@@ -374,13 +374,16 @@
         let oOfficeUserId = {};
         //-- 全体を事業所ごとに分ける
         aPeople.forEach(value => {
-            if(value.user_type_id == 3) {
+            if(value.user_type_id == 1) {
+                if(oOfficeUserId[value.office.office_name+' 職員'] == null) oOfficeUserId[value.office.office_name+' 職員']=[];
+                oOfficeUserId[value.office.office_name+' 職員'].push(value.id);
+            } else if(value.user_type_id == 2) {
+                if(oOfficeUserId[value.office.office_name+' 通所者'] == null) oOfficeUserId[value.office.office_name+' 通所者']=[];
+                oOfficeUserId[value.office.office_name+' 通所者'].push(value.id);
+            } else if(value.user_type_id == 3) {
                 if(oOfficeUserId['体験'] == null) oOfficeUserId['体験'] = [];
                 oOfficeUserId['体験'].push(value.id);
             }
-            else if(value.user_type_id != 2) return false;
-            if(oOfficeUserId[value.office.office_name] == null) oOfficeUserId[value.office.office_name]=[];
-            oOfficeUserId[value.office.office_name].push(value.id);
         });
         //-- 事業所ごとに、全員がいたら表示に +事業所名 -個人名
         Object.keys(oOfficeUserId).forEach(key => {
