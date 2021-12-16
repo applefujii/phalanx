@@ -54,9 +54,9 @@ class UserpageController extends Controller
             if ($end_at < $now) {
                 return ['期限切れ' => $notification];
             } else if ($start_at <= $now && $now <= $end_at) {
-                return ['今' => $notification];
+                return ['現在' => $notification];
             } else if ($start_at->isToday()) {
-                return ['今日' => $notification];
+                return ['本日' => $notification];
             } else if ($start_at <= $end_of_week) {
                 return ['今週' => $notification];
             } else if ($start_at <= $end_of_month) {
@@ -66,7 +66,7 @@ class UserpageController extends Controller
             } else if ($start_at > $end_of_year) {
                 return ['来年以降' => $notification];
             } else {
-                return ['unknown' => $notification];
+                return ['不明' => $notification];
             }
         });
         return view("user_page", compact('new_trial_applications', 'notifications_groups'));
