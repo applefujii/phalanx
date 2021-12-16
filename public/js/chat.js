@@ -83,6 +83,9 @@ $(() => {
                 // 末尾までスクロール
                 $("#chat_scroll").scrollTop($("#chat_scroll").get(0).scrollHeight);
             }
+
+            // 新着メッセージ取得
+            getNewChatLog();
         })
         .fail(() => {
             // 失敗時
