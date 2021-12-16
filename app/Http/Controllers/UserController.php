@@ -108,8 +108,31 @@ class UserController extends Controller
     public function update(EditUserRequest $request, user $user)
     {
         $validated = $request->validated();
-        $user->fill(array_merge($validated, ['password' => Hash::make($request->password)]));
         $now = Carbon::now();
+        if($user->user_type_id == 1 && $request->input("office_id") != $user->office_id) {
+            ChatRoom__User::where("user_id", $user->id)->whereHas("chat_room", function($c) {
+                $c->where("distinction_number", 3);
+            })->delete();
+            $chatRooms = ChatRoom::whereNull("deleted_at")->where("distinction_number", 3)->where("office_id", $request->input("office_id"))->get();
+            if(isset($chatRooms)) {
+                $aItem = [];
+                foreach($chatRooms as $chatRoom) {
+                    array_push($aItem, [
+                        "chat_room_id" => $chatRoom->id,
+                        "user_id" => $user->id,
+                        "create_user_id" => $user->id,
+                        "update_user_id" => $user->id,
+                        "created_at" => $now->isoFormat("YYYY-MM-DD HH:mm:ss"),
+                        "updated_at" => $now->isoFormat("YYYY-MM-DD HH:mm:ss")
+                    ]);
+                }
+                $aChunk = array_chunk($aItem, 100);
+                foreach($aChunk as $chunk) {
+                    ChatRoom__User::insert($chunk);
+                }
+            }
+        }
+        $user->fill(array_merge($validated, ['password' => Hash::make($request->password)]));
         $user->fill(['update_user_id' => Auth::id(), 'updated_at' => $now->isoFormat('YYYY-MM-DD HH:mm:ss')]);
         $user->save();
         ChatRoom::whereNull("deleted_at")->where("user_id", $user->id)->update([
