@@ -12,7 +12,7 @@
                     <ul @if($user_type->id === 1)id="staff-{{ $office->id }}" @elseif ($user_type->id === 2) id="user-{{ $office->id }}" @endif class="col-12 pt-1 collapse show">
                         @foreach ($chat_room->users as $user)
                             @if ($user->user_type_id === $user_type->id && $user->office_id === $office->id)
-                                <li class="@if ($user->id === Auth::user()->id) text-success @elseif($user->user_type_id === 1) text-danger @else text-success @endif">{{ $user->name }}</li>
+                                <li class="@if ($user->id === Auth::user()->id) text-success @elseif($user->user_type_id === 1) text-danger @else text-primary @endif">{{ $user->name }}</li>
                             @endif
                         @endforeach
                     </ul>
