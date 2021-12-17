@@ -186,7 +186,12 @@ class ChatController extends Controller
             ->with(['chat_texts' => function ($query) {
                 $query->whereNull('deleted_at')->orderByDesc('id')->limit(config('const.chat_text_limit'));
             }])
-            ->find($chat_room_id);
+            ->with('users')
+            ->whereHas('users', function($query) {
+                //表示するチャットルームにログイン中のユーザーが参加しているかの判別
+                $query->where('user_id', Auth::user()->id);
+            })
+            ->findOrFail($chat_room_id);
         
         //配列に変換
         $chat_room_array = $chat_room->toArray();
@@ -243,7 +248,11 @@ class ChatController extends Controller
                     $query->where('id', '>', $newest_read_chat_text_id)->whereNull('deleted_at')->orderBy('id');
                 }]);
             })
-            ->find($chat_room_id);
+            ->whereHas('users', function($query) {
+                //表示するチャットルームにログイン中のユーザーが参加しているかの判別
+                $query->where('user_id', Auth::user()->id);
+            })
+            ->findOrFail($chat_room_id);
 
             // 未読があるとき
             if (!empty($chat_room->chat_texts->last())) {
@@ -284,7 +293,11 @@ class ChatController extends Controller
         ->with(['chat_texts' => function ($query) use ($chat_text_id) {
             $query->where('id', '<', $chat_text_id)->whereNull('deleted_at')->orderByDesc('id')->limit(config('const.chat_text_limit'));
         }])
-        ->find($chat_room_id);
+        ->whereHas('users', function($query) {
+            //表示するチャットルームにログイン中のユーザーが参加しているかの判別
+            $query->where('user_id', Auth::user()->id);
+        })
+        ->findOrFail($chat_room_id);
         
         return response()->json($chat_room);
     }
