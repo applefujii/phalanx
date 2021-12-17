@@ -187,7 +187,7 @@ return [
     ],
 
     'values' => [
-        'start_at' => [
+        'end_at' => [
             'now' => '現在日時'
         ]
     ]
