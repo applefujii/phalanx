@@ -8,7 +8,7 @@ $(() => {
     $("#chat_scroll").innerHeight(
         $(window).height() - $('nav').outerHeight() - $('#chat_header').outerHeight() - $('#chat_footer').outerHeight()
     );
-
+    
     // 最新チャットメッセージ取得中かどうか
     let is_getting_text = false;
 
@@ -30,85 +30,42 @@ $(() => {
     // 入力部の１行の高さ
     const chat_text_line_height = $("#chat_text").css('line-height').replace(/[^0-9.]/g, '');
 
+    // ----------------------------サイドバー----------------------------
+
+    // $('[id^=chat_room_]').each(function(i, elem) {
+    //     // リンク先削除
+    //     $(elem).removeAttr('href');
+    //     // ポインター変更
+    //     $(elem).css({'cursor':'pointer'});
+    //     $(elem).on('click', () => {
+    //         // ルームID
+    //         let chat_room_id = $(elem).attr('id').replace(/[^0-9]/g, '');
+    //         if (chat_room_id != display_chat_room_id) {
+    //             // 初回チャット読み込み
+    //             getChatLog(chat_room_id);
+    //         }
+    //     });
+    // });
+
     // ----------------------------初回チャット読み込み----------------------------
-    // Ajaxリクエスト
-    $.ajaxSetup({
-        headers: {
-            "X-CSRF-TOKEN": $('meta[name="csrf-token"]').attr("content"),
-        },
-    });
-    $.ajax({
-        url: '/chat/' + chat_room_id + '/getChatLogJson',
-        type: 'GET',
-    })
-        .done((room) => {
-            // 成功時
-            // ルーム名
-            let room_title = "";
-            // 個人用ルームかつログイン者が職員でないとき
-            if (room.user_id && auth_user_type_id !== 1) {
-                room_title = chat_room_office_name + ' 職員';
-            } else {
-                room_title = room.room_title;
-            }
-            // ヘッダーにルーム名表示
-            $('#room_name').text(room_title);
-            // メッセージ入力のプレースホルダーにルーム名表示
-            $('#chat_text').prop('placeholder', room_title + 'にメッセージ送信');
-
-            // チャットログを空に
-            $("#chat_log").empty();
-            
-            $.map(room.chat_texts.reverse(), (val, index) => {
-                // チャット履歴表示
-                $("#chat_log").append(formChatText(val, index));
-
-                // ブックマーク追加
-                if (val.id == room.newest_read_chat_text_id) {
-                    displayBookmark();
-                }
-            });
-
-            // もっとも古いチャットテキストのID更新
-            oldest_display_chat_text_id = room.oldest_display_chat_text_id;
-            
-            // サイドバーのルーム名の文字色変更
-            $(`#chat_room[${chat_room_id}]`).removeClass('text-danger');
-
-            // bookmarkがあれば
-            if ($('#bookmark').length) {
-                // bookmarkまでスクロール
-                $("#chat_scroll").scrollTop($('#bookmark').offset().top - $('nav').outerHeight() - $('#chat_header').outerHeight());
-            } else {
-                // 末尾までスクロール
-                $("#chat_scroll").scrollTop($("#chat_scroll").get(0).scrollHeight);
-            }
-
-            // 新着メッセージ取得
-            getNewChatLog();
-        })
-        .fail(() => {
-            // 失敗時
-            $('#error_message').text('メッセージの受信に失敗しました。');
-            $('#error').show();
-        });
+    getChatLog(display_chat_room_id);
 
     // ----------------------------10秒ごとに最新チャット取得----------------------------
     setInterval(() => {
-        getNewChatLog();
+        getNewChatLog(display_chat_room_id);
     }, 10000);
 
     // ----------------------------チャット送信----------------------------
     // 送信ボタンを押したらチャット送信
     $("#submit").on('click', () => {
-        submitText();
+        submitText(display_chat_room_id);
     });
 
     // SHFIT+ENTERを押したらチャット送信
     // 連打防止で送信ボタン無効なら送信しない
     $(window).on('keydown', (event) => {
         if (!$('#submit').prop('disabled') && event.shiftKey && event.key === 'Enter') {
-            submitText();
+            submitText(display_chat_room_id);
             return false;
         }
     });
@@ -147,7 +104,7 @@ $(() => {
         // 一番上までスクロールしたら
         if ($("#chat_scroll").scrollTop() == 0) {
             // 過去ログ表示
-            getOldChatLog();
+            getOldChatLog(display_chat_room_id);
         }
     });
 
@@ -162,10 +119,78 @@ $(() => {
     });
 
     // ----------------------------関数----------------------------
+    // 初回チャット読み込み
+    function getChatLog(chat_room_id) {
+        $.ajaxSetup({
+            headers: {
+                "X-CSRF-TOKEN": $('meta[name="csrf-token"]').attr("content"),
+            },
+        });
+        $.ajax({
+            url: '/chat/' + chat_room_id + '/getChatLogJson',
+            type: 'GET',
+        })
+            .done((room) => {
+                // 成功時
+                // 表示している中で最も古いチャットテキストのID
+                oldest_display_chat_text_id = 1;
+
+                // 表示しているチャットルームのID
+                display_chat_room_id = room.id;
+
+                // ルーム名
+                let room_title = room.room_title;
+
+                // 個人用ルームかつログイン者が職員でないとき
+                if (room.user_id && auth_user_type_id !== 1) {
+                    room_title = room.office.office_name + ' 職員';
+                }
+                // ヘッダーにルーム名表示
+                $('#room_name').text(room_title);
+                // メッセージ入力のプレースホルダーにルーム名表示
+                $('#chat_text').prop('placeholder', room_title + 'にメッセージ送信');
+    
+                // チャットログを空に
+                $("#chat_log").empty();
+                
+                $.map(room.chat_texts.reverse(), (val, index) => {
+                    // チャット履歴表示
+                    $("#chat_log").append(formChatText(val, index));
+    
+                    // ブックマーク追加
+                    if (val.id == room.newest_read_chat_text_id) {
+                        displayBookmark();
+                    }
+                });
+    
+                // もっとも古いチャットテキストのID更新
+                oldest_display_chat_text_id = room.oldest_display_chat_text_id;
+                
+                // サイドバーのルーム名の文字色変更
+                $(`#chat_room[${chat_room_id}]`).removeClass('text-danger');
+    
+                // bookmarkがあれば
+                if ($('#bookmark').length) {
+                    // bookmarkまでスクロール
+                    $("#chat_scroll").scrollTop($('#bookmark').offset().top - $('nav').outerHeight() - $('#chat_header').outerHeight());
+                } else {
+                    // 末尾までスクロール
+                    $("#chat_scroll").scrollTop($("#chat_scroll").get(0).scrollHeight);
+                }
+    
+                // 新着メッセージ取得
+                getNewChatLog(chat_room_id);
+            })
+            .fail(() => {
+                // 失敗時
+                $('#error_message').text('メッセージの受信に失敗しました。');
+                $('#error').show();
+            });
+    }
     // 新着メッセージ取得
-    function getNewChatLog() {
+    function getNewChatLog(chat_room_id) {
         // 既に取得中なら新たに取得しない
-        if (!is_getting_text) {
+        if (is_getting_text) {
             return false;
         }
         // 新着メッセージ取得中ならtrue
@@ -212,7 +237,6 @@ $(() => {
                         }
                     });
                     
-                    
                     // 新着ログ部分の高さの差分
                     let difference = $('#chat_log').innerHeight() - old_height;
                     new_height += difference;
@@ -242,7 +266,7 @@ $(() => {
     }
 
     // 過去メッセージ取得
-    function getOldChatLog() {
+    function getOldChatLog(chat_room_id) {
         // 過去ログ部分の高さ
         let old_height = $('#chat_log').innerHeight();
 
@@ -283,7 +307,7 @@ $(() => {
     }
 
     // チャット送信
-    function submitText() {
+    function submitText(chat_room_id) {
         // 入力値を取得
         let chat_text = $('#chat_text').val();
         if (chat_text.length < 1) {
@@ -317,8 +341,6 @@ $(() => {
                     $('#chat_text').val('');
                     // フッター等の高さ調整
                     changeHeights();
-                    //最新チャット取得
-                    getNewChatLog();
                 }
             })
             // 失敗時
