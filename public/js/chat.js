@@ -368,7 +368,6 @@ $(() => {
         } else {
             name_css = 'text-primary font-weight-bold';
         }
-        console.log(val.created_at);
         return `
             <div class="chat_individual">
                 <div class="chat_header">

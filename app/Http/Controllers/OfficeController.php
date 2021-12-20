@@ -89,6 +89,17 @@ class OfficeController extends Controller
                 "distinction_number" => 1,
                 "office_id" => $office->id,
             ]));
+
+            $users = User::whereNull("deleted_at")->where("user_type_id", "<>", 1)->get();
+            foreach($users as $user) {
+                $id = $con->storeDetail(new Request([
+                    "room_title" => $user->name,
+                    "distinction_number" => 3,
+                    "office_id" => $office->id,
+                    "user_id" => $user->id,
+                    "target_users" => $user->id
+                ]));
+            }
         });
 
         if(isset($office)) return $office->id;
@@ -169,8 +180,10 @@ class OfficeController extends Controller
             ]);
 
             $con = app()->make("App\Http\Controllers\ChatRoomController");
-            $chatRoom = ChatRoom::whereNull("deleted_at")->where("distinction_number", 1)->where("office_id", $id)->first();
-            $con->destroy($chatRoom->id);
+            $chatRooms = ChatRoom::whereNull("deleted_at")->where("office_id", $id)->get();
+            foreach($chatRooms as $chatRoom) {
+                $con->destroy($chatRoom->id);
+            }
 
             User::whereNull("deleted_at")->where("office_id", $id)->update([
                 "delete_user_id" => Auth::id(),
