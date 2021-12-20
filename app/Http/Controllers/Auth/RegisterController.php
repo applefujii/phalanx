@@ -104,12 +104,24 @@ class RegisterController extends Controller
         //現在時刻を取得
         $now = carbon::now()->isoFormat('YYYY-MM-DD HH:mm:ss');
 
-        //作成されたユーザーが職員の場合職員全体と対利用者のチャットルームに自動的に参加
+        //作成されたユーザーが職員の場合職員全体と事業所全体と対利用者のチャットルームに自動的に参加
         if($user->user_type_id == 1) {
             $group = ChatRoom::where("distinction_number", 0)->first();
             if(isset($group)) {
                 ChatRoom__User::create([
                     "chat_room_id" => $group->id,
+                    "user_id" => $user->id,
+                    "create_user_id" => Auth::id(),
+                    "update_user_id" => Auth::id(),
+                    "created_at" => $now,
+                    "updated_at" => $now
+                ]);
+            }
+
+            $chatRoom = ChatRoom::whereNull("deleted_at")->where("distinction_number", 1)->where("office_id", $user->office_id)->first();
+            if(isset($chatRoom)) {
+                ChatRoom__User::create([
+                    "chat_room_id" => $chatRoom->id,
                     "user_id" => $user->id,
                     "create_user_id" => Auth::id(),
                     "update_user_id" => Auth::id(),
@@ -125,8 +137,8 @@ class RegisterController extends Controller
                     array_push($aItem, [
                         "chat_room_id" => $chatRoom->id,
                         "user_id" => $user->id,
-                        "create_user_id" => $user->id,
-                        "update_user_id" => $user->id,
+                        "create_user_id" => Auth::id(),
+                        "update_user_id" => Auth::id(),
                         "created_at" => $now,
                         "updated_at" => $now
                     ]);
