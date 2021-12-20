@@ -108,7 +108,7 @@ class ApiController extends Controller
             }
         }
 
-        $query = User::whereNull('deleted_at')->with('office');
+        $query = User::whereNull('deleted_at');
         if ($filter_user_id !== '')
             $query->whereIn('id', $filter_user_id);
 
@@ -292,45 +292,42 @@ class ApiController extends Controller
 
     /**
      * 事業所 登録
-     * @param Request $request 登録情報[id,office_name,sort]
+     * @param Request $request 登録情報[id,office_name,en_office_name,sort]
      * @return json 実行結果
      */
     public function ApiStoreOffices( Request $request )
     {
-        $con = app()->make("App\Http\Controllers\Auth\OfficeController");
+        $con = app()->make("App\Http\Controllers\officeController");
+        
         if( isset($request->record) ) {
             try {
-                $record_confirm = array_merge($request->record);
-                $id = $con->register_return_id( new Request($record_confirm) );
+                $id = $con->storeDetail( new Request($request->record) );
             } catch(\Exception $e) {
-                Log::debug($e);
                 return json_encode( '{ result : "Failure" }' );
             }
-            return json_encode( '{ result : "Success", result : '.$id.' }' );
-        }
-        else if( isset($request->records) ) {
-            $ids = "";
+            return json_encode( '{ result : "Success", id : '.$id.' }' );
+        } else if( isset($request->records) ) {
+            $ids = [];
             try {
                 DB::transaction(function() use(&$ids, $con, $request) {
                     foreach($request->records as $r) {
-                        $record_confirm = array_merge($r, ['password_confirmation' => $r["password"]]);
-                        $id = $con->register_return_id( new Request($record_confirm) );
-                        $ids .= strval($id) . ", ";
+                        $id = $con->storeDetail( new Request($r) );
+                        $ids[] = $id;
                     }
+                    $ids = implode(", ", $ids);
                 });
             } catch( \Exception $e ) {
-                Log::debug($e);
                 return json_encode( '{ result : "Failure" }' );
             }
-            return json_encode( '{ result : "Success", results : ['. $ids .'] }' );
+            return json_encode( '{ result : "Success", ids : ['. $ids .'] }' );
         }
-
+        
         return json_encode( '{ result : "Failure" }' );
     }
 
     /**
      * 事業所 更新
-     * @param Request $request 登録情報[※記入]
+     * @param Request $request 登録情報[id,office_name,en_office_name,sort]
      * @return json 実行結果
      */
     public function ApiUpdateOffices( Request $request )
@@ -340,7 +337,7 @@ class ApiController extends Controller
         if( isset($request->record) ) {
             try {
                 $user = User::where("id", $request->record["id"])->first();
-                $record_confirm = array_merge($request->record, ['password_confirmation' => $request->record["password"]]);
+                $record_confirm = $request->record;
                 $eud = EditUserRequest::create($uri=route('user.update', $request->record["id"]), $method="PUT", $parameters=$record_confirm);
                 $eud->user = $user;
                 $eud->setContainer(app())->setRedirector(app()->make(Redirector::class));
@@ -358,7 +355,7 @@ class ApiController extends Controller
                 DB::transaction(function() use(&$ids, $con, $request) {
                     foreach($request->records as $r) {
                         $user = User::where("id", $r["id"])->first();
-                        $record_confirm = array_merge($r, ['password_confirmation' => $r["password"]]);
+                        $record_confirm = $r;
                         $eud = EditUserRequest::create($uri=route('user.update', $r["id"]), $method="PUT", $parameters=$record_confirm);
                         $eud->user = $user;
                         $eud->setContainer(app())->setRedirector(app()->make(Redirector::class));

@@ -39,25 +39,15 @@ class ChatController extends Controller
         //ログイン中のユーザーが職員かどうかの判別(職員のuser_type_idを1と仮定)
         if($user->user_type_id == 1) {
 
-            //未読があるチャットルームのidを取得
-            $unreadId = [];
-            // $cuFinds = ChatRoom__User::where("user_id", $user->id)->get();
-            // foreach($cuFinds as $cuFind) {
-            //     $ctFind = ChatText::whereNull("deleted_at")->where("chat_room_id", $cuFind->chat_room_id)->where("user_id", "<>", $user->id)
-            //         ->orderBy("id", "desc")->first();
-            //     if(isset($ctFind) && $cuFind->newest_read_chat_text_id < $ctFind->id) {
-            //         $unreadId[] = $cuFind->chat_room_id;
-            //     }
-            // }
-
             // 所属しているチャットルームを取得
             $join_chat_rooms = ChatRoom::whereNull("deleted_at")
                 ->with('user')
                 ->with(['chat_room__user' => function ($query) use ($user) {
                     $query->where('user_id', $user->id);
                 }])
-                ->with(['chat_texts' => function ($query) {
-                    $query->whereNull('deleted_at')->orderByDesc('id')->limit(1);
+                ->with(['chat_texts' => function ($query) use ($user) {
+                    $query->whereNull('deleted_at')->where("user_id", "<>", $user->id)// 自身の書き込みは除外
+                        ->orderByDesc('id')->limit(1);
                 }])
                 ->with('users')
                 ->whereHas('users', function($query) use ($user) {
@@ -67,12 +57,14 @@ class ChatController extends Controller
                 ->orderBy('id')
                 ->get();
 
+            //未読があるチャットルームのidを取得
+            $unreadId = [];
+
             foreach($join_chat_rooms as $join_chat_room) {
                 if(optional(optional($join_chat_room->chat_room__user)->first())->newest_read_chat_text_id < optional(optional($join_chat_room->chat_texts)->first())->id) {
                     $unreadId[] = $join_chat_room->id;
                 }
             }
-            // dd($join_chat_room->toArray());
 
             //事業所一覧を取得
             $offices = Office::whereNull("deleted_at")->orderBy("sort")->get();
@@ -103,20 +95,16 @@ class ChatController extends Controller
             })
             ->findOrFail($id);
 
-        //未読があるチャットルームのidを取得
-        $unreadId = [];
-        $cuFinds = ChatRoom__User::where("user_id", $user->id)->get();
-        foreach($cuFinds as $cuFind) {
-            $ctFind = ChatText::whereNull("deleted_at")->where("chat_room_id", $cuFind->chat_room_id)->where("user_id", "<>", $user->id)
-                ->orderBy("id", "desc")->first();
-            if(isset($ctFind) && $cuFind->newest_read_chat_text_id < $ctFind->id) {
-                $unreadId[] = $cuFind->chat_room_id;
-            }
-        }
-
         // 所属しているチャットルームを取得
         $join_chat_rooms = ChatRoom::whereNull("deleted_at")
             ->with('user')
+            ->with(['chat_room__user' => function ($query) use ($user) {
+                $query->where('user_id', $user->id);
+            }])
+            ->with(['chat_texts' => function ($query) use ($user) {
+                $query->whereNull('deleted_at')->where("user_id", "<>", $user->id)// 自身の書き込みは除外
+                    ->orderByDesc('id')->limit(1);
+            }])
             ->with('users')
             ->whereHas('users', function($query) use ($user) {
                 $query->where('user_id', $user->id);
@@ -124,6 +112,15 @@ class ChatController extends Controller
             ->orderBy('distinction_number')
             ->orderBy('id')
             ->get();
+
+        //未読があるチャットルームのidを取得
+        $unreadId = [];
+
+        foreach($join_chat_rooms as $join_chat_room) {
+            if(optional(optional($join_chat_room->chat_room__user)->first())->newest_read_chat_text_id < optional(optional($join_chat_room->chat_texts)->first())->id) {
+                $unreadId[] = $join_chat_room->id;
+            }
+        }
 
         //事業所一覧を取得
         $offices = Office::whereNull("deleted_at")->orderBy("sort")->get();

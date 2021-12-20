@@ -27,6 +27,8 @@
 
 <script>
 
+    var siteUrl = "{{ config('const.url') }}";
+
     //-- 読み込まれたタイミングで実行
     $(function(){
 
@@ -43,12 +45,10 @@
         $("#api1").on('click', function(){
             $.ajax({
                 type: "PUT",
-                url: "/api/v1.0/set/notifications.json", // 送り先
+                url: siteUrl + "api/v1.0/set/offices.json", // 送り先
                 data: {
                     records : [
-                        { id:3, content : "API複数更新1", start_at :"2022/01/01 00:00:00" , end_at : "2022/01/02 00:00:00", is_all_day : "0" },
-                        { id:4,content : "API複数更新2", start_at :"2022/01/01 00:00:00" , end_at : "2022/01/02 00:00:00", is_all_day : "1" },
-                        { id:5,content : "API複数更新3", start_at :"2022/01/01 00:00:00" , end_at : "2022/01/02 00:00:00", is_all_day : "0" }
+                        { id:2,office_name : "リテラル天神橋", en_office_name : "a",sort :200}
                     ]
                 },   // 渡したいデータをオブジェクトで渡す
                 dataType : "json",  // データ形式を指定
@@ -68,9 +68,9 @@
         $("#api2").on('click', function(){
             $.ajax({
                 type: "POST",
-                url: "/api/v1.0/get/notifications.json", // 送り先
+                url: siteUrl + "api/v1.0/get/offices.json", // 送り先
                 data: {
-                    sort : "-id"
+                    
                 },   // 渡したいデータをオブジェクトで渡す
                 dataType : "json",  // データ形式を指定
                 scriptCharset: 'utf-8'  // 文字コードを指定
