@@ -44,7 +44,7 @@ class UserpageController extends Controller
         $notifications = Notification::whereNull('deleted_at')->whereHas('notification__user', function($n__u) {
             $n__u->where('user_id', '=', Auth::id());
         })->orderBy('start_at', 'asc')->orderBy('end_at', 'asc')->get();
-        $notifications_groups = $notifications->mapToGroups(function ($notification, $key) {
+        $unsorted_notifications_groups = $notifications->mapToGroups(function ($notification, $key) {
             $start_at = new Carbon($notification->start_at);
             $end_at = new Carbon($notification->end_at);
             $now = now();
@@ -67,6 +67,23 @@ class UserpageController extends Controller
                 return ['来年以降' => $notification];
             } else {
                 return ['不明' => $notification];
+            }
+        });
+        $key_order = [
+            '期限切れ' => -1,
+            '現在' => 0,
+            '本日' => 1,
+            '今週' => 2,
+            '今月' => 3,
+            '今年' => 4,
+            '今年' => 5,
+            '来年以降' => 6,
+        ];
+        $notifications_groups = $unsorted_notifications_groups->sortBy(function ($notification, $key) use ($key_order) {
+            if (array_key_exists($key, $key_order)) {
+                return $key_order[$key];
+            } else {
+                return PHP_INT_MAX;
             }
         });
         return view("user_page", compact('new_trial_applications', 'notifications_groups'));
