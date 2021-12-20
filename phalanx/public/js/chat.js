@@ -371,7 +371,7 @@ $(() => {
         return `
             <div class="chat_individual">
                 <div class="chat_header">
-                    <span class="${name_css}">${val.user.name}</span>　${moment(val.created_at, "YYYY-MM-DD hh:mm:ss").locale('ja').format('llll')}
+                    <span class="${name_css}">${val.user.name}</span>　${moment(val.created_at, "YYYY-MM-DD hh:mm:ss").locale('ja').format('ll')} ${moment(val.created_at, "YYYY-MM-DD hh:mm:ss").format('h:mm:ss')}
                 </div>
                     
                 <div class="chat_text">${val.chat_text}</div>
