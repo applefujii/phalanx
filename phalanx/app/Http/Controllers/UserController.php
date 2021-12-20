@@ -43,7 +43,7 @@ class UserController extends Controller
         if ($filter_user_type_id !== '') {
             $users_query->where('user_type_id', '=', $filter_user_type_id);
         }
-        $offices = Office::orderBy('sort', 'asc')->get();
+        $offices = Office::whereNull("deleted_at")->orderBy('sort', 'asc')->get();
         $user_types = UserType::orderBy('id', 'asc')->get();
 
         $users = $users_query->join('offices', 'users.office_id', '=', 'offices.id')->join('user_types', 'users.user_type_id', '=', 'user_types.id')->orderBy('user_types.id', 'asc')->orderBy('offices.sort', 'asc')->orderBy('users.id', 'asc')->select('users.id', 'users.name', 'users.user_type_id', 'users.office_id')->paginate(25);
@@ -58,7 +58,7 @@ class UserController extends Controller
      */
     public function create()
     {
-        $offices = Office::orderBy('sort', 'asc')->get();
+        $offices = Office::whereNull("deleted_at")->orderBy('sort', 'asc')->get();
         $user_types = UserType::orderBy('id', 'asc')->get();
         return view("user_master.create", compact('offices', 'user_types'));
     }
@@ -93,7 +93,7 @@ class UserController extends Controller
      */
     public function edit(user $user)
     {
-        $offices = Office::orderBy('sort', 'asc')->get();
+        $offices = Office::whereNull("deleted_at")->orderBy('sort', 'asc')->get();
         $user_types = UserType::orderBy('id', 'asc')->get();
         return view("user_master.edit", compact('user', 'offices', 'user_types'));
     }
