@@ -108,7 +108,7 @@ class ApiController extends Controller
             }
         }
 
-        $query = User::whereNull('deleted_at');
+        $query = User::with('office')->whereNull('deleted_at');
         if ($filter_user_id !== '')
             $query->whereIn('id', $filter_user_id);
 
