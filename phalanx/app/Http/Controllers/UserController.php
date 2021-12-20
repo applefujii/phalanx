@@ -111,9 +111,9 @@ class UserController extends Controller
         $now = Carbon::now();
         if($user->user_type_id == 1 && $request->input("office_id") != $user->office_id) {
             ChatRoom__User::where("user_id", $user->id)->whereHas("chat_room", function($c) {
-                $c->where("distinction_number", 3);
+                $c->whereIn("distinction_number", [1, 3]);
             })->delete();
-            $chatRooms = ChatRoom::whereNull("deleted_at")->where("distinction_number", 3)->where("office_id", $request->input("office_id"))->get();
+            $chatRooms = ChatRoom::whereNull("deleted_at")->whereIn("distinction_number", [1, 3])->where("office_id", $request->input("office_id"))->get();
             if(isset($chatRooms)) {
                 $aItem = [];
                 foreach($chatRooms as $chatRoom) {
