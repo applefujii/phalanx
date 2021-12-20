@@ -85,7 +85,7 @@
         ';
 
     const peopleHtmlNest = '<div class="flex-fill ml-3">';
-    const peopleHtml = '<p><input type="checkbox" class="[EnName] check-individual" style="vertical-align: middle;" data-people-id="[PeopleId]" data-group="[EnName]"> [PeopleName]</p>';
+    const peopleHtml = '<p><label><input type="checkbox" class="[EnName] check-individual" style="vertical-align: middle;" data-people-id="[PeopleId]" data-group="[EnName]"> [PeopleName]</label></p>';
     const ancompleted = '<p><b>読み込み中</b></p>';
     const noChuse = '<p class="text-danger">未選択</p>';
 
