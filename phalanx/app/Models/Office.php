@@ -14,6 +14,8 @@ class Office extends Model
 {
     use HasFactory;
 
+    protected $guarded = ["id"];
+
     /**
      * モデルと関連しているテーブル
      *
