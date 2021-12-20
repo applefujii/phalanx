@@ -25,7 +25,7 @@ class ChatRoomRequest extends FormRequest
     {
         return [
             "room_title" => "required|max:100",
-            "office_id" => "required||integer",
+            "office_id" => "required|numeric",
             "target_users" => "required"
         ];
     }

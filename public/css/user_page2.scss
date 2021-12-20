@@ -1,0 +1,58 @@
+.buttons-container {
+    button {
+        width: 300px;
+    }
+}
+
+.notification-content {
+    white-space: pre-wrap;
+}
+
+.notification-card {
+    background-color: white;
+    & + & {
+        margin-top: 10px;
+    }
+}
+.date {
+    & + & {
+        margin-top: 10px;
+    }
+}
+
+.date-title {
+    background-color: white;
+}
+
+#chat_button {
+    height: 50px;
+    font-size: 20px;
+}
+
+#user-main {
+    position: fixed;
+}
+
+#footer {
+    background-color: white;
+    position: fixed;
+    bottom: 0;
+    left:0;
+}
+
+#scroll {
+    overflow-x: hidden;
+    overflow-y: scroll;
+    -webkit-overflow-scrolling: touch;
+
+    &::-webkit-scrollbar {
+        width: 20px;
+        z-index: 10;
+    }
+    &::-webkit-scrollbar-track-piece {
+        background: #f3f3f2;
+    }
+    &::-webkit-scrollbar-thumb {
+        background: #6c757d;
+    }
+}
