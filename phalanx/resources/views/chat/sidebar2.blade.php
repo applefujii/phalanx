@@ -44,10 +44,7 @@
             </div>
         </div>
         <div class="col-md-8 bg-white border-top p-0">
-            <div class="scroll-contents" id="center-scroll">
-                @yield('center')
-            </div>
-            @yield("c_modal")
+            @yield('center')
         </div>
         <div class="col-md-2 d-none d-md-block border border-dark pr-0">
             <div class="scroll-contents">
