@@ -174,7 +174,7 @@ class OfficeController extends Controller
             ]);
 
             $con = app()->make("App\Http\Controllers\ChatRoomController");
-            $chatRooms = ChatRoom::whereNull("deleted_at")->where("office_id", $id)->first();
+            $chatRooms = ChatRoom::whereNull("deleted_at")->where("office_id", $id)->get();
             foreach($chatRooms as $chatRoom) {
                 $con->destroy($chatRoom->id);
             }
