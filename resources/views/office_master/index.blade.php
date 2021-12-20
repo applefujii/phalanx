@@ -34,6 +34,9 @@
                 @endforeach
             </tbody>
         </table>
+        <a class="btn btn-secondary" role="button" href="{{ route('user_page') }}">ホームに戻る</a>
         </div>
     </div>
+
 @endsection
+
