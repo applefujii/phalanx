@@ -31,19 +31,15 @@
                             @endif
                         </td>
                         <td class="align-middle">
-                            <div class="row gx-2">
-                                <div class="col">
-                                    <form action="{{ route('chat_room.edit', $chatRoom->id) }}" method="GET">
-                                        <button class="btn btn-sm btn-primary" type="submit">編集</button>
-                                    </form>
-                                </div>
-                                <div class="col">
-                                    <form action="{{ route('chat_room.destroy', $chatRoom->id) }}" method="POST">
-                                        @csrf
-                                        @method("DELETE")
-                                        <button class="btn btn-sm btn-danger" type="submit" onclick="return confirm('本当に削除しますか？')">削除</button>
-                                    </form>
-                                </div>
+                            <div class="table-body-action">
+                                <form action="{{ route('chat_room.edit', $chatRoom->id) }}" method="GET">
+                                    <button class="btn btn-sm btn-primary" type="submit">編集</button>
+                                </form>
+                                <form action="{{ route('chat_room.destroy', $chatRoom->id) }}" method="POST">
+                                    @csrf
+                                    @method("DELETE")
+                                    <button class="btn btn-sm btn-danger" type="submit" onclick="return confirm('本当に削除しますか？')">削除</button>
+                                </form>
                             </div>
                         </td>
                     </tr>
