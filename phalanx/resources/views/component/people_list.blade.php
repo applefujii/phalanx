@@ -30,8 +30,8 @@
                 {{-- jsで動的に追加 --}}
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">キャンセル</button>
                 <button id="people-list-modal-ok" type="button" class="btn btn-primary">決定</button>
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">キャンセル</button>
             </div>
         </div>
     </div>
@@ -54,6 +54,7 @@
         aCheckList = [];
     if('{{ old("target_users") }}' != '')
         aCheckList = '{{ old("target_users") }}'.split(',').map(Number);
+    var aCheckListBuffer;
     // 事業所全員がチェックされているか
     var aIsAllCheck = [];
     // 表示するグループ 利用者、職員
@@ -149,6 +150,7 @@
     //-- モーダルが呼び出されたとき
     $(document).ready(function(){
         $(document).on('show.bs.modal','#peopleListModal', function ( event ) {
+            aCheckListBuffer = aCheckList.concat();
             let button = $(event.relatedTarget) //モーダルを呼び出すときに使われたボタンを取得
             let targetGroup = button.data('target-group');
 
@@ -197,16 +199,16 @@
         if ( $(this).prop('checked') == true ) {
             $('.'+$(this).data('child-class')).each(function(index, element){
                 $(this).prop('checked', true);
-                if( aCheckList.includes($(this).data('people-id')) == false )
-                    aCheckList.push($(this).data('people-id'));
+                if( aCheckListBuffer.includes($(this).data('people-id')) == false )
+                    aCheckListBuffer.push($(this).data('people-id'));
             });
             aIsAllCheck.push($(this).data('child-class')+'-'+targetUserType);
         } else {
             $('.'+$(this).data('child-class')).each(function(index, element){
                 $(this).prop('checked', false);
-                aCheckList.splice(aCheckList.indexOf($(this).data('people-id')), 1);
+                aCheckListBuffer.splice(aCheckListBuffer.indexOf($(this).data('people-id')), 1);
             });
-            aIsAllCheck.splice(aCheckList.indexOf($(this).data('child-class')+'-'+targetUserType), 1);
+            aIsAllCheck.splice(aCheckListBuffer.indexOf($(this).data('child-class')+'-'+targetUserType), 1);
         }
     });
 
@@ -214,10 +216,10 @@
     $(document).on('change', 'div.people_list input[type=checkbox]', function(){
         if( $(this).prop('checked') ) {
             //増加
-            aCheckList.push($(this).data('people-id'));
+            aCheckListBuffer.push($(this).data('people-id'));
         } else {
             //削減
-            aCheckList.splice(aCheckList.indexOf($(this).data('people-id')), 1);
+            aCheckListBuffer.splice(aCheckListBuffer.indexOf($(this).data('people-id')), 1);
         }
     });
 
@@ -234,19 +236,18 @@
         if( fAllCheck )
             aIsAllCheck.push($(this).data('group')+'-'+targetUserType);
         else
-            aIsAllCheck.splice(aCheckList.indexOf($(this).data('group')+'-'+targetUserType), 1);
+            aIsAllCheck.splice(aCheckListBuffer.indexOf($(this).data('group')+'-'+targetUserType), 1);
     });
 
     //-- 決定ボタンを押したときの動作
     $('#people-list-modal-ok').on('click', function(){
+        aCheckList = aCheckListBuffer
+        $('#target_users').attr('value', aCheckList.join(','));
+        updateUserList();
+        $('#peopleListModal').modal('hide');
+        
         // console.log(aCheckList);
         // console.log(aIsAllCheck);
-
-        $('#target_users').attr('value', aCheckList.join(','));
-
-        updateUserList();
-
-        $('#peopleListModal').modal('hide');
     });
 
 
