@@ -24,8 +24,6 @@ Auth::routes([
     'verify' => false,
 ]);
 
-Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
-
 // 通知
 Route::resource('/notification', App\Http\Controllers\NotificationController::class);
 Route::get('/api_test', [App\Http\Controllers\NotificationController::class, 'api_test'])->name('api_test');
