@@ -137,8 +137,8 @@ class RegisterController extends Controller
                     array_push($aItem, [
                         "chat_room_id" => $chatRoom->id,
                         "user_id" => $user->id,
-                        "create_user_id" => $user->id,
-                        "update_user_id" => $user->id,
+                        "create_user_id" => Auth::id(),
+                        "update_user_id" => Auth::id(),
                         "created_at" => $now,
                         "updated_at" => $now
                     ]);
