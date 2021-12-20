@@ -182,7 +182,7 @@ class NotificationController extends Controller
             ]);
 
             //-- 対象ユーザー登録
-            if(isset($request->old_users)) {
+            if(isset($request->target_users)) {
                 $aItem = [];
                 foreach( $request->target_users as $tu ) {
                     //-- 既に登録されていたら飛ばす
