@@ -56,7 +56,6 @@ Route::resource('/aptitude_question_manage', App\Http\Controllers\AptitudeQuesti
 Route::resource('user', App\Http\Controllers\UserController::class)->only(['index', 'create', 'store', 'edit', 'update', 'destroy']);
 
 // 事業所マスター
-
 Route::resource('office', App\Http\Controllers\OfficeController::class)->only(['index', 'create', 'store', 'edit', 'update', 'destroy']);
 
 //ログイン後の画面
@@ -82,7 +81,9 @@ Route::PUT('/api/v1.0/set/users.json', [App\Http\Controllers\APIController::clas
 Route::DELETE('/api/v1.0/set/users.json', [App\Http\Controllers\APIController::class, "ApiDeleteUsers"]);
 // 事業所
 Route::POST('/api/v1.0/get/offices.json', [App\Http\Controllers\APIController::class, "ApiGetOffices"]);
-
+Route::POST('/api/v1.0/set/offices.json', [App\Http\Controllers\APIController::class, "ApiStoreOffices"]);
+Route::PUT('/api/v1.0/set/offices.json', [App\Http\Controllers\APIController::class, "ApiUpdateOffices"]);
+Route::DELETE('/api/v1.0/set/offices.json', [App\Http\Controllers\APIController::class, "ApiDeleteOffices"]);
 // 予定通知
 Route::POST('/api/v1.0/get/notifications.json', [App\Http\Controllers\APIController::class, "ApiGetNotifications"]);
 Route::POST('/api/v1.0/set/notifications.json', [App\Http\Controllers\APIController::class, "ApiStoreNotifications"]);
