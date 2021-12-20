@@ -32,7 +32,11 @@ class OfficeController extends Controller
      */
     public function index()
     {
+<<<<<<< HEAD
+        $offices = Office::orderBy("sort")->get();
+=======
         $offices = Office::whereNull("deleted_at")->orderBy("id")->get();
+>>>>>>> 4dde13d864e7b305609e3f30d3ee47eb068a78a2
         return view("office_master/index",compact("offices"));
     }
 
