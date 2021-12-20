@@ -27,6 +27,12 @@ class OfficeController extends Controller
      * コンストラクタ
      */
 
+    public function __construct() {
+
+        //ログインしているユーザーが職員かどうかの判断
+        $this->middleware("staff");
+    }
+
 /**
      * 事業所マスタ表示画面
      */
