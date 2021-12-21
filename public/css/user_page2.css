@@ -1,3 +1,4 @@
+@charset "UTF-8";
 .buttons-container button {
   width: 300px;
 }
@@ -13,28 +14,25 @@
   margin-top: 10px;
 }
 
-.date + .date {
-  margin-top: 10px;
-}
-
-.date-title {
-  background-color: white;
+.date_category {
+  position: relative;
+  height: 30px;
 }
 
 #chat_button {
-  height: 50px;
-  font-size: 20px;
-}
-
-#user-main {
-  position: fixed;
+  height: 80px;
+  font-size: 40px;
 }
 
 #footer {
   background-color: white;
   position: fixed;
   bottom: 0;
-  left: 0;
+  z-index: 10;
+}
+
+.space_for_footer {
+  margin-bottom: 80px;
 }
 
 #scroll {
@@ -51,4 +49,25 @@
 }
 #scroll::-webkit-scrollbar-thumb {
   background: #6c757d;
+}
+
+.date_category hr {
+  z-index: 1;
+}
+.date_category button {
+  z-index: 2;
+}
+.date_category button[data-toggle=collapse].collapsed::after {
+  font-family: "Font Awesome 5 Free";
+  font-weight: 900;
+  content: "";
+  /* chevron-down */
+  float: right;
+}
+.date_category button[data-toggle=collapse]::after {
+  font-family: "Font Awesome 5 Free";
+  font-weight: 900;
+  content: "";
+  /* chevron-up */
+  float: right;
 }/*# sourceMappingURL=user_page2.css.map */
