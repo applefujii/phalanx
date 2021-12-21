@@ -51,33 +51,16 @@ class UserpageController extends Controller
             $end_of_week = now()->endOfWeek();
             $end_of_month = now()->endOfMonth();
             $end_of_year = now()->endOfYear();
-            if ($end_at < $now) {
-                return ['期限切れ' => $notification];
-            } else if ($start_at <= $now && $now <= $end_at) {
-                return ['現在' => $notification];
-            } else if ($start_at->isToday()) {
-                return ['本日' => $notification];
-            } else if ($start_at <= $end_of_week) {
+            if ($start_at <= $end_of_week) {
                 return ['今週' => $notification];
-            } else if ($start_at <= $end_of_month) {
-                return ['今月' => $notification];
-            } else if ($start_at <= $end_of_year) {
-                return ['今年' => $notification];
-            } else if ($start_at > $end_of_year) {
-                return ['来年以降' => $notification];
             } else {
-                return ['不明' => $notification];
+                return ['来週以降' => $notification];
             }
         });
+        // ソート用
         $key_order = [
-            '期限切れ' => -1,
-            '現在' => 0,
-            '本日' => 1,
-            '今週' => 2,
-            '今月' => 3,
-            '今年' => 4,
-            '今年' => 5,
-            '来年以降' => 6,
+            '今週' => 1,
+            '来週以降' => 2,
         ];
         $notifications_groups = $unsorted_notifications_groups->sortBy(function ($notification, $key) use ($key_order) {
             if (array_key_exists($key, $key_order)) {

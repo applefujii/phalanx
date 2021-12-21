@@ -37,7 +37,7 @@
                     </div>
                     <div class="answer col-md-6 row p-3">
                         @foreach (config('const.option') as $option_key => $option_value)
-                            <div class="radio col-md-auto">
+                            <div class="radio col-lg-auto">
                                 <div class="form-check">
                                     <input id="{{ $option_key }}[{{ $aptitude_question->id }}]"
                                         class="form-check-input" type="radio"
