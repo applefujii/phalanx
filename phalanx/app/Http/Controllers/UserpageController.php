@@ -57,6 +57,7 @@ class UserpageController extends Controller
                 return ['来週以降' => $notification];
             }
         });
+        // ソート用
         $key_order = [
             '今週' => 1,
             '来週以降' => 2,
