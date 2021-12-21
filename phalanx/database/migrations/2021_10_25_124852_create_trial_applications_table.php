@@ -26,6 +26,7 @@ class CreateTrialApplicationsTable extends Migration
             $table->date('desired_date');
             $table->string('email', 512)->nullable()->default(null);
             $table->string('phone_number', 255)->nullable()->default(null);
+            $table->string('comment', 500)->nullable()->default(null);
             $table->boolean('is_checked')->default(false);
             $table->unsignedBigInteger('update_user_id')->nullable()->default(null);
             $table->unsignedBigInteger('delete_user_id')->nullable()->default(null);
