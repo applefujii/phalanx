@@ -1,5 +1,5 @@
 @if ($paginator->hasPages())
-    <nav>
+    <nav style="-webkit-user-select: none; -moz-user-select: none; -ms-user-select: none; user-select: none;">
         <ul class="pagination">
             
             {{-- First Page Link and Previous Page Link --}}
