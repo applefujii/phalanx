@@ -100,7 +100,8 @@
                                     method="post">
                                     @method('DELETE')
                                     @csrf
-                                    <button class="btn btn-sm btn-danger" type="submit">削除</button>
+                                    <button class="btn btn-sm btn-danger" type="submit" onclick="moveCheck()">
+                                    削除</button>
                                 </form>
                             </div>
                         </td>
@@ -113,4 +114,12 @@
             <a class="btn btn-secondary" role="button" href="{{ route('user_page') }}">ホームに戻る</a>
         </p> --}}
     </div>
+@endsection
+
+@section("script")
+<script>
+function moveCheck {
+    let con = confirm("削除しますか\n")
+}
+</script>
 @endsection
