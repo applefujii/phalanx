@@ -20,6 +20,20 @@ class Notification extends Model
         return $this->hasMany(Notification__User::class);
     }
 
+    public function users()
+    {
+        return $this->belongsToMany(User::class, 'notification__user');
+    }
+
+    public function notification__office() {
+        return $this->hasMany(Notification__Office::class);
+    }
+
+    public function offices()
+    {
+        return $this->belongsToMany(Office::class, 'notification__office');
+    }
+
     // 終日の場合その日付を返す。それ以外の場合nullを返す
     public function date_if_allday() {
         if (!$this->is_all_day) {
