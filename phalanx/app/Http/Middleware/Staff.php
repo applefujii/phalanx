@@ -27,7 +27,7 @@ class Staff
         }
  
         //権限チェック
-        if (auth()->user()->user_type_id === 1) {
+        if (auth()->user()->user_type_id === 1  |  auth()->user()->user_type_id === 4) {
             $this->auth = true;
         } else {
             $this->auth = false;

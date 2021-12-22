@@ -44,13 +44,10 @@
                   <div class="notification-date-header sticky-top">{{ $key }}</div>
                   @foreach ($notifications as $notification)
                     <div class="notification-card">
-                      @if ($notification->is_all_day)
-                      <span class="notification-start-at">{{ $notification->date_if_allday() }}</span>
-                      <br>
-                      @else
-                        <div class="notification-start-at">{{ $notification->start_at }}</div>
-                        <div class="notification-end-at">～ {{ $notification->end_at }}</div>
-                      @endif
+                        <div class="notification-start-at">{{ $notification->start_date_format() }}</div>
+                        @if($notification->start_date_format() != $notification->end_date_format())
+                          <div class="notification-end-at">～ {{ $notification->end_date_format() }}</div>
+                        @endif
                       <div class="notification-content">{{ $notification->content }}</div>
                     </div>
                   @endforeach
