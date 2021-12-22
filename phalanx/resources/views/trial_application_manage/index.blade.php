@@ -100,7 +100,8 @@
                                     method="post">
                                     @method('DELETE')
                                     @csrf
-                                    <button class="btn btn-sm btn-danger" type="submit" onclick="moveCheck()">
+                                    <button class="btn btn-sm btn-danger" type="submit"
+                                        onclick="moveCheck('{{ $application_date->isoFormat('YYYY年MM月DD日 (ddd)') }}', '{{ $trial_application->office->office_name }}', '{{ $desired_date->isoFormat('YYYY年MM月DD日 (ddd)') }}', '{{ Illuminate\Support\Facades\Crypt::decryptString($trial_application->name) }}', {{ $trial_application->is_checked }})">
                                     削除</button>
                                 </form>
                             </div>
@@ -118,8 +119,20 @@
 
 @section("script")
 <script>
-function moveCheck {
-    let con = confirm("削除しますか\n")
+function moveCheck(a_date, office, d_date, name, check) {
+    let con = false;
+    if (check == 1) {
+        con = confirm(`削除しますか\n申請日: ${a_date}\n事業所: ${office}\n体験希望日: ${d_date}\n氏名: ${name}\n本人への連絡: 済`);
+    } else {
+        con = confirm(`削除しますか\n申請日: ${a_date}\n事業所: ${office}\n体験希望日: ${d_date}\n氏名: ${name}\n本人への連絡: 未`);
+    }
+    if(con == false) {
+        return false;
+    } else if (check == 0) {
+        return confirm("本人への連絡が済んでいませんが本当に削除しますか");
+    } else {
+        return true;
+    }
 }
 </script>
 @endsection
