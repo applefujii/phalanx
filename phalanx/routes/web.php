@@ -54,7 +54,7 @@ Route::resource('/aptitude_question_manage', App\Http\Controllers\AptitudeQuesti
 Route::resource('user', App\Http\Controllers\UserController::class)->only(['index', 'create', 'store', 'edit', 'update', 'destroy']);
 
 // 事業所マスター
-Route::resource('office', App\Http\Controllers\OfficeController::class)->only(['index', 'create', 'store', 'edit', 'update', 'destroy']);
+Route::resource('office', App\Http\Controllers\OfficeController::class)->only(['index', 'edit', 'update']);
 
 //ログイン後の画面
 Route::get("/user_page", [App\Http\Controllers\UserpageController::class, "index"])->name("user_page");

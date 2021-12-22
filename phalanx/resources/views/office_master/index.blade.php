@@ -7,7 +7,7 @@
 @section('content')
     <div class="container-md">
         <h3>事業所マスター　一覧</h3>
-        <a href="{{ route('office.create') }}" type="button" class="btn btn-primary my-3">新規作成</a>
+        {{-- <a href="{{ route('office.create') }}" type="button" class="btn btn-primary my-3">新規作成</a> --}}
         <div class="mt-3">
         <table class="table table-striped table-bordered table-sm">
             <thead class="bg-primary text-white">
@@ -25,9 +25,9 @@
                         <td class="">
                             <div class="table-body-action"><span><a href="{{ route('office.edit', $office->id) }}"
                                         type="button" class="btn btn-sm btn-primary edit-button">編集</a></span>
-                                <form method="post" action="{{ route('office.destroy', $office->id) }}"> @csrf
+                                {{-- <form method="post" action="{{ route('office.destroy', $office->id) }}"> @csrf
                                     @method('DELETE') <button type="submit"
-                                        class="btn btn-sm btn-danger delete-button" onclick='@if($office->id == Auth::id()) alert("自身のアカウントを削除できないように制限しています"); return false; @else return confirm("削除しますか\nID: {{ $office->id }}\n事業所名: {{ $office->office_name }}\n表示順: {{ $office->sort }}"); @endif'>削除</button></form>
+                                        class="btn btn-sm btn-danger delete-button" onclick='@if($office->id == Auth::id()) alert("自身のアカウントを削除できないように制限しています"); return false; @else return confirm("削除しますか\nID: {{ $office->id }}\n事業所名: {{ $office->office_name }}\n表示順: {{ $office->sort }}"); @endif'>削除</button></form> --}}
                             </div>
                         </td>
                     </tr>
