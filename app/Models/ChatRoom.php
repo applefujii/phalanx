@@ -54,21 +54,6 @@ class ChatRoom extends Model
     }
 
     /**
-     * 関連するチャットルーム-事業所テーブルのデータを取得
-     */
-    public function chat_room__office() {
-        return $this->hasMany(ChatRoom__Office::class);
-    }
-
-    /**
-     * 所属している事業所の事業所マスタのデータを取得
-     */
-    public function offices()
-    {
-        return $this->belongsToMany(Office::class, 'chat_room__office');
-    }
-
-    /**
      * 個人ルームの場合、個人のユーザーマスタのデータを取得
      */
     public function user() {
