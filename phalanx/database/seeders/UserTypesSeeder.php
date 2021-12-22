@@ -36,6 +36,13 @@ class UserTypesSeeder extends Seeder
                 "updated_at" => "2021-04-01 12:34:56",
                 "created_at" => "2021-04-01 12:34:56",
             ],
+            [
+                "alias" => "スーパーアカウント",
+                "create_user_id" => 1,
+                "update_user_id" => 1,
+                "updated_at" => "2021-04-01 12:34:56",
+                "created_at" => "2021-04-01 12:34:56",
+            ],
         ]);
     }
 }
