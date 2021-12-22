@@ -8,11 +8,11 @@
 
 @section('content')
     <div class="container">
-        <div class="col-md-10">
+        <div class="col-lg-10">
             <h3 class="">適性診断</h3>
         </div>
         @if ($errors->any())
-            <div class="col-md-10">
+            <div class="col-lg-10">
                 <div class="alert alert-danger justify-content-center">
                     <span>未回答の質問があります。</span>
                 </div>
@@ -20,7 +20,7 @@
         @endif
         <form action="{{ route('aptitude_question_form.calculate') }}" method="post">
             @csrf
-            <div class="justify-content-center col-md-10">
+            <div class="justify-content-center col-lg-10">
             @foreach ($aptitude_questions as $aptitude_question)
                 <div class="aptitude_question row">
                     <input type="hidden" name="aptitude_questions[{{ $aptitude_question->id }}][id]"
@@ -32,10 +32,10 @@
                     <input type="hidden" name="aptitude_questions[{{ $aptitude_question->id }}][score_maple]"
                         value="{{ $aptitude_question->score_maple ?? 0 }}">
 
-                    <div class="question col-md-6 p-3">
+                    <div class="question col-lg-6 p-3">
                         {{ $aptitude_question->question }}
                     </div>
-                    <div class="answer col-md-6 row p-3">
+                    <div class="answer col-lg-6 row p-3">
                         @foreach (config('const.option') as $option_key => $option_value)
                             <div class="radio col-lg-auto">
                                 <div class="form-check">
@@ -58,15 +58,15 @@
             @endforeach
             </div>
 
-            <div class="form-group col-md-10">
+            <div class="form-group col-lg-10 mt-4">
                 <div class="text-center">
-                    <button class="btn btn-primary" type="submit">結果を見る</button>
+                    <button class="btn btn-primary col-lg-3" type="submit">結果を見る</button>
                 </div>
             </div>
         </form>
-        <div class="col-md-10">
+        <div class="col-lg-10">
             <div class="text-center">
-                <p><a class="btn btn-secondary" role="button" href="{{ route('top') }}">トップに戻る</a></p>
+                <p><a class="btn btn-secondary col-lg-3" role="button" href="{{ route('top') }}">トップに戻る</a></p>
             </div>
         </div>
     </div>
