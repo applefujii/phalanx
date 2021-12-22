@@ -74,6 +74,6 @@ class User extends Authenticatable
 
     // リファクタリングする機会があったら
     public function is_staff() {
-        return $this->user_type_id == 1;
+        return $this->user_type_id == 1  |  $this->user_type_id == 4;
     }
 }
