@@ -29,7 +29,7 @@
                                 <div class="col-6 col-md-4 col-xl-3 my-1 d-flex align-items-center">
                                     <input type="checkbox" class="mr-1 {{ $office->en_office_name }}-checkBox" name="user" value="{{ $join_chat_room->id }}">
                                     <a class="chat_room_{{ $join_chat_room->id }}" href="{{ route('chat.show', $join_chat_room->id) }}">
-                                        {{ $join_chat_room->room_title }}
+                                        <span class="new d-none">●</span>{{ $join_chat_room->room_title }}
                                     </a>
                                 </div>
                             @endif
@@ -56,7 +56,7 @@
                             <div class="col-6 col-md-4 col-xl-3 my-1 d-flex align-items-center">
                                 <input type="checkbox" class="mr-1 trial-checkBox" name="user" value="{{ $join_chat_room->id }}">
                                 <a class="chat_room_{{ $join_chat_room->id }}" href="{{ route('chat.show', $join_chat_room->id) }}">
-                                    {{ $join_chat_room->room_title }}
+                                    <span class="new d-none">●</span>{{ $join_chat_room->room_title }}
                                 </a>
                             </div>
                         @endif
