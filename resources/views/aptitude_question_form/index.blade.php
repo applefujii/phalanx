@@ -58,15 +58,15 @@
             @endforeach
             </div>
 
-            <div class="form-group col-lg-10">
+            <div class="form-group col-lg-10 mt-4">
                 <div class="text-center">
-                    <button class="btn btn-primary" type="submit">結果を見る</button>
+                    <button class="btn btn-primary col-lg-3" type="submit">結果を見る</button>
                 </div>
             </div>
         </form>
         <div class="col-lg-10">
             <div class="text-center">
-                <p><a class="btn btn-secondary" role="button" href="{{ route('top') }}">トップに戻る</a></p>
+                <p><a class="btn btn-secondary col-lg-3" role="button" href="{{ route('top') }}">トップに戻る</a></p>
             </div>
         </div>
     </div>
