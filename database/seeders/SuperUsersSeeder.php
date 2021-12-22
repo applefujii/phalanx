@@ -6,7 +6,7 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Database\Seeder;
 use Carbon\Carbon;
 
-class InitialUsersSeeder extends Seeder
+class SuperUsersSeeder extends Seeder
 {
     /**
      * Run the database seeds.
@@ -17,11 +17,11 @@ class InitialUsersSeeder extends Seeder
     {
         DB::table("users")->insert([
             [
-                'user_type_id' => 1,
-                'office_id' => 1,
-                'name' => '初期アカウント',
-                'name_katakana' => 'ショキアカウント',
-                'login_name' => 'init',
+                'user_type_id' => 4,
+                'office_id' => 0,
+                'name' => 'スーパーアカウント',
+                'name_katakana' => 'スーパーアカウント',
+                'login_name' => 'admin',
                 'password' => Hash::make('password'), // password
                 'remember_token' => null,
                 'create_user_id' => 1,

@@ -48,6 +48,6 @@ class DatabaseSeeder extends Seeder
         // $this->call(TestUsersSeeder::class);// ログインテスト用ユーザー
         // $this->call(ChatRoomsSeeder::class);// チャットルーム
         // \App\Models\ChatText::factory(1000)->create();// チャットテキスト
-        $this->call(InitialUsersSeeder::class);
+        $this->call(SuperUsersSeeder::class);
     }
 }
