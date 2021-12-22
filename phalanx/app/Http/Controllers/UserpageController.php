@@ -1,7 +1,7 @@
 <?php
 
 /**
- * ログイン後、ユーザーに表示するページのコントローラ
+ * ログイン後に表示するページのコントローラ
  * 
  * @author Yubaru Nozato
  */
@@ -44,29 +44,29 @@ class UserpageController extends Controller
         $notifications = Notification::whereNull('deleted_at')->whereHas('notification__user', function($n__u) {
             $n__u->where('user_id', '=', Auth::id());
         })->orderBy('start_at', 'asc')->orderBy('end_at', 'asc')->get();
-        $notifications_groups = $notifications->mapToGroups(function ($notification, $key) {
+        $unsorted_notifications_groups = $notifications->mapToGroups(function ($notification, $key) {
             $start_at = new Carbon($notification->start_at);
             $end_at = new Carbon($notification->end_at);
             $now = now();
             $end_of_week = now()->endOfWeek();
             $end_of_month = now()->endOfMonth();
             $end_of_year = now()->endOfYear();
-            if ($end_at < $now) {
-                return ['期限切れ' => $notification];
-            } else if ($start_at <= $now && $now <= $end_at) {
-                return ['今' => $notification];
-            } else if ($start_at->isToday()) {
-                return ['今日' => $notification];
-            } else if ($start_at <= $end_of_week) {
+            if ($start_at <= $end_of_week) {
                 return ['今週' => $notification];
-            } else if ($start_at <= $end_of_month) {
-                return ['今月' => $notification];
-            } else if ($start_at <= $end_of_year) {
-                return ['今年' => $notification];
-            } else if ($start_at > $end_of_year) {
-                return ['来年以降' => $notification];
             } else {
-                return ['unknown' => $notification];
+                return ['来週以降' => $notification];
+            }
+        });
+        // ソート用
+        $key_order = [
+            '今週' => 1,
+            '来週以降' => 2,
+        ];
+        $notifications_groups = $unsorted_notifications_groups->sortBy(function ($notification, $key) use ($key_order) {
+            if (array_key_exists($key, $key_order)) {
+                return $key_order[$key];
+            } else {
+                return PHP_INT_MAX;
             }
         });
         return view("user_page", compact('new_trial_applications', 'notifications_groups'));

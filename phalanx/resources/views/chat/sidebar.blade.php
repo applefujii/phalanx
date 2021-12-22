@@ -58,9 +58,6 @@
 @endsection
 
 @section('script')
-
-    @yield("c_script")
-
     <script>
         $(function() {
 
@@ -100,13 +97,13 @@
             });
 
             //未読テキストがあるチャットルームのリンクの色を変更
-            @if (isset($chat_room))
-                @foreach ($unreadId as $unread)
-                    @if ($unread !== $chat_room->id) 
-                        $(".{{ $unread }}").addClass("text-danger");
-                    @endif
-                @endforeach
-            @endif
+            $.map(@json($unreadId), (val, index) => {
+                $(`.chat_room_${val}`).addClass("text-danger");
+                $(`.chat_room_${val}`).children('span').removeClass('d-none');
+            });
         });
     </script>
+
+@yield("c_script")
+
 @endsection

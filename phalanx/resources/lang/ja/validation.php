@@ -153,6 +153,7 @@ return [
         'desired_date' => '体験・見学希望日',
         'email' => 'メールアドレス',
         'phone_number' => '電話番号',
+        'comment' => '備考',
 
         // 適性診断
         'answers' => '回答',
@@ -184,6 +185,12 @@ return [
 
         // チャットルーム管理
         'room_title' => 'ルーム名',
+    ],
+
+    'values' => [
+        'end_at' => [
+            'now' => '現在日時'
+        ]
     ]
 
 ];

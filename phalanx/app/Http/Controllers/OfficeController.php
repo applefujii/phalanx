@@ -10,8 +10,11 @@ namespace App\Http\Controllers;
 
 use App\Http\Controllers\Controller;
 use App\Models\Office;
+use App\Models\ChatRoom;
+use App\Models\User;
 use Illuminate\Validation\Rule;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use App\Http\Requests\OfficeRequest;
 use Illuminate\Support\Facades\Validator;
 use Carbon\Carbon;
@@ -24,12 +27,19 @@ class OfficeController extends Controller
      * コンストラクタ
      */
 
+    public function __construct() {
+
+        //ログインしているユーザーが職員かどうかの判断
+        $this->middleware("staff");
+    }
+
 /**
      * 事業所マスタ表示画面
      */
     public function index()
     {
-        $offices = Office::orderBy("id")->get();
+        /* $offices = Office::orderBy("sort")->get(); */
+        $offices = Office::whereNull("deleted_at")->orderBy("sort")->get();
         return view("office_master/index",compact("offices"));
     }
 
@@ -43,43 +53,59 @@ class OfficeController extends Controller
     }
 
      /**
-     * 新規データ作成の実行部分
+     * 新規データ作成の受け取り部分
      */
-    public function store(Request $request)
+    public function store(OfficeRequest $request)
     {
-        $request->validate([
-            'office_name' => 'required|unique:offices,office_name',
-            'sort' => 'required|unique:offices,sort'
-        ],
-        [
-            'office_name.required' => '事業所名を入力してください。',
-            'sort.required' => '表示する順番を数字で入力してください。',
-            'office_name.unique' => 'その事業所は既に登録されています。',
-            'sort.unique' => 'その番号は既に登録されています。'
-     ]);
+        $id = $this->storeDetail($request);
 
-
-        //ログイン中のユーザーデータを取得
-        $user = Auth::user();
-
-        //各種リクエストのデータを取得
-        $officename = $request->input("office_name");
-        $sort = $request->input("sort");
-
-        //現在時刻の取得
-        $now = Carbon::now()->isoFormat('YYYY-MM-DD HH:mm:ss');
-
-        //Officeインスタンスを作成、各種データを挿入後登録
-        $office = new Office();
-        $office->office_name = $officename;
-        $office->sort = $sort;
-        $office->create_user_id = isset($user->id);
-        $office->update_user_id = isset($user->id);
-        $office->created_at = $now;
-        $office->updated_at = $now;
-        $office->save();
         return redirect()->route("office.index");
     }
+
+    /**
+     * 新規データ作成の実行部分
+     * 
+     * @param Request $request
+     * @return int $id
+     */
+    public function storeDetail(Request $request) {
+
+        $office = null;
+        DB::transaction(function () use(&$office, $request) {
+            $now = Carbon::now()->isoFormat('YYYY-MM-DD HH:mm:ss');
+            $office = Office::create([
+                "office_name" => $request->input("office_name"),
+                "en_office_name" => $request->input("en_office_name"),
+                "sort" => $request->input("sort"),
+                "create_user_id" => Auth::id(),
+                "update_user_id" => Auth::id(),
+                "created_at" => $now,
+                "update_at" => $now,
+            ]);
+
+            $con = app()->make("App\Http\Controllers\ChatRoomController");
+            $id = $con->storeDetail(new Request([
+                "room_title" => $office->office_name . "職員",
+                "distinction_number" => 1,
+                "office_id" => $office->id,
+            ]));
+
+            $users = User::whereNull("deleted_at")->where("user_type_id", "<>", 1)->get();
+            foreach($users as $user) {
+                $id = $con->storeDetail(new Request([
+                    "room_title" => $user->name,
+                    "distinction_number" => 3,
+                    "office_id" => $office->id,
+                    "user_id" => $user->id,
+                    "target_users" => $user->id
+                ]));
+            }
+        });
+
+        if(isset($office)) return $office->id;
+        return -1;
+    }
+
 
     /**
      * データの編集
@@ -100,38 +126,45 @@ class OfficeController extends Controller
      */
 
     /**
-     * データ編集の実行部分
+     * データ編集の受け取り部分
      */
-    public function update(Request $request, $id)
+    public function update(OfficeRequest $request, $id)
     {
-        $request->validate([
-            'office_name' => ['required',Rule::unique('offices')->ignore($id)],
-            'sort' => ['required',Rule::unique('offices')->ignore($id)]
-        ],
-        [
-            'office_name.required' => '事業所名を入力してください。',
-            'sort.required' => '表示する順番を数字で入力してください。',
-            'office_name.unique' => 'その事業所は既に登録されています。',
-            'sort.unique' => 'その番号は既に登録されています。'
-     ]);
+        $id = $this->updateDetail($request, $id);
 
-        //ログイン中のユーザーデータを取得
-        $user = Auth::user();
-
-        //各種リクエストのデータを取得
-        $officename = $request->input("office_name");
-        $sort = $request->input("sort");
-
-    //現在時刻を取得
-        $now = Carbon::now()->isoFormat('YYYY-MM-DD HH:mm:ss');
-
-        $office = Office::findOrFail($id);
-        $office->office_name = $officename;
-        $office->sort = $sort;
-        $office->update_user_id = $user->id;
-        $office->updated_at = $now;
-        $office->save();
         return redirect()->route("office.index");
+    }
+
+    /**
+     * データ更新の実行部分
+     * 
+     * @param Request $request, int $id
+     * @return int $id
+     */
+    public function updateDetail(Request $request, $id) {
+
+        $office = null;
+        DB::transaction(function () use(&$office, $request, $id) {
+            $now = Carbon::now()->isoFormat('YYYY-MM-DD HH:mm:ss');
+            $office = Office::whereNull("deleted_at")->where("id", $id)->first();
+
+            $office->update([
+                "office_name" => $request->input("office_name"),
+                "en_office_name" => $request->input("en_office_name"),
+                "sort" => $request->input("sort"),
+                "update_user_id" => Auth::id(),
+                "updated_at" => $now
+            ]);
+
+            ChatRoom::whereNull("deleted_at")->where("distinction_number", 1)->where("office_id", $office->id)->update([
+                "room_title" => $office->office_name . "職員",
+                "update_user_id" => Auth::id(),
+                "updated_at" => $now
+            ]);
+        });
+
+        if(isset($office)) return $id;
+        return -1;
     }
 
     /**
@@ -139,15 +172,25 @@ class OfficeController extends Controller
      */
     public function destroy($id)
     {
-        //ログイン中のユーザーデータを取得
-        $user = Auth::user();
+        DB::transaction(function () use($id) {
+            $now = Carbon::now()->isoFormat('YYYY-MM-DD HH:mm:ss');
+            Office::where("id", $id)->update([
+                "delete_user_id" => Auth::id(),
+                "deleted_at" => $now
+            ]);
 
-        //現在時刻を取得
-        $now = Carbon::now()->isoFormat('YYYY-MM-DD HH:mm:ss');
+            $con = app()->make("App\Http\Controllers\ChatRoomController");
+            $chatRooms = ChatRoom::whereNull("deleted_at")->where("office_id", $id)->get();
+            foreach($chatRooms as $chatRoom) {
+                $con->destroy($chatRoom->id);
+            }
 
-        //削除を実行
-        $office = Office::findOrFail($id);
-        $office->delete();
+            User::whereNull("deleted_at")->where("office_id", $id)->update([
+                "delete_user_id" => Auth::id(),
+                "deleted_at" => $now
+            ]);
+        });
+
         return redirect()->route("office.index");
     }
 

@@ -44,10 +44,7 @@
             </div>
         </div>
         <div class="col-md-8 bg-white border-top p-0">
-            <div class="scroll-contents" id="center-scroll">
-                @yield('center')
-            </div>
-            @yield("c_modal")
+            @yield('center')
         </div>
         <div class="col-md-2 d-none d-md-block border border-dark pr-0">
             <div class="scroll-contents">
@@ -116,6 +113,11 @@
             }
         });
 
+        //未読テキストがあるチャットルームのリンクの色を変更
+        $.map(@json($unreadId), (val, index) => {
+            $(`.chat_room_${val}`).addClass("text-danger");
+            $(`.chat_room_${val}`).children('span').removeClass('d-none');
+        });
     });
 
 </script>

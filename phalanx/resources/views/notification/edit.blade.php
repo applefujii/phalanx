@@ -60,9 +60,14 @@
         </div>
         <div class="row justify-content-start mx-auto my-4">
             <div class="mx-4">
-                <button type="button" class="btn btn-secondary btn-sm" data-toggle="modal" data-target="#peopleListModal" data-target-group="user">
-                    + 対象
-                </button>
+                <div class="row">
+                    <div class="col-sm-auto mt-3">
+                        <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#peopleListModal" data-target-group="staff">メンバー選択（職員）</button>
+                    </div>
+                    <div class="col-sm-auto mt-3 mb-3">
+                        <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#peopleListModal" data-target-group="user">メンバー選択（利用者）</button>
+                    </div>
+                </div>
                 <input form="main-form" name="old_target_users" id="old_target_users" hidden>
                 <input form="main-form" name="target_users" id="target_users" class="@error('target_users') is-invalid @enderror @error('target_users.*') is-invalid @enderror" hidden>
                 @error('target_users')

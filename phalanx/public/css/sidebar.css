@@ -6,6 +6,13 @@ nav {
     z-index: 1035;
 }
 
+i {
+    -webkit-user-select: none;
+	   -moz-user-select: none;
+	    -ms-user-select: none;
+	        user-select: none;
+}
+
 .top {
     top:0;
 }

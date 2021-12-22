@@ -20,8 +20,8 @@
             <ul class="col-12 pt-1">
                 @foreach ($join_chat_rooms->where("distinction_number", 4)->where("office_id", 0) as $join_chat_room)
                     <li>
-                        <a id="chat_room[{{ $join_chat_room->id }}]" href="{{ route('chat.show', $join_chat_room->id) }}" class="{{ $join_chat_room->id }}">
-                        {{ $join_chat_room->room_title }}
+                        <a class="chat_room_{{ $join_chat_room->id }}" href="{{ route('chat.show', $join_chat_room->id) }}">
+                            <span class="new d-none">●</span>{{ $join_chat_room->room_title }}
                         </a>
                     </li>
                 @endforeach
@@ -37,8 +37,8 @@
                         @foreach ($join_chat_rooms->whereIn("distinction_number", [1, 4]) as $join_chat_room)
                             @if ($join_chat_room->office_id == $office->id)
                                 <li>
-                                    <a id="chat_room[{{ $join_chat_room->id }}]" href="{{ route('chat.show', $join_chat_room->id) }}" class="{{ $join_chat_room->id }}">
-                                    @if ($join_chat_room->distinction_number == 4){{ $join_chat_room->room_title }} @else {{ $office->office_name }}職員 @endif
+                                    <a class="chat_room_{{ $join_chat_room->id }}" href="{{ route('chat.show', $join_chat_room->id) }}">
+                                        <span class="new d-none">●</span>@if ($join_chat_room->distinction_number == 4){{ $join_chat_room->room_title }} @else {{ $office->office_name }}職員 @endif
                                     </a>
                                 </li>
                             @endif
@@ -47,8 +47,8 @@
                         @foreach ($join_chat_rooms->whereIn("distinction_number", [3, 4]) as $join_chat_room)
                             @if ($join_chat_room->office_id == $office->id)
                                 <li>
-                                    <a id="chat_room[{{ $join_chat_room->id }}]" href="{{ route('chat.show', $join_chat_room->id) }}" class="{{ $join_chat_room->id }}">
-                                    @if ($join_chat_room->distinction_number == 4){{ $join_chat_room->room_title }} @else {{ $office->office_name }}職員 @endif
+                                    <a class="chat_room_{{ $join_chat_room->id }}" href="{{ route('chat.show', $join_chat_room->id) }}">
+                                        <span class="new d-none">●</span>@if ($join_chat_room->distinction_number == 4){{ $join_chat_room->room_title }} @else {{ $office->office_name }}職員 @endif
                                     </a>
                                 </li>
                             @endif
@@ -74,8 +74,8 @@
                                 @foreach ($join_chat_rooms->whereIn("distinction_number", [1, 4]) as $join_chat_room)
                                     @if ($join_chat_room->office_id == $office->id)
                                         <li>
-                                            <a id="chat_room[{{ $join_chat_room->id }}]" href="{{ route('chat.show', $join_chat_room->id) }}" class="{{ $join_chat_room->id }}">
-                                            @if ($join_chat_room->distinction_number == 4){{ $join_chat_room->room_title }} @else {{ $office->office_name }}職員 @endif
+                                            <a class="chat_room_{{ $join_chat_room->id }}" href="{{ route('chat.show', $join_chat_room->id) }}">
+                                                <span class="new d-none">●</span>@if ($join_chat_room->distinction_number == 4){{ $join_chat_room->room_title }} @else {{ $office->office_name }}職員 @endif
                                             </a>
                                         </li>
                                     @endif
@@ -84,8 +84,8 @@
                                 @foreach ($join_chat_rooms->whereIn("distinction_number", [3, 4]) as $join_chat_room)
                                     @if ($join_chat_room->office_id == $office->id)
                                         <li>
-                                            <a id="chat_room[{{ $join_chat_room->id }}]" href="{{ route('chat.show', $join_chat_room->id) }}" class="{{ $join_chat_room->id }}">
-                                            @if ($join_chat_room->distinction_number == 4){{ $join_chat_room->room_title }} @else {{ $office->office_name }}職員 @endif
+                                            <a class="chat_room_{{ $join_chat_room->id }}" href="{{ route('chat.show', $join_chat_room->id) }}">
+                                                <span class="new d-none">●</span>@if ($join_chat_room->distinction_number == 4){{ $join_chat_room->room_title }} @else {{ $office->office_name }}職員 @endif
                                             </a>
                                         </li>
                                     @endif

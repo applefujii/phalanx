@@ -49,8 +49,8 @@
                 @foreach ($notifications as $notification)
                     <tr>
                         <td>{{ $notification->created_at }}</td>
-                        <td>{{ $notification->start_at }}</td>
-                        <td>{{ $notification->end_at }}</td>
+                        <td>{{ $notification->start_date_format() }}</td>
+                        <td>{{ $notification->end_date_format() }}</td>
                         <td>{{ mb_substr($notification->content, 0, 32) }}</td>
                         <td>
                             <div class="table-body-action">
@@ -62,7 +62,9 @@
                                 <form action="{{ route('notification.destroy', $notification->id) }}" method="POST">
                                     @csrf
                                     @method('DELETE')
-                                    <button type="submit" class="btn btn-sm btn-danger delete-button">削除</button>
+                                    <button type="submit" class="btn btn-sm btn-danger delete-button"
+                                        onclick="return confirm('削除しますか\nID: {{ $notification->id }}\n作成日時: {{ $notification->created_at }}\n開始日時: {{ $notification->start_at }}\n終了日時: {{ $notification->end_at }}\n内容: {{ mb_substr($notification->content, 0, 32) }}')">
+                                    削除</button>
                                 </form>
                         </td>
                     </tr>
