@@ -63,7 +63,7 @@
             </tbody>
         </table>
 
-        {{ $users->links('pagination::bootstrap-4') }}
+        {{ $users->links('vendor/pagination/pagination_view') }}
 
     </div>
 @endsection

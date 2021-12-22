@@ -43,7 +43,7 @@ class UserController extends Controller
         if ($filter_user_type_id !== '') {
             $users_query->where('user_type_id', '=', $filter_user_type_id);
         }
-        $offices = Office::orderBy('sort', 'asc')->get();
+        $offices = Office::whereNull("deleted_at")->orderBy('sort', 'asc')->get();
         $user_types = UserType::orderBy('id', 'asc')->get();
 
         $users = $users_query->join('offices', 'users.office_id', '=', 'offices.id')->join('user_types', 'users.user_type_id', '=', 'user_types.id')->orderBy('user_types.id', 'asc')->orderBy('offices.sort', 'asc')->orderBy('users.id', 'asc')->select('users.id', 'users.name', 'users.user_type_id', 'users.office_id')->paginate(25);
@@ -58,7 +58,7 @@ class UserController extends Controller
      */
     public function create()
     {
-        $offices = Office::orderBy('sort', 'asc')->get();
+        $offices = Office::whereNull("deleted_at")->orderBy('sort', 'asc')->get();
         $user_types = UserType::orderBy('id', 'asc')->get();
         return view("user_master.create", compact('offices', 'user_types'));
     }
@@ -93,7 +93,7 @@ class UserController extends Controller
      */
     public function edit(user $user)
     {
-        $offices = Office::orderBy('sort', 'asc')->get();
+        $offices = Office::whereNull("deleted_at")->orderBy('sort', 'asc')->get();
         $user_types = UserType::orderBy('id', 'asc')->get();
         return view("user_master.edit", compact('user', 'offices', 'user_types'));
     }
@@ -111,9 +111,9 @@ class UserController extends Controller
         $now = Carbon::now();
         if($user->user_type_id == 1 && $request->input("office_id") != $user->office_id) {
             ChatRoom__User::where("user_id", $user->id)->whereHas("chat_room", function($c) {
-                $c->where("distinction_number", 3);
+                $c->whereIn("distinction_number", [1, 3]);
             })->delete();
-            $chatRooms = ChatRoom::whereNull("deleted_at")->where("distinction_number", 3)->where("office_id", $request->input("office_id"))->get();
+            $chatRooms = ChatRoom::whereNull("deleted_at")->whereIn("distinction_number", [1, 3])->where("office_id", $request->input("office_id"))->get();
             if(isset($chatRooms)) {
                 $aItem = [];
                 foreach($chatRooms as $chatRoom) {

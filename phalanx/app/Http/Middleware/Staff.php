@@ -37,8 +37,8 @@ class Staff
             //職員の場合はアクセスを許可
             return $next($request);
         } else {
-            //それ以外はホーム画面にリダイレクト
-            return redirect()->route('home')->with('error', '権限がありません。');
+            //それ以外はユーザーページ画面にリダイレクト
+            return redirect()->route('user_page')->with('error', '権限がありません。');
         }
     }
 }

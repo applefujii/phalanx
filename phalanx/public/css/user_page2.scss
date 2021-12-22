@@ -14,30 +14,26 @@
         margin-top: 10px;
     }
 }
-.date {
-    & + & {
-        margin-top: 10px;
-    }
-}
 
-.date-title {
-    background-color: white;
+.date_category {
+    position: relative;
+    height: 30px;
 }
 
 #chat_button {
-    height: 50px;
-    font-size: 20px;
-}
-
-#user-main {
-    position: fixed;
+    height: 80px;
+    font-size: 40px;
 }
 
 #footer {
     background-color: white;
     position: fixed;
     bottom: 0;
-    left:0;
+    z-index: 10;
+}
+
+.space_for_footer {
+    margin-bottom: 80px;
 }
 
 #scroll {
@@ -54,5 +50,29 @@
     }
     &::-webkit-scrollbar-thumb {
         background: #6c757d;
+    }
+}
+
+.date_category {
+    hr {
+        z-index: 1;
+    }
+
+    button {
+        z-index: 2;
+    }
+
+    button[data-toggle="collapse"].collapsed::after {
+        font-family: 'Font Awesome 5 Free';
+        font-weight: 900;
+        content: "\f078";/* chevron-down */
+        float: right;
+    }
+
+    button[data-toggle="collapse"]::after {
+        font-family: 'Font Awesome 5 Free';
+        font-weight: 900;
+        content: "\f077";/* chevron-up */
+        float: right;
     }
 }
