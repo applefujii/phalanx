@@ -17,7 +17,7 @@
                         </button>
                         <hr class="position-absolute" color="black" width="100%">
                     </div>
-                    <div id="collapse_{{ $i }}" class="collapse @if ($i == 0)show @endif">
+                    <div id="collapse_{{ $i }}" class="collapse show">
                         @foreach ($notifications as $notification)
                             @php
                                 $start_at = new Carbon\Carbon($notification->start_at);
