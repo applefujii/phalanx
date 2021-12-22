@@ -98,7 +98,8 @@
 
             //未読テキストがあるチャットルームのリンクの色を変更
             $.map(@json($unreadId), (val, index) => {
-                $(`#chat_room_${val}`).addClass("text-danger");
+                $(`.chat_room_${val}`).addClass("text-danger");
+                $(`.chat_room_${val}`).children('span').removeClass('d-none');
             });
         });
     </script>
