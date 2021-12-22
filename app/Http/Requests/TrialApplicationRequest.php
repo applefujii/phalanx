@@ -56,6 +56,9 @@ class TrialApplicationRequest extends FormRequest
                 'nullable',
                 'regex:/^[0-9-]+$/u',
             ],
+            'comment' => [
+                'max:500',
+            ],
         ];
     }
 }

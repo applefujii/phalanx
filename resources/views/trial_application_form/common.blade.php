@@ -107,6 +107,21 @@
                         @enderror
                     </div>
                 </div>
+
+                <div class="row justify-content-start mx-auto my-4">
+                    <div class="mx-4 col-md-8">
+                        <label for="comment">備考</label>
+                        @php
+                            $email = $trial_application->email ?? '';
+                        @endphp
+                        <textarea id="comment" name="comment" class="form-control @error('comment') is-invalid @enderror">{{ old('comment', $trial_application->comment ?? '') }}</textarea>
+                        @error('comment')
+                            <span class="invalid-feedback" role="alert">
+                                <strong>{{ $message }}</strong>
+                            </span>
+                        @enderror
+                    </div>
+                </div>
             </fieldset>
 
             @yield('submit_button')
