@@ -168,6 +168,7 @@ $(() => {
                 
                 // サイドバーのルーム名の文字色変更
                 $(`.chat_room_${chat_room_id}`).removeClass('text-danger');
+                $(`.chat_room_${chat_room_id}`).children('span').hide();
     
                 // bookmarkがあれば
                 if ($('#bookmark').length) {
@@ -341,6 +342,8 @@ $(() => {
                     $('#chat_text').val('');
                     // フッター等の高さ調整
                     changeHeights();
+                    // 新着メッセージ取得
+                    getNewChatLog(chat_room_id);
                 }
             })
             // 失敗時
