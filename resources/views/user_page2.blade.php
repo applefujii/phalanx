@@ -18,17 +18,17 @@
             
             @if (Auth::user()->is_staff())
             <div class="buttons-container col-md-4 space_for_footer">
-                <p class="text-center">
-                    <button class="btn btn-primary"
-                        onclick="location.href='{{ route('chat_room.index') }}'">チャットルーム管理</button>
+                <p class="text-center d-none d-md-block">
+                    <button id="chat_button" class="btn btn-primary" onclick="location.href='{{ route('chat.index') }}'">チャット</button>
                 </p>
                 <p class="text-center">
-                    <button class="btn btn-primary"
-                        onclick="location.href='{{ route('notification.index') }}'">通知管理</button>
+                    <button class="btn btn-primary" onclick="location.href='{{ route('chat_room.index') }}'">チャットルーム管理</button>
                 </p>
                 <p class="text-center">
-                    <button class="btn @if ($new_trial_applications) btn-warning @else btn-primary @endif"
-                        onclick="location.href='{{ route('trial_application_manage.index', ['office_id' => Auth::user()->office_id]) }}'">
+                    <button class="btn btn-primary" onclick="location.href='{{ route('notification.index') }}'">通知管理</button>
+                </p>
+                <p class="text-center">
+                    <button class="btn @if ($new_trial_applications) btn-warning @else btn-primary @endif" onclick="location.href='{{ route('trial_application_manage.index', ['office_id' => Auth::user()->office_id]) }}'">
                         体験・見学申込管理
                         @if ($new_trial_applications)
                             <br>
@@ -54,7 +54,7 @@
             </div>
             @endif
 
-            <div id="footer" class="col-md-12 pb-4 pt-2 bg-white">
+            <div id="footer" class="d-md-none col-md-12 pb-4 pt-2 bg-white">
                 <button id="chat_button" class="btn btn-primary col-12" onclick="location.href='{{ route('chat.index') }}'">チャット</button>
             </div>
         </div>
@@ -69,14 +69,14 @@
             if ($('#scroll').length) {
                 // スクロール可能な部分の高さ
                 $("#scroll").innerHeight(
-                    $(window).height() - $('nav').outerHeight() - $('#footer').outerHeight() -40
+                    $(window).height() - $('nav').outerHeight()
                 );
 
                 // 画面サイズが変更されたら
                 $(window).on('resize', () => {
                     // スクロール可能な部分の高さ
                     $("#scroll").innerHeight(
-                        $(window).height() - $('nav').outerHeight() - $('#footer').outerHeight() -40
+                        $(window).height() - $('nav').outerHeight()
                     );
                 });
             }
