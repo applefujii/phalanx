@@ -61,7 +61,7 @@ class User extends Authenticatable
     protected $casts = [];
 
     public function user_type() {
-        return $this->belongsTo(UserType::class);
+        return $this->belongsTo(UserType::class)->whereIn("id", [1, 2, 3]);
     }
 
     public function office() {
