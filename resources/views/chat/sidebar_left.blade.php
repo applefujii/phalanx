@@ -8,9 +8,11 @@
         <div class="col-12 pt-3">
             <h5>リテラル</h5>
             <ul class="col-12 pt-1">
-                <li><a href="{{ route("chat.show", $join_chat_rooms->where("distinction_number", 0)->first()->id) }}" class="{{ $join_chat_rooms->where("distinction_number", 0)->first()->id }}">
-                    全職員
-                </a></li>
+                <li>
+                    <a class="chat_room_{{ $join_chat_rooms->where("distinction_number", 0)->first()->id }}" href="{{ route("chat.show", $join_chat_rooms->where("distinction_number", 0)->first()->id) }}">
+                        <span class="new d-none">●</span>全職員
+                    </a>
+                </li>
             </ul>
         </div>
     @endif
