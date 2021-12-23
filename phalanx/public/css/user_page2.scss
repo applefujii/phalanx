@@ -8,16 +8,8 @@
     white-space: pre-wrap;
 }
 
-.notification-card {
-    background-color: white;
-    & + & {
-        margin-top: 10px;
-    }
-}
-
 .date_category {
     position: relative;
-    height: 30px;
 }
 
 #chat_button {
