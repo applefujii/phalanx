@@ -35,7 +35,7 @@
                 </div>
                 <div class="col-md-2">
                     <label for="sort" class="form-element">表示順</label>
-                    <input type="number" id="sort" class="w-100 form-control form-element" name="sort" value="{{old('sort',$office->sort) }}">
+                    <input type="number" id="sort" class="w-100 form-control form-element" name="sort" value="{{old('sort',$office->sort) }}" min="0" max="18446744073709551615">
                     @if ($errors->has("sort"))
                         <ul class="pl-0" style="list-style: none">
                             @foreach ($errors->get("sort") as $error)
