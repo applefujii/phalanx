@@ -29,7 +29,7 @@
                 @method('DELETE')
                 @csrf
                 <button class="btn btn-sm btn-danger" type="submit"
-                    onclick="return confirm('削除しますか\nID: \n質問文: {{ $aptitude_question->question }}\n表示順: {{ $aptitude_question->sort }}\nアップル点数: {{ $aptitude_question->score_apple }}\nミント点数: {{ $aptitude_question->score_mint }}\nメープル点数: {{ $aptitude_question->score_maple }}')">
+                    onclick="return confirm('削除しますか\nID: {{ $aptitude_question->id }}\n質問文: {{ $aptitude_question->question }}\n表示順: {{ $aptitude_question->sort }}\nアップル点数: {{ $aptitude_question->score_apple }}\nミント点数: {{ $aptitude_question->score_mint }}\nメープル点数: {{ $aptitude_question->score_maple }}')">
                 削除</button>
             </form>
         </div>
