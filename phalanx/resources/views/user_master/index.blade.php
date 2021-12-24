@@ -38,16 +38,16 @@
         <table class="table table-striped table-bordered table-sm">
             <thead>
                 <tr class="table-header">
-                    <th>氏名</th>
-                    <th class="table-header-sub">ユーザー種別</th>
-                    <th class="table-header-sub">事業所</th>
-                    <th class="table-header-sub">操作</th>
+                    <th style="width: 50%">氏名</th>
+                    <th class="table-header-sub" style="width: 15%">ユーザー種別</th>
+                    <th class="table-header-sub" style="width: 15%">事業所</th>
+                    <th class="table-header-sub" style="width: 20%">操作</th>
                 </tr>
             </thead>
             <tbody>
                 @foreach ($users as $user)
                     <tr>
-                        <td>{{ $user->name }}</td>
+                        <td class="main-td">{{ $user->name }}</td>
                         <td>{{ $user->user_type->alias }}</td>
                         <td>{{ $user->office->office_name }}</td>
                         <td>
