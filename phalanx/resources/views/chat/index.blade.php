@@ -16,7 +16,7 @@
                         <p class="d-flex align-items-center collapse-open">
                             <input type="checkbox" class="mx-2 {{ $office->en_office_name }}-allCheck">
                             <button type="button" class="btn btn-link offices-open" data-toggle="collapse" data-target="#{{ $office->en_office_name }}Collapse" aria-expanded="@if ($office->id == Auth::user()->office_id)true @else false @endif">
-                                <i class="fas @if ($office->id == Auth::user()->office_id)fa-chevron-up @else fa-chevron-down @endif"></i>{{ $office->office_name }}
+                                {{ $office->office_name }}<i class="fas @if ($office->id == Auth::user()->office_id)fa-chevron-up @else fa-chevron-down @endif"></i>
                             </button>
                         </p>
                     </div>
@@ -43,7 +43,7 @@
                     <p class="d-flex align-items-center collapse-open">
                         <input type="checkbox" class="mx-2 trial-allCheck">
                         <button type="button" class="btn btn-link offices-open" data-toggle="collapse" data-target="#trialsCollapse" aria-expanded="false">
-                            <i class="fas fa-chevron-down"></i>体験
+                            体験<i class="fas fa-chevron-down"></i>
                         </button>
                     </p>
                 </div>

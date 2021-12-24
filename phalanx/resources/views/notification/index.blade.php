@@ -1,5 +1,6 @@
 @extends('layouts.app')
 
+@section("title", "予定通知管理　一覧")
 @section('css')
     <link href="{{ asset('css/index-table.css') }}" rel="stylesheet">
     <link href="{{ asset('css/notification/index.css') }}" rel="stylesheet">
@@ -7,7 +8,7 @@
 @section('content')
 
     <div class="container">
-        <h3>予定通知　一覧</h3>
+        <h3>予定通知管理　一覧</h3>
         <form method="get" action="{{ route('notification.index') }}">
             <div class="form-group">
                 <div class="row justify-content-start mx-auto my-2">

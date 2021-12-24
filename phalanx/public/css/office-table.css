@@ -2,6 +2,12 @@
     width: 100px;
 }
 
+.room-title {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
 .form-select {
     width: 150px;
     display: flex;
