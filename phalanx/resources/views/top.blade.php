@@ -13,17 +13,17 @@
             <h1 class="text-center m-4">サイト説明（仮）</h1>
             <div class="row mb-4">
                 <div class="col-md-4 mb-4">
-                    <a class="d-flex justify-content-center" href="https://apple-osaka.com/">
+                    <a class="d-flex justify-content-center" href="https://apple-osaka.com/" target="_blank" rel="noopener noreferrer">
                         <img src="{{ asset('css/images/apple.png') }}" alt="アップル梅田" class="logo">
                     </a>
                 </div>
                 <div class="col-md-4 mb-4">
-                    <a class="d-flex justify-content-center" href="https://mint-osaka.jp/">
+                    <a class="d-flex justify-content-center" href="https://mint-osaka.jp/" target="_blank" rel="noopener noreferrer">
                         <img src="{{ asset('css/images/mint.png') }}" alt="ミント大阪" class="logo">
                     </a>
                 </div>
                 <div class="col-md-4 mb-4">
-                    <a class="d-flex justify-content-center" href="https://maple-osaka.jp/">
+                    <a class="d-flex justify-content-center" href="https://maple-osaka.jp/" target="_blank" rel="noopener noreferrer">
                         <img src="{{ asset('css/images/maple.png') }}" alt="メープル関西" class="logo">
                     </a>
                 </div>

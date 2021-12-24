@@ -10,37 +10,26 @@
                 $i = 0;
             @endphp
             @foreach ($notifications_groups as $key => $notifications)
-                @if ($key !== '期限切れ')
-                    <div class="date_category my-2 position-relative d-flex justify-content-center">
-                        <button class="btn btn-light d-flex align-items-center" data-toggle="collapse" data-target="#collapse_{{ $i }}" aria-expanded="false">
-                            {{ $key }}
-                        </button>
-                        <hr class="position-absolute" color="black" width="100%">
-                    </div>
-                    <div id="collapse_{{ $i }}" class="collapse @if ($i == 0)show @endif">
-                        @foreach ($notifications as $notification)
-                            @php
-                                $start_at = new Carbon\Carbon($notification->start_at);
-                                $end_at = new Carbon\Carbon($notification->end_at);
-                                if ($notification->date_if_allday()) {
-                                    $start_at = $start_at->isoFormat('YYYY年MM月DD日(ddd)');
-                                    $end_at = $end_at->isoFormat('YYYY年MM月DD日(ddd)');
-                                } else {
-                                    $start_at = $start_at->isoFormat('YYYY年MM月DD日(ddd) HH:mm');
-                                    $end_at = $end_at->isoFormat('YYYY年MM月DD日(ddd) HH:mm');
-                                }
-                            @endphp
-                            <div class="notification-card border border-secondary rounded p-2">
-                                <span>{{ $start_at }}</span>
-                                <br class="d-block d-md-none">
-                                <span> ～ {{ $end_at }}</span>
-                                <div class="p-2">
+                <div class="date_category my-2 position-relative d-flex justify-content-center">
+                    <button class="btn btn-light d-flex align-items-center" data-toggle="collapse" data-target="#collapse_{{ $i }}" aria-expanded="false">
+                        {{ $key }}
+                    </button>
+                    <hr class="position-absolute" color="black" width="100%">
+                </div>
+                <div id="collapse_{{ $i }}" class="collapse show">
+                    @foreach ($notifications as $notification)
+                    <div>
+                        <div class="border border-secondary rounded">
+                            <div class="m-2">
+                                <span>{{ $notification->start_date_format() }}</span><span> ～ {{ $notification->end_date_format() }}</span>
+                                <div class="m-2">
                                     <span class="notification-content">{{ $notification->content }}</span>
                                 </div>
                             </div>
-                        @endforeach
+                        </div>
                     </div>
-                @endif
+                    @endforeach
+                </div>
                 @php
                     $i++;
                 @endphp
