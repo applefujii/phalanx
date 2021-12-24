@@ -75,7 +75,7 @@
         <div class="f-office order-[OrderNo]">\n\
             <div class="d-flex justify-content-center" style="position: relative">\n\
                 <hr color="black" width="100%" size="2" align="center">\n\
-                <p style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); background-color: white; padding: 0 0.6rem;"><a data-toggle="collapse" href="#list-[EnName]" class="collapse-trigger"><i class="fas fa-chevron-down"></i> <b>[Name]</b></a> <input id="[EnName]-all-check" class="all-check" type="checkbox" style="margin: 0 0 0 0.2rem; vertical-align: middle;" data-child-class="[EnName]"></p>\n\
+                <p style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); background-color: white; padding: 0 0.6rem;"><input id="[EnName]-all-check" class="all-check" type="checkbox" style="margin: 0 0.2rem 0 0; vertical-align: middle;" data-child-class="[EnName]"> <a data-toggle="collapse" href="#list-[EnName]" class="collapse-trigger"><b>[Name]</b> <i class="fas fa-chevron-down"></i></a></p>\n\
             </div>\n\
             <div id="list-[EnName]" class="collapse people_list">\n\
                 <div class="d-flex flex-row justify-content-between mt-1 mb-3 insert-[EnName]">\n\
@@ -103,7 +103,9 @@
         $.ajax({
             type: "POST",
             url: "/api/v1.0/get/users.json", // 送り先
-            data: {},   // 渡したいデータをオブジェクトで渡す
+            data: {
+                sort : 'name_katakana'
+            },   // 渡したいデータをオブジェクトで渡す
             dataType : "json",  // データ形式を指定
             scriptCharset: 'utf-8'  // 文字コードを指定
         })

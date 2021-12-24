@@ -1,3 +1,13 @@
+.table {
+    table-layout: fixed;
+}
+
+/* tr .main-td {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+} */
+
 .label {
     width: 100px;
 }
