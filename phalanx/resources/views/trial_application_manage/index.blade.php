@@ -86,16 +86,16 @@
                             @endif
                         </td>
                         <td>
-                            <div class="table-body-action">
-                                <span>
+                            <div class="table-body-action row">
+                                <span class="col-12 col-md-4 px-0 py-1">
                                     <a class="btn btn-sm btn-success" role="button"
                                         href="{{ route('trial_application_manage.check', $trial_application->id) }}">連絡</a>
                                 </span>
-                                <div>
+                                <div class="col-12 col-md-4 px-0 py-1">
                                     <a class="btn btn-sm btn-primary" role="button"
                                         href="{{ route('trial_application_manage.edit', $trial_application->id) }}">編集</a>
                                 </div>
-                                <form class="delete-form"
+                                <form class="delete-form col-12 col-md-4 px-0 py-1"
                                     action="{{ route('trial_application_manage.destroy', $trial_application->id) }}"
                                     method="post">
                                     @method('DELETE')
