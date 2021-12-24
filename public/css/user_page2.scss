@@ -1,6 +1,8 @@
 .buttons-container {
     button {
-        width: 300px;
+        font-size: 20px;
+        min-height: 45px;
+        width: 90%;
     }
 }
 
@@ -12,9 +14,9 @@
     position: relative;
 }
 
-#chat_button {
+.chat_button {
     height: 80px;
-    font-size: 40px;
+    font-size: 40px !important;
 }
 
 #footer {

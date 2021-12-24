@@ -2,8 +2,12 @@
     <h2 class="text-center mt-2">予定</h2>
     <div class="notifications">
         @if ($notifications_groups->count() === 0)
-            <div class="notification-card border border-secondary rounded p-2">
-                <span>予定はありません</span>
+            <div class="notification-card border border-secondary rounded">
+                <div class="m-2">
+                    <div class="m-2">
+                        <span class="notification-content">予定はありません</span>
+                    </div>
+                </div>
             </div>
         @else
             @php
@@ -18,10 +22,13 @@
                 </div>
                 <div id="collapse_{{ $i }}" class="collapse show">
                     @foreach ($notifications as $notification)
-                    <div>
+                    <div class="mb-2">
                         <div class="border border-secondary rounded">
                             <div class="m-2">
-                                <span>{{ $notification->start_date_format() }}</span><span> ～ {{ $notification->end_date_format() }}</span>
+                                <span>{{ $notification->start_date_format() }}</span>
+                                @if($notification->start_date_format() != $notification->end_date_format())
+                                    <span> ～ {{ $notification->end_date_format() }}</span>
+                                @endif
                                 <div class="m-2">
                                     <span class="notification-content">{{ $notification->content }}</span>
                                 </div>

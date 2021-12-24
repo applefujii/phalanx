@@ -1,12 +1,12 @@
 @extends('layouts.app')
-@section('title', '事業所マスター　一覧')
+@section('title', '事業所マスタ　一覧')
 @section('css')
     <link href="{{ asset('css/index-table.css') }}" rel="stylesheet">
     <link href="{{ asset('css/user-master/index.css') }}" rel="stylesheet">
 @endsection
 @section('content')
     <div class="container-md">
-        <h3>事業所マスター　一覧</h3>
+        <h3>事業所マスタ　一覧</h3>
         {{-- <a href="{{ route('office.create') }}" type="button" class="btn btn-primary my-3">新規作成</a> --}}
         <div class="mt-3">
         <table class="table table-striped table-bordered table-sm">
