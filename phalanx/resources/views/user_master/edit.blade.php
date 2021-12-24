@@ -1,11 +1,11 @@
 @extends('layouts.app')
-@section('title', 'ユーザーマスター　編集')
+@section('title', 'ユーザーマスタ　編集')
 @section('css')
 <link href="{{ asset('css/user-master/create_and_edit.css') }}" rel="stylesheet">
 @endsection
 @section('content')
 <div class="container">
-    <h3>ユーザーマスター　編集</h3>
+    <h3>ユーザーマスタ　編集</h3>
     <form method="post" action="{{ route('user.update', $user->id) }}">
         @csrf
         @method('PATCH')

@@ -1,11 +1,11 @@
 @extends('layouts.app')
-@section('title', '事業所マスター　編集')
+@section('title', '事業所マスタ　編集')
 @section('css')
 <link href="{{ asset('css/user-master/create_and_edit.css') }}" rel="stylesheet">
 @endsection
 @section('content')
 <div class="container">
-    <h3>事業所マスター　編集</h3>
+    <h3>事業所マスタ　編集</h3>
     <form method="POST" action="{{ route('office.update', $office->id) }}">
         @csrf
         @method('PATCH')
