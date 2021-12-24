@@ -14,6 +14,8 @@ class Notification extends Model
         'id'
     ];
 
+    private static $week_ja = ["日", "月", "火", "水", "木", "金", "土"];
+
     // --------------- リレーション ------------------------
     
     public function notification__user() {
@@ -45,18 +47,21 @@ class Notification extends Model
 
     //-- 終日でない場合日時をフルで返す。終日の場合その日付を返す。
     public function start_date_format() {
+        $car = new Carbon($this->start_at);
         if (!$this->is_all_day) {
-            return $this->start_at;
+            return $car->format('Y/m/d') . "(" . self::$week_ja[(int)$car->format('w')] . ") " . $car->format('H:i');
         } else {
-            return (new Carbon($this->start_at))->format('Y-m-d');
+            return $car->format('Y/m/d') . "(" . self::$week_ja[(int)$car->format('w')] . ")";
         }
     }
 
     public function end_date_format() {
+        $car = new Carbon($this->end_at);
         if (!$this->is_all_day) {
-            return $this->end_at;
+            return $car->format('Y/m/d') . "(" . self::$week_ja[(int)$car->format('w')] . ") " . $car->format('H:i');
         } else {
-            return (new Carbon($this->end_at))->format('Y-m-d');
+            return $car->format('Y/m/d') . "(" . self::$week_ja[(int)$car->format('w')] . ")";
         }
     }
+
 }

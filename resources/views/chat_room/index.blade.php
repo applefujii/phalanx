@@ -11,26 +11,26 @@
         <button class="btn btn-primary my-3" type="submit">新規作成</button>
     </form>
     <div class="mt-3">
-        <table class="table table-striped table-bordered border-white table-sm">
-            <thead class="bg-primary text-white">
-                <tr class="table-header">
-                    <th class="col-3 align-middle" >ルーム名</th>
-                    <th class="col-3 align-middle" style="width: 10%">事業所</th>
-                    <th class="col-6 align-middle" style="width: 6%">操作</th>
+        <table class="table table-striped table-bordered border-white table-sm w-100">
+            <thead class="w-100">
+                <tr class="table-header w-100">
+                    <th class="col-6 align-middle">ルーム名</th>
+                    <th class="col-3 align-middle">事業所</th>
+                    <th class="col-3 align-middle">操作</th>
                 </tr>
             </thead>
-            <tbody>
+            <tbody class="w-100">
                 @foreach ($chatRooms as $chatRoom)
-                    <tr>
-                        <td class="room-title align-middle">{{ $chatRoom->room_title }}</td>
-                        <td class="align-middle">
+                    <tr class="w-100">
+                        <td class="room-title align-middle col-6">{{ $chatRoom->room_title }}</td>
+                        <td class="align-middle col-3">
                             @if ($chatRoom->office_id == 0)
                                 その他
                             @else
                                 {{ $chatRoom->office->office_name }}
                             @endif
                         </td>
-                        <td class="align-middle">
+                        <td class="align-middle col-3">
                             <div class="table-body-action">
                                 <form action="{{ route('chat_room.edit', $chatRoom->id) }}" method="GET">
                                     <button class="btn btn-sm btn-primary" type="submit">編集</button>
