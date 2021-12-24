@@ -74,7 +74,7 @@
     const officeHtml = '\
         <div class="f-office order-[OrderNo]">\n\
             <div class="d-flex justify-content-center" style="position: relative">\n\
-                <hr color="black" width="90%" size: 2; align="center">\n\
+                <hr color="black" width="100%" size="2" align="center">\n\
                 <p style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); background-color: white; padding: 0 0.6rem;"><a data-toggle="collapse" href="#list-[EnName]" class="collapse-trigger"><i class="fas fa-chevron-down"></i> <b>[Name]</b></a> <input id="[EnName]-all-check" class="all-check" type="checkbox" style="margin: 0 0 0 0.2rem; vertical-align: middle;" data-child-class="[EnName]"></p>\n\
             </div>\n\
             <div id="list-[EnName]" class="collapse people_list">\n\
