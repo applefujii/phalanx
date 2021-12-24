@@ -1,13 +1,13 @@
 @extends('layouts.app')
 
-@section('title', 'ユーザーマスター　一覧')
+@section('title', 'ユーザーマスタ　一覧')
 @section('css')
     <link href="{{ asset('css/index-table.css') }}" rel="stylesheet">
     <link href="{{ asset('css/user-master/index.css') }}" rel="stylesheet">
 @endsection
 @section('content')
     <div class="container">
-        <h3>ユーザーマスター　一覧</h3>
+        <h3>ユーザーマスタ　一覧</h3>
         <form method="get" action="{{ route('user.index') }}">
             <div class="form-group">
                 <div class="row justify-content-start mx-auto my-2">

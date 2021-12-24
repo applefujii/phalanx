@@ -1,11 +1,11 @@
 @extends('layouts.app')
-@section('title', 'ユーザーマスター　新規登録')
+@section('title', 'ユーザーマスタ　新規登録')
 @section('css')
 <link href="{{ asset('css/office-master/create_and_edit.css') }}" rel="stylesheet">
 @endsection
 @section('content')
 <div class="container">
-    <h3>ユーザーマスター　新規登録</h3>
+    <h3>ユーザーマスタ　新規登録</h3>
     <form method="POST" action="{{ route('register') }}">
         @csrf
 
