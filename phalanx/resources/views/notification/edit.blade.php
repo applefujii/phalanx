@@ -1,4 +1,6 @@
 @extends('layouts.app')
+
+@section("title", "予定通知管理　更新")
 @section('css')
 <link href="{{ asset('css/notification/create_and_edit.css') }}" rel="stylesheet">
 @endsection
@@ -12,7 +14,7 @@
 @endphp
 
 <div class="container">
-    <h3>予定通知　更新</h3>
+    <h3>予定通知管理　更新</h3>
     <div class="form-group">
         <div class="row justify-content-start mx-auto my-4">
             <div class="mx-4">
