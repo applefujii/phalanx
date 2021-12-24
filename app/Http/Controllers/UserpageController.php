@@ -69,6 +69,6 @@ class UserpageController extends Controller
                 return PHP_INT_MAX;
             }
         });
-        return view("user_page", compact('new_trial_applications', 'notifications_groups'));
+        return view("user_page2", compact('new_trial_applications', 'notifications_groups'));
     }
 }
