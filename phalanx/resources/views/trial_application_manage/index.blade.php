@@ -56,60 +56,62 @@
                 </div>
             </div>
         </form>
-        <table class="table table-striped table-bordered table-sm">
-            <thead>
-                <tr class="table-header">
-                    <th class="table-header-sub">申請日</th>
-                    <th class="table-header-sub">事業所</th>
-                    <th class="table-header-sub">体験希望日</th>
-                    <th>氏名</th>
-                    <th class="table-header-sub">本人への連絡</th>
-                    <th class="table-header-sub">操作</th>
-                </tr>
-            </thead>
-            <tbody>
-                @foreach ($trial_applications as $trial_application)
-                    @php
-                        $application_date = new Carbon\Carbon($trial_application->created_at);
-                        $desired_date = new Carbon\Carbon($trial_application->desired_date);
-                    @endphp
-                    <tr>
-                        <td>{{ $application_date->isoFormat('YYYY年MM月DD日 (ddd)') }}</td>
-                        <td>{{ $trial_application->office->office_name }}</td>
-                        <td>{{ $desired_date->isoFormat('YYYY年MM月DD日 (ddd)') }}</td>
-                        <td>{{ Illuminate\Support\Facades\Crypt::decryptString($trial_application->name) }}</td>
-                        <td>
-                            @if ($trial_application->is_checked)
-                                済
-                            @else
-                                <span class="text-danger font-weight-bold">未</span>
-                            @endif
-                        </td>
-                        <td>
-                            <div class="table-body-action row">
-                                <span class="col-12 col-md-4 px-0 py-1">
-                                    <a class="btn btn-sm btn-success" role="button"
-                                        href="{{ route('trial_application_manage.check', $trial_application->id) }}">連絡</a>
-                                </span>
-                                <div class="col-12 col-md-4 px-0 py-1">
-                                    <a class="btn btn-sm btn-primary" role="button"
-                                        href="{{ route('trial_application_manage.edit', $trial_application->id) }}">編集</a>
-                                </div>
-                                <form class="delete-form col-12 col-md-4 px-0 py-1"
-                                    action="{{ route('trial_application_manage.destroy', $trial_application->id) }}"
-                                    method="post">
-                                    @method('DELETE')
-                                    @csrf
-                                    <button class="btn btn-sm btn-danger" type="submit"
-                                        onclick="return moveCheck('{{ $application_date->isoFormat('YYYY年MM月DD日 (ddd)') }}', '{{ $trial_application->office->office_name }}', '{{ $desired_date->isoFormat('YYYY年MM月DD日 (ddd)') }}', '{{ Illuminate\Support\Facades\Crypt::decryptString($trial_application->name) }}', {{ $trial_application->is_checked }})">
-                                    削除</button>
-                                </form>
-                            </div>
-                        </td>
+        <div class="table-responsive">
+            <table class="table table-striped table-bordered table-sm">
+                <thead>
+                    <tr class="table-header">
+                        <th class="table-header-sub">申請日</th>
+                        <th class="table-header-sub">事業所</th>
+                        <th class="table-header-sub">体験希望日</th>
+                        <th>氏名</th>
+                        <th class="table-header-sub">本人への連絡</th>
+                        <th class="table-header-sub">操作</th>
                     </tr>
-                @endforeach
-            </tbody>
-        </table>
+                </thead>
+                <tbody>
+                    @foreach ($trial_applications as $trial_application)
+                        @php
+                            $application_date = new Carbon\Carbon($trial_application->created_at);
+                            $desired_date = new Carbon\Carbon($trial_application->desired_date);
+                        @endphp
+                        <tr>
+                            <td>{{ $application_date->isoFormat('YYYY年MM月DD日 (ddd)') }}</td>
+                            <td>{{ $trial_application->office->office_name }}</td>
+                            <td>{{ $desired_date->isoFormat('YYYY年MM月DD日 (ddd)') }}</td>
+                            <td>{{ Illuminate\Support\Facades\Crypt::decryptString($trial_application->name) }}</td>
+                            <td>
+                                @if ($trial_application->is_checked)
+                                    済
+                                @else
+                                    <span class="text-danger font-weight-bold">未</span>
+                                @endif
+                            </td>
+                            <td>
+                                <div class="table-body-action row">
+                                    <span class="col-12 col-md-4 px-0 py-1">
+                                        <a class="btn btn-sm btn-success" role="button"
+                                            href="{{ route('trial_application_manage.check', $trial_application->id) }}">連絡</a>
+                                    </span>
+                                    <div class="col-12 col-md-4 px-0 py-1">
+                                        <a class="btn btn-sm btn-primary" role="button"
+                                            href="{{ route('trial_application_manage.edit', $trial_application->id) }}">編集</a>
+                                    </div>
+                                    <form class="delete-form col-12 col-md-4 px-0 py-1"
+                                        action="{{ route('trial_application_manage.destroy', $trial_application->id) }}"
+                                        method="post">
+                                        @method('DELETE')
+                                        @csrf
+                                        <button class="btn btn-sm btn-danger" type="submit"
+                                            onclick="return moveCheck('{{ $application_date->isoFormat('YYYY年MM月DD日 (ddd)') }}', '{{ $trial_application->office->office_name }}', '{{ $desired_date->isoFormat('YYYY年MM月DD日 (ddd)') }}', '{{ Illuminate\Support\Facades\Crypt::decryptString($trial_application->name) }}', {{ $trial_application->is_checked }})">
+                                        削除</button>
+                                    </form>
+                                </div>
+                            </td>
+                        </tr>
+                    @endforeach
+                </tbody>
+            </table>
+        </div>
         {{ $trial_applications->appends(request()->query())->links('vendor/pagination/pagination_view') }}
         {{-- <p>
             <a class="btn btn-secondary" role="button" href="{{ route('user_page') }}">ホームに戻る</a>
