@@ -132,7 +132,9 @@ class UserController extends Controller
                 }
             }
         }
-        $user->fill(array_merge($validated, ['password' => Hash::make($request->password)]));
+        if ($request->input("password")) {
+            $user->fill(array_merge($validated, ['password' => Hash::make($request->password)]));
+        }
         $user->fill(['update_user_id' => Auth::id(), 'updated_at' => $now->isoFormat('YYYY-MM-DD HH:mm:ss')]);
         $user->save();
         ChatRoom::whereNull("deleted_at")->where("user_id", $user->id)->update([
