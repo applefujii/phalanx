@@ -67,6 +67,9 @@
 #to_bottom_button:hover {
   opacity: 1;
 }
+#to_bottom_button svg {
+  transform: rotate(90deg);
+}
 
 #chat_footer {
   background-color: white;

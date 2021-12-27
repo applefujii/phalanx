@@ -73,6 +73,9 @@
     &:hover {
         opacity: 1;
     }
+    svg {
+        transform: rotate( 90deg );
+    }
 }
 
 #chat_footer {
