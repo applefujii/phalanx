@@ -16,9 +16,10 @@
         <span>入力に誤りがあります。</span>
     </div>
     @endif
-    <div>
-        <p>※点数に『F』を指定すると、回答が『はい』の場合、合計点数に関わらずその事業所に確定されます。</p>
-        <p>　点数が空欄の場合は0点と判断されます。</p>
+    <div class="mb-4">
+        <span>※点数に『F』を指定すると、回答が『はい』の場合、合計点数に関わらずその事業所に確定されます。</span>
+        <br>
+        <span>　点数が空欄の場合は0点と判断されます。</span>
     </div>
     @yield('form_upper')
         <div class="table-responsive">
@@ -33,9 +34,9 @@
                         @endif
                     </tr>
                     <tr class="table-header">
-                        <th class="align-middle">アップル</th>
-                        <th class="align-middle">ミント</th>
-                        <th class="align-middle">メープル</th>
+                        <th class="align-middle">アップル梅田</th>
+                        <th class="align-middle">ミント大阪</th>
+                        <th class="align-middle">メープル関西</th>
                     </tr>
                 </thead>
                 <tbody>
