@@ -25,10 +25,7 @@
                     <div class="mb-2">
                         <div class="border border-secondary rounded">
                             <div class="m-2">
-                                <span>{{ $notification->start_date_format() }}</span>
-                                @if($notification->start_date_format() != $notification->end_date_format())
-                                    <span> ～ {{ $notification->end_date_format() }}</span>
-                                @endif
+                                <span>{{ $notification->full_date_format() }}</span>
                                 <div class="m-2">
                                     <span class="notification-content">{{ $notification->content }}</span>
                                 </div>
