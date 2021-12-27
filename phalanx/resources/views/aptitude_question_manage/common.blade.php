@@ -25,7 +25,7 @@
             <table class="table table-striped table-bordered table-sm">
                 <thead class="table-header-width">
                     <tr class="table-header">
-                        <th rowspan="2" class="align-middle">質問文</th>
+                        <th rowspan="2" class="align-middle" style="width: 30%">質問文</th>
                         <th rowspan="2" class="align-middle">表示順</th>
                         <th colspan="3" class="align-middle">点数</th>
                         @if (\Route::current() -> getName() === 'aptitude_question_manage.index')

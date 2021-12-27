@@ -1,11 +1,11 @@
 @extends('layouts.app')
-@section('title', 'ユーザーマスター　新規登録')
+@section('title', 'ユーザーマスタ　新規登録')
 @section('css')
 <link href="{{ asset('css/office-master/create_and_edit.css') }}" rel="stylesheet">
 @endsection
 @section('content')
 <div class="container">
-    <h3>ユーザーマスター　新規登録</h3>
+    <h3>ユーザーマスタ　新規登録</h3>
     <form method="POST" action="{{ route('register') }}">
         @csrf
 
@@ -70,7 +70,7 @@
                         </span>
                     @enderror
                     <div class="information">
-                        <span>半角英数字または_(アンダースコア)が使用できます</span><br />
+                        <span>半角英数字または_(アンダースコア)が使用できます。</span><br />
                         <span>3字以上 30字以内で入力してください。</span>
                     </div>
                 </div>
@@ -83,7 +83,7 @@
                         </span>
                     @enderror
                     <div class="information">
-                        <span>半角英数字記号が使用できます</span><br />
+                        <span>半角英数字記号が使用できます。</span><br />
                         <span>8字以上 30字以内で入力してください。</span>
                     </div>
                 </div>
