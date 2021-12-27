@@ -4,6 +4,13 @@
     }
 }
 
+.chat-room-link {
+    width: calc(100% - 13px);
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
 .broadcast {
     bottom: 3%;
     right: 5%;

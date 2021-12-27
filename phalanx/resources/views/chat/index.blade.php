@@ -8,7 +8,7 @@
 <div class="scroll-contents" id="center-scroll">
     <div class="container-fluid pt-3 mb-5">
         <h3>通所者一覧</h3>
-        <div class="d-flex flex-column text-center">
+        <div class="d-flex flex-column">
             @foreach ($offices as $office)
                 <div class="d-flex flex-column">
                     <div class="my-2 position-relative">
@@ -28,7 +28,7 @@
                             @if (optional($join_chat_room->user)->user_type_id == 2 && $join_chat_room->user->office_id == $office->id)
                                 <div class="col-6 col-md-4 col-xl-3 my-1 d-flex align-items-center">
                                     <input type="checkbox" class="mr-1 {{ $office->en_office_name }}-checkBox" name="user" value="{{ $join_chat_room->id }}">
-                                    <a class="chat_room_{{ $join_chat_room->id }}" href="{{ route('chat.show', $join_chat_room->id) }}">
+                                    <a class="chat_room_{{ $join_chat_room->id }} chat-room-link" href="{{ route('chat.show', $join_chat_room->id) }}">
                                         <span class="new d-none">●</span>{{ $join_chat_room->room_title }}
                                     </a>
                                 </div>
@@ -55,7 +55,7 @@
                         @if (optional($join_chat_room->user)->user_type_id == 3)
                             <div class="col-6 col-md-4 col-xl-3 my-1 d-flex align-items-center">
                                 <input type="checkbox" class="mr-1 trial-checkBox" name="user" value="{{ $join_chat_room->id }}">
-                                <a class="chat_room_{{ $join_chat_room->id }}" href="{{ route('chat.show', $join_chat_room->id) }}">
+                                <a class="chat_room_{{ $join_chat_room->id }} chat-room-link" href="{{ route('chat.show', $join_chat_room->id) }}">
                                     <span class="new d-none">●</span>{{ $join_chat_room->room_title }}
                                 </a>
                             </div>
