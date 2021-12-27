@@ -183,6 +183,10 @@ return [
         'login_name' => 'ログイン名',
         'password' => 'パスワード',
 
+        // 事業所マスタ
+        'office_name' => '事業所名',
+        'en_office_name' => '英語事業所名',
+
         // チャットルーム管理
         'room_title' => 'ルーム名',
     ],
