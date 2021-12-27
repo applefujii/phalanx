@@ -63,7 +63,7 @@
 
 
 @section('script')
-    <script>
+    {{-- <script>
         $(() => {
             if ($('#scroll').length) {
                 // スクロール可能な部分の高さ
@@ -80,5 +80,5 @@
                 });
             }
         });
-    </script>
+    </script> --}}
 @endsection
