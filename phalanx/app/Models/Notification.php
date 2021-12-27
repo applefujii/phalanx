@@ -64,4 +64,33 @@ class Notification extends Model
         }
     }
 
+    //-- 適切なフォーマットにする。主にユーザーページ用。
+    public function full_date_format() {
+        $str = "";
+        $format_start = "Y/n/j(@) H:i";
+        $format_end = "Y/n/j(@) H:i";
+        $connect = " ～ ";
+        $st = new Carbon($this->start_at);
+        $en = new Carbon($this->end_at);
+
+        if( $st->isCurrentYear() ) $format_start = str_replace("Y/", "", $format_start);
+        if( $en->isCurrentYear() ) $format_end = str_replace("Y/", "", $format_end);
+        if( $st == $en ) $format_end = "";
+        else if( $st->isSameDay($en) ) {
+            $format_end = str_replace("n/j(@)", "", $format_end);
+        }
+        if ($this->is_all_day) {
+            $format_start = str_replace("H:i", "", $format_start);
+            $format_end = str_replace("H:i", "", $format_end);
+            if( $st->isSameDay($en) ) $connect = "";
+        }
+        $format_start = trim($format_start);
+        $format_end = trim($format_end);
+
+        $str = $st->format($format_start) . $connect . $en->format($format_end);
+        $str = preg_replace("/@/", self::$week_ja[(int)$st->format('w')], $str, 1);
+        $str = preg_replace("/@/", self::$week_ja[(int)$en->format('w')], $str, 1);
+        return $str;
+    }
+
 }
