@@ -55,7 +55,7 @@
               @endforeach
             </div>
             <div class="sidebar-top"></div>
-            <div class="sidebar-bottom"></div>
+            {{-- <div class="sidebar-bottom"></div> --}}
           @endif
         </div>
       </div>

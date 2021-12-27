@@ -110,7 +110,11 @@
             scriptCharset: 'utf-8'  // 文字コードを指定
         })
         .done( function(param){     // paramに処理後のデータが入って戻ってくる
-                aPeople = param; // 帰ってきたら実行する処理
+                aPeople = param.map(p => {
+                    if(p.name.length > 10)
+                    p.name = p.name.substr(0, 10) + '…';
+                    return p;
+                }); // 帰ってきたら実行する処理
                 updateUserList();
                 fo_completed_load['people'] = true;
             })
