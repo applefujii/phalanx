@@ -48,7 +48,7 @@ class NotificationRequest extends FormRequest
         return [
             "content" => "required|max:500",
             "start_at" => "required|date_format:Y-m-d H:i:s",
-            "end_at" => "required|date_format:Y-m-d H:i:s|after:now|after:start_at",
+            "end_at" => "required|date_format:Y-m-d H:i:s|after:now|after_or_equal:start_at",
             "is_all_day" => "required|boolean",
             "target_users" => "required|array|distinct",
             "target_users.*" => "required|integer"
