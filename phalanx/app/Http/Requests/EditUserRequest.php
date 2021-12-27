@@ -33,7 +33,7 @@ class EditUserRequest extends FormRequest
             'name' => ['required', 'string', 'max:255'],
             'name_katakana' => ['required', 'string', 'max:255', new KatakanaRule],
             'login_name' => ['required', 'string', new IdentiferRule, 'min:3', 'max:30', Rule::unique('users', 'login_name')->ignore($this->user->id)->whereNull('deleted_at')],
-            'password' => ['required', 'string', new AsciiRule, 'min:8', 'max:30', 'confirmed'],
+            'password' => ['nullable', 'string', new AsciiRule, 'min:8', 'max:30', 'confirmed'],
         ];
     }
 }

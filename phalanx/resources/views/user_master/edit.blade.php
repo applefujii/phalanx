@@ -68,7 +68,7 @@
                         </span>
                     @enderror
                     <div class="information">
-                        <span>半角英数字または_(アンダースコア)が使用できます</span><br />
+                        <span>半角英数字または_(アンダースコア)が使用できます。</span><br />
                         <span>3字以上 30字以内で入力してください。</span>
                     </div>
                 </div>
@@ -81,7 +81,8 @@
                         </span>
                     @enderror
                     <div class="information">
-                        <span>半角英数字記号が使用できます</span><br />
+                        <span>パスワード変更時のみ入力してください。</span>
+                        <span>半角英数字記号が使用できます。</span><br />
                         <span>8字以上 30字以内で入力してください。</span>
                     </div>
                 </div>
