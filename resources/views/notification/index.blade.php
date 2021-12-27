@@ -47,7 +47,7 @@
             </tbody>
         </table>
 
-        {{ $notifications->links('pagination::bootstrap-4') }}
+        {{ $notifications->links('vendor/pagination/pagination_view') }}
 
     </div>
 @endsection

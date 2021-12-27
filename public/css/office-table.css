@@ -1,11 +1,9 @@
-.label {
-    width: 100px;
+.table {
+    table-layout: fixed;
 }
 
-.room-title {
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
+.label {
+    width: 100px;
 }
 
 .form-select {

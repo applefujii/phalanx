@@ -10,7 +10,7 @@
         <button class="btn btn-primary chat-link-button" onclick="location.href='{{ route("chat.index") }}'">チャット</button>
         @if (Auth::user()->is_staff())
           <button class="btn btn-primary" onclick="location.href='{{ route("chat_room.index") }}'">チャットルーム管理</button>
-          <button class="btn btn-primary" onclick="location.href='{{ route("notification.index") }}'">通知管理</button>
+          <button class="btn btn-primary" onclick="location.href='{{ route("notification.index") }}'">予定通知管理</button>
           <button class="btn @if ($new_trial_applications) btn-warning @else btn-primary @endif" onclick="location.href='{{ route("trial_application_manage.index", ["office_id" => Auth::user()->office_id]) }}'">
             体験・見学申込管理
             @if ($new_trial_applications)
