@@ -10,10 +10,6 @@
     white-space: pre-wrap;
 }
 
-.date_category {
-    position: relative;
-}
-
 .chat_button {
     height: 80px;
     font-size: 40px !important;
@@ -31,23 +27,25 @@
 }
 
 #scroll {
-    overflow-x: hidden;
-    overflow-y: scroll;
-    -webkit-overflow-scrolling: touch;
+    // overflow-x: hidden;
+    // overflow-y: scroll;
+    // -webkit-overflow-scrolling: touch;
 
-    &::-webkit-scrollbar {
-        width: 20px;
-        z-index: 10;
-    }
-    &::-webkit-scrollbar-track-piece {
-        background: #f3f3f2;
-    }
-    &::-webkit-scrollbar-thumb {
-        background: #6c757d;
-    }
+    // &::-webkit-scrollbar {
+    //     width: 20px;
+    //     z-index: 10;
+    // }
+    // &::-webkit-scrollbar-track-piece {
+    //     background: #f3f3f2;
+    // }
+    // &::-webkit-scrollbar-thumb {
+    //     background: #6c757d;
+    // }
 }
 
 .date_category {
+    position: relative;
+
     hr {
         z-index: 1;
     }
