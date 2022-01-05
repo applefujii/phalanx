@@ -53,6 +53,7 @@ use App\Models\Office;
 use App\Models\User;
 use App\Models\UserType;
 use App\Models\ChatRoom;
+use App\Models\ChatRoom__User;
 use App\Http\Requests\EditUserRequest;
 use App\Http\Requests\NotificationRequest;
 use Illuminate\Contracts\Container\Container;
@@ -674,11 +675,21 @@ class ApiController extends Controller
     {
         $con = app()->make("App\Http\Controllers\ChatRoomController");
         
+        $rules = [
+            "room_title" => "required|max:100",
+            "distinction_number" => "numeric",
+            "office_id" => "required|numeric",
+            "user_id" => "numeric"
+        ];
+
         if( isset($request->record) ) {
             try {
-                $id = $con->storeDetail( new Request($request->record) );
+                $r = new Request($request->record);
+                $validator = Validator::make($r->query(), $rules);
+                if($validator->fails()) throw( new \Exception("バリデーションエラー") );
+                $id = $con->storeDetail($r);
             } catch(\Exception $e) {
-                return json_encode( '{ result : "Failure" }' );
+                return json_encode( '{ result : "Failure", errorMsg : ' . $e . ' }' );
             }
             return json_encode( '{ result : "Success", id : '.$id.' }' );
         } else if( isset($request->records) ) {
@@ -686,13 +697,16 @@ class ApiController extends Controller
             try {
                 DB::transaction(function() use(&$ids, $con, $request) {
                     foreach($request->records as $r) {
-                        $id = $con->storeDetail( new Request($r) );
+                        $r = new Request($r);
+                        $validator = Validator::make($r->query(), $rules);
+                        if($validator->fails()) throw( new \Exception("バリデーションエラー") );
+                        $id = $con->storeDetail($r);
                         $ids[] = $id;
                     }
                     $ids = implode(", ", $ids);
                 });
             } catch( \Exception $e ) {
-                return json_encode( '{ result : "Failure" }' );
+                return json_encode( '{ result : "Failure", errorMsg : ' . $e . ' }' );
             }
             return json_encode( '{ result : "Success", ids : ['. $ids .'] }' );
         }
@@ -709,11 +723,19 @@ class ApiController extends Controller
     {
         $con = app()->make("App\Http\Controllers\ChatRoomController");
 
+        $rules = [
+            "room_title" => "required|max:100",
+            "office_id" => "required|numeric"
+        ];
+
         if( isset($request->record) ) {
             try {
-                $id = $con->updateDetail( new Request($request->record), $request->record["id"] );
+                $r = new Request($request->record);
+                $validator = Validator::make($r->query(), $rules);
+                if($validator->fails()) throw(new \Exception("バリデーションエラー"));
+                $id = $con->updateDetail($r, $r->id);
             } catch( \Exception $e ) {
-                return json_encode( '{ result : "Failure" }' );
+                return json_encode( '{ result : "Failure", errorMsg : ' . $e . ' }' );
             }
             return json_encode( '{ result : "Success", id : ['. $id .'] }' );
         } else if( isset($request->records) ) {
@@ -721,13 +743,16 @@ class ApiController extends Controller
             try {
                 DB::transaction(function() use(&$ids, $con, $request) {
                     foreach($request->records as $r) {
-                        $id = $con->updateDetail( new Request($r), $r["id"] );
+                        $r = new Request($r);
+                        $validator = Validator::make($r->query(), $rules);
+                        if($validator->fails()) throw(new \Exception("バリデーションエラー"));
+                        $id = $con->updateDetail($r, $r->id);
                         $ids[] = $id;
                     }
                     $ids = implode(", ", $ids);
                 });
             } catch( \Exception $e ) {
-                return json_encode( '{ result : "Failure" }' );
+                return json_encode( '{ result : "Failure", errorMsg : ' . $e . ' }' );
             }
             return json_encode( '{ result : "Success", ids : ['. $ids .'] }' );
         }
@@ -891,7 +916,94 @@ class ApiController extends Controller
         return json_encode( '{ result : "Success" }' );
     }
 
+    //--------------------チャットルーム__ユーザー中間テーブル--------------------
 
+    /**
+     * チャットルーム__ユーザー 取得
+     * @param Request $request 検索条件[id, chat_room_id, user_id, sort]
+     * @return json 実行結果
+     */
+    public function ApiGetChatRoomUser(Request $request)
+    {
+        $filter_chat_room__user_id = $request->input('id', '');
+        if ($filter_chat_room__user_id != ""  &&  !is_array($filter_chat_room__user_id))
+            $filter_chat_room__user_id = compact("filter_chat_room__user_id");
+        $filter_chat_room_id = $request->input("chat_room_id", "");
+        if($filter_chat_room_id != "" && !is_array($filter_chat_room_id))
+            $filter_chat_room_id = compact("filter_chat_room_id");
+        $filter_user_id = $request->input("user_id", "");
+        if($filter_user_id != "" && !is_array($filter_user_id))
+            $filter_user_id = compact("filter_user_id");
+        
+        $sort = "";
+        $t_sort = $request->input('sort', '');
+        if ($t_sort != ""){
+            $sort = [[]];
+            if(!is_array($t_sort)) $t_sort = compact("t_sort");
+            $i = 0;
+            foreach( $t_sort as $s ){
+                $order = "asc";
+                if( preg_match("/^-/i", $s) ) $order = "desc";
+                $sort[$i] = ["order" => $order, "subject" => preg_replace("/^-/i", "", $s)];
+                $i++;
+            }
+        }
+
+        $query = ChatRoom__User::get();
+        if($filter_chat_room__user_id != "")
+            $query->whereIn("id", $filter_chat_room__user_id);
+        if($filter_chat_room_id != "")
+            $query->whereIn("chat_room_id", $filter_chat_room_id);
+        if($filter_user_id != "")
+            $query->whereIn("user_id", $filter_user_id);
+        if($sort != "") {
+            foreach($sort as $s) {
+                $query->orderBy($s["subject"], $s["order"]);
+            }
+        } else {
+            $query->orderBy("id", "asc");
+        }
+
+        $chat_room__user = $query->get();
+
+        return json_encode($chat_room__user);
+    }
+
+    /**
+     * チャットルーム__ユーザー 登録
+     * @param Request $request 登録情報[chat_room_id, user_id]
+     * @return json 実行結果
+     */
+    public function ApiStoreChatRoomUser(Request $request)
+    {
+        $con = app()->make("App\Http\Controllers\ChatRoomController");
+        $con->chat_room__user_store($request);
+        return json_encode('{ result : "Success" }');
+    }
+
+    /**
+     * チャットルーム__ユーザー 更新
+     * @param Request $request 登録情報[id, newest_read_chat_text_id]
+     * @return json 実行結果
+     */
+    public function ApiUpdateChatRoomUser(Request $request)
+    {
+        $con = app()->make("App\Http\Controllers\ChatRoomController");
+        $con->chat_room__user_update($request, $request->input("id"));
+        return json_encode('{ result : "Success" }');
+    }
+
+    /**
+     * チャットルーム__ユーザー 更新
+     * @param Request $request 登録情報[id]
+     * @return json 実行結果
+     */
+    public function ApiDeleteChatRoomUser(Request $request)
+    {
+        $con = app()->make("App\Http\Controllers\ChatRoomController");
+        $con->chat_room__user_destroy($request->input("id"));
+        return json_encode('{ result : "Success" }');
+    }
 
     
     //--------------------- ※テスト用 ----------------------
