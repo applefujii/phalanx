@@ -102,7 +102,7 @@
             @csrf
         </form>
         <input type="submit" form="main-form" class="btn btn-primary mx-4" value="登録">
-        <a href="{{ route('notification.index') }}" class="btn btn-secondary mx-4">戻る</a>
+        <a href="{{ route('notification.index') }}" class="btn btn-secondary mx-4">キャンセル</a>
     </div>
 </div>
 
