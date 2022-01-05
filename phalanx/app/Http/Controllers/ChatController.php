@@ -346,4 +346,64 @@ class ChatController extends Controller
         
         return response()->json(['success' => '送信が完了しました。']);
     }
+
+
+    /**
+     * 未読があるか
+     *
+     * @param  Request  $request[chatroom_id]
+     * @return boolean true:未読あり
+     */
+    public function ExistUnread(Request $request) {
+        $user = Auth::user();
+        $filter_chatroom_id = $request->input('record.chatroom_id', null);
+        if ($filter_chatroom_id != null  &&  !is_array($filter_chatroom_id))
+        $filter_chatroom_id = compact("filter_chatroom_id");
+
+        //----- 対チャットルーム
+        if( $filter_chatroom_id != null ) {
+            $rooms = ChatRoom::whereNull("deleted_at")->whereIn("id", $filter_chatroom_id)
+                ->with(['chat_room__user' => function ($query) use ($user) {
+                    $query->where('user_id', $user->id);
+                }])
+                ->with(['chat_texts' => function ($query) use ($user) {
+                    $query->whereNull('deleted_at')->where("user_id", "<>", $user->id)// 自身の書き込みは除外
+                        ->orderByDesc('id')->limit(1);
+                }])->get();
+            foreach($rooms as $room) {
+                if(optional(optional($room->chat_room__user)->first())->newest_read_chat_text_id < optional(optional($room->chat_texts)->first())->id) {
+                    return true;
+                }
+            }
+        }
+        //----- チャットルーム指定なし
+        else {
+            // 所属しているチャットルームを取得
+            $join_chat_rooms = ChatRoom::whereNull("deleted_at")
+                ->with('user')
+                ->with(['chat_room__user' => function ($query) use ($user) {
+                    $query->where('user_id', $user->id);
+                }])
+                ->with(['chat_texts' => function ($query) use ($user) {
+                    $query->whereNull('deleted_at')->where("user_id", "<>", $user->id)// 自身の書き込みは除外
+                        ->orderByDesc('id')->limit(1);
+                }])
+                ->with('users')
+                ->whereHas('users', function($query) use ($user) {
+                    $query->where('user_id', $user->id);
+                })
+                ->orderBy('distinction_number')
+                ->orderBy('id')
+                ->get();
+
+            foreach($join_chat_rooms as $join_chat_room) {
+                if(optional(optional($join_chat_room->chat_room__user)->first())->newest_read_chat_text_id < optional(optional($join_chat_room->chat_texts)->first())->id) {
+                    return true;
+                }
+            }
+        }
+
+        return false;
+    }
+
 }
