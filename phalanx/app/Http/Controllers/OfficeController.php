@@ -46,21 +46,21 @@ class OfficeController extends Controller
      /**
      * 新規データの作成
      */
-    public function create()
+    /* public function create()
     {
         $offices = Office::orderBy("id")->get();
         return view("office_master/create",compact("offices"));
-    }
+    } */
 
      /**
      * 新規データ作成の受け取り部分
      */
-    public function store(OfficeRequest $request)
+    /* public function store(OfficeRequest $request)
     {
         $id = $this->storeDetail($request);
 
         return redirect()->route("office.index");
-    }
+    } */
 
     /**
      * 新規データ作成の実行部分
@@ -68,7 +68,7 @@ class OfficeController extends Controller
      * @param Request $request
      * @return int $id
      */
-    public function storeDetail(Request $request) {
+    /* public function storeDetail(Request $request) {
 
         $office = null;
         DB::transaction(function () use(&$office, $request) {
@@ -104,7 +104,7 @@ class OfficeController extends Controller
 
         if(isset($office)) return $office->id;
         return -1;
-    }
+    } */
 
 
     /**
@@ -170,7 +170,7 @@ class OfficeController extends Controller
     /**
      * データ削除の実行部分
      */
-    public function destroy($id)
+    /* public function destroy($id)
     {
         DB::transaction(function () use($id) {
             $now = Carbon::now()->isoFormat('YYYY-MM-DD HH:mm:ss');
@@ -200,5 +200,5 @@ class OfficeController extends Controller
             'office_name.required' => 'A title is required',
             'sort.required'  => 'A message is required',
         ];
-    }
+    } */
 }

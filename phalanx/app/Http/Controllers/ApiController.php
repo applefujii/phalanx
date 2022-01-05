@@ -46,6 +46,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Validation\Rule;
 
 use App\Models\Notification;
 use App\Models\Notification__User;
@@ -296,9 +297,9 @@ class ApiController extends Controller
      * @param Request $request 登録情報[id,office_name,en_office_name,sort]
      * @return json 実行結果
      */
-    public function ApiStoreOffices( Request $request )
+    /* public function ApiStoreOffices( Request $request )
     {
-        $con = app()->make("App\Http\Controllers\officeController");
+        $con = app()->make("App\Http\Controllers\OfficeController");
         
         if( isset($request->record) ) {
             try {
@@ -324,7 +325,7 @@ class ApiController extends Controller
         }
         
         return json_encode( '{ result : "Failure" }' );
-    }
+    } */
 
     /**
      * 事業所 更新
@@ -334,6 +335,12 @@ class ApiController extends Controller
     public function ApiUpdateOffices( Request $request )
     {
         $con = app()->make("App\Http\Controllers\OfficeController");
+
+        $rules = [
+            'office_name' => ['required',"max:255",  Rule::unique('offices')->whereNull("deleted_at")->ignore($this->office)],
+            "en_office_name" => ["required", "alpha_dash", "max:255", Rule::unique("offices")->whereNull("deleted_at")->ignore($this->office)],
+            'sort' => ['required', "numeric", "min:0", "max:9999", Rule::unique('offices')->whereNull("deleted_at")->ignore($this->office)],
+        ];
 
         if( isset($request->record) ) {
             try {
@@ -380,7 +387,7 @@ class ApiController extends Controller
      * @param Request $request 登録情報[id]
      * @return json 実行結果
      */
-    public function ApiDeleteOffices( Request $request )
+    /* public function ApiDeleteOffices( Request $request )
     {
         $con = app()->make("App\Http\Controllers\OfficeController");
 
@@ -406,7 +413,7 @@ class ApiController extends Controller
             }
             return json_encode( '{ result : "Success", ids : ['. $ids .'] }' );
         }
-    }
+    } */
 
 
 
