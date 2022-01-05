@@ -165,7 +165,7 @@ class ChatRoomController extends Controller
 
     /**
      * チャットルーム更新の実行部分
-     * @param Request $request
+     * @param Request $request int $id
      * @return int id
      */
     public function updateDetail(Request $request, $id) {
@@ -251,5 +251,60 @@ class ChatRoomController extends Controller
         });
 
         return redirect()->route("chat_room.index");
+    }
+
+    //----------リレーションテーブル操作 chat_room__user----------
+
+    /**
+     * チャットルーム-ユーザー中間テーブル新規作成
+     * @param Request $request
+     */
+    public function chat_room__user_store(Request $request) {
+        
+        //現在時刻を取得
+        $now = Carbon::now()->isoFormat('YYYY-MM-DD HH:mm:ss');
+
+        //データの作成
+        ChatRoom__User::create([
+            "chat_room_id" => $request->input("chat_room_id"),
+            "user_id" => $request->input("user_id"),
+            "create_user_id" => Auth::id(),
+            "update_user_id" => Auth::id(),
+            "created_at" => $now,
+            "updated_at" => $now
+        ]);
+
+        return;
+    }
+
+    /**
+     * チャットルーム-ユーザー中間テーブル更新
+     * @param Request $request int $id
+     */
+    public function chat_room__user_update(Request $request, $id) {
+
+        //現在時刻を取得
+        $now = Carbon::now()->isoFormat('YYYY-MM-DD HH:mm:ss');
+
+        //データの更新
+        ChatRoom__User::where("id", $id)->update([
+            "newest_read_chat_text_id" => $request->input("newest_read_chat_text_id"),
+            "update_user_id" => Auth::id(),
+            "updated_at" => $now()
+        ]);
+
+        return;
+    }
+
+    /**
+     * チャットルーム-ユーザー中間テーブル削除
+     * @param int $id
+     */
+    public function chat_room__user_destroy($id) {
+
+        //データの削除
+        ChatRoom__User::where("id", $id)->delete();
+
+        return;
     }
 }
