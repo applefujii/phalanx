@@ -267,11 +267,4 @@ class NotificationController extends Controller
         return;
     }
 
-    //--------------------- ※テスト用 ----------------------
-
-    public function api_test()
-    {
-        //
-        return view('api_test');
-    }
 }
