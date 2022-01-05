@@ -40,6 +40,10 @@ class UserpageController extends Controller
         $trial_applications = TrialApplication::whereNull('deleted_at')->where('office_id', Auth::user()->office_id)->where('is_checked', false)->get();
         $new_trial_applications = $trial_applications->isNotEmpty();
 
+        // チャットに未読があるかチェック
+        $con = app()->make("App\Http\Controllers\ChatController");
+        $exist_unread = $con->ExistUnread(new Request());
+
         // 通知の獲得
         $notifications = Notification::whereNull('deleted_at')->whereHas('notification__user', function($n__u) {
             $n__u->where('user_id', '=', Auth::id());
@@ -69,6 +73,6 @@ class UserpageController extends Controller
                 return PHP_INT_MAX;
             }
         });
-        return view("user_page2", compact('new_trial_applications', 'notifications_groups'));
+        return view("user_page2", compact('new_trial_applications', 'notifications_groups', 'exist_unread'));
     }
 }

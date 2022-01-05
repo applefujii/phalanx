@@ -68,9 +68,10 @@
         $("#api2").on('click', function(){
             $.ajax({
                 type: "POST",
-                url: siteUrl + "api/v1.0/get/offices.json", // 送り先
+                url: siteUrl + "api/v1.0/get/chatExistUnread.json", // 送り先
                 data: {
-                    
+                    record : {
+                    }
                 },   // 渡したいデータをオブジェクトで渡す
                 dataType : "json",  // データ形式を指定
                 scriptCharset: 'utf-8'  // 文字コードを指定

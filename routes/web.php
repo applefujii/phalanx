@@ -26,7 +26,6 @@ Auth::routes([
 
 // 通知
 Route::resource('/notification', App\Http\Controllers\NotificationController::class);
-Route::get('/api_test', [App\Http\Controllers\NotificationController::class, 'api_test'])->name('api_test');
 
 // 体験・見学申込管理
 Route::get('/trial_application_manage/{id}/check', [App\Http\Controllers\TrialApplicationManageController::class, 'check'])->name('trial_application_manage.check');
@@ -72,6 +71,9 @@ Route::resource("chat", App\Http\Controllers\ChatController::class)->only(["inde
 
 //////////// API /////////////////////////////////
 
+// ※テスト用
+Route::get('/api_test', [App\Http\Controllers\ApiController::class, 'api_test'])->name('api_test');
+
 // ユーザー
 Route::POST('/api/v1.0/get/users.json', [App\Http\Controllers\APIController::class, "ApiGetUsers"]);
 Route::POST('/api/v1.0/set/users.json', [App\Http\Controllers\APIController::class, "ApiStoreUsers"]);
@@ -93,6 +95,10 @@ Route::POST('/api/v1.0/get/chatrooms.json', [App\Http\Controllers\APIController:
 Route::POST('/api/v1.0/set/chatrooms.json', [App\Http\Controllers\APIController::class, "ApiStoreChatRooms"]);
 Route::PUT('/api/v1.0/set/chatrooms.json', [App\Http\Controllers\APIController::class, "ApiUpdateChatRooms"]);
 Route::DELETE('/api/v1.0/set/chatrooms.json', [App\Http\Controllers\APIController::class, "ApiDeleteChatRooms"]);
+
+// チャット
+Route::POST('/api/v1.0/get/chatExistUnread.json', [App\Http\Controllers\APIController::class, "ApiChatExistUnread"]);
+
 
 //---------- リレーション -----------------------
 

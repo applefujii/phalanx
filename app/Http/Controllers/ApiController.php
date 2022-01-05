@@ -479,9 +479,9 @@ class ApiController extends Controller
 
         $rules = [
             "content" => "required|max:500",
-            "start_at" => "required|date",//date_format:'Y-m-d H:i:s'
-            "end_at" => "required|date|after:start_at",//date_format:'Y-m-d H:i:s'
-            "is_all_day" => "required|boolean"
+            "start_at" => "required|date_format:Y-m-d H:i:s",
+            "end_at" => "required|date_format:Y-m-d H:i:s|after:now|after_or_equal:start_at",
+            "is_all_day" => "required|boolean",
         ];
         
         //-- 1件
@@ -531,9 +531,9 @@ class ApiController extends Controller
 
         $rules = [
             "content" => "required|max:500",
-            "start_at" => "required|date",//date_format:'Y-m-d H:i:s'
-            "end_at" => "required|date|after:start_at",//date_format:'Y-m-d H:i:s'
-            "is_all_day" => "required|boolean"
+            "start_at" => "required|date_format:Y-m-d H:i:s",
+            "end_at" => "required|date_format:Y-m-d H:i:s|after:now|after_or_equal:start_at",
+            "is_all_day" => "required|boolean",
         ];
 
         if( isset($request->record) ) {
@@ -796,6 +796,43 @@ class ApiController extends Controller
     }
 
 
+    ///////////////////////////////// チャット //////////////////////////////////////////
+
+    /**
+     * チャット取得
+     * @param Request $request
+     * @return json 実行結果
+     */
+
+    /**
+     * チャット書き込み
+     * @param Request $request
+     * @return json 実行結果
+     */
+
+    /**
+     * 未読があるか
+     * @param Request $request
+     * @return json 実行結果
+     */
+    public function ApiChatExistUnread(Request $request)
+    {
+        $con = app()->make("App\Http\Controllers\ChatController");
+
+        $existUnread = false;
+        try {
+            $existUnread = $con->ExistUnread($request);
+        } catch(\Exception $e) {
+            return json_encode('{ result : "Failure" }');
+        }
+        $json = '{ result : "Success", Exist_Unread : ';
+        $json .= $existUnread ? "true" : "false";
+        $json .= ' }';
+        return json_encode($json);
+    }
+    
+
+
     ///////////////////////////////// リレーション //////////////////////////////////////////
 
 
@@ -967,4 +1004,15 @@ class ApiController extends Controller
         $con->chat_room__user_destroy($request->input("id"));
         return json_encode('{ result : "Success" }');
     }
+
+    
+    //--------------------- ※テスト用 ----------------------
+
+    public function api_test()
+    {
+        //
+        return view('api_test');
+    }
+
+
 }
