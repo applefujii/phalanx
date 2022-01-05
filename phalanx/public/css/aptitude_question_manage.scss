@@ -4,7 +4,19 @@
         &:nth-child(1) {
             th {
                 &:nth-child(1) {
-                    min-width: 500px;
+                    width: 67%;
+                }
+
+                &:nth-child(2) {
+                    width: 5%;
+                }
+
+                &:nth-child(3) {
+                    width: 25%;
+                }
+
+                &:nth-child(4) {
+                    width: 8%;
                 }
             }
         }
