@@ -47,6 +47,10 @@ class UserpageController extends Controller
         // 通知の獲得
         $notifications = Notification::whereNull('deleted_at')->whereHas('notification__user', function($n__u) {
             $n__u->where('user_id', '=', Auth::id());
+        })->orWhere(function($query) {
+            $query->whereHas('notification__office', function($n__o) {
+                $n__o->where('office_id', '=', Auth::user()->office_id);
+            });
         })->orderBy('start_at', 'asc')->orderBy('end_at', 'asc')->get();
         $unsorted_notifications_groups = $notifications->mapToGroups(function ($notification, $key) {
             $start_at = new Carbon($notification->start_at);

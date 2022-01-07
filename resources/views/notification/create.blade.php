@@ -70,12 +70,26 @@
             <div class="mx-4">
                 <div class="row">
                     <div class="col-sm-auto mt-3">
+                        <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#peopleListModal" data-target-group="office">事業所選択</button>
+                    </div>
+                    <div class="col-sm-auto mt-3">
                         <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#peopleListModal" data-target-group="staff">メンバー選択（職員）</button>
                     </div>
                     <div class="col-sm-auto mt-3 mb-3">
                         <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#peopleListModal" data-target-group="user">メンバー選択（利用者）</button>
                     </div>
                 </div>
+                <input form="main-form" name="target_offices" id="target_offices" class="@error('target_offices') is-invalid @enderror @error('target_offices.*') is-invalid @enderror" hidden>
+                @error('target_offices')
+                    <span class="invalid-feedback" role="alert">
+                        <strong>{{ $message }}</strong>
+                    </span>
+                @enderror
+                @error('target_offices.*')
+                    <span class="invalid-feedback" role="alert">
+                        <strong>{{ $message }}</strong>
+                    </span>
+                @enderror
                 <input form="main-form" name="target_users" id="target_users" class="@error('target_users') is-invalid @enderror @error('target_users.*') is-invalid @enderror" hidden>
                 @error('target_users')
                     <span class="invalid-feedback" role="alert">
