@@ -344,37 +344,30 @@ class ApiController extends Controller
 
         if( isset($request->record) ) {
             try {
-                $user = User::where("id", $request->record["id"])->first();
-                $record_confirm = $request->record;
-                $eud = EditUserRequest::create($uri=route('user.update', $request->record["id"]), $method="PUT", $parameters=$record_confirm);
-                $eud->user = $user;
-                $eud->setContainer(app())->setRedirector(app()->make(Redirector::class));
-                $eud->validateResolved();
-                app()->call( [$con,'update'], ['request' => $eud, 'user' => $user] );
+                $r = new Request($request->record);
+                $validator = Validator::make($r->query(), $rules);
+                if($validator->fails()) throw(new \Exception("バリデーションエラー"));
+                $id = $con->updateDetail($r, $r->id);
             } catch( \Exception $e ) {
-                Log::debug($e);
-                return json_encode( '{ result : "Failure" }' );
+                return json_encode( '{ result : "Failure", errorMsg : ' . $e . ' }' );
             }
-            return json_encode( '{ result : "Success", id : ['. $request->record["id"] .'] }' );
+            return json_encode( '{ result : "Success", id : ['. $id .'] }' );
         }
         else if( isset($request->records) ) {
-            $ids = "";
+            $ids = [];
             try {
                 DB::transaction(function() use(&$ids, $con, $request) {
                     foreach($request->records as $r) {
-                        $user = User::where("id", $r["id"])->first();
-                        $record_confirm = $r;
-                        $eud = EditUserRequest::create($uri=route('user.update', $r["id"]), $method="PUT", $parameters=$record_confirm);
-                        $eud->user = $user;
-                        $eud->setContainer(app())->setRedirector(app()->make(Redirector::class));
-                        $eud->validateResolved();
-                        app()->call( [$con,'update'], ['request' => $eud, 'user' => $user] );
-                        $ids .= $r["id"] . ", ";
+                        $r = new Request($r);
+                        $validator = Validator::make($r->query(), $rules);
+                        if($validator->fails()) throw(new \Exception("バリデーションエラー"));
+                        $id = $con->updateDetail($r, $r->id);
+                        $ids[] = $id;
                     }
+                    $ids = implode(", ", $ids);
                 });
             } catch( \Exception $e ) {
-                Log::debug($e);
-                return json_encode( '{ result : "Failure" }' );
+                return json_encode( '{ result : "Failure", errorMsg : ' . $e . ' }' );
             }
             return json_encode( '{ result : "Success", ids : ['. $ids .'] }' );
         }

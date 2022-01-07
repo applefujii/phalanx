@@ -81,9 +81,9 @@ Route::PUT('/api/v1.0/set/users.json', [App\Http\Controllers\APIController::clas
 Route::DELETE('/api/v1.0/set/users.json', [App\Http\Controllers\APIController::class, "ApiDeleteUsers"]);
 // 事業所
 Route::POST('/api/v1.0/get/offices.json', [App\Http\Controllers\APIController::class, "ApiGetOffices"]);
-Route::POST('/api/v1.0/set/offices.json', [App\Http\Controllers\APIController::class, "ApiStoreOffices"]);
+// Route::POST('/api/v1.0/set/offices.json', [App\Http\Controllers\APIController::class, "ApiStoreOffices"]);
 Route::PUT('/api/v1.0/set/offices.json', [App\Http\Controllers\APIController::class, "ApiUpdateOffices"]);
-Route::DELETE('/api/v1.0/set/offices.json', [App\Http\Controllers\APIController::class, "ApiDeleteOffices"]);
+// Route::DELETE('/api/v1.0/set/offices.json', [App\Http\Controllers\APIController::class, "ApiDeleteOffices"]);
 // 予定通知
 Route::POST('/api/v1.0/get/notifications.json', [App\Http\Controllers\APIController::class, "ApiGetNotifications"]);
 Route::POST('/api/v1.0/set/notifications.json', [App\Http\Controllers\APIController::class, "ApiStoreNotifications"]);
