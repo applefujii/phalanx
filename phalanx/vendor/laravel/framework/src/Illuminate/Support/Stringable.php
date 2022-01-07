@@ -343,6 +343,20 @@ class Stringable implements JsonSerializable
     }
 
     /**
+     * Masks a portion of a string with a repeated character.
+     *
+     * @param  string  $character
+     * @param  int  $index
+     * @param  int|null  $length
+     * @param  string  $encoding
+     * @return static
+     */
+    public function mask($character, $index, $length = null, $encoding = 'UTF-8')
+    {
+        return new static(Str::mask($this->value, $character, $index, $length, $encoding));
+    }
+
+    /**
      * Get the string matching the given pattern.
      *
      * @param  string  $pattern
@@ -479,6 +493,16 @@ class Stringable implements JsonSerializable
     }
 
     /**
+     * Reverse the string.
+     *
+     * @return static
+     */
+    public function reverse()
+    {
+        return new static(Str::reverse($this->value));
+    }
+
+    /**
      * Repeat the string.
      *
      * @param  int  $times
@@ -597,6 +621,16 @@ class Stringable implements JsonSerializable
     }
 
     /**
+     * Convert the given string to title case for each word.
+     *
+     * @return static
+     */
+    public function headline()
+    {
+        return new static(Str::headline($this->value));
+    }
+
+    /**
      * Get the singular form of an English word.
      *
      * @return static
@@ -673,6 +707,19 @@ class Stringable implements JsonSerializable
     public function substrCount($needle, $offset = null, $length = null)
     {
         return Str::substrCount($this->value, $needle, $offset ?? 0, $length);
+    }
+
+    /**
+     * Replace text within a portion of a string.
+     *
+     * @param  string|array  $replace
+     * @param  array|int  $offset
+     * @param  array|int|null  $length
+     * @return string|array
+     */
+    public function substrReplace($replace, $offset = 0, $length = null)
+    {
+        return new static(Str::substrReplace($this->value, $replace, $offset, $length));
     }
 
     /**
@@ -772,6 +819,16 @@ class Stringable implements JsonSerializable
     public function wordCount()
     {
         return str_word_count($this->value);
+    }
+
+    /**
+     * Convert the string into a `HtmlString` instance.
+     *
+     * @return \Illuminate\Support\HtmlString
+     */
+    public function toHtmlString()
+    {
+        return new HtmlString($this->value);
     }
 
     /**
