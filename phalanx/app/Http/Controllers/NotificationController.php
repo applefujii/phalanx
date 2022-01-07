@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use App\Http\Requests\NotificationRequest;
 use App\Models\Notification;
 use App\Models\Notification__User;
+use App\Models\Notification__Office;
 use App\Models\Office;
 use App\Models\UserType;
 
@@ -103,6 +104,23 @@ class NotificationController extends Controller
                 'updated_at' => $dt->format('Y-m-d H:i:s')
             ]);
 
+            if(isset($request->target_offices)) {
+                $aItem = [];
+                foreach( $request->target_offices as $to ) {
+                    array_push($aItem, [
+                        'notification_id' => $notification->id,
+                        'office_id' => $to,
+                        'create_user_id' => Auth::user()->id,
+                        'created_at' => $dt->format('Y-m-d H:i:s')
+                    ]);
+                }
+
+                $aChunk = array_chunk($aItem, 100);
+                foreach($aChunk as $chunk){
+                    Notification__Office::insert($chunk);
+                }
+            }
+
             if(isset($request->target_users)) {
                 $aItem = [];
                 foreach( $request->target_users as $tu ) {
@@ -150,7 +168,14 @@ class NotificationController extends Controller
         foreach($targetUsers as $t) {
             array_push($aTargetUsers, $t->user_id);
         }
-        return view("notification.edit", compact("notification", "aTargetUsers"));
+        $targetOffices = Notification__Office::select('office_id')->where('notification_id', $notification->id)->orderby('office_id', 'asc')->get();
+        $aTargetOffices = [];
+        foreach($targetOffices as $t) {
+            array_push($aTargetOffices, $t->office_id);
+        }
+        logger($aTargetUsers);
+        logger($aTargetOffices);
+        return view("notification.edit", compact("notification", "aTargetUsers", "aTargetOffices"));
     }
 
     /**
@@ -185,6 +210,7 @@ class NotificationController extends Controller
             if(isset($request->target_users)) {
                 $aItem = [];
                 foreach( $request->target_users as $tu ) {
+                    if( $tu == "" ) continue;
                     //-- 既に登録されていたら飛ばす
                     $fFind = Notification__User::where('notification_id', $id)->where('user_id', $tu)->first();
                     if( $fFind != null ) continue;
@@ -208,6 +234,37 @@ class NotificationController extends Controller
                 });
                 foreach( $reduction as $tu ) {
                     Notification__User::where("user_id", $tu)->delete();
+                }
+            }
+
+            //-- 対象事業所登録
+            if(isset($request->target_offices)) {
+                $aItem = [];
+                foreach( $request->target_offices as $to ) {
+                    if( $to == "" ) continue;
+                    //-- 既に登録されていたら飛ばす
+                    $fFind = Notification__Office::select("id")->where('notification_id', $id)->where('office_id', $to)->first();
+                    if( $fFind != null ) continue;
+
+                    array_push($aItem, [
+                        'notification_id' => $id,
+                        'office_id' => $to,
+                        'create_user_id' => Auth::user()->id,
+                        'created_at' => $dt->format('Y-m-d H:i:s'),
+                    ]);
+                }
+                $aChunk = array_chunk($aItem, 100);
+                foreach($aChunk as $chunk){
+                    Notification__Office::insert($chunk);
+                }
+
+                //-- 対象外事業所削除
+                $reduction = array_filter($request->old_target_offices, function($e) use($request) {
+                    if(in_array($e, $request->target_offices)) return false;
+                    return true;
+                });
+                foreach( $reduction as $to ) {
+                    Notification__Office::where("office_id", $to)->delete();
                 }
             }
         });
@@ -263,6 +320,37 @@ class NotificationController extends Controller
     {
         $dt = new \DateTime( "now" );
         $notifications = Notification__User::where("id", $id)->delete();
+
+        return;
+    }
+
+
+    //--------------------- リレーションテーブル操作 notification__office ----------------------
+
+    /**
+     * @return \Illuminate\Http\Response
+     */
+    public function notification__office_store(Request $request)
+    {
+        $dt = new \DateTime( "now" );
+        $notifications = Notification__Office::create([
+            'notification_id' => $request->notification_id,
+            'user_id' => $request->office_id,
+            'create_user_id' => Auth::user()->id,
+            'created_at' => $dt->format('Y-m-d H:i:s')
+        ]);
+
+        return;
+    }
+
+    /**
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function notification__office_destroy($id)
+    {
+        $dt = new \DateTime( "now" );
+        $notifications = Notification__Office::where("id", $id)->delete();
 
         return;
     }
