@@ -32,7 +32,7 @@ class UserpageController extends Controller
     {
         //-- 古い通知を消す
         $dt = new \DateTime( "now" );
-        Notification::whereRaw( "end_at <= DATE_SUB( CURDATE(),INTERVAL 1 DAY )" )->update([
+        Notification::whereDate("end_at", "<=", $dt->format('Y-m-d H:i:s'))->update([
             'deleted_at' => $dt->format('Y-m-d H:i:s')
         ]);
         
