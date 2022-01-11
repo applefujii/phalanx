@@ -9,6 +9,7 @@ use Illuminate\Http\Response;
 
 class OpenHandlerController extends BaseController
 {
+
     public function handle(Request $request)
     {
         $openHandler = new OpenHandler($this->debugbar);

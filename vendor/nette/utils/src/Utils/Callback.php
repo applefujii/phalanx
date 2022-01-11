@@ -161,9 +161,8 @@ final class Callback
 
 	/**
 	 * Unwraps closure created by Closure::fromCallable().
-	 * @return callable|array
 	 */
-	public static function unwrap(\Closure $closure)
+	public static function unwrap(\Closure $closure): callable
 	{
 		$r = new \ReflectionFunction($closure);
 		if (substr($r->name, -1) === '}') {

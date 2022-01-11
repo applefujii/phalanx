@@ -6,6 +6,7 @@ use DebugBar\DataFormatter\DataFormatter;
 
 class QueryFormatter extends DataFormatter
 {
+
     /**
      * Removes extra spaces at the beginning and end of the SQL query and its lines.
      *
