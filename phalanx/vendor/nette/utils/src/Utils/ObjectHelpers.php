@@ -20,10 +20,7 @@ final class ObjectHelpers
 {
 	use Nette\StaticClass;
 
-	/**
-	 * @return never
-	 * @throws MemberAccessException
-	 */
+	/** @throws MemberAccessException */
 	public static function strictGet(string $class, string $name): void
 	{
 		$rc = new \ReflectionClass($class);
@@ -35,10 +32,7 @@ final class ObjectHelpers
 	}
 
 
-	/**
-	 * @return never
-	 * @throws MemberAccessException
-	 */
+	/** @throws MemberAccessException */
 	public static function strictSet(string $class, string $name): void
 	{
 		$rc = new \ReflectionClass($class);
@@ -50,10 +44,7 @@ final class ObjectHelpers
 	}
 
 
-	/**
-	 * @return never
-	 * @throws MemberAccessException
-	 */
+	/** @throws MemberAccessException */
 	public static function strictCall(string $class, string $method, array $additionalMethods = []): void
 	{
 		$trace = debug_backtrace(0, 3); // suppose this method is called from __call()
@@ -83,10 +74,7 @@ final class ObjectHelpers
 	}
 
 
-	/**
-	 * @return never
-	 * @throws MemberAccessException
-	 */
+	/** @throws MemberAccessException */
 	public static function strictStaticCall(string $class, string $method): void
 	{
 		$trace = debug_backtrace(0, 3); // suppose this method is called from __callStatic()

@@ -12,6 +12,7 @@ use Laravel\Telescope\Telescope;
 
 class TelescopeController extends BaseController
 {
+
     public function show(EntriesRepository $storage, $uuid)
     {
 

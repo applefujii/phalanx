@@ -6,6 +6,7 @@ use DebugBar\Storage\StorageInterface;
 
 class SocketStorage implements StorageInterface
 {
+
     protected $hostname;
     protected $port;
     protected $socket;
