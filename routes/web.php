@@ -81,9 +81,9 @@ Route::PUT('/api/v1.0/set/users.json', [App\Http\Controllers\APIController::clas
 Route::DELETE('/api/v1.0/set/users.json', [App\Http\Controllers\APIController::class, "ApiDeleteUsers"]);
 // 事業所
 Route::POST('/api/v1.0/get/offices.json', [App\Http\Controllers\APIController::class, "ApiGetOffices"]);
-Route::POST('/api/v1.0/set/offices.json', [App\Http\Controllers\APIController::class, "ApiStoreOffices"]);
+// Route::POST('/api/v1.0/set/offices.json', [App\Http\Controllers\APIController::class, "ApiStoreOffices"]);
 Route::PUT('/api/v1.0/set/offices.json', [App\Http\Controllers\APIController::class, "ApiUpdateOffices"]);
-Route::DELETE('/api/v1.0/set/offices.json', [App\Http\Controllers\APIController::class, "ApiDeleteOffices"]);
+// Route::DELETE('/api/v1.0/set/offices.json', [App\Http\Controllers\APIController::class, "ApiDeleteOffices"]);
 // 予定通知
 Route::POST('/api/v1.0/get/notifications.json', [App\Http\Controllers\APIController::class, "ApiGetNotifications"]);
 Route::POST('/api/v1.0/set/notifications.json', [App\Http\Controllers\APIController::class, "ApiStoreNotifications"]);
@@ -91,10 +91,10 @@ Route::PUT('/api/v1.0/set/notifications.json', [App\Http\Controllers\APIControll
 Route::DELETE('/api/v1.0/set/notifications.json', [App\Http\Controllers\APIController::class, "ApiDeleteNotifications"]);
 
 // チャットルーム
-Route::POST('/api/v1.0/get/chatrooms.json', [App\Http\Controllers\APIController::class, "ApiGetChatRooms"]);
-Route::POST('/api/v1.0/set/chatrooms.json', [App\Http\Controllers\APIController::class, "ApiStoreChatRooms"]);
-Route::PUT('/api/v1.0/set/chatrooms.json', [App\Http\Controllers\APIController::class, "ApiUpdateChatRooms"]);
-Route::DELETE('/api/v1.0/set/chatrooms.json', [App\Http\Controllers\APIController::class, "ApiDeleteChatRooms"]);
+Route::POST('/api/v1.0/get/chat_rooms.json', [App\Http\Controllers\APIController::class, "ApiGetChatRooms"]);
+Route::POST('/api/v1.0/set/chat_rooms.json', [App\Http\Controllers\APIController::class, "ApiStoreChatRooms"]);
+Route::PUT('/api/v1.0/set/chat_rooms.json', [App\Http\Controllers\APIController::class, "ApiUpdateChatRooms"]);
+Route::DELETE('/api/v1.0/set/chat_rooms.json', [App\Http\Controllers\APIController::class, "ApiDeleteChatRooms"]);
 
 // チャット
 Route::POST('/api/v1.0/get/chatExistUnread.json', [App\Http\Controllers\APIController::class, "ApiChatExistUnread"]);
@@ -105,6 +105,11 @@ Route::POST('/api/v1.0/get/chatExistUnread.json', [App\Http\Controllers\APIContr
 // 予定通知__ユーザー
 Route::POST('/api/v1.0/get/notification__user.json', [App\Http\Controllers\APIController::class, "ApiGetNotificationUser"]);
 
+// チャットルーム__ユーザー
+Route::POST("/api/v1.0/get/chat_room__user.json", [App\Http\Controllers\APIController::class, "ApiGetChatRoomUser"]);
+Route::POST('/api/v1.0/set/chat_room__user.json', [App\Http\Controllers\APIController::class, "ApiStoreChatRoomUser"]);
+Route::PUT('/api/v1.0/set/chat_room__user.json', [App\Http\Controllers\APIController::class, "ApiUpdateChatRoomUser"]);
+Route::DELETE('/api/v1.0/set/chat_room__user.json', [App\Http\Controllers\APIController::class, "ApiDeleteChatRoomUser"]);
 
 //URI例。取得系はget、登録系はset。
 // /api/v1.0/get/users.json
