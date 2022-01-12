@@ -12,7 +12,7 @@
 <div id="nav-left-container" class="d-block d-md-none" style='visibility: hidden'>
     <div id="nav-button-left" class="nav-button openbtn d-flex align-items-center justify-content-end" data-is-open="false"><i class="fas fa-chevron-right"></i></div>
     <nav id="nav-left" class="edge-nav">
-        <div class="side-scroll container-fluid">
+        <div class="side-scroll container-fluid pb-2">
             @include('chat.sidebar_left', [$join_chat_rooms, $offices])
         </div>
     </nav>
@@ -39,7 +39,7 @@
 <div class="container-fluid">
     <div class="row">
         <div class="col-md-2 d-none d-md-block border border-dark px-0">
-            <div class="side-scroll container-fluid">
+            <div class="side-scroll container-fluid pb-2">
                 @include('chat.sidebar_left', [$join_chat_rooms, $offices])
             </div>
         </div>
