@@ -99,7 +99,7 @@
             </div>
         </div>
 
-        <input type="submit" class="btn btn-primary" value="更新"><a href="{{ route('user.index') }}" class="btn btn-secondary back-button">戻る</a>
+        <input type="submit" class="btn btn-primary" value="更新"><a href="{{ route('user.index') }}" class="btn btn-secondary back-button">キャンセル</a>
     </form>
 </div>
 

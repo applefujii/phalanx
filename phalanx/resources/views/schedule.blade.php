@@ -9,6 +9,7 @@
                     </div>
                 </div>
             </div>
+            <img src="{{ asset('css/images/nashi.png') }}" alt="予定なし" class="notification-content-image">
         @else
             @php
                 $i = 0;

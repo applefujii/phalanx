@@ -48,7 +48,15 @@
                         @else
                             <li class="nav-item dropdown">
                                 <a id="navbarDropdown" class="nav-link dropdown-toggle text-light" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-pre>
-                                    {{ Auth::user()->name }}
+                                    @php
+                                        $name = Auth::user()->name;
+                                        if(mb_strlen($name) > 20) { 
+                                            $name = mb_substr($name,0,20);
+                                            echo $name. "…" ;
+                                        } else {
+                                            echo $name;
+                                        }
+                                    @endphp
                                 </a>
 
                                 <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">
