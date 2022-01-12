@@ -187,10 +187,10 @@ class navigationManager {
         if(this.fEnable == false) return;
         //-- 条件を満たすと動き始める
         if(!this.manager.fAnyoneMotion) {
-            console.log("move initMotion");
+            // console.log("move initMotion");
             switch(clTouch.swipeDirection) {
                 case 2:
-                    console.log("move");
+                    // console.log("move");
                     if(!this.manager.fAnyoneOpen  &&  this.direction == 4) {
                         this.fInMotion = true;
                         this.manager.fAnyoneMotion = true;
@@ -201,7 +201,7 @@ class navigationManager {
                     }
                     break;
                 case 4:
-                    console.log("move");
+                    // console.log("move");
                     if(!this.manager.fAnyoneOpen  &&  this.direction == 2) {
                         this.fInMotion = true;
                         this.manager.fAnyoneMotion = true;
