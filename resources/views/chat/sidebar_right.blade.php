@@ -1,11 +1,11 @@
-<div class="row">
+<div class="row mr-0">
     <h5 class="col-12 pt-3 font-weight-bold">参加者 ({{ $chat_room->users->count() }})</h5>
 </div>
 @foreach ($user_types as $user_type)
-    <div class="row">
+    <div class="row mr-0">
         @foreach ($offices as $office)
             @if ($user_type->id < 3 && $chat_room->users->where('user_type_id', $user_type->id)->where('office_id', $office->id)->count())
-                <div>
+                {{-- <div> --}}
                     <a data-toggle="collapse" class="no-close" @if($user_type->id === 1)href="#staff-{{ $office->id }}" @elseif ($user_type->id === 2) href="#user-{{ $office->id }}" @endif>
                         <h5 class="col-12 pt-3 text-dark font-weight-bold">{{ $office->office_name }}{{ $user_type->alias }} ({{ $chat_room->users->where('user_type_id', $user_type->id)->where('office_id', $office->id)->count() }})</h5>
                     </a>
@@ -16,11 +16,11 @@
                             @endif
                         @endforeach
                     </ul>
-                </div>
+                {{-- </div> --}}
             @endif
         @endforeach
         @if ($user_type->id == 3 && $chat_room->users->where('user_type_id', 3)->where('office_id', $office->id)->count())
-            <div>
+            {{-- <div> --}}
                 <a data-toggle="collapse" href="#trial">
                     <h5 class="col-12 pt-3 text-dark font-weight-bold">{{ $user_type->alias }} ({{ $chat_room->users->where('user_type_id', $user_type->id)->count() }})</h5>
                 </a>
@@ -31,7 +31,7 @@
                         @endif
                     @endforeach
                 </ul>
-            </div>
+            {{-- </div> --}}
         @endif
     </div>
 @endforeach
