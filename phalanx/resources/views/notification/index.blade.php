@@ -9,7 +9,9 @@
 
     <div class="container">
         <h3>予定通知管理　一覧</h3>
-        <a href="{{ route('notification.create') }}" type="button" class="btn btn-primary">新規作成</a>
+        <div class="mb-2">
+            <a href="{{ route('notification.create') }}" type="button" class="btn btn-primary">新規作成</a>
+        </div>
         <table class="table table-striped table-bordered table-sm">
             <thead>
                 <tr class="table-header">
