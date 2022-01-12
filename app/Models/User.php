@@ -76,4 +76,8 @@ class User extends Authenticatable
     public function is_staff() {
         return $this->user_type_id == 1  |  $this->user_type_id == 4;
     }
+
+    public function not_super() {
+        return $this->user_type_id !== 4;
+    }
 }
