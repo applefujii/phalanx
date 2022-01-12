@@ -7,7 +7,11 @@
 @section('content')
     <div class="container-md">
         <h3>事業所マスタ　一覧</h3>
-        {{-- <a href="{{ route('office.create') }}" type="button" class="btn btn-primary my-3">新規作成</a> --}}
+        {{--
+        <div class="mb-2"> 
+            <a href="{{ route('office.create') }}" type="button" class="btn btn-primary my-3">新規作成</a> 
+        </div>
+        --}}
         <div class="mt-3">
         <table class="table table-striped table-bordered table-sm">
             <thead class="bg-primary text-white">

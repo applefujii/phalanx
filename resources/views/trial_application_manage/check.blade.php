@@ -18,5 +18,5 @@
 @endsection
 
 @section('back_button')
-<a href="{{ session()->get('index_url.trial_application_manage') ?? route('trial_application_manage.index') }}" class="btn btn-secondary back-button">取り消し</a>
+<a href="{{ session()->get('index_url.trial_application_manage') ?? route('trial_application_manage.index') }}" class="btn btn-secondary back-button">キャンセル</a>
 @endsection

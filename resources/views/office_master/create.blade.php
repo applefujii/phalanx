@@ -46,7 +46,7 @@
             </div>
         </div>
         <input type="submit" class="btn btn-primary" value="登録">
-        <a href="{{ route('office.index') }}" class="btn btn-secondary back-button">戻る</a>
+        <a href="{{ route('office.index') }}" class="btn btn-secondary back-button">キャンセル</a>
     </form>
 </div>
 
