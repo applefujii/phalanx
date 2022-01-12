@@ -46,8 +46,7 @@ class ChatController extends Controller
                     $query->where('user_id', $user->id);
                 }])
                 ->with(['chat_texts' => function ($query) use ($user) {
-                    $query->whereNull('deleted_at')->where("user_id", "<>", $user->id)// 自身の書き込みは除外
-                        ->orderByDesc('id')->limit(1);
+                    $query->whereNull('deleted_at')->where("user_id", "<>", $user->id);// 自身の書き込みは除外
                 }])
                 ->with('users')
                 ->whereHas('users', function($query) use ($user) {
@@ -61,7 +60,7 @@ class ChatController extends Controller
             $unreadId = [];
 
             foreach($join_chat_rooms as $join_chat_room) {
-                if(optional(optional($join_chat_room->chat_room__user)->first())->newest_read_chat_text_id < optional(optional($join_chat_room->chat_texts)->first())->id) {
+                if(optional(optional($join_chat_room->chat_room__user)->first())->newest_read_chat_text_id < optional(optional($join_chat_room->chat_texts)->sortByDesc("id")->first())->id) {
                     $unreadId[] = $join_chat_room->id;
                 }
             }
@@ -102,8 +101,7 @@ class ChatController extends Controller
                 $query->where('user_id', $user->id);
             }])
             ->with(['chat_texts' => function ($query) use ($user) {
-                $query->whereNull('deleted_at')->where("user_id", "<>", $user->id)// 自身の書き込みは除外
-                    ->orderByDesc('id')->limit(1);
+                $query->whereNull('deleted_at')->where("user_id", "<>", $user->id);// 自身の書き込みは除外
             }])
             ->with('users')
             ->whereHas('users', function($query) use ($user) {
@@ -117,7 +115,9 @@ class ChatController extends Controller
         $unreadId = [];
 
         foreach($join_chat_rooms as $join_chat_room) {
-            if(optional(optional($join_chat_room->chat_room__user)->first())->newest_read_chat_text_id < optional(optional($join_chat_room->chat_texts)->first())->id) {
+            if(optional(optional($join_chat_room->chat_room__user)->first())->newest_read_chat_text_id < optional(optional($join_chat_room->chat_texts)->sortByDesc("id")->first())->id
+                && $join_chat_room->id != $id)
+            {
                 $unreadId[] = $join_chat_room->id;
             }
         }
@@ -367,11 +367,10 @@ class ChatController extends Controller
                     $query->where('user_id', $user->id);
                 }])
                 ->with(['chat_texts' => function ($query) use ($user) {
-                    $query->whereNull('deleted_at')->where("user_id", "<>", $user->id)// 自身の書き込みは除外
-                        ->orderByDesc('id')->limit(1);
+                    $query->whereNull('deleted_at')->where("user_id", "<>", $user->id);// 自身の書き込みは除外
                 }])->get();
             foreach($rooms as $room) {
-                if(optional(optional($room->chat_room__user)->first())->newest_read_chat_text_id < optional(optional($room->chat_texts)->first())->id) {
+                if(optional(optional($room->chat_room__user)->first())->newest_read_chat_text_id < optional(optional($room->chat_texts)->sortByDesc("id")->first())->id) {
                     return true;
                 }
             }
@@ -385,8 +384,7 @@ class ChatController extends Controller
                     $query->where('user_id', $user->id);
                 }])
                 ->with(['chat_texts' => function ($query) use ($user) {
-                    $query->whereNull('deleted_at')->where("user_id", "<>", $user->id)// 自身の書き込みは除外
-                        ->orderByDesc('id')->limit(1);
+                    $query->whereNull('deleted_at')->where("user_id", "<>", $user->id);// 自身の書き込みは除外
                 }])
                 ->with('users')
                 ->whereHas('users', function($query) use ($user) {
@@ -397,7 +395,7 @@ class ChatController extends Controller
                 ->get();
 
             foreach($join_chat_rooms as $join_chat_room) {
-                if(optional(optional($join_chat_room->chat_room__user)->first())->newest_read_chat_text_id < optional(optional($join_chat_room->chat_texts)->first())->id) {
+                if(optional(optional($join_chat_room->chat_room__user)->first())->newest_read_chat_text_id < optional(optional($join_chat_room->chat_texts)->sortByDesc("id")->first())->id) {
                     return true;
                 }
             }
