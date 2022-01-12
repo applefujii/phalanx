@@ -5,6 +5,13 @@
   height: 40px;
 }
 
+#room_name {
+  width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
 #chat_main {
   position: fixed;
   top: 95px;
