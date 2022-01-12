@@ -6,9 +6,15 @@
 @section('content')
 <div class="container">
     <h3>ユーザーマスタ　編集</h3>
+    @if ($errors->any())
+        <div class="alert alert-danger w-100">
+            <span>入力に誤りがあります。</span>
+        </div>
+    @endif
     <form method="post" action="{{ route('user.update', $user->id) }}">
         @csrf
         @method('PATCH')
+        <input type="hidden" name="id" value="{{ $user->id ?? '' }}">
         <div class="form-group">
             <div class="row justify-content-start mx-auto my-4">
                 <div class="mx-4">
