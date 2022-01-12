@@ -6,7 +6,7 @@
 @endsection
 
 @section('center')
-<div id="center-scroll">
+<div class="scroll-contents" id="center-scroll">
     <div id="chat_header" class="border col-md-8 d-flex align-items-center">
         <span id="room_name">
     </div>
