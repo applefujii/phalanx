@@ -93,7 +93,7 @@
                                             href="{{ route('trial_application_manage.check', $trial_application->id) }}">連絡</a>
                                     </span>
                                     <div class="col-12 col-md-4 px-0 py-1">
-                                        <a class="btn btn-sm btn-primary" role="button"
+                                        <a class="btn btn-sm btn-primary @if ($trial_application->is_checked) disabled @endif" role="button"
                                             href="{{ route('trial_application_manage.edit', $trial_application->id) }}">編集</a>
                                     </div>
                                     <form class="delete-form col-12 col-md-4 px-0 py-1"
