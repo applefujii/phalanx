@@ -14,10 +14,10 @@
                     <label for="user_type" class="text-md-left label">ユーザー種別</label>
                     <select id="user_type" name="user_type" class="form-select">
                         <option value="" @if ($filter_user_type_id === '') selected @endif>条件なし</option>
-                        @foreach ($user_types as $user_type)
-                            <option value="{{ $user_type->id }}" @if ($filter_user_type_id == $user_type->id) selected @endif>{{ $user_type->alias }}
+                        @for ($i = 0; $i < count($user_types) - 1; $i ++)
+                            <option value="{{ $user_types[$i]->id }}" @if ($filter_user_type_id == $user_types[$i]->id) selected @endif>{{ $user_types[$i]->alias }}
                             </option>
-                        @endforeach
+                        @endfor
                     </select>
                     <div class="col2"></div>
                 </div>
