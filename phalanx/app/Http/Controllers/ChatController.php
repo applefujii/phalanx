@@ -33,6 +33,10 @@ class ChatController extends Controller
      * どのチャットを最初に表示するかの判断
      */
     public function index() {
+        //キャッシュを作らせない(強制的にロードさせる)
+        header("Cache-Control: no-store, no-cache, must-revalidate, max-age=0, post-check=0, pre-check=0");
+        header("Pragma: no-cache");
+        
         //ログイン中のユーザーのidを取得
         $user = Auth::user();
 
