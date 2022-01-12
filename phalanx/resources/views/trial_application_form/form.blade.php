@@ -12,5 +12,5 @@
 @endsection
 
 @section('back_button')
-<a href="{{ route('top') }}" class="btn btn-secondary back-button">トップに戻る</a>
+<a href="{{ route('top') }}" class="btn btn-secondary back-button">キャンセル</a>
 @endsection

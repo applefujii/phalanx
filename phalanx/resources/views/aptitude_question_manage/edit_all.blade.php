@@ -89,7 +89,7 @@
 @section('form_under')
     <div class="form-group">
         <button class="btn btn-primary" type="submit">更新</button>
-        <a class="btn btn-secondary" role="button" href="{{ route('aptitude_question_manage.index') }}">取り消し</a>
+        <a class="btn btn-secondary" role="button" href="{{ route('aptitude_question_manage.index') }}">キャンセル</a>
     </div>
 </form>
 @endsection

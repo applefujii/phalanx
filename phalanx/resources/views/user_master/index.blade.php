@@ -34,7 +34,9 @@
                 </div>
             </div>
         </form>
-        <a href="{{ route('user.create') }}" type="button" class="btn btn-primary">新規作成</a>
+        <div class="mb-2">
+            <a href="{{ route('user.create') }}" type="button" class="btn btn-primary">新規作成</a>
+        </div>
         <table class="table table-striped table-bordered table-sm">
             <thead>
                 <tr class="table-header">
