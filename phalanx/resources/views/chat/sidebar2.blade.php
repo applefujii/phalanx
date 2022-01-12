@@ -12,7 +12,7 @@
 <div id="nav-left-container" class="d-block d-md-none" style='visibility: hidden'>
     <div id="nav-button-left" class="nav-button openbtn d-flex align-items-center justify-content-end" data-is-open="false"><i class="fas fa-chevron-right"></i></div>
     <nav id="nav-left" class="edge-nav">
-        <div class="scroll-contents container-fluid">
+        <div class="side-scroll container-fluid">
             @include('chat.sidebar_left', [$join_chat_rooms, $offices])
         </div>
     </nav>
@@ -22,7 +22,7 @@
 <div id="nav-right-container" class="d-block d-md-none" style='visibility: hidden'>
     <div id="nav-button-right" class="nav-button openbtn d-flex align-items-center justify-content-start" data-is-open="false"><i class="fas fa-chevron-left"></i></div>
     <nav id="nav-right" class="edge-nav">
-        <div class="scroll-contents container-fluid">
+        <div class="side-scroll container-fluid">
             @if (isset($chat_room))
                 @include('chat.sidebar_right', [$user_types, $offices, $chat_room])
             @endif
@@ -39,7 +39,7 @@
 <div class="container-fluid">
     <div class="row">
         <div class="col-md-2 d-none d-md-block border border-dark px-0">
-            <div class="scroll-contents container-fluid">
+            <div class="side-scroll container-fluid">
                 @include('chat.sidebar_left', [$join_chat_rooms, $offices])
             </div>
         </div>
@@ -47,7 +47,7 @@
             @yield('center')
         </div>
         <div class="col-md-2 d-none d-md-block border border-dark pr-0">
-            <div class="scroll-contents">
+            <div class="side-scroll">
                 @if (isset($chat_room))
                     @include('chat.sidebar_right', [$user_types, $offices, $chat_room])
                 @endif
@@ -100,6 +100,21 @@
         $(".scroll-contents").css("height", `calc(100vh - 2px - ${navHeight}px)`);
         $("main").css("height", `calc(100vh - 2px - ${navHeight}px)`);
 
+        $(".navbar-toggler").click(function() {
+            setTimeout(function() {
+                navHeight = $("nav").innerHeight();
+                $(".scroll-contents").css("height", `calc(100vh - 2px - ${navHeight}px)`);
+                $("main").css("height", `calc(100vh - 2px - ${navHeight}px)`);
+            }, 500);
+        });
+
+        $("#navbarDropdown").click(function() {
+            setTimeout(function() {
+                navHeight = $("nav").innerHeight();
+                $(".scroll-contents").css("height", `calc(100vh - 2px - ${navHeight}px)`);
+                $("main").css("height", `calc(100vh - 2px - ${navHeight}px)`);
+            }, 100);
+        });
 
         //#sub-officesが押された時の動作
         $(".sub-offices").click(function(){
