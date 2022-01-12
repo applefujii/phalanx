@@ -26,7 +26,7 @@ class ChatController extends Controller
      * コンストラクタ
      */
     public function __construct() {
-        $this->middleware("auth");// ログイン認証
+        $this->middleware("notSuper");// ログイン認証
     }
 
     /**
