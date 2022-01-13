@@ -26,7 +26,7 @@ class ChatController extends Controller
      * コンストラクタ
      */
     public function __construct() {
-        $this->middleware("auth");// ログイン認証
+        $this->middleware("notSuper");// ログイン認証
     }
 
     /**
@@ -50,7 +50,7 @@ class ChatController extends Controller
                     $query->where('user_id', $user->id);
                 }])
                 ->with(['chat_texts' => function ($query) use ($user) {
-                    $query->whereNull('deleted_at')->where("user_id", "<>", $user->id);// 自身の書き込みは除外
+                    $query->select('id', 'chat_room_id')->whereNull('deleted_at')->where("user_id", "<>", $user->id);// 自身の書き込みは除外
                 }])
                 ->with('users')
                 ->whereHas('users', function($query) use ($user) {
@@ -62,17 +62,19 @@ class ChatController extends Controller
 
             //未読があるチャットルームのidを取得
             $unreadId = [];
+            $subUnread = false;
 
             foreach($join_chat_rooms as $join_chat_room) {
                 if(optional(optional($join_chat_room->chat_room__user)->first())->newest_read_chat_text_id < optional(optional($join_chat_room->chat_texts)->sortByDesc("id")->first())->id) {
                     $unreadId[] = $join_chat_room->id;
+                    if($join_chat_room->office_id !== $user->office_id) $subUnread = true;
                 }
             }
 
             //事業所一覧を取得
             $offices = Office::whereNull("deleted_at")->orderBy("sort")->get();
 
-            return view("chat.index", compact('join_chat_rooms', "offices", "unreadId"));
+            return view("chat.index", compact('join_chat_rooms', "offices", "unreadId", "subUnread"));
         } else {
             //chat_roomsテーブルのuser_idが$userIdと一致するものを検索
             $chat_room = ChatRoom::where("user_id", $user->id)->first();
@@ -105,7 +107,7 @@ class ChatController extends Controller
                 $query->where('user_id', $user->id);
             }])
             ->with(['chat_texts' => function ($query) use ($user) {
-                $query->whereNull('deleted_at')->where("user_id", "<>", $user->id);// 自身の書き込みは除外
+                $query->select('id', 'chat_room_id')->whereNull('deleted_at')->where("user_id", "<>", $user->id);// 自身の書き込みは除外
             }])
             ->with('users')
             ->whereHas('users', function($query) use ($user) {
@@ -117,12 +119,14 @@ class ChatController extends Controller
 
         //未読があるチャットルームのidを取得
         $unreadId = [];
+        $subUnread = false;
 
         foreach($join_chat_rooms as $join_chat_room) {
             if(optional(optional($join_chat_room->chat_room__user)->first())->newest_read_chat_text_id < optional(optional($join_chat_room->chat_texts)->sortByDesc("id")->first())->id
                 && $join_chat_room->id != $id)
             {
                 $unreadId[] = $join_chat_room->id;
+                if($join_chat_room->office_id !== $user->office_id) $subUnread = true;
             }
         }
 
@@ -132,7 +136,7 @@ class ChatController extends Controller
         // ユーザー種別一覧
         $user_types = UserType::whereNull("deleted_at")->orderBy("id")->get();
 
-        return view('chat/show', compact('join_chat_rooms', 'chat_room', 'user_types', 'offices', "unreadId"));
+        return view('chat/show', compact('join_chat_rooms', 'chat_room', 'user_types', 'offices', "unreadId", "subUnread"));
     }
 
     /**
@@ -371,7 +375,7 @@ class ChatController extends Controller
                     $query->where('user_id', $user->id);
                 }])
                 ->with(['chat_texts' => function ($query) use ($user) {
-                    $query->whereNull('deleted_at')->where("user_id", "<>", $user->id);// 自身の書き込みは除外
+                    $query->select('id', 'chat_room_id')->whereNull('deleted_at')->where("user_id", "<>", $user->id);// 自身の書き込みは除外
                 }])->get();
             foreach($rooms as $room) {
                 if(optional(optional($room->chat_room__user)->first())->newest_read_chat_text_id < optional(optional($room->chat_texts)->sortByDesc("id")->first())->id) {
@@ -388,7 +392,7 @@ class ChatController extends Controller
                     $query->where('user_id', $user->id);
                 }])
                 ->with(['chat_texts' => function ($query) use ($user) {
-                    $query->whereNull('deleted_at')->where("user_id", "<>", $user->id);// 自身の書き込みは除外
+                    $query->select('id', 'chat_room_id')->whereNull('deleted_at')->where("user_id", "<>", $user->id);// 自身の書き込みは除外
                 }])
                 ->with('users')
                 ->whereHas('users', function($query) use ($user) {

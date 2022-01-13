@@ -62,7 +62,7 @@
     @endforeach
     <div class="col-12 px-0">
         <div>
-            <button type="button" class="btn btn-outline-dark btn-block sub-offices" data-toggle="collapse" data-target="#subOffices" aria-expanded="false" aria-controls="subOffices">
+            <button type="button" class="btn btn-block sub-offices @if($subUnread) btn-outline-danger @else btn-outline-dark @endif" data-toggle="collapse" data-target="#subOffices" aria-expanded="false" aria-controls="subOffices">
                 <i class="fas fa-chevron-down"></i>
             </button>
         </div>

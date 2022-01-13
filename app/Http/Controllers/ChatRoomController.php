@@ -189,7 +189,7 @@ class ChatRoomController extends Controller
         DB::transaction(function() use(&$chatRoom, $id, $user, $roomTitle, $officeId, $joinUsersId, $now) {
             $chatRoom = ChatRoom::where("id", $id)->update([
                 "room_title" => $roomTitle,
-                "office_Id" => $officeId,
+                "office_id" => $officeId,
                 "update_user_id" => $user->id,
                 "updated_at" => $now
             ]);
