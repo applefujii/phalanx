@@ -45,12 +45,12 @@ class NotificationController extends Controller
         $filter_user_type_id = $request->input('user_type', '');
         $filter_user_type_id ??= '';
 
-        $query = Notification::whereNull('deleted_at');
+        $query = Notification::query();
         if ($filter_office_id !== '')
             $query->where('office_id', '=', $filter_office_id);
         if ($filter_user_type_id !== '')
             $query->where('user_type_id', '=', $filter_user_type_id);
-        $notifications = $query->orderBy('id', 'asc')->paginate(25);
+        $notifications = $query->orderBy('deleted_at', 'asc')->orderBy('id', 'asc')->paginate(25);
 
         $offices = Office::orderBy('id', 'asc')->get();
         $user_types = UserType::orderBy('id', 'asc')->get();
