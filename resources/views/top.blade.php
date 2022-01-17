@@ -10,7 +10,7 @@
 <div class="container">
     <div class="d-flex justify-content-center">
         <div class="main_contents">
-            <h1 class="text-center m-4">サイト説明文（仮）</h1>
+            <h1 class="text-center m-4">サイト説明文をここに表示（仮）</h1>
             <div class="row mb-4">
                 <div class="col-md-4 mb-4">
                     <a class="d-flex justify-content-center" href="https://apple-osaka.com/" target="_blank" rel="noopener noreferrer">
