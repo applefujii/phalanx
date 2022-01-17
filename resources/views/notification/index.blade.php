@@ -24,7 +24,7 @@
             </thead>
             <tbody>
                 @foreach ($notifications as $notification)
-                    <tr>
+                    <tr class="@if(isset($notification->deleted_at)) list-tr-done @endif">
                         <td>{{ $notification->created_at }}</td>
                         <td>{{ $notification->start_date_format() }}</td>
                         <td>{{ $notification->end_date_format() }}</td>

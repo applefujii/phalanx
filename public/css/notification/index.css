@@ -6,3 +6,6 @@
     width: 10%;
 }
 
+.list-tr-done {
+    background-color: #BBB !important;
+}
