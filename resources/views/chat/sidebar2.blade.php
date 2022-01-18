@@ -117,22 +117,25 @@
         });
 
         //#sub-officesが押された時の動作
-        $(".sub-offices").click(function(){
-            let fas = $(this).find(".fas");
-            if( fas.hasClass("fa-chevron-down") ) {
-                fas.removeClass("fa-chevron-down");
-                fas.addClass("fa-chevron-up");
-            } else {
-                fas.removeClass("fa-chevron-up");
-                fas.addClass("fa-chevron-down");
-            }
-        });
+        $(".sub-offices").click(subClick);
 
         //未読テキストがあるチャットルームのリンクの色を変更
         $.map(@json($unreadId), (val, index) => {
-            $(`.chat_room_${val}`).addClass("text-danger");
+            $(`.chat_room_${val}`).addClass("text-success");
             $(`.chat_room_${val}`).children('span').removeClass('d-none');
         });
+
+        function subClick() {
+            let fas = $(".sub-offices").find(".fas");
+            fas.toggleClass("fa-chevron-down");
+            fas.toggleClass("fa-chevron-up");
+        }
+
+        @if($subUnread)
+            $("#subOffices").collapse("show");
+            $(".sub-offices").removeClass("btn-outline-dark").addClass("btn-outline-success");
+            subClick();
+        @endif
     });
 
 </script>
