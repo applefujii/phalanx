@@ -64,6 +64,8 @@
 <script src="{{ asset('js/touchInfo.js') }}"></script>
 <script src="{{ asset('js/edgeNavigation.js') }}"></script>
 
+@yield("c_script")
+
 <script>
 
     var fRightNav = {{ isset($chat_room) ? 'true' : 'false' }};
@@ -117,29 +119,31 @@
         });
 
         //#open_subが押された時の動作
-        $(".open_sub").click(subClick);
+        $(".open_sub").click(function() {
+            let fas = $(this).find(".fas");
+            fas.toggleClass("fa-chevron-down");
+            fas.toggleClass("fa-chevron-up");
+        });
 
-        //未読テキストがあるチャットルームのリンクの色を変更
+        //未読テキストがあるチャットルームのリンクの色を変更し、折りたたまれているなら展開する
+        let collapse;
+        let id;
         $.map(@json($unreadId), (val, index) => {
             $(`.chat_room_${val}`).addClass("text-success");
             $(`.chat_room_${val}`).children('span').removeClass('d-none');
+            collapse = $(`.chat_room_${val}`).parents(".collapse");
+            if(!collapse.hasClass("show")) {
+                id = collapse.attr("id");
+                $(`button[data-target="#${id}"]`).trigger("click");
+            }
         });
 
-        function subClick() {
-            let fas = $(".open_sub").find(".fas");
-            fas.toggleClass("fa-chevron-down");
-            fas.toggleClass("fa-chevron-up");
-        }
-
-        @if($subUnread)
-            $("#smallSubOffices").collapse("show");
-            $("#largeSubOffices").collapse("show");
+        @if ($subUnread)
             $(".open_sub").removeClass("btn-outline-dark").addClass("btn-outline-success");
-            subClick();
         @endif
+        
     });
 
 </script>
 
-@yield("c_script")
 @endsection
