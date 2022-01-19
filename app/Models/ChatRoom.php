@@ -50,7 +50,7 @@ class ChatRoom extends Model
      */
     public function users()
     {
-        return $this->belongsToMany(User::class, 'chat_room__user');
+        return $this->belongsToMany(User::class, 'chat_room__user')->orderBy("user_type_id")->orderBy("office_id")->orderBy("name");
     }
 
     /**
