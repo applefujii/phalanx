@@ -67,7 +67,7 @@ class ChatController extends Controller
             foreach($join_chat_rooms as $join_chat_room) {
                 if(optional(optional($join_chat_room->chat_room__user)->first())->newest_read_chat_text_id < optional(optional($join_chat_room->chat_texts)->sortByDesc("id")->first())->id) {
                     $unreadId[] = $join_chat_room->id;
-                    if($join_chat_room->office_id !== $user->office_id) $subUnread = true;
+                    if($join_chat_room->office_id !== $user->office_id && $join_chat_room->office_id !== 0) $subUnread = true;
                 }
             }
 
@@ -123,10 +123,10 @@ class ChatController extends Controller
 
         foreach($join_chat_rooms as $join_chat_room) {
             if(optional(optional($join_chat_room->chat_room__user)->first())->newest_read_chat_text_id < optional(optional($join_chat_room->chat_texts)->sortByDesc("id")->first())->id
-                && $join_chat_room->id != $id)
+                && $join_chat_room->id !== $id)
             {
                 $unreadId[] = $join_chat_room->id;
-                if($join_chat_room->office_id !== $user->office_id) $subUnread = true;
+                if($join_chat_room->office_id !== $user->office_id && $join_chat_room->office_id !== 0) $subUnread = true;
             }
         }
 
