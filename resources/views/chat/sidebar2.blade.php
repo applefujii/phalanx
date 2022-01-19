@@ -13,7 +13,7 @@
     <div id="nav-button-left" class="nav-button openbtn d-flex align-items-center justify-content-end" data-is-open="false"><i class="fas fa-chevron-right"></i></div>
     <nav id="nav-left" class="edge-nav">
         <div class="side-scroll container-fluid pb-2">
-            @include('chat.sidebar_left', [$join_chat_rooms, $offices])
+            @include('chat.sidebar_left', [$join_chat_rooms, $offices, "size" => "small"])
         </div>
     </nav>
 </div>
@@ -24,7 +24,7 @@
     <nav id="nav-right" class="edge-nav">
         <div class="side-scroll container-fluid">
             @if (isset($chat_room))
-                @include('chat.sidebar_right', [$user_types, $offices, $chat_room])
+                @include('chat.sidebar_right', [$user_types, $offices, $chat_room, "size" => "small"])
             @endif
         </div>
     </nav>
@@ -40,7 +40,7 @@
     <div class="row">
         <div class="col-md-2 d-none d-md-block border border-dark px-0">
             <div class="side-scroll container-fluid pb-2">
-                @include('chat.sidebar_left', [$join_chat_rooms, $offices])
+                @include('chat.sidebar_left', [$join_chat_rooms, $offices, "size" => "large"])
             </div>
         </div>
         <div class="col-md-8 bg-white border-top p-0">
@@ -49,7 +49,7 @@
         <div class="col-md-2 d-none d-md-block border border-dark pr-0">
             <div class="side-scroll">
                 @if (isset($chat_room))
-                    @include('chat.sidebar_right', [$user_types, $offices, $chat_room])
+                    @include('chat.sidebar_right', [$user_types, $offices, $chat_room, "size" => "large"])
                 @endif
             </div>
         </div>
@@ -116,8 +116,8 @@
             }, 100);
         });
 
-        //#sub-officesが押された時の動作
-        $(".sub-offices").click(subClick);
+        //#open_subが押された時の動作
+        $(".open_sub").click(subClick);
 
         //未読テキストがあるチャットルームのリンクの色を変更
         $.map(@json($unreadId), (val, index) => {
@@ -126,14 +126,15 @@
         });
 
         function subClick() {
-            let fas = $(".sub-offices").find(".fas");
+            let fas = $(".open_sub").find(".fas");
             fas.toggleClass("fa-chevron-down");
             fas.toggleClass("fa-chevron-up");
         }
 
         @if($subUnread)
-            $("#subOffices").collapse("show");
-            $(".sub-offices").removeClass("btn-outline-dark").addClass("btn-outline-success");
+            $("#smallSubOffices").collapse("show");
+            $("#largeSubOffices").collapse("show");
+            $(".open_sub").removeClass("btn-outline-dark").addClass("btn-outline-success");
             subClick();
         @endif
     });
