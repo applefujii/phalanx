@@ -49,17 +49,20 @@
                 </div>
                 <div class="collapse text-left row" id="trialsCollapse">
                     @foreach (
-                            $join_chat_rooms->where("office_id", Auth::user()->office_id)->whereNotNull("user_id")->sortBy('user.name_katakana')
-                                 as $join_chat_room
+                            $join_chat_rooms->where("office_id", Auth::user()->office_id)->whereNotNull("user_id")->where("user.user_type_id", 3)
+                                ->sort(function($first, $second) {
+                                    if($first->user->office->sort == $second->user->office->sort) {
+                                        return $first->user->name_katakana > $second->user->name_katakana ? 1 : -1;
+                                    }
+                                    return $first->user->office->sort > $second->user->office->sort ? 1 : -1;
+                                }) as $join_chat_room
                         )
-                        @if (optional($join_chat_room->user)->user_type_id == 3)
-                            <div class="col-6 col-md-4 col-xl-3 my-1 d-flex align-items-center">
-                                <input type="checkbox" class="mr-1 trial-checkBox" name="user" value="{{ $join_chat_room->id }}">
-                                <a class="chat_room_{{ $join_chat_room->id }} chat-room-link" href="{{ route('chat.show', $join_chat_room->id) }}">
-                                    <span class="new d-none">●</span>{{ $join_chat_room->room_title }}
-                                </a>
-                            </div>
-                        @endif
+                        <div class="col-6 col-md-4 col-xl-3 my-1 d-flex align-items-center">
+                            <input type="checkbox" class="mr-1 trial-checkBox" name="user" value="{{ $join_chat_room->id }}">
+                            <a class="chat_room_{{ $join_chat_room->id }} chat-room-link" href="{{ route('chat.show', $join_chat_room->id) }}">
+                                <span class="new d-none">●</span>{{ $join_chat_room->room_title }}
+                            </a>
+                        </div>
                     @endforeach
                 </div>
             </div>
