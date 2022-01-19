@@ -42,7 +42,8 @@ class DatabaseSeeder extends Seeder
         //---- 運用用
         $this->call(OfficesSeeder::class);// 事業所マスタ
         // \App\Models\TrialApplication::factory(50)->create();// 体験・見学申込
-        $this->call(AptitudeQuestionsSeeder::class);// 適性診断質問
+        // $this->call(AptitudeQuestionsSeeder::class);// 適性診断質問
+        $this->call(AltAptitudeQuestionsSeeder::class);// 適性診断質問
         $this->call(UserTypesSeeder::class);
         // $this->call(NotificationsSeeder::class);// 予定通知テーブル
         // $this->call(TestUsersSeeder::class);// ログインテスト用ユーザー
