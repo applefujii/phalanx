@@ -106,13 +106,8 @@
         //.offices-openが押された時の動作
         $(".offices-open").click(function() {
             let fas = $(this).find(".fas");
-            if( fas.hasClass("fa-chevron-down") ) {
-                fas.removeClass("fa-chevron-down");
-                fas.addClass("fa-chevron-up");
-            } else {
-                fas.removeClass("fa-chevron-up");
-                fas.addClass("fa-chevron-down");
-            }
+            fas.toggleClass("fa-chevron-down");
+            fas.toggleClass("fa-chevron-up");
         });
 
         //一斉送信ボタンが押されたとき
