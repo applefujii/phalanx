@@ -45,7 +45,7 @@ Route::get('/trial_application_form/finish', [App\Http\Controllers\TrialApplicat
 // Route::get('/aptitude_question_form_maple', [App\Http\Controllers\AptitudeQuestionFormController::class, 'maple'])->name('aptitude_question_form.maple');
 
 // 適性診断 フォーム
-Route::get('/aptitude_question_form', [App\Http\Controllers\AltAptitudeQuestionFormController::class, 'index'])->name('aaptitude_question_form.index');
+Route::get('/aptitude_question_form', [App\Http\Controllers\AltAptitudeQuestionFormController::class, 'index'])->name('aptitude_question_form.index');
 Route::post('/aptitude_question_form', [App\Http\Controllers\AltAptitudeQuestionFormController::class, 'calculate'])->name('aptitude_question_form.calculate');
 Route::get('/aptitude_question_form_apple', [App\Http\Controllers\AltAptitudeQuestionFormController::class, 'apple'])->name('aptitude_question_form.apple');
 Route::get('/aptitude_question_form_mint', [App\Http\Controllers\AltAptitudeQuestionFormController::class, 'mint'])->name('aptitude_question_form.mint');
