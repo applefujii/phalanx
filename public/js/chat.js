@@ -24,6 +24,18 @@ $(() => {
     // 入力値の行数
     let rows = 1;
 
+    // ルーム名
+    let room_title;
+
+    // プレースホルダーに必要な各種数値
+    let canvas = document.createElement('canvas');
+    let context = canvas.getContext('2d');
+    context.font = '0.9rem "Nunito", sans-serif';
+    let message = context.measureText('にメッセージ送信').width;
+    let ellipsis = context.measureText('...').width;
+    let titleWidth = 0;
+    let placeholder;
+
     // フッターのデフォルト高さ
     const footer_height_default = $('#chat_footer').outerHeight();
 
@@ -80,6 +92,8 @@ $(() => {
         );
         // 入力部の高さ変更
         changeHeights();
+        // プレースホルダーの文字調整
+        inputPlaceholder();
     });
 
     // 入力開始したら
@@ -139,7 +153,7 @@ $(() => {
                 display_chat_room_id = room.id;
 
                 // ルーム名
-                let room_title = room.room_title;
+                room_title = room.room_title;
 
                 // 個人用ルームかつログイン者が職員でないとき
                 if (room.user_id && auth_user_type_id !== 1) {
@@ -147,8 +161,12 @@ $(() => {
                 }
                 // ヘッダーにルーム名表示
                 $('#room_name').text(room_title);
+
+                // ルーム名の横幅を測定
+                titleWidth = context.measureText(room_title).width;
+
                 // メッセージ入力のプレースホルダーにルーム名表示
-                $('#chat_text').prop('placeholder', room_title + 'にメッセージ送信');
+                inputPlaceholder();
     
                 // チャットログを空に
                 $("#chat_log").empty();
@@ -445,5 +463,25 @@ $(() => {
             maxRows++;
         }
         return maxRows;
+    }
+
+    // プレースホルダーに文字を挿入
+    function inputPlaceholder() {
+        let maxWidth = $("#chat_text").width() - message;
+        if(titleWidth > maxWidth) {
+            let sliceWidth;
+            maxWidth -= ellipsis;
+            for (let i = 13; i < room_title.length; i++) {
+                placeholder = room_title.slice(0, i);
+                sliceWidth = context.measureText(placeholder).width;
+                if(sliceWidth > maxWidth) {
+                    placeholder = room_title.slice(0, i - 1) + "...";
+                    break;
+                }
+            }
+        } else {
+            placeholder = room_title;
+        }
+        $('#chat_text').prop('placeholder', `${placeholder}にメッセージ送信`);
     }
 });
