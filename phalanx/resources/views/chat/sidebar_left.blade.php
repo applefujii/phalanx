@@ -62,11 +62,11 @@
     @endforeach
     <div class="col-12 px-0">
         <div>
-            <button type="button" class="btn btn-block sub-offices @if($subUnread) btn-outline-danger @else btn-outline-dark @endif" data-toggle="collapse" data-target="#subOffices" aria-expanded="false" aria-controls="subOffices">
+            <button type="button" class="btn btn-block open_sub btn-outline-dark" data-toggle="collapse" data-target="#{{ $size }}SubOffices" aria-expanded="false" aria-controls="{{ $size }}SubOffices">
                 <i class="fas fa-chevron-down"></i>
             </button>
         </div>
-        <div class="collapse" id="subOffices">
+        <div class="collapse" id="{{ $size }}SubOffices">
             @foreach ($offices as $office)
                 @if ($office->id != Auth::user()->office_id)
                     <div class="col-12 pt-3">
