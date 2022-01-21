@@ -22,7 +22,7 @@ class ChatRoomsSeeder extends Seeder
                 "room_title" => '全職員',
                 "distinction_number" => 0,
                 'create_user_id' => 1,
-                'office_id' => 1,
+                'office_id' => 0,
                 'create_user_id' => 1,
                 'update_user_id' => 1,
                 'updated_at' => $now->isoFormat('YYYY-MM-DD HH:mm:ss'),

@@ -13,7 +13,7 @@
     <div id="nav-button-left" class="nav-button openbtn d-flex align-items-center justify-content-end" data-is-open="false"><i class="fas fa-chevron-right"></i></div>
     <nav id="nav-left" class="edge-nav">
         <div class="side-scroll container-fluid pb-2">
-            @include('chat.sidebar_left', [$join_chat_rooms, $offices])
+            @include('chat.sidebar_left', [$join_chat_rooms, $offices, "size" => "small"])
         </div>
     </nav>
 </div>
@@ -24,7 +24,7 @@
     <nav id="nav-right" class="edge-nav">
         <div class="side-scroll container-fluid">
             @if (isset($chat_room))
-                @include('chat.sidebar_right', [$user_types, $offices, $chat_room])
+                @include('chat.sidebar_right', [$user_types, $offices, $chat_room, "size" => "small"])
             @endif
         </div>
     </nav>
@@ -40,7 +40,7 @@
     <div class="row">
         <div class="col-md-2 d-none d-md-block border border-dark px-0">
             <div class="side-scroll container-fluid pb-2">
-                @include('chat.sidebar_left', [$join_chat_rooms, $offices])
+                @include('chat.sidebar_left', [$join_chat_rooms, $offices, "size" => "large"])
             </div>
         </div>
         <div class="col-md-8 bg-white border-top p-0">
@@ -49,7 +49,7 @@
         <div class="col-md-2 d-none d-md-block border border-dark pr-0">
             <div class="side-scroll">
                 @if (isset($chat_room))
-                    @include('chat.sidebar_right', [$user_types, $offices, $chat_room])
+                    @include('chat.sidebar_right', [$user_types, $offices, $chat_room, "size" => "large"])
                 @endif
             </div>
         </div>
@@ -63,6 +63,8 @@
 <script src="{{ asset('js/cover.js') }}"></script>
 <script src="{{ asset('js/touchInfo.js') }}"></script>
 <script src="{{ asset('js/edgeNavigation.js') }}"></script>
+
+@yield("c_script")
 
 <script>
 
@@ -116,26 +118,32 @@
             }, 100);
         });
 
-        //#sub-officesが押された時の動作
-        $(".sub-offices").click(function(){
+        //#open_subが押された時の動作
+        $(".open_sub").click(function() {
             let fas = $(this).find(".fas");
-            if( fas.hasClass("fa-chevron-down") ) {
-                fas.removeClass("fa-chevron-down");
-                fas.addClass("fa-chevron-up");
-            } else {
-                fas.removeClass("fa-chevron-up");
-                fas.addClass("fa-chevron-down");
+            fas.toggleClass("fa-chevron-down");
+            fas.toggleClass("fa-chevron-up");
+        });
+
+        //未読テキストがあるチャットルームのリンクの色を変更し、折りたたまれているなら展開する
+        let collapse;
+        let id;
+        $.map(@json($unreadId), (val, index) => {
+            $(`.chat_room_${val}`).addClass("text-success");
+            $(`.chat_room_${val}`).children('span').removeClass('d-none');
+            collapse = $(`.chat_room_${val}`).parents(".collapse");
+            if(!collapse.hasClass("show")) {
+                id = collapse.attr("id");
+                $(`button[data-target="#${id}"]`).trigger("click");
             }
         });
 
-        //未読テキストがあるチャットルームのリンクの色を変更
-        $.map(@json($unreadId), (val, index) => {
-            $(`.chat_room_${val}`).addClass("text-danger");
-            $(`.chat_room_${val}`).children('span').removeClass('d-none');
-        });
+        @if ($subUnread)
+            $(".open_sub").removeClass("btn-outline-dark").addClass("btn-outline-success");
+        @endif
+        
     });
 
 </script>
 
-@yield("c_script")
 @endsection
