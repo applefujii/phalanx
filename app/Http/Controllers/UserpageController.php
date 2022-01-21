@@ -32,7 +32,7 @@ class UserpageController extends Controller
     {
         //-- 古い通知を消す
         $dt = new \DateTime( "now" );
-        Notification::whereDate("end_at", "<=", $dt->format('Y-m-d H:i:s'))->update([
+        Notification::whereDate("end_at", "<", $dt->format('Y-m-d'))->update([
             'deleted_at' => $dt->format('Y-m-d H:i:s')
         ]);
         
@@ -45,7 +45,7 @@ class UserpageController extends Controller
         $exist_unread = $con->ExistUnread(new Request());
 
         // 通知の獲得
-        $notifications = Notification::whereNull('deleted_at')->whereHas('notification__user', function($n__u) {
+        $notifications = Notification::whereHas('notification__user', function($n__u) {
             $n__u->where('user_id', '=', Auth::id());
         })->orWhere(function($query) {
             $query->whereHas('notification__office', function($n__o) {
@@ -55,7 +55,7 @@ class UserpageController extends Controller
                     $n__o->where('office_id', '=', Auth::user()->office_id);
                 }
             });
-        })->orderBy('start_at', 'asc')->orderBy('end_at', 'asc')->get();
+        })->whereNull('deleted_at')->orderBy('start_at', 'asc')->orderBy('end_at', 'asc')->get();
         $unsorted_notifications_groups = $notifications->mapToGroups(function ($notification, $key) {
             $start_at = new Carbon($notification->start_at);
             $end_at = new Carbon($notification->end_at);

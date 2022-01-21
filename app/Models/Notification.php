@@ -84,6 +84,10 @@ class Notification extends Model
             $format_end = str_replace("H:i", "", $format_end);
             if( $st->isSameDay($en) ) $connect = "";
         }
+        if ($this->start_at == $this->end_at) {
+            $format_end = "";
+            $connect = "";
+        }
         $format_start = trim($format_start);
         $format_end = trim($format_end);
 

@@ -35,7 +35,7 @@ class NotificationController extends Controller
     {
         //-- 古い通知を消す
         $dt = new \DateTime( "now" );
-        Notification::whereDate("end_at", "<=", $dt->format('Y-m-d H:i:s'))->update([
+        Notification::whereDate("end_at", "<", $dt->format('Y-m-d'))->update([
             'deleted_at' => $dt->format('Y-m-d H:i:s')
         ]);
 
@@ -203,7 +203,9 @@ class NotificationController extends Controller
                 'end_at' => $request->end_at,
                 'is_all_day' => $request->is_all_day,
                 'update_user_id' => Auth::user()->id,
-                'updated_at' => $dt->format('Y-m-d H:i:s')
+                'delete_user_id' => null,
+                'updated_at' => $dt->format('Y-m-d H:i:s'),
+                'deleted_at' => null
             ]);
 
             //-- 対象ユーザー登録
