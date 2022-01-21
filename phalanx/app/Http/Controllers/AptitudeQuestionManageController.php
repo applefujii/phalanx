@@ -8,6 +8,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\AptitudeQuestion;
+use App\Models\Office;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use App\Http\Requests\AptitudeQuestionManageRequest;
@@ -30,7 +31,8 @@ class AptitudeQuestionManageController extends Controller
     public function index()
     {
         $aptitude_questions = AptitudeQuestion::whereNull('deleted_at')->orderBy('sort')->get();
-        return view('aptitude_question_manage/index', compact('aptitude_questions'));
+        $offices = Office::select("office_name")->whereNull('deleted_at')->orderBy('id')->get();
+        return view('aptitude_question_manage/index', compact('aptitude_questions', 'offices'));
     }
 
     /**
@@ -40,7 +42,8 @@ class AptitudeQuestionManageController extends Controller
      */
     public function create()
     {
-        return view('aptitude_question_manage/create');
+        $offices = Office::select("office_name")->whereNull('deleted_at')->orderBy('id')->get();
+        return view('aptitude_question_manage/create', compact('offices'));
     }
 
     /**
@@ -76,7 +79,8 @@ class AptitudeQuestionManageController extends Controller
     public function edit($id)
     {
         $aptitude_question = AptitudeQuestion::whereNull('deleted_at')->findOrFail($id);
-        return view('aptitude_question_manage/edit', compact('aptitude_question'));
+        $offices = Office::select("office_name", "en_office_name")->whereNull('deleted_at')->orderBy('id')->get();
+        return view('aptitude_question_manage/edit', compact('aptitude_question', 'offices'));
     }
 
     /**

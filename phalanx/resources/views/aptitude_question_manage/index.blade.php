@@ -10,13 +10,17 @@
 @endsection
 
 @section('table_body')
-@foreach ($aptitude_questions as $aptitude_question)
+@foreach ($aptitude_questions as $q_count => $aptitude_question)
 <tr class="@error("questions.$aptitude_question->id") table-danger @enderror">
     <td>{{ $aptitude_question->question }}</td>
     <td>{{ $aptitude_question->sort }}</td>
-    <td>{{ $aptitude_question->score_apple }}</td>
-    <td>{{ $aptitude_question->score_mint }}</td>
-    <td>{{ $aptitude_question->score_maple }}</td>
+    @php
+        $scores = explode(",", $aptitude_questions[$q_count]["scores"]);
+        for($i=0 ; $i<count($offices) ; $i++) {
+            if(!isset($scores[$i])) $scores[$i] = 0;
+            echo "<td>".$scores[$i]."</td>";
+        }
+    @endphp
     <td>
         <div class="table-body-action row">
             <div class="col-12 col-md-6 px-0 py-1">

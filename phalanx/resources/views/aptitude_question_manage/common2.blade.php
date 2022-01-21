@@ -45,38 +45,25 @@
                     </div>
                 </div>
 
-                <div class="row justify-content-start mx-auto my-4">
-                    <div class="mx-4 col-md-3">
-                        <label for="score_apple">アップル梅田の点数</label>
-                        <input id="score_apple" class="form-control @error('score_apple') is-invalid @enderror" type="text"
-                            name="score_apple" value="{{ old('score_apple', $aptitude_question->score_apple ?? '') }}">
-                        @error('score_apple')
-                            <span class="invalid-feedback" role="alert">
-                                <strong>{{ $message }}</strong>
-                            </span>
-                        @enderror
-                    </div>
-                    <div class="mx-4 col-md-3">
-                        <label for="score_mint">ミント大阪の点数</label>
-                        <input id="score_mint" class="form-control @error('score_mint') is-invalid @enderror" type="text"
-                            name="score_mint" value="{{ old('score_mint', $aptitude_question->score_mint ?? '') }}">
-                        @error('score_mint')
-                            <span class="invalid-feedback" role="alert">
-                                <strong>{{ $message }}</strong>
-                            </span>
-                        @enderror
-                    </div>
+                @php
+                    if(isset($aptitude_question)) {
+                        $scores = explode(",", $aptitude_question["scores"]);
+                    } else $scores = array_fill(0, count($offices), "")
+                @endphp
 
-                    <div class="mx-4 col-md-3">
-                        <label for="score_maple">メープル関西の点数</label>
-                        <input id="score_maple" class="form-control @error('score_maple') is-invalid @enderror" type="text"
-                            name="score_maple" value="{{ old('score_maple', $aptitude_question->score_maple ?? '') }}">
-                        @error('score_maple')
-                            <span class="invalid-feedback" role="alert">
-                                <strong>{{ $message }}</strong>
-                            </span>
-                        @enderror
-                    </div>
+                <div class="row justify-content-start mx-auto my-4">
+                    @foreach($offices as $offices_index => $office)
+                        <div class="mx-4 col-md-3">
+                            <label for="score_{{ $office->en_office_name }}">{{ $office->office_name }}の点数</label>
+                            <input id="score_{{ $office->en_office_name }}" class="form-control @error('score_apple') is-invalid @enderror" type="text"
+                                name="score[{{ $offices_index }}]" value="{{ old('score['.$offices_index.']', $scores[$offices_index] ?? '') }}">
+                            @error('score_{{ $office->en_office_name }}')
+                                <span class="invalid-feedback" role="alert">
+                                    <strong>{{ $message }}</strong>
+                                </span>
+                            @enderror
+                        </div>
+                    @endforeach
                 </div>
 
                 <div class="form-group">

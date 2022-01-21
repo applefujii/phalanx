@@ -28,15 +28,15 @@
                     <tr class="table-header">
                         <th rowspan="2" class="align-middle" style="width: 30%">質問文</th>
                         <th rowspan="2" class="align-middle">表示順</th>
-                        <th colspan="3" class="align-middle">点数</th>
+                        <th colspan="{{ count($offices) }}" class="align-middle">点数</th>
                         @if (\Route::current() -> getName() === 'aptitude_question_manage.index')
                             <th rowspan="2" class="align-middle">操作</th> 
                         @endif
                     </tr>
                     <tr class="table-header">
-                        <th class="align-middle">アップル梅田</th>
-                        <th class="align-middle">ミント大阪</th>
-                        <th class="align-middle">メープル関西</th>
+                        @foreach($offices as $office)
+                            <th class="align-middle">{{ $office->office_name }}</th>
+                        @endforeach
                     </tr>
                 </thead>
                 <tbody>
