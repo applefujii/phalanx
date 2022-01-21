@@ -89,4 +89,10 @@
   resize: none;
   height: 37.05px;
   line-height: 23.04px;
+  -ms-overflow-style: none;
+  scrollbar-width: none; 
 }/*# sourceMappingURL=chat.css.map */
+
+#chat_text::-webkit-scrollbar {
+  display:none;
+}
