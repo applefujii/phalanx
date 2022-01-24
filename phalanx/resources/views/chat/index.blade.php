@@ -10,7 +10,7 @@
         <h3>通所者一覧</h3>
         <div class="d-flex flex-column">
             @foreach ($offices as $office_index => $office)
-                <div class="d-flex flex-column @if($office->id == 2) order-0 @else order-{{ $office_index+1 }} @endif">
+                <div class="d-flex flex-column @if($office->id == Auth::user()->office_id) order-0 @else order-{{ $office_index+1 }} @endif">
                     <div class="my-2 position-relative">
                         <hr color="black" width="100%">
                         <p class="d-flex align-items-center collapse-open">
