@@ -77,7 +77,7 @@ class ChatController extends Controller
             return view("chat.index", compact('join_chat_rooms', "offices", "unreadId", "subUnread"));
         } else {
             //chat_roomsテーブルのuser_idが$userIdと一致するものを検索
-            $chat_room = ChatRoom::where("user_id", $user->id)->first();
+            $chat_room = ChatRoom::where("user_id", $user->id)->where("office_id", $user->office_id)->first();
 
             return redirect()->route("chat.show", $chat_room->id);
         }
