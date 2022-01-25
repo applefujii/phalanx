@@ -47,13 +47,11 @@ class TrialApplicationRequest extends FormRequest
                 new HolidayRule(),
             ],
             'email' => [
-                'required_without:phone_number',
-                'nullable',
+                'required',
                 'email:rfc',
             ],
             'phone_number' => [
-                'required_without:email',
-                'nullable',
+                'required',
                 'regex:/^[0-9-]+$/u',
             ],
             'comment' => [

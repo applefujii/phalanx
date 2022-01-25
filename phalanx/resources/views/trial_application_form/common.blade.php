@@ -26,6 +26,7 @@
                             @endphp
                             <input id="name" class="form-control @error('name') is-invalid @enderror" type="text" name="name"
                                 value="{{ old('name', $name ? Illuminate\Support\Facades\Crypt::decryptString($name) : '') }}">
+                            <p class="text-success mb-0">※入力必須事項です</p>
                             @error('name')
                                 <span class="invalid-feedback" role="alert">
                                     <strong>{{ $message }}</strong>
@@ -42,6 +43,7 @@
                             <input id="name_kana" class="form-control @error('name_kana') is-invalid @enderror" type="text"
                                 name="name_kana"
                                 value="{{ old('name_kana', $name_kana ? Illuminate\Support\Facades\Crypt::decryptString($name_kana) : '') }}">
+                            <p class="text-success mb-0">※入力必須事項です</p>
                             @error('name_kana')
                                 <span class="invalid-feedback" role="alert">
                                     <strong>{{ $message }}</strong>
@@ -61,6 +63,7 @@
                                         {{ $office->office_name }}</option>
                                 @endforeach
                             </select>
+                            <p class="text-success mb-0">※選択必須事項です</p>
                             @error('office_id')
                                 <span class="invalid-feedback" role="alert">
                                     <strong>{{ $message }}</strong>
@@ -71,9 +74,10 @@
                     </div>
                     <div class="col-md-6">
                         <div class="form-group">
-                            <label for="desired_date">体験・見学希望日</label>
+                            <label for="desired_date">体験・見学希望日(土日、祝を除く)</label>
                             <input id="desired_date" class="form-control @error('desired_date') is-invalid @enderror" type="date"
-                                name="desired_date" value="{{ old('desired_date', $trial_application->desired_date ?? '') }}">
+                                name="desired_date" value="{{ old('desired_date', $trial_application->desired_date ?? '') }}" max="9999-12-31">
+                            <p class="text-success mb-0">※入力必須事項です</p>
                             @error('desired_date')
                                 <span class="invalid-feedback" role="alert">
                                     <strong>{{ $message }}</strong>
@@ -92,6 +96,7 @@
                             @endphp
                             <input id="email" class="form-control @error('email') is-invalid @enderror" type="text" name="email"
                                 value="{{ old('email', $email ? Illuminate\Support\Facades\Crypt::decryptString($email) : '') }}">
+                            <p class="text-success mb-0">※入力必須事項です</p>
                             @error('email')
                                 <span class="invalid-feedback" role="alert">
                                     <strong>{{ $message }}</strong>
@@ -108,6 +113,7 @@
                             <input id="phone_number" class="form-control @error('phone_number') is-invalid @enderror" type="text"
                                 name="phone_number"
                                 value="{{ old('phone_number', $phone_number ? Illuminate\Support\Facades\Crypt::decryptString($phone_number) : '') }}">
+                            <p class="text-success mb-0">※入力必須事項です</p>
                             @error('phone_number')
                                 <span class="invalid-feedback" role="alert">
                                     <strong>{{ $message }}</strong>
@@ -124,7 +130,8 @@
                             @php
                                 $email = $trial_application->email ?? '';
                             @endphp
-                            <textarea id="comment" name="comment" class="form-control @error('comment') is-invalid @enderror">{{ old('comment', $trial_application->comment ?? '') }}</textarea>
+                            <textarea id="comment" name="comment" class="form-control @error('comment') is-invalid @enderror"
+                                placeholder="(例) メールの方が都合がよいです, 午前中を希望します">{{ old('comment', $trial_application->comment ?? '') }}</textarea>
                             @error('comment')
                                 <span class="invalid-feedback" role="alert">
                                     <strong>{{ $message }}</strong>
@@ -139,4 +146,16 @@
             @yield('back_button')
         </form>
     </div>
+@endsection
+
+@section("script")
+    <script>
+        $(function() {
+            const now = new Date();
+            let month;
+            if(now.getMonth() + 1 < 10) month = `0${now.getMonth() + 1}`; else month = now.getMonth() + 1;
+            const today = `${now.getFullYear()}-${month}-${now.getDate()}`;
+            $("#desired_date").attr("min", today);
+        });
+    </script>
 @endsection
