@@ -131,7 +131,7 @@
                                 $email = $trial_application->email ?? '';
                             @endphp
                             <textarea id="comment" name="comment" class="form-control @error('comment') is-invalid @enderror"
-                                placeholder="(例) メールの方が都合がよいです, 午前中を希望します">{{ old('comment', $trial_application->comment ?? '') }}</textarea>
+                                placeholder="(例) メールの方が都合がよいです, 午前中を希望します, ○○について詳しくお伺いしたいです">{{ old('comment', $trial_application->comment ?? '') }}</textarea>
                             @error('comment')
                                 <span class="invalid-feedback" role="alert">
                                     <strong>{{ $message }}</strong>
