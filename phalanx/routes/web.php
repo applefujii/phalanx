@@ -43,6 +43,8 @@ Route::post('/aptitude_question_form', [App\Http\Controllers\AptitudeQuestionFor
 Route::get('/aptitude_question_form_apple', [App\Http\Controllers\AptitudeQuestionFormController::class, 'apple'])->name('aptitude_question_form.apple');
 Route::get('/aptitude_question_form_mint', [App\Http\Controllers\AptitudeQuestionFormController::class, 'mint'])->name('aptitude_question_form.mint');
 Route::get('/aptitude_question_form_maple', [App\Http\Controllers\AptitudeQuestionFormController::class, 'maple'])->name('aptitude_question_form.maple');
+Route::get('/aptitude_question_form_abokado', [App\Http\Controllers\AptitudeQuestionFormController::class, 'abokado'])->name('aptitude_question_form.abokado');
+Route::get('/aptitude_question_form_banana', [App\Http\Controllers\AptitudeQuestionFormController::class, 'banana'])->name('aptitude_question_form.banana');
 
 // 適性診断 質問管理
 Route::get('/aptitude_question_manage/edit_all', [App\Http\Controllers\AptitudeQuestionManageController::class, 'edit_all'])->name('aptitude_question_manage.edit_all');

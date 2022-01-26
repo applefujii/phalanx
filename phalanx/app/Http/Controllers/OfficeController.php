@@ -12,6 +12,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Office;
 use App\Models\ChatRoom;
 use App\Models\User;
+use App\Models\AptitudeQuestion;
 use Illuminate\Validation\Rule;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -100,6 +101,17 @@ class OfficeController extends Controller
                     "target_users" => $user->id
                 ]));
             }
+
+            //-- 適性診断の得点にこの事業所を追加 
+            $aptitude_questions = AptitudeQuestion::select("id", "scores")->whereNull('deleted_at')->orderBy('sort')->get();
+            $office_no = Office::whereNull('deleted_at')->where('sort', '<', $request->input("sort"))->count();
+            foreach($aptitude_questions as $aptitude_question) {
+                $scores = explode(",", $aptitude_question->scores);
+                array_splice($scores, $office_no, 0, 0);
+                AptitudeQuestion::where("id", $aptitude_question->id)->update([
+                    "scores" => implode(",", $scores)
+                ]);
+            }
         });
 
         if(isset($office)) return $office->id;
@@ -147,6 +159,7 @@ class OfficeController extends Controller
         DB::transaction(function () use(&$office, $request, $id) {
             $now = Carbon::now()->isoFormat('YYYY-MM-DD HH:mm:ss');
             $office = Office::whereNull("deleted_at")->where("id", $id)->first();
+            $pre_office_no = Office::whereNull('deleted_at')->where('sort', '<', $office->sort)->count();
 
             $office->update([
                 "office_name" => $request->input("office_name"),
@@ -161,6 +174,19 @@ class OfficeController extends Controller
                 "update_user_id" => Auth::id(),
                 "updated_at" => $now
             ]);
+
+            //-- sort順位によって適性診断のscoresの位置を変更
+            $aptitude_questions = AptitudeQuestion::select("id", "scores")->whereNull('deleted_at')->orderBy('sort')->get();
+            $post_office_no = Office::whereNull('deleted_at')->where('sort', '<', $request->input("sort"))->count();
+            foreach($aptitude_questions as $aptitude_question) {
+                $scores = explode(",", $aptitude_question->scores);
+                $save = $scores[$pre_office_no];
+                unset($scores[$pre_office_no]);
+                array_splice($scores, $post_office_no, 0, $save);
+                AptitudeQuestion::where("id", $aptitude_question->id)->update([
+                    "scores" => implode(",", $scores)
+                ]);
+            }
         });
 
         if(isset($office)) return $id;
@@ -189,6 +215,18 @@ class OfficeController extends Controller
                 "delete_user_id" => Auth::id(),
                 "deleted_at" => $now
             ]);
+
+            //-- 適性診断のscoresの該当箇所を削除
+            $aptitude_questions = AptitudeQuestion::select("id", "scores")->whereNull('deleted_at')->orderBy('sort')->get();
+            $sort = Office::select("sort")->where("id", $id)->first()->sort;
+            $office_no = Office::whereNull('deleted_at')->where('sort', '<', $sort)->count();
+            foreach($aptitude_questions as $aptitude_question) {
+                $scores = explode(",", $aptitude_question->scores);
+                unset($scores[$office_no]);
+                AptitudeQuestion::where("id", $aptitude_question->id)->update([
+                    "scores" => implode(",", $scores)
+                ]);
+            }
         });
 
         return redirect()->route("office.index");

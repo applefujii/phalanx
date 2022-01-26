@@ -31,7 +31,7 @@ class AptitudeQuestionManageController extends Controller
     public function index()
     {
         $aptitude_questions = AptitudeQuestion::whereNull('deleted_at')->orderBy('sort')->get();
-        $offices = Office::select("office_name")->whereNull('deleted_at')->orderBy('id')->get();
+        $offices = Office::select("office_name")->whereNull('deleted_at')->orderBy('sort')->get();
         return view('aptitude_question_manage/index', compact('aptitude_questions', 'offices'));
     }
 
@@ -55,13 +55,11 @@ class AptitudeQuestionManageController extends Controller
     public function store(AptitudeQuestionManageRequest $request)
     {
         $now = Carbon::now();
-
+        $scores = implode(",", $request->scores);
         $aptitude_question = new AptitudeQuestion();
         $aptitude_question->question = $request->input('question');
         $aptitude_question->sort = $request->input('sort');
-        $aptitude_question->score_apple = $request->input('score_apple');
-        $aptitude_question->score_mint = $request->input('score_mint');
-        $aptitude_question->score_maple = $request->input('score_maple');
+        $aptitude_question->scores = $scores;
         $aptitude_question->create_user_id = Auth::user()->id;
         $aptitude_question->update_user_id = Auth::user()->id;
         $aptitude_question->created_at = $now->isoFormat('YYYY-MM-DD HH:mm:ss');
@@ -93,12 +91,11 @@ class AptitudeQuestionManageController extends Controller
     {
         $now = Carbon::now();
         $aptitude_question = AptitudeQuestion::findOrFail($id);
+        $scores = implode(",", $request->scores);
         
         $aptitude_question->question = $request->input('question');
         $aptitude_question->sort = $request->input('sort');
-        $aptitude_question->score_apple = $request->input('score_apple');
-        $aptitude_question->score_mint = $request->input('score_mint');
-        $aptitude_question->score_maple = $request->input('score_maple');
+        $aptitude_question->scores = $scores;
         $aptitude_question->update_user_id = Auth::user()->id;
         $aptitude_question->updated_at = $now->isoFormat('YYYY-MM-DD HH:mm:ss');
         $aptitude_question->save();
@@ -114,7 +111,8 @@ class AptitudeQuestionManageController extends Controller
     public function edit_all()
     {
         $aptitude_questions = AptitudeQuestion::whereNull('deleted_at')->orderBy('sort')->get();
-        return view('aptitude_question_manage/edit_all', compact('aptitude_questions'));
+        $offices = Office::whereNull('deleted_at')->orderBy("sort")->get();
+        return view('aptitude_question_manage/edit_all', compact('aptitude_questions', 'offices'));
     }
 
     /**
@@ -129,13 +127,12 @@ class AptitudeQuestionManageController extends Controller
         $aptitude_questions = $request->input('aptitude_questions');
 
         foreach ($aptitude_questions as $input_value) {
+            $scores = implode(",", $input_value["scores"]);
             $aptitude_question = AptitudeQuestion::findOrFail($input_value['id']);
         
             $aptitude_question->question = $input_value['question'];
             $aptitude_question->sort = $input_value['sort'];
-            $aptitude_question->score_apple = $input_value['score_apple'];
-            $aptitude_question->score_mint = $input_value['score_mint'];
-            $aptitude_question->score_maple = $input_value['score_maple'];
+            $aptitude_question->scores = $scores;
             $aptitude_question->update_user_id = Auth::user()->id;
             $aptitude_question->updated_at = $now->isoFormat('YYYY-MM-DD HH:mm:ss');
             $aptitude_question->save();

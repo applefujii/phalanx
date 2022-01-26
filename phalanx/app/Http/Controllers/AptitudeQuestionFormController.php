@@ -22,7 +22,7 @@ class AptitudeQuestionFormController extends Controller
     public function index()
     {
         $aptitude_questions = AptitudeQuestion::whereNull('deleted_at')->orderBy('sort')->get();
-        return view('alt_aptitude_question_form/index', compact('aptitude_questions'));
+        return view('aptitude_question_form/index', compact('aptitude_questions'));
     }
 
     /**
@@ -45,12 +45,17 @@ class AptitudeQuestionFormController extends Controller
             $scores = explode(",", $aptitude_questions[$i]["scores"]);
 
             foreach($scores as $index => $score) {
-                if($score == "F"  &&  $answer == 1) $total_score[$index] +=999999;
+                if($score == "F") {
+                    if($answer == 1) $total_score[$index] +=999999;
+                    else if($answer == -1) $total_score[$index] -=999999;
+                }
                 else $total_score[$index] += $score * $answer;
             }
         }
 
-        // logger("apple:" . $total_score[0] . " mint:" . $total_score[1] . " maple:" . $total_score[2]);
+        // foreach($total_score as $index => $ts) {
+        //     logger($index." / ".$ts);
+        // }
 
         $max = max($total_score);
         foreach($total_score as $index => $sc) {
@@ -67,7 +72,7 @@ class AptitudeQuestionFormController extends Controller
      */
     public function apple()
     {
-        return view('alt_aptitude_question_form/result/apple');
+        return view('aptitude_question_form/result/apple');
     }
 
     /**
@@ -77,7 +82,7 @@ class AptitudeQuestionFormController extends Controller
      */
     public function mint()
     {
-        return view('alt_aptitude_question_form/result/mint');
+        return view('aptitude_question_form/result/mint');
     }
 
     /**
@@ -87,7 +92,27 @@ class AptitudeQuestionFormController extends Controller
      */
     public function maple()
     {
-        return view('alt_aptitude_question_form/result/maple');
+        return view('aptitude_question_form/result/maple');
+    }
+
+    /**
+     * アボカドジャパン
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function abokado()
+    {
+        return view('aptitude_question_form/result/abokado');
+    }
+
+    /**
+     * バナナワールド
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function banana()
+    {
+        return view('aptitude_question_form/result/banana');
     }
 
 }

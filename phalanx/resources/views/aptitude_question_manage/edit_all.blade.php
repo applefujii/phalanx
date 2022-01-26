@@ -40,48 +40,28 @@
             </span>
         @enderror
     </td>
-    <td>
-        <input
-            id="aptitude_questions[{{ $aptitude_question->id }}][score_apple]"
-            class="form-control @error("aptitude_questions.$aptitude_question->id.score_apple") is-invalid @enderror"
-            type="text"
-            name="aptitude_questions[{{ $aptitude_question->id }}][score_apple]"
-            value="{{ old("aptitude_questions.$aptitude_question->id.score_apple", $aptitude_question->score_apple ?? '') }}"
-        >
-        @error("aptitude_questions.$aptitude_question->id.score_apple")
-            <span class="invalid-feedback" role="alert">
-                <strong>{{ $message }}</strong>
-            </span>
-        @enderror
-    </td>
-    <td>
-        <input
-            id="aptitude_questions[{{ $aptitude_question->id }}][score_mint]"
-            class="form-control @error("aptitude_questions.$aptitude_question->id.score_mint") is-invalid @enderror"
-            type="text"
-            name="aptitude_questions[{{ $aptitude_question->id }}][score_mint]"
-            value="{{ old("aptitude_questions.$aptitude_question->id.score_mint", $aptitude_question->score_mint ?? '') }}"
-        >
-        @error("aptitude_questions.$aptitude_question->id.score_mint")
-            <span class="invalid-feedback" role="alert">
-                <strong>{{ $message }}</strong>
-            </span>
-        @enderror
-    </td>
-    <td>
-        <input
-            id="aptitude_questions[{{ $aptitude_question->id }}][score_maple]"
-            class="form-control @error("aptitude_questions.$aptitude_question->id.score_maple") is-invalid @enderror"
-            type="text"
-            name="aptitude_questions[{{ $aptitude_question->id }}][score_maple]"
-            value="{{ old("aptitude_questions.$aptitude_question->id.score_maple", $aptitude_question->score_maple ?? '') }}"
-        >
-        @error("aptitude_questions.$aptitude_question->id.score_maple")
-            <span class="invalid-feedback" role="alert">
-                <strong>{{ $message }}</strong>
-            </span>
-        @enderror
-    </td>
+    @php
+        $scores = explode(",", $aptitude_question["scores"]);
+    @endphp
+    @for($i=0 ; $i<count($offices) ; $i++)
+        @php
+            if(!isset($scores[$i])) $scores[$i] = 0;
+        @endphp
+        <td>
+            <input
+                id="aptitude_questions[{{ $aptitude_question->id }}][score_{{ $offices[$i]->en_office_name }}]"
+                class="form-control @error("aptitude_questions.$aptitude_question->id.scores.$i") is-invalid @enderror"
+                type="text"
+                name="aptitude_questions[{{ $aptitude_question->id }}][scores][{{ $i }}]"
+                value="{{ old("aptitude_questions.$aptitude_question->id.scores.$i", $scores[$i] ?? '') }}"
+            >
+            @error("aptitude_questions.$aptitude_question->id.scores.$i")
+                <span class="invalid-feedback" role="alert">
+                    <strong>{{ $message }}</strong>
+                </span>
+            @enderror
+        </td>
+    @endfor
 </tr>
 @endforeach
 @endsection

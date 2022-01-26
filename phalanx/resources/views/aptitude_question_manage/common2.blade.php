@@ -55,9 +55,9 @@
                     @foreach($offices as $offices_index => $office)
                         <div class="mx-4 col-md-3">
                             <label for="score_{{ $office->en_office_name }}">{{ $office->office_name }}の点数</label>
-                            <input id="score_{{ $office->en_office_name }}" class="form-control @error('score_apple') is-invalid @enderror" type="text"
-                                name="score[{{ $offices_index }}]" value="{{ old('score['.$offices_index.']', $scores[$offices_index] ?? '') }}">
-                            @error('score_{{ $office->en_office_name }}')
+                            <input id="score_{{ $office->en_office_name }}" class="form-control @error('scores.'.$offices_index) is-invalid @enderror" type="text"
+                                name="scores[{{ $offices_index }}]" value="{{ old('scores.'.$offices_index, $scores[$offices_index] ?? 0) }}">
+                            @error('scores.'.$offices_index)
                                 <span class="invalid-feedback" role="alert">
                                     <strong>{{ $message }}</strong>
                                 </span>

@@ -39,17 +39,7 @@ class AptitudeQuestionManageRequest extends FormRequest
                     $query->whereNull('deleted_at');
                 }),
             ],
-            "score_apple" => [
-                'nullable',
-                'regex:/(^[+-]?\d+$|^F{1}$)/u',// 整数かF
-                'max:6',
-            ],
-            "score_mint" => [
-                'nullable',
-                'regex:/(^[+-]?\d+$|^F{1}$)/u',// 整数かF
-                'max:6',
-            ],
-            "score_maple" => [
+            "scores.*" => [
                 'nullable',
                 'regex:/(^[+-]?\d+$|^F{1}$)/u',// 整数かF
                 'max:6',
@@ -65,9 +55,8 @@ class AptitudeQuestionManageRequest extends FormRequest
     public function messages()
     {
         return [
-            'score_apple.regex' => ':attributeは半角数字の整数かFを入力してください。',
-            'score_mint.regex' => ':attributeは半角数字の整数かFを入力してください。',
-            'score_maple.regex' => ':attributeは半角数字の整数かFを入力してください。',
+            'scores.*.regex' => '半角数字の整数かFを入力してください。',
+            'scores.*.max' => '6桁以下で入力してください。',
         ];
     }
 }
