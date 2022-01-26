@@ -13,7 +13,6 @@
             <div class="col-sm mt-3 mx-3 px-0 d-flex flex-column">
                 <label for="roomTitle">ルーム名</label>
                 <input type="text" class="form-control" id="roomTitle" name="room_title" value="{{ old('room_title') }}">
-                <p class="text-success mb-0">※入力必須事項です</p>
                 @if ($errors->has("room_title"))
                     <ul class="pl-0 mt-1" style="list-style: none">
                         @foreach ($errors->get("room_title") as $error)
@@ -34,7 +33,6 @@
                     @endforeach
                     <option value="0" @if (old("office_id") != null && old("office_id") == 0) selected @endif>その他</option>
                 </select>
-                <p class="text-success mb-0">※選択必須事項です</p>
                 @if ($errors->has("office_id"))
                     <ul class="pl-0 mt-1" style="list-style: none">
                         <li class="text-danger">事業所を選択してください。</li>
@@ -51,7 +49,6 @@
                     <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#peopleListModal" data-target-group="user">メンバー選択（利用者）</button>
                 </div>
             </div>
-            <p class="text-success mb-0">※選択必須事項です</p>
             <div class="mx-0 insert-checked-people"></div>
             @if ($errors->has("target_users"))
                 <ul class="pl-0 mt-1" style="list-style: none">
