@@ -25,7 +25,7 @@
         <div class="row justify-content-start mx-auto my-4">
             <div class="mx-4">
                 <label>開始日時</label><br />
-                <input form="main-form" name="start_date" type="date" value="{{ old('start_date', isset($start_at) ? $start_at->isoFormat('YYYY-MM-DD') : $now_at->isoFormat('YYYY-MM-DD') )}}" class="@error('start_at') is-invalid @enderror">
+                <input form="main-form" name="start_date" type="date" value="{{ old('start_date', isset($start_at) ? $start_at->isoFormat('YYYY-MM-DD') : $now_at->isoFormat('YYYY-MM-DD') )}}" class="@error('start_at') is-invalid @enderror" max="9999-12-31">
                 <input id="start_time" form="main-form" name="start_time" type="time" value="{{ old('start_time', isset($start_at) ? $start_at->isoFormat('HH:mm') : $now_at->isoFormat('HH:mm') ) }}" class="@error('start_at') is-invalid @enderror">
                 @error('start_at')
                     <span class="invalid-feedback" role="alert">
@@ -35,7 +35,7 @@
             </div>
             <div class="mx-4">
                 <label>終了日時</label><br />
-                <input form="main-form" name="end_date" type="date" value="{{ old('end_date', isset($end_at) ? $end_at->isoFormat('YYYY-MM-DD') : $now_at->isoFormat('YYYY-MM-DD') ) }}" class="@error('end_at') is-invalid @enderror">
+                <input form="main-form" name="end_date" type="date" value="{{ old('end_date', isset($end_at) ? $end_at->isoFormat('YYYY-MM-DD') : $now_at->isoFormat('YYYY-MM-DD') ) }}" class="@error('end_at') is-invalid @enderror" max="9999-12-31">
                 <input id="end_time" form="main-form" name="end_time" type="time" value="{{ old('end_time', isset($end_at) ? $end_at->isoFormat('HH:mm') : $now_at->isoFormat('HH:mm') ) }}" class="@error('end_at') is-invalid @enderror">
                 @error('end_at')
                     <span class="invalid-feedback" role="alert">
@@ -142,6 +142,33 @@
         } else {
             $('#start_time').attr('disabled', false);
             $('#end_time').attr('disabled', false);
+        }
+    });
+
+    //-- 日付入力欄からフォーカスが外れた際に「開始日時＞終了日時」だったらフォーカスされていた入力欄の日付で統一
+    $(document).on('focusout', '[name=start_date]', function(){
+        format = "YYYY-MM-DD";
+        st = new Date( $(this).val() );
+        ed = new Date( $('[name=end_date]').val() );
+        if( st > ed ) {
+            console.log("in");
+            format = format.replace('YYYY', st.getFullYear());
+            format = format.replace('MM', (st.getMonth()+1).toString(10).padStart(2, '0'));
+            format = format.replace('DD', st.getDate().toString(10).padStart(2, '0'));
+            $('[name=end_date]').val(format);
+        }
+    });
+
+    $(document).on('focusout', '[name=end_date]', function(){
+        format = "YYYY-MM-DD";
+        ed = new Date( $(this).val() );
+        st = new Date( $('[name=start_date]').val() );
+        if( st > ed ) {
+            console.log("in");
+            format = format.replace('YYYY', ed.getFullYear());
+            format = format.replace('MM', (ed.getMonth()+1).toString(10).padStart(2, '0'));
+            format = format.replace('DD', ed.getDate().toString(10).padStart(2, '0'));
+            $('[name=start_date]').val(format);
         }
     });
 </script>
