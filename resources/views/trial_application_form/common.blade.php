@@ -15,6 +15,16 @@
             </div>
         @endif
 
+        {{-- 体験の流れの説明 --}}
+        <div class="explanation">
+            <h5>【申込から体験までの流れ】</h5>
+            <ol>
+                <li>本フォームで申請します。</li>
+                <li>後ほど職員からの連絡があります。このとき、日程・時間帯の調整や詳細の説明をします。</li>
+                <li>体験当日に来所して体験・見学をします。</li>
+            </ol>
+        </div>
+
         @yield('form')
             <fieldset @if (\Route::current()->getName() === 'trial_application_manage.check') disabled @endif>
                 <div class="row justify-content-start mx-auto my-4">
@@ -78,6 +88,7 @@
                             <input id="desired_date" class="form-control @error('desired_date') is-invalid @enderror" type="date"
                                 name="desired_date" value="{{ old('desired_date', $trial_application->desired_date ?? '') }}" max="9999-12-31">
                             <p class="text-success mb-0">※入力必須事項です</p>
+                            <p class="text-success mb-0">希望日は目安です。実際の日程は後ほどの連絡時に決定となります。</p>
                             @error('desired_date')
                                 <span class="invalid-feedback" role="alert">
                                     <strong>{{ $message }}</strong>
@@ -131,7 +142,7 @@
                                 $email = $trial_application->email ?? '';
                             @endphp
                             <textarea id="comment" name="comment" class="form-control @error('comment') is-invalid @enderror"
-                                placeholder="(例) メールの方が都合がよいです, 午前中を希望します, ○○について詳しくお伺いしたいです">{{ old('comment', $trial_application->comment ?? '') }}</textarea>
+                                placeholder="(例) 連絡はメールの方が都合がよいです, 午前中を希望します, ○○について詳しくお伺いしたいです">{{ old('comment', $trial_application->comment ?? '') }}</textarea>
                             @error('comment')
                                 <span class="invalid-feedback" role="alert">
                                     <strong>{{ $message }}</strong>
