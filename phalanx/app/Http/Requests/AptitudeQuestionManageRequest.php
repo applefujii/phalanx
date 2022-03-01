@@ -40,9 +40,9 @@ class AptitudeQuestionManageRequest extends FormRequest
                 }),
             ],
             "scores.*" => [
-                'nullable',
-                'regex:/(^[+-]?\d+$|^F{1}$)/u',// 整数かF
-                'max:6',
+                'required',
+                'integer',
+                'between:-999999,999999',
             ],
         ];
     }
@@ -55,8 +55,6 @@ class AptitudeQuestionManageRequest extends FormRequest
     public function messages()
     {
         return [
-            'scores.*.regex' => '半角数字の整数かFを入力してください。',
-            'scores.*.max' => '6桁以下で入力してください。',
         ];
     }
 }

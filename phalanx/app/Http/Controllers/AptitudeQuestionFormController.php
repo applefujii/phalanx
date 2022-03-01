@@ -1,7 +1,7 @@
 <?php
 /**
  * 適性診断フォームのコントローラー
- * 
+ *
  * @author Fumio Mochizuki
  */
 namespace App\Http\Controllers;
@@ -35,10 +35,12 @@ class AptitudeQuestionFormController extends Controller
         // dd($request->toArray());
         $aptitude_answers = $request->input('aptitude_questions');
         $aptitude_questions = AptitudeQuestion::select('scores')->whereNull('deleted_at')->orderBy('sort')->get();
-        $offices = Office::select("en_office_name")->whereNull('deleted_at')->orderBy('id')->get();
+        // 同点の場合はこのソート順で登録される
+        $offices = Office::select("en_office_name")->whereNull('deleted_at')->orderBy('sort')->get();
 
         // 各事業所の合計点数
         $total_score = array_fill(0, count($offices), 0);
+
 
         for( $i=0 ; $i<count($aptitude_answers) ; $i++) {
             $answer = $aptitude_answers[$i+1]["answer"];
@@ -52,6 +54,7 @@ class AptitudeQuestionFormController extends Controller
                 else $total_score[$index] += $score * $answer;
             }
         }
+        dd($total_score);
 
         // foreach($total_score as $index => $ts) {
         //     logger($index." / ".$ts);

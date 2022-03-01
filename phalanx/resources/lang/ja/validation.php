@@ -168,6 +168,7 @@ return [
         'aptitude_questions.*.score_mint' => '点数',
         'score_maple' => '点数',
         'aptitude_questions.*.score_maple' => '点数',
+        'scores.*' => '点数',
 
         // 通知
         'start_at' => '開始日時',
