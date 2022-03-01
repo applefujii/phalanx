@@ -32,33 +32,28 @@ class AptitudeQuestionFormController extends Controller
      */
     public function calculate(AptitudeQuestionFormRequest $request)
     {
-        // dd($request->toArray());
-        $aptitude_answers = $request->input('aptitude_questions');
-        $aptitude_questions = AptitudeQuestion::select('scores')->whereNull('deleted_at')->orderBy('sort')->get();
-        // 同点の場合はこのソート順で登録される
-        $offices = Office::select("en_office_name")->whereNull('deleted_at')->orderBy('sort')->get();
+        $answers = $request->input('answers');
+        // dd($answers);
+
+        $offices = Office::whereNull('deleted_at')->get();
+        $aptitude_questions = AptitudeQuestion::with('scores')->whereNull('deleted_at')->get();
 
         // 各事業所の合計点数
-        $total_score = array_fill(0, count($offices), 0);
+        $total_score = [];
 
+        foreach ($offices as $office) {
+            data_set($total_score, $office->id . '.office_id', $office->id);
+        }
 
-        for( $i=0 ; $i<count($aptitude_answers) ; $i++) {
-            $answer = $aptitude_answers[$i+1]["answer"];
-            $scores = explode(",", $aptitude_questions[$i]["scores"]);
-
-            foreach($scores as $index => $score) {
-                if($score == "F") {
-                    if($answer == 1) $total_score[$index] +=999999;
-                    else if($answer == -1) $total_score[$index] -=999999;
-                }
-                else $total_score[$index] += $score * $answer;
+        foreach($answers as $answer) {
+            foreach ($offices as $office) {
+                dd($aptitude_questions->where('id', $answer['id'])->where('')->toArray());
+                $score = data_get($total_score, $office->id . '.score', 1);
+                $score += $answer['answer'] * $aptitude_questions->where('id', $answer['id']);
+                data_set($total_score, $office->id . '.score', $a);
             }
         }
-        dd($total_score);
-
-        // foreach($total_score as $index => $ts) {
-        //     logger($index." / ".$ts);
-        // }
+        data_set($total_score, $office->id . '.score', $office->id);
 
         $max = max($total_score);
         foreach($total_score as $index => $sc) {
@@ -76,46 +71,6 @@ class AptitudeQuestionFormController extends Controller
     public function apple()
     {
         return view('aptitude_question_form/result/apple');
-    }
-
-    /**
-     * ミント大阪
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function mint()
-    {
-        return view('aptitude_question_form/result/mint');
-    }
-
-    /**
-     * メープル関西
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function maple()
-    {
-        return view('aptitude_question_form/result/maple');
-    }
-
-    /**
-     * アボカドジャパン
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function abokado()
-    {
-        return view('aptitude_question_form/result/abokado');
-    }
-
-    /**
-     * バナナワールド
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function banana()
-    {
-        return view('aptitude_question_form/result/banana');
     }
 
 }

@@ -49,5 +49,6 @@ class DatabaseSeeder extends Seeder
         $this->call(ChatRoomsSeeder::class);// チャットルーム
         // \App\Models\ChatText::factory(1000)->create();// チャットテキスト
         $this->call(SuperUsersSeeder::class);
+        $this->call(ScoresSeeder::class);// 適性診断の点数
     }
 }

@@ -1,16 +1,11 @@
 <?php
-/**
- * 適性診断質問テーブルのモデル
- *
- * @author Fumio Mochizuki
- */
 
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class AptitudeQuestion extends Model
+class Score extends Model
 {
     use HasFactory;
 
@@ -19,7 +14,7 @@ class AptitudeQuestion extends Model
      *
      * @var string
      */
-    protected $table = 'aptitude_questions';
+    protected $table = 'scores';
 
     /**
      * モデルのタイムスタンプを更新するかの指示
@@ -29,11 +24,13 @@ class AptitudeQuestion extends Model
 
     public $timestamps = false;
 
+
     /**
      * リレーション
-     * 点数
+     *
+     * 事業所
      */
-    public function scores() {
-        return $this->hasMany(Score::class);
+    public function office() {
+        return $this->belongsTo(Office::class);
     }
 }

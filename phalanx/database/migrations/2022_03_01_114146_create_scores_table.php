@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateAptitudeQuestionsTable extends Migration
+class CreateScoresTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,10 +13,11 @@ class CreateAptitudeQuestionsTable extends Migration
      */
     public function up()
     {
-        Schema::create('aptitude_questions', function (Blueprint $table) {
+        Schema::create('scores', function (Blueprint $table) {
             $table->id();
-            $table->string('question', 255);
-            $table->unsignedInteger('sort');
+            $table->unsignedBigInteger('aptitude_question_id');
+            $table->unsignedBigInteger('office_id');
+            $table->integer('score');
             $table->unsignedBigInteger('create_user_id');
             $table->unsignedBigInteger('update_user_id');
             $table->unsignedBigInteger('delete_user_id')->nullable()->default(null);
@@ -33,6 +34,6 @@ class CreateAptitudeQuestionsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('aptitude_questions');
+        Schema::dropIfExists('scores');
     }
 }
