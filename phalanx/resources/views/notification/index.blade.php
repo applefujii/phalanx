@@ -40,7 +40,7 @@
                                     @csrf
                                     @method('DELETE')
                                     <button type="submit" class="btn btn-sm btn-danger delete-button"
-                                        onclick="return confirm('削除しますか\nID: {{ $notification->id }}\n作成日時: {{ $notification->created_at }}\n開始日時: {{ $notification->start_at }}\n終了日時: {{ $notification->end_at }}\n内容: {{ preg_replace('/(?:\n|\r|\r\n)/', ' ', mb_substr($notification->content, 0, 32)) }}')">
+                                        onclick="return confirm('削除しますか\nID: {{ $notification->id }}\n作成日時: {{ $notification->created_at }}\n開始日時: {{ $notification->start_at }}\n終了日時: {{ $notification->end_at }}\n内容: \n    {{ preg_replace('/\r\n|\n|\r/', '\n    ', mb_substr($notification->content, 0, 32)) }}')">
                                     削除</button>
                                 </form>
                         </td>
