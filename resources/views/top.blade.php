@@ -10,7 +10,8 @@
 <div class="container">
     <div class="d-flex justify-content-center">
         <div class="main_contents">
-            <h1 class="text-center m-4">サイト説明文をここに表示（仮）</h1>
+            <h3 class="text-center m-4">こちらは、株式会社リテラル福祉事業部が運営する<br/>就労福祉サービス事業所とのコミュニケーションツールとなります。</h3>
+            <h3 class="text-center m-4">ご興味のある方は、下記の適性診断よりご自身に合った事業所をご確認ください。</h3>
             <div class="row mb-4">
                 <div class="col-md-4 mb-4">
                     <a class="d-flex justify-content-center" href="https://apple-osaka.com/" target="_blank" rel="noopener noreferrer">
