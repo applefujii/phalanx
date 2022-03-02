@@ -32,12 +32,34 @@
                         </ul>
                     @enderror
                 </div>
+                <div class="col-md-5">
+                    <label for="url" class="form-element">公式サイトのURL</label>
+                    <input type="text" id="url" name="url" class="w-100 form-control form-element" value="{{ old('url') }}">
+                    @error("url")
+                        <ul class="pl-0" style="list-style: none">
+                            @foreach ($errors->get("url") as $error)
+                                <li class="text-danger">{{ $error }}</li>
+                            @endforeach
+                        </ul>
+                    @enderror
+                </div>
                 <div class="col-md-2">
                     <label for="sort" class="form-element">表示順</label>
                     <input type="number" id="sort" name="sort" class="w-100 form-control form-element" value="{{ old('sort') }}">
                     @if ($errors->has("sort"))
                         <ul class="pl-0" style="list-style: none">
                             @foreach ($errors->get("sort") as $error)
+                                <li class="text-danger">{{ $error }}</li>
+                            @endforeach
+                        </ul>
+                    @endif
+                </div>
+                <div class="col-md-2">
+                    <label for="priority" class="form-element">適性診断結果画面の優先順位</label>
+                    <input type="number" id="priority" name="priority" class="w-100 form-control form-element" value="{{ old('priority') }}">
+                    @if ($errors->has("sort"))
+                        <ul class="pl-0" style="list-style: none">
+                            @foreach ($errors->get("priority") as $error)
                                 <li class="text-danger">{{ $error }}</li>
                             @endforeach
                         </ul>

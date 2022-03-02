@@ -187,6 +187,8 @@ return [
         // 事業所マスタ
         'office_name' => '事業所名',
         'en_office_name' => '英語事業所名',
+        'url' => '公式サイトのURL',
+        'priority' => '適性診断結果画面の優先順位',
 
         // チャットルーム管理
         'room_title' => 'ルーム名',
