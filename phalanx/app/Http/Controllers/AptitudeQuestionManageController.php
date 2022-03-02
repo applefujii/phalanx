@@ -1,7 +1,7 @@
 <?php
 /**
  * 適性診断質問管理のコントローラー
- * 
+ *
  * @author Fumio Mochizuki
  */
 namespace App\Http\Controllers;
@@ -22,7 +22,7 @@ class AptitudeQuestionManageController extends Controller
     {
         $this->middleware('staff');// 職員
     }
-    
+
     /**
      * 一覧画面
      *
@@ -30,7 +30,7 @@ class AptitudeQuestionManageController extends Controller
      */
     public function index()
     {
-        $aptitude_questions = AptitudeQuestion::whereNull('deleted_at')->orderBy('sort')->get();
+        $aptitude_questions = AptitudeQuestion::with('scores.office')->whereNull('deleted_at')->orderBy('sort')->get();
         $offices = Office::select("office_name")->whereNull('deleted_at')->orderBy('sort')->get();
         return view('aptitude_question_manage/index', compact('aptitude_questions', 'offices'));
     }
@@ -92,7 +92,7 @@ class AptitudeQuestionManageController extends Controller
         $now = Carbon::now();
         $aptitude_question = AptitudeQuestion::findOrFail($id);
         $scores = implode(",", $request->scores);
-        
+
         $aptitude_question->question = $request->input('question');
         $aptitude_question->sort = $request->input('sort');
         $aptitude_question->scores = $scores;
@@ -129,7 +129,7 @@ class AptitudeQuestionManageController extends Controller
         foreach ($aptitude_questions as $input_value) {
             $scores = implode(",", $input_value["scores"]);
             $aptitude_question = AptitudeQuestion::findOrFail($input_value['id']);
-        
+
             $aptitude_question->question = $input_value['question'];
             $aptitude_question->sort = $input_value['sort'];
             $aptitude_question->scores = $scores;

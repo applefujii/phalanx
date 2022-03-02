@@ -14,13 +14,9 @@
 <tr class="@error("questions.$aptitude_question->id") table-danger @enderror">
     <td>{{ $aptitude_question->question }}</td>
     <td>{{ $aptitude_question->sort }}</td>
-    @php
-        $scores = explode(",", $aptitude_questions[$q_count]["scores"]);
-        for($i=0 ; $i<count($offices) ; $i++) {
-            if(!isset($scores[$i])) $scores[$i] = 0;
-            echo "<td>".$scores[$i]."</td>";
-        }
-    @endphp
+    @foreach ($aptitude_question->scores as $score)
+        <td>{{ $score->score }}</td>
+    @endforeach
     <td>
         <div class="table-body-action row">
             <div class="col-12 col-md-6 px-0 py-1">
@@ -33,7 +29,7 @@
                 @method('DELETE')
                 @csrf
                 <button class="btn btn-sm btn-danger" type="submit"
-                    onclick="return confirm('削除しますか\nID: {{ $aptitude_question->id }}\n質問文: {{ $aptitude_question->question }}\n表示順: {{ $aptitude_question->sort }}\nアップル点数: {{ $aptitude_question->score_apple }}\nミント点数: {{ $aptitude_question->score_mint }}\nメープル点数: {{ $aptitude_question->score_maple }}')">
+                    onclick="return confirm('削除しますか？')">
                 削除</button>
             </form>
         </div>
