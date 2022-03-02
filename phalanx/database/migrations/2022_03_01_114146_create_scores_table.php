@@ -17,7 +17,7 @@ class CreateScoresTable extends Migration
             $table->id();
             $table->unsignedBigInteger('aptitude_question_id');
             $table->unsignedBigInteger('office_id');
-            $table->integer('score');
+            $table->string('score', 10);
             $table->unsignedBigInteger('create_user_id');
             $table->unsignedBigInteger('update_user_id');
             $table->unsignedBigInteger('delete_user_id')->nullable()->default(null);

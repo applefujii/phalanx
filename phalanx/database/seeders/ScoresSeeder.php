@@ -408,7 +408,7 @@ class ScoresSeeder extends Seeder
             ],
 
             [
-                'score' => 999999,
+                'score' => 'F',
                 'aptitude_question_id' => 15,
                 'office_id' => 1,
                 'create_user_id' => 1,
@@ -510,7 +510,7 @@ class ScoresSeeder extends Seeder
                 'created_at' => '2021-04-01 12:34:56',
             ],
             [
-                'score' => 999999,
+                'score' => 'F',
                 'aptitude_question_id' => 18,
                 'office_id' => 3,
                 'create_user_id' => 1,

@@ -41,8 +41,8 @@ class AptitudeQuestionManageRequest extends FormRequest
             ],
             "scores.*" => [
                 'required',
-                'integer',
-                'between:-999999,999999',
+                'regex:/(^[+-]?\d+$|^F{1}$)/u',// 整数かF
+                'max:10',
             ],
         ];
     }

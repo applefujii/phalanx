@@ -34,8 +34,8 @@ class AptitudeQuestionFormController extends Controller
     public function calculate(AptitudeQuestionFormRequest $request)
     {
         $answers = $request->input('answers');
-        // dd($answers);
 
+        // 優先順位で事業所をソート
         $offices = Office::whereNull('deleted_at')->orderBy('priority')->get();
         $aptitude_questions = AptitudeQuestion::with('scores')->whereNull('deleted_at')->get();
 
@@ -47,15 +47,30 @@ class AptitudeQuestionFormController extends Controller
             data_set($total_scores, $office->id . '.office_id', $office->id);
             data_set($total_scores, $office->id . '.en_office_name', $office->en_office_name);
             foreach($aptitude_questions as $aptitude_question) {
-                $office_score = data_get($total_scores, $office->id . '.score') ?? 0;
+                $office_score = data_get($total_scores, $office->id . '.score', 0);
                 $score = Score::whereNull('deleted_at')->where('office_id', $office->id)->where('aptitude_question_id', $aptitude_question->id)->first()->score ?? 0;
-                $office_score += $answers[$aptitude_question->id]['answer'] * $score;
-                data_set($total_scores, $office->id . '.score', $office_score);
+                if ($score == 'F') {
+                    if ( $answers[$aptitude_question->id]['answer'] == 1) {// 確定質問に「はい」と回答したら計算を止める
+                        data_set($total_scores, 'fixed', $office->id);
+                        break 2;
+                    }
+                } else {
+                    $office_score += $answers[$aptitude_question->id]['answer'] * $score;
+                    data_set($total_scores, $office->id . '.score', $office_score);
+                }
             }
         }
 
         $max_office_id = $offices->first()->id;
         $max_score = $total_scores[$max_office_id]['score'];
+
+        $fixed_id = data_get($total_scores, 'fixed', null);
+
+        // // 確定質問に「はい」と回答していたら
+        if ($fixed_id) {
+            return redirect()->route('aptitude_question_form.result', $fixed_id);
+        }
+
         foreach($total_scores as $total_score) {
             if ($total_score['score'] > $max_score) {
                 $max_score = $total_score['score'];
