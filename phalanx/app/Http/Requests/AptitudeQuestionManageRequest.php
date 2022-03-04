@@ -39,7 +39,7 @@ class AptitudeQuestionManageRequest extends FormRequest
                     $query->whereNull('deleted_at');
                 }),
             ],
-            "scores.*.*.score" => [
+            "scores.*.score" => [
                 'required',
                 'regex:/(^[+-]?\d+$|^F{1}$)/u',// 整数かF
                 'max:7',
@@ -55,6 +55,7 @@ class AptitudeQuestionManageRequest extends FormRequest
     public function messages()
     {
         return [
+            'scores.*.score.regex' => ':attributeは半角数字の整数かFを入力してください。',
         ];
     }
 }

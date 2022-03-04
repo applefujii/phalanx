@@ -49,7 +49,7 @@
                     @foreach ($aptitude_question->scores->sortBy('office.sort') as $score)
                         <div class="mx-4 col-md-3">
                             <label for="score_{{ $office->en_office_name }}">{{ $office->office_name }}の点数</label>
-                            <input type="hidden" name="scores[{{ $score->office_id }}][id]" value="{{ $score->id }}">
+                            <input type="hidden" name="scores[{{ $office->id }}][id]" value="{{ $score->id }}">
                             <input
                                 class="form-control @error("scores.$office->id.score") is-invalid @enderror"
                                 type="text"
