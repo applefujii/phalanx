@@ -9,6 +9,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\AptitudeQuestion;
 use App\Models\Office;
+use App\Models\Score;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use App\Http\Requests\AptitudeQuestionManageRequest;
@@ -126,16 +127,22 @@ class AptitudeQuestionManageController extends Controller
         $now = Carbon::now();
         $aptitude_questions = $request->input('aptitude_questions');
 
-        foreach ($aptitude_questions as $input_value) {
-            $scores = implode(",", $input_value["scores"]);
-            $aptitude_question = AptitudeQuestion::findOrFail($input_value['id']);
-
-            $aptitude_question->question = $input_value['question'];
-            $aptitude_question->sort = $input_value['sort'];
-            $aptitude_question->scores = $scores;
+        foreach ($aptitude_questions as $input_value_aptitude_question) {
+            $aptitude_question = AptitudeQuestion::findOrFail($input_value_aptitude_question['id']);
+            $aptitude_question->question = $input_value_aptitude_question['question'];
+            $aptitude_question->sort = $input_value_aptitude_question['sort'];
             $aptitude_question->update_user_id = Auth::user()->id;
             $aptitude_question->updated_at = $now->isoFormat('YYYY-MM-DD HH:mm:ss');
             $aptitude_question->save();
+
+
+            foreach ($input_value_aptitude_question['score'] as $input_value_score) {
+                $score = Score::findOrFail($input_value_score['id']);
+                $score->score = $input_value_score['score'];
+                $score->update_user_id = Auth::user()->id;
+                $score->updated_at = $now->isoFormat('YYYY-MM-DD HH:mm:ss');
+                $score->save();
+            }
         }
         return redirect()->route('aptitude_question_manage.index');
     }

@@ -39,10 +39,10 @@ class AptitudeQuestionManageRequest extends FormRequest
                     $query->whereNull('deleted_at');
                 }),
             ],
-            "scores.*" => [
+            "scores.*.*.score" => [
                 'required',
                 'regex:/(^[+-]?\d+$|^F{1}$)/u',// 整数かF
-                'max:10',
+                'max:7',
             ],
         ];
     }

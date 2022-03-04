@@ -45,19 +45,18 @@
                     </div>
                 </div>
 
-                @php
-                    if(isset($aptitude_question)) {
-                        $scores = explode(",", $aptitude_question["scores"]);
-                    } else $scores = array_fill(0, count($offices), "")
-                @endphp
-
                 <div class="row justify-content-start mx-auto my-4">
-                    @foreach($offices as $offices_index => $office)
+                    @foreach ($aptitude_question->scores->sortBy('office.sort') as $score)
                         <div class="mx-4 col-md-3">
                             <label for="score_{{ $office->en_office_name }}">{{ $office->office_name }}の点数</label>
-                            <input id="score_{{ $office->en_office_name }}" class="form-control @error('scores.'.$offices_index) is-invalid @enderror" type="text"
-                                name="scores[{{ $offices_index }}]" value="{{ old('scores.'.$offices_index, $scores[$offices_index] ?? 0) }}">
-                            @error('scores.'.$offices_index)
+                            <input type="hidden" name="scores[{{ $score->office_id }}][id]" value="{{ $score->id }}">
+                            <input
+                                class="form-control @error("scores.$office->id.score") is-invalid @enderror"
+                                type="text"
+                                name="scores[{{ $office->id }}][score]"
+                                value="{{ old("scores.$office->id.score", $score->score ?? "") }}"
+                            >
+                            @error("scores.$office->id.score")
                                 <span class="invalid-feedback" role="alert">
                                     <strong>{{ $message }}</strong>
                                 </span>

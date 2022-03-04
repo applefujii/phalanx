@@ -14,7 +14,6 @@
         <tr>
             <td>
                 <input
-                    id="aptitude_questions[{{ $aptitude_question->id }}][question]"
                     class="form-control @error("aptitude_questions.$aptitude_question->id.question") is-invalid @enderror"
                     type="text"
                     name="aptitude_questions[{{ $aptitude_question->id }}][question]"
@@ -28,7 +27,6 @@
             </td>
             <td>
                 <input
-                    id="aptitude_questions[{{ $aptitude_question->id }}][sort]"
                     class="form-control @error("aptitude_questions.$aptitude_question->id.sort") is-invalid @enderror"
                     type="text"
                     name="aptitude_questions[{{ $aptitude_question->id }}][sort]"
@@ -42,14 +40,14 @@
             </td>
             @foreach ($aptitude_question->scores->sortBy('office.sort') as $score)
                 <td>
+                    <input type="hidden" name="aptitude_questions[{{ $aptitude_question->id }}][score][{{ $score->office_id }}][id]" value="{{ $score->id }}">
                     <input
-                        id="scores[{{ $aptitude_question->id }}][score_{{ $offices[$i]->en_office_name }}]"
-                        class="form-control @error("scores.$aptitude_question->id.scores.$i") is-invalid @enderror"
+                        class="form-control @error("aptitude_questions.$aptitude_question->id.score.$score->office_id.score") is-invalid @enderror"
                         type="text"
-                        name="scores[{{ $score->id }}][scores]"
-                        value="{{ old("scores.$aptitude_question->id.scores.$i", $score->score ?? '') }}"
+                        name="aptitude_questions[{{ $aptitude_question->id }}][score][{{ $score->office_id }}][score]"
+                        value="{{ old("aptitude_questions.$aptitude_question->id.score.$score->office_id.score", $score->score ?? '') }}"
                     >
-                    @error("aptitude_questions.$aptitude_question->id.scores.$i")
+                    @error("aptitude_questions.$aptitude_question->id.score.$score->office_id.score")
                         <span class="invalid-feedback" role="alert">
                             <strong>{{ $message }}</strong>
                         </span>

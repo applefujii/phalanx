@@ -11,6 +11,9 @@
 @section('content')
 <div class="container">
     <h3>適性診断質問管理 @yield('page_title')</h3>
+    <div class="mb-4">
+        <span>※点数に『F』を指定すると、回答が『はい』の場合、合計点数に関わらず、その事業所に確定されます。</span>
+    </div>
     @if ($errors->any())
     <div class="alert alert-danger w-100">
         <span>入力に誤りがあります。</span>

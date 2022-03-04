@@ -14,7 +14,7 @@
 <tr class="@error("questions.$aptitude_question->id") table-danger @enderror">
     <td>{{ $aptitude_question->question }}</td>
     <td>{{ $aptitude_question->sort }}</td>
-    @foreach ($aptitude_question->scores as $score)
+    @foreach ($aptitude_question->scores->sortBy('office.sort') as $score)
         <td>{{ $score->score }}</td>
     @endforeach
     <td>
