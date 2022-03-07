@@ -34,6 +34,6 @@ class AptitudeQuestion extends Model
      * 点数
      */
     public function scores() {
-        return $this->hasMany(Score::class);
+        return $this->hasMany(Score::class)->whereNull('deleted_at');
     }
 }

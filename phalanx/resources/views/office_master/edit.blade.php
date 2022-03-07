@@ -56,7 +56,7 @@
                     @endif
                 </div>
                 <div class="col-md-2">
-                    <label for="priority" class="form-element">適性診断結果画面の優先順位</label>
+                    <label for="priority" class="form-element">適性診断の優先順位</label>
                     <input type="number" id="priority" class="w-100 form-control form-element" name="priority" value="{{old('priority',$office->priority) }}">
                     @if ($errors->has("priority"))
                         <ul class="pl-0" style="list-style: none">

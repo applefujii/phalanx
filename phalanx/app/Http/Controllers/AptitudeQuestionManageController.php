@@ -31,7 +31,11 @@ class AptitudeQuestionManageController extends Controller
      */
     public function index()
     {
-        $aptitude_questions = AptitudeQuestion::with('scores.office')->whereNull('deleted_at')->orderBy('sort')->get();
+        $aptitude_questions = AptitudeQuestion::
+            with('scores.office')
+            ->whereNull('deleted_at')
+            ->orderBy('sort')
+            ->get();
         $offices = Office::select("office_name")->whereNull('deleted_at')->orderBy('sort')->get();
         return view('aptitude_question_manage/index', compact('aptitude_questions', 'offices'));
     }
@@ -60,6 +64,7 @@ class AptitudeQuestionManageController extends Controller
         $aptitude_question->question = $request->input('question');
         $aptitude_question->sort = $request->input('sort');
         $aptitude_question->update_user_id = Auth::user()->id;
+        $aptitude_question->created_at = $now->isoFormat('YYYY-MM-DD HH:mm:ss');
         $aptitude_question->updated_at = $now->isoFormat('YYYY-MM-DD HH:mm:ss');
         $aptitude_question->save();
 
@@ -69,6 +74,7 @@ class AptitudeQuestionManageController extends Controller
             $score->office_id = $input_value_score['office_id'];
             $score->score = $input_value_score['score'];
             $score->update_user_id = Auth::user()->id;
+            $score->created_at = $now->isoFormat('YYYY-MM-DD HH:mm:ss');
             $score->updated_at = $now->isoFormat('YYYY-MM-DD HH:mm:ss');
             $score->save();
         }

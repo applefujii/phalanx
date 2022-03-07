@@ -44,8 +44,9 @@ class AptitudeQuestionFormController extends Controller
         $office_score = 0;
 
         foreach ($offices as $office) {
+            // data_set($total_scores, $office->id . '.en_office_name', $office->en_office_name);
             data_set($total_scores, $office->id . '.office_id', $office->id);
-            data_set($total_scores, $office->id . '.en_office_name', $office->en_office_name);
+            data_set($total_scores, $office->id . '.score', 0);
             foreach($aptitude_questions as $aptitude_question) {
                 $office_score = data_get($total_scores, $office->id . '.score', 0);
                 $score = Score::whereNull('deleted_at')->where('office_id', $office->id)->where('aptitude_question_id', $aptitude_question->id)->first()->score ?? 0;
@@ -70,7 +71,7 @@ class AptitudeQuestionFormController extends Controller
         if ($fixed_id) {
             return redirect()->route('aptitude_question_form.result', $fixed_id);
         }
-
+        // どれが一番高い点数か比較
         foreach($total_scores as $total_score) {
             if ($total_score['score'] > $max_score) {
                 $max_score = $total_score['score'];

@@ -12,6 +12,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Office;
 use App\Models\ChatRoom;
 use App\Models\User;
+use App\Models\Score;
 use App\Models\AptitudeQuestion;
 use Illuminate\Validation\Rule;
 use Illuminate\Support\Facades\Auth;
@@ -103,6 +104,18 @@ class OfficeController extends Controller
                     "target_users" => $user->id
                 ]));
             }
+
+            $aptitude_questions = AptitudeQuestion::whereNull("deleted_at")->get();
+            foreach($aptitude_questions as $aptitude_question) {
+                $score = new Score;
+                $score->score = 0;
+                $score->aptitude_question_id = $aptitude_question->id;
+                $score->office_id = $office->id;
+                $score->update_user_id = Auth::user()->id;
+                $score->created_at = $now;
+                $score->updated_at = $now;
+                $score->save();
+            }
         });
 
         if(isset($office)) return $office->id;
@@ -186,6 +199,14 @@ class OfficeController extends Controller
                 "delete_user_id" => Auth::id(),
                 "deleted_at" => $now
             ]);
+
+            $scores = Score::whereNull("deleted_at")->where("office_id", $id)->get();
+            foreach ($scores as $score) {
+                $score->update_user_id = Auth::user()->id;
+                $score->delete_user_id = Auth::user()->id;
+                $score->deleted_at = $now;
+                $score->save();
+            }
         });
 
         return redirect()->route("office.index");
