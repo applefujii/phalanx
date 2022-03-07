@@ -43,63 +43,35 @@ class AptitudeQuestionManageController extends Controller
      */
     public function create()
     {
-        $offices = Office::select("office_name")->whereNull('deleted_at')->orderBy('id')->get();
+        $offices = Office::whereNull('deleted_at')->orderBy('id')->get();
         return view('aptitude_question_manage/create', compact('offices'));
     }
 
     /**
      * 新規登録画面の内容をDBに保存
      *
-     * @param  \App\Http\Requests\AptitudeQuestionManageRequest  $request
+     * @param  AptitudeQuestionManageRequest  $request
      * @return \Illuminate\Http\Response
      */
     public function store(AptitudeQuestionManageRequest $request)
     {
         $now = Carbon::now();
-        $scores = implode(",", $request->scores);
-        $aptitude_question = new AptitudeQuestion();
+        $aptitude_question = new AptitudeQuestion;
         $aptitude_question->question = $request->input('question');
         $aptitude_question->sort = $request->input('sort');
-        $aptitude_question->scores = $scores;
-        $aptitude_question->create_user_id = Auth::user()->id;
-        $aptitude_question->update_user_id = Auth::user()->id;
-        $aptitude_question->created_at = $now->isoFormat('YYYY-MM-DD HH:mm:ss');
-        $aptitude_question->updated_at = $now->isoFormat('YYYY-MM-DD HH:mm:ss');
-        $aptitude_question->save();
-
-        return redirect()->route('aptitude_question_manage.index');
-    }
-
-    /**
-     * 編集画面
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function edit($id)
-    {
-        $aptitude_question = AptitudeQuestion::whereNull('deleted_at')->findOrFail($id);
-        $offices = Office::select("office_name", "en_office_name")->whereNull('deleted_at')->orderBy('id')->get();
-        return view('aptitude_question_manage/edit', compact('aptitude_question', 'offices'));
-    }
-
-    /**
-     * 編集画面の内容をDBに保存
-     *
-     * @param  \App\Http\Requests\AptitudeQuestionManageRequest  $request
-     * @return \Illuminate\Http\Response
-     */
-    public function update(AptitudeQuestionManageRequest $request, $id)
-    {
-        $now = Carbon::now();
-        $aptitude_question = AptitudeQuestion::findOrFail($id);
-        $scores = implode(",", $request->scores);
-
-        $aptitude_question->question = $request->input('question');
-        $aptitude_question->sort = $request->input('sort');
-        $aptitude_question->scores = $scores;
         $aptitude_question->update_user_id = Auth::user()->id;
         $aptitude_question->updated_at = $now->isoFormat('YYYY-MM-DD HH:mm:ss');
         $aptitude_question->save();
+
+        foreach ($request->input('scores') as $input_value_score) {
+            $score = new Score;
+            $score->aptitude_question_id = $aptitude_question->id;
+            $score->office_id = $input_value_score['office_id'];
+            $score->score = $input_value_score['score'];
+            $score->update_user_id = Auth::user()->id;
+            $score->updated_at = $now->isoFormat('YYYY-MM-DD HH:mm:ss');
+            $score->save();
+        }
 
         return redirect()->route('aptitude_question_manage.index');
     }
@@ -156,13 +128,20 @@ class AptitudeQuestionManageController extends Controller
     public function destroy($id)
     {
         $now = Carbon::now();
-
         $aptitude_question = AptitudeQuestion::findOrFail($id);
 
         $aptitude_question->update_user_id = Auth::user()->id;
         $aptitude_question->delete_user_id = Auth::user()->id;
         $aptitude_question->deleted_at = $now->isoFormat('YYYY-MM-DD HH:mm:ss');
         $aptitude_question->save();
+
+        foreach ($aptitude_question->scores as $delete_score) {
+            $score = Score::findOrFail($delete_score->id);
+            $score->update_user_id = Auth::user()->id;
+            $score->delete_user_id = Auth::user()->id;
+            $score->deleted_at = $now->isoFormat('YYYY-MM-DD HH:mm:ss');
+            $score->save();
+        }
         return redirect()->route('aptitude_question_manage.index');
     }
 }

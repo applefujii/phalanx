@@ -18,12 +18,8 @@
         <td>{{ $score->score }}</td>
     @endforeach
     <td>
-        <div class="table-body-action row">
-            <div class="col-12 col-md-6 px-0 py-1">
-                <a class="btn btn-sm btn-primary" role="button edit-button"
-                    href="{{ route('aptitude_question_manage.edit', $aptitude_question->id) }}">編集</a>
-            </div>
-            <form class="delete-form col-12 col-md-6 px-0 py-1"
+        <div class="table-body-action">
+            <form class="delete-form"
                 action="{{ route('aptitude_question_manage.destroy', $aptitude_question->id) }}"
                 method="post">
                 @method('DELETE')

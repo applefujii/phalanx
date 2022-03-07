@@ -45,7 +45,7 @@ Route::get('/aptitude_question_form/{max_office_id}/result', [App\Http\Controlle
 // 適性診断 質問管理
 Route::get('/aptitude_question_manage/edit_all', [App\Http\Controllers\AptitudeQuestionManageController::class, 'edit_all'])->name('aptitude_question_manage.edit_all');
 Route::patch('/aptitude_question_manage/edit_all', [App\Http\Controllers\AptitudeQuestionManageController::class, 'update_all'])->name('aptitude_question_manage.update_all');
-Route::resource('/aptitude_question_manage', App\Http\Controllers\AptitudeQuestionManageController::class)->only(['index','edit','update','create','store','destroy']);
+Route::resource('/aptitude_question_manage', App\Http\Controllers\AptitudeQuestionManageController::class)->only(['index','create','store','destroy']);
 
 // ユーザーマスター
 Route::resource('user', App\Http\Controllers\UserController::class)->only(['index', 'create', 'store', 'edit', 'update', 'destroy']);

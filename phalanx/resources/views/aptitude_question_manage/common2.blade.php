@@ -46,15 +46,16 @@
                 </div>
 
                 <div class="row justify-content-start mx-auto my-4">
-                    @foreach ($aptitude_question->scores->sortBy('office.sort') as $score)
+                    @foreach ($offices as $office)
                         <div class="mx-4 col-md-3">
-                            <label for="score_{{ $office->en_office_name }}">{{ $office->office_name }}の点数</label>
-                            <input type="hidden" name="scores[{{ $office->id }}][id]" value="{{ $score->id }}">
+                            <label for="scores.{{ $office->id }}.score">{{ $office->office_name }}の点数</label>
+                            <input type="hidden" name="scores[{{ $office->id }}][office_id]" value="{{ $office->id }}">
                             <input
+                                id="scores.{{ $office->id }}.score"
                                 class="form-control @error("scores.$office->id.score") is-invalid @enderror"
                                 type="text"
                                 name="scores[{{ $office->id }}][score]"
-                                value="{{ old("scores.$office->id.score", $score->score ?? "") }}"
+                                value="{{ old("scores.$office->id.score", "") }}"
                             >
                             @error("scores.$office->id.score")
                                 <span class="invalid-feedback" role="alert">

@@ -163,6 +163,7 @@ return [
         'aptitude_questions.*.question' => '質問文',
         'aptitude_questions.*.sort' => '表示順',
         'aptitude_questions.*.score.*.score' => '点数',
+        'scores.*.score' => '点数',
 
         // 通知
         'start_at' => '開始日時',
