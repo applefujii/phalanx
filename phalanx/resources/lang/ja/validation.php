@@ -159,15 +159,11 @@ return [
         'answers' => '回答',
         'answers.*' => '回答',
         'question' => '質問文',
-        'aptitude_questions.*.question' => '質問文',
         'sort' => '表示順',
+        'aptitude_questions.*.question' => '質問文',
         'aptitude_questions.*.sort' => '表示順',
-        'score_apple' => '点数',
-        'aptitude_questions.*.score_apple' => '点数',
-        'score_mint' => '点数',
-        'aptitude_questions.*.score_mint' => '点数',
-        'score_maple' => '点数',
-        'aptitude_questions.*.score_maple' => '点数',
+        'aptitude_questions.*.score.*.score' => '点数',
+        'scores.*.score' => '点数',
 
         // 通知
         'start_at' => '開始日時',
@@ -186,6 +182,8 @@ return [
         // 事業所マスタ
         'office_name' => '事業所名',
         'en_office_name' => '英語事業所名',
+        'url' => '公式サイトのURL',
+        'priority' => '適性診断の優先順位',
 
         // チャットルーム管理
         'room_title' => 'ルーム名',

@@ -1,7 +1,7 @@
 <?php
 /**
  * 事業所マスタのマイグレーション
- * 
+ *
  * @author Fumio Mochizuki
  */
 
@@ -22,7 +22,9 @@ class CreateOfficesTable extends Migration
             $table->id();
             $table->string('office_name', 255);
             $table->string('en_office_name', 255);
+            $table->string('url', 255);
             $table->unsignedBigInteger('sort');
+            $table->unsignedBigInteger('priority');
             $table->unsignedBigInteger('create_user_id');
             $table->unsignedBigInteger('update_user_id');
             $table->unsignedBigInteger('delete_user_id')->nullable()->default(null);

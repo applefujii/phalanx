@@ -36,20 +36,10 @@ class AptitudeQuestionManageAllRequest extends FormRequest
                 'min:0',
                 'distinct'// 重複ダメ
             ],
-            "aptitude_questions.*.score_apple" => [
-                'nullable',
+            "aptitude_questions.*.score.*.score" => [
+                'required',
                 'regex:/(^[+-]?\d+$|^F{1}$)/u',// 整数かF
-                'max:6',
-            ],
-            "aptitude_questions.*.score_mint" => [
-                'nullable',
-                'regex:/(^[+-]?\d+$|^F{1}$)/u',// 整数かF
-                'max:6',
-            ],
-            "aptitude_questions.*.score_maple" => [
-                'nullable',
-                'regex:/(^[+-]?\d+$|^F{1}$)/u',// 整数かF
-                'max:6',
+                'max:7',
             ],
         ];
     }
@@ -62,9 +52,7 @@ class AptitudeQuestionManageAllRequest extends FormRequest
     public function messages()
     {
         return [
-            'aptitude_questions.*.score_apple.regex' => ':attributeは半角数字の整数かFを入力してください。',
-            'aptitude_questions.*.score_mint.regex' => ':attributeは半角数字の整数かFを入力してください。',
-            'aptitude_questions.*.score_maple.regex' => ':attributeは半角数字の整数かFを入力してください。',
+            'aptitude_questions.*.score.*.score.regex' => ':attributeは半角数字の整数かFを入力してください。',
         ];
     }
 }

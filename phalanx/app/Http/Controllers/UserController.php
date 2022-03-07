@@ -121,7 +121,7 @@ class UserController extends Controller
         $user->update_user_id = Auth::user()->id;
         $user->updated_at = $now->isoFormat('YYYY-MM-DD HH:mm:ss');
         $user->save();
-        if($request->input('user_type_id') == 1 && $request->input("office_id") != $request->input('office_id')) {
+        if($user->user_type_id == 1) {
             ChatRoom__User::where("user_id", $id)->whereHas("chat_room", function($c) {
                 $c->whereIn("distinction_number", [1, 3]);
             })->delete();
