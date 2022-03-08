@@ -13,9 +13,9 @@
 @foreach ($aptitude_questions as $q_count => $aptitude_question)
 <tr class="@error("questions.$aptitude_question->id") table-danger @enderror">
     <td>{{ $aptitude_question->question }}</td>
-    <td>{{ $aptitude_question->sort }}</td>
+    <td class="text-right">{{ $aptitude_question->sort }}</td>
     @foreach ($aptitude_question->scores->sortBy('office.sort') as $score)
-        <td>{{ $score->score }}</td>
+        <td class="text-right">{{ $score->score }}</td>
     @endforeach
     <td>
         <div class="table-body-action">
