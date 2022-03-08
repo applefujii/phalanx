@@ -1,7 +1,7 @@
 <?php
 /**
  * 事業所マスタのシーダー
- * 
+ *
  * @author Fumio Mochizuki
  */
 
@@ -23,7 +23,9 @@ class OfficesSeeder extends Seeder
             [
                 'office_name' => 'アップル梅田',
                 'en_office_name' => 'apple',
+                'url' => 'https://apple-osaka.com/',
                 'sort' => 10,
+                'priority' => 10,
                 'create_user_id' => 1,
                 'update_user_id' => 1,
                 'updated_at' => '2021-04-01 12:34:56',
@@ -32,7 +34,9 @@ class OfficesSeeder extends Seeder
             [
                 'office_name' => 'ミント大阪',
                 'en_office_name' => 'mint',
+                'url' => 'https://mint-osaka.jp/',
                 'sort' => 20,
+                'priority' => 20,
                 'create_user_id' => 1,
                 'update_user_id' => 1,
                 'updated_at' => '2021-04-01 12:34:56',
@@ -41,7 +45,9 @@ class OfficesSeeder extends Seeder
             [
                 'office_name' => 'メープル関西',
                 'en_office_name' => 'maple',
+                'url' => 'https://maple-osaka.jp/',
                 'sort' => 30,
+                'priority' => 30,
                 'create_user_id' => 1,
                 'update_user_id' => 1,
                 'updated_at' => '2021-04-01 12:34:56',

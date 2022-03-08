@@ -25,7 +25,7 @@ Auth::routes([
 ]);
 
 // 通知
-Route::resource('/notification', App\Http\Controllers\NotificationController::class);
+Route::resource('/notification', App\Http\Controllers\NotificationController::class)->only(['index', 'create', 'store', 'edit', 'update', 'destroy']);
 
 // 体験・見学申込管理
 Route::get('/trial_application_manage/{id}/check', [App\Http\Controllers\TrialApplicationManageController::class, 'check'])->name('trial_application_manage.check');
@@ -40,20 +40,18 @@ Route::get('/trial_application_form/finish', [App\Http\Controllers\TrialApplicat
 // 適性診断 フォーム
 Route::get('/aptitude_question_form', [App\Http\Controllers\AptitudeQuestionFormController::class, 'index'])->name('aptitude_question_form.index');
 Route::post('/aptitude_question_form', [App\Http\Controllers\AptitudeQuestionFormController::class, 'calculate'])->name('aptitude_question_form.calculate');
-Route::get('/aptitude_question_form_apple', [App\Http\Controllers\AptitudeQuestionFormController::class, 'apple'])->name('aptitude_question_form.apple');
-Route::get('/aptitude_question_form_mint', [App\Http\Controllers\AptitudeQuestionFormController::class, 'mint'])->name('aptitude_question_form.mint');
-Route::get('/aptitude_question_form_maple', [App\Http\Controllers\AptitudeQuestionFormController::class, 'maple'])->name('aptitude_question_form.maple');
+Route::get('/aptitude_question_form/{max_office_id}/result', [App\Http\Controllers\AptitudeQuestionFormController::class, 'result'])->name('aptitude_question_form.result');
 
 // 適性診断 質問管理
 Route::get('/aptitude_question_manage/edit_all', [App\Http\Controllers\AptitudeQuestionManageController::class, 'edit_all'])->name('aptitude_question_manage.edit_all');
 Route::patch('/aptitude_question_manage/edit_all', [App\Http\Controllers\AptitudeQuestionManageController::class, 'update_all'])->name('aptitude_question_manage.update_all');
-Route::resource('/aptitude_question_manage', App\Http\Controllers\AptitudeQuestionManageController::class)->only(['index','edit','update','create','store','destroy']);
+Route::resource('/aptitude_question_manage', App\Http\Controllers\AptitudeQuestionManageController::class)->only(['index','create','store','destroy']);
 
 // ユーザーマスター
 Route::resource('user', App\Http\Controllers\UserController::class)->only(['index', 'create', 'store', 'edit', 'update', 'destroy']);
 
 // 事業所マスター
-Route::resource('office', App\Http\Controllers\OfficeController::class)->only(['index', 'edit', 'update']);
+Route::resource('office', App\Http\Controllers\OfficeController::class)->only(['index', 'create', 'store', 'edit', 'update', 'destroy']);
 
 //ログイン後の画面
 Route::get("/user_page", [App\Http\Controllers\UserpageController::class, "index"])->name("user_page");

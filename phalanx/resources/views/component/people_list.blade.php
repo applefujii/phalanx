@@ -133,7 +133,7 @@
         $.ajax({
             type: "POST",
             url: "/api/v1.0/get/offices.json",
-            data: {},
+            data: {sort : 'sort'},
             dataType : "json",
             scriptCharset: 'utf-8'
         })
@@ -498,7 +498,7 @@
                 st += '<span style="background-color: #88FFFF;">【'+aOffice[aOffice.length-1].office_name+'】</span>/ ';
                 return;
             }
-            st += '<span style="background-color: #88FFFF;">【'+aOffice[element-1].office_name+'】</span>/ ';
+            st += '<span style="background-color: #88FFFF;">【'+aOffice.find(el => el.id==element).office_name+'】</span>/ ';
         });
         $.each(names, (index, element) => {
             st += element+'/ ';
