@@ -1,11 +1,11 @@
 @extends('layouts.app')
-@section('title', '事業所マスター　新規登録')
+@section('title', '事業所マスタ　新規登録')
 @section('css')
 <link href="{{ asset('css/user-master/create_and_edit.css') }}" rel="stylesheet">
 @endsection
 @section('content')
 <div class="container">
-    <h3>事業所マスター　新規登録</h3>
+    <h3>事業所マスタ　新規登録</h3>
     <form method="POST" action="{{ route('office.store') }}">
         @csrf
         <div class="form-group">
@@ -32,6 +32,17 @@
                         </ul>
                     @enderror
                 </div>
+                <div class="col-md-5">
+                    <label for="url" class="form-element">公式サイトのURL</label>
+                    <input type="text" id="url" name="url" class="w-100 form-control form-element" value="{{ old('url') }}">
+                    @error("url")
+                        <ul class="pl-0" style="list-style: none">
+                            @foreach ($errors->get("url") as $error)
+                                <li class="text-danger">{{ $error }}</li>
+                            @endforeach
+                        </ul>
+                    @enderror
+                </div>
                 <div class="col-md-2">
                     <label for="sort" class="form-element">表示順</label>
                     <input type="number" id="sort" name="sort" class="w-100 form-control form-element" value="{{ old('sort') }}">
@@ -43,10 +54,21 @@
                         </ul>
                     @endif
                 </div>
+                <div class="col-md-2">
+                    <label for="priority" class="form-element">適性診断の優先順位</label>
+                    <input type="number" id="priority" name="priority" class="w-100 form-control form-element" value="{{ old('priority') }}">
+                    @if ($errors->has("sort"))
+                        <ul class="pl-0" style="list-style: none">
+                            @foreach ($errors->get("priority") as $error)
+                                <li class="text-danger">{{ $error }}</li>
+                            @endforeach
+                        </ul>
+                    @endif
+                </div>
             </div>
         </div>
         <input type="submit" class="btn btn-primary" value="登録">
-        <a href="{{ route('office.index') }}" class="btn btn-secondary back-button">戻る</a>
+        <a href="{{ route('office.index') }}" class="btn btn-secondary back-button">キャンセル</a>
     </form>
 </div>
 

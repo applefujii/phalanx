@@ -10,20 +10,21 @@
 <div class="container">
     <div class="d-flex justify-content-center">
         <div class="main_contents">
-            <h1 class="text-center m-4">サイト説明（仮）</h1>
+            <h3 class="text-center m-4">こちらは、株式会社リテラル福祉事業部が運営する<br/>就労福祉サービス事業所とのコミュニケーションツールとなります。</h3>
+            <h3 class="text-center m-4">ご興味のある方は、下記の適性診断よりご自身に合った事業所をご確認ください。</h3>
             <div class="row mb-4">
                 <div class="col-md-4 mb-4">
-                    <a class="d-flex justify-content-center" href="https://apple-osaka.com/">
+                    <a class="d-flex justify-content-center" href="https://apple-osaka.com/" target="_blank" rel="noopener noreferrer">
                         <img src="{{ asset('css/images/apple.png') }}" alt="アップル梅田" class="logo">
                     </a>
                 </div>
                 <div class="col-md-4 mb-4">
-                    <a class="d-flex justify-content-center" href="https://mint-osaka.jp/">
+                    <a class="d-flex justify-content-center" href="https://mint-osaka.jp/" target="_blank" rel="noopener noreferrer">
                         <img src="{{ asset('css/images/mint.png') }}" alt="ミント大阪" class="logo">
                     </a>
                 </div>
                 <div class="col-md-4 mb-4">
-                    <a class="d-flex justify-content-center" href="https://maple-osaka.jp/">
+                    <a class="d-flex justify-content-center" href="https://maple-osaka.jp/" target="_blank" rel="noopener noreferrer">
                         <img src="{{ asset('css/images/maple.png') }}" alt="メープル関西" class="logo">
                     </a>
                 </div>

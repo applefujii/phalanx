@@ -18,8 +18,19 @@ class NotificationRequest extends FormRequest
 
     protected function prepareForValidation()
     {
-        $target_users = explode(',', $this->target_users);
-        $old_target_users = explode(',', $this->old_target_users);
+        $target_users = [];
+        $old_target_users = [];
+        $target_offices = [];
+        $old_target_offices = [];
+
+        if( $this->target_users != null )
+            $target_users = explode(',', $this->target_users);
+        if( $this->old_target_users != null )
+            $old_target_users = explode(',', $this->old_target_users);
+        if( $this->target_offices != null )
+            $target_offices = explode(',', $this->target_offices);
+        if( $this->old_target_offices != null )
+            $old_target_offices = explode(',', $this->old_target_offices);
         $start_at = $this->start_date;
         $end_at = $this->end_date;
         if( $this->is_all_day == "0" ) {
@@ -33,9 +44,12 @@ class NotificationRequest extends FormRequest
         $this->merge([
             'target_users' => $target_users,
             'old_target_users' => $old_target_users,
+            'target_offices' => $target_offices,
+            'old_target_offices' => $old_target_offices,
             'start_at' => $start_at,
             'end_at' => $end_at,
         ]);
+        logger($this);
     }
 
     /**
@@ -48,10 +62,12 @@ class NotificationRequest extends FormRequest
         return [
             "content" => "required|max:500",
             "start_at" => "required|date_format:Y-m-d H:i:s",
-            "end_at" => "required|date_format:Y-m-d H:i:s|after:now|after:start_at",
+            "end_at" => "required|date_format:Y-m-d H:i:s|after:now|after_or_equal:start_at",
             "is_all_day" => "required|boolean",
-            "target_users" => "required|array|distinct",
-            "target_users.*" => "required|integer"
+            "target_users" => "array|distinct",
+            "target_users.*" => "integer",
+            "target_offices" => "array|distinct",
+            "target_offices.*" => "integer"
         ];
     }
 

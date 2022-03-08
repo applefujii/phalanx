@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\user;
+use App\Models\User;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Office;
@@ -88,11 +88,12 @@ class UserController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  \App\Models\user  $user
+     * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit(user $user)
+    public function edit($id)
     {
+        $user = User::findOrFail($id);
         $offices = Office::whereNull("deleted_at")->orderBy('sort', 'asc')->get();
         $user_types = UserType::orderBy('id', 'asc')->get();
         return view("user_master.edit", compact('user', 'offices', 'user_types'));
@@ -102,15 +103,26 @@ class UserController extends Controller
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Models\user  $user
+     * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(EditUserRequest $request, user $user)
+    public function update(EditUserRequest $request, $id)
     {
-        $validated = $request->validated();
         $now = Carbon::now();
-        if($user->user_type_id == 1 && $request->input("office_id") != $user->office_id) {
-            ChatRoom__User::where("user_id", $user->id)->whereHas("chat_room", function($c) {
+        $user = User::findOrFail($id);
+        // $user->user_type_id = $request->input('user_type_id');
+        $user->office_id = $request->input('office_id');
+        $user->name = $request->input('name');
+        $user->name_katakana = $request->input('name_katakana');
+        $user->login_name = $request->input('login_name');
+        if ($request->input('password')) {
+            $user->password = Hash::make($request->input('password'));
+        }
+        $user->update_user_id = Auth::user()->id;
+        $user->updated_at = $now->isoFormat('YYYY-MM-DD HH:mm:ss');
+        $user->save();
+        if($user->user_type_id == 1) {
+            ChatRoom__User::where("user_id", $id)->whereHas("chat_room", function($c) {
                 $c->whereIn("distinction_number", [1, 3]);
             })->delete();
             $chatRooms = ChatRoom::whereNull("deleted_at")->whereIn("distinction_number", [1, 3])->where("office_id", $request->input("office_id"))->get();
@@ -119,9 +131,9 @@ class UserController extends Controller
                 foreach($chatRooms as $chatRoom) {
                     array_push($aItem, [
                         "chat_room_id" => $chatRoom->id,
-                        "user_id" => $user->id,
-                        "create_user_id" => $user->id,
-                        "update_user_id" => $user->id,
+                        "user_id" => $id,
+                        "create_user_id" => Auth::user()->id,
+                        "update_user_id" => Auth::user()->id,
                         "created_at" => $now->isoFormat("YYYY-MM-DD HH:mm:ss"),
                         "updated_at" => $now->isoFormat("YYYY-MM-DD HH:mm:ss")
                     ]);
@@ -132,11 +144,8 @@ class UserController extends Controller
                 }
             }
         }
-        $user->fill(array_merge($validated, ['password' => Hash::make($request->password)]));
-        $user->fill(['update_user_id' => Auth::id(), 'updated_at' => $now->isoFormat('YYYY-MM-DD HH:mm:ss')]);
-        $user->save();
-        ChatRoom::whereNull("deleted_at")->where("user_id", $user->id)->update([
-            "room_title" => $user->name
+        ChatRoom::whereNull("deleted_at")->where("user_id", $id)->update([
+            "room_title" => $request->input('name')
         ]);
         return redirect()->route('user.index');
     }
@@ -144,11 +153,12 @@ class UserController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\Models\user  $user
+     * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy(user $user)
+    public function destroy($id)
     {
+        $user = User::findOrFail($id);
         if ($user->id == Auth::id()) {
             abort(403);
         }

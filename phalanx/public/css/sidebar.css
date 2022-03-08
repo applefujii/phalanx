@@ -51,7 +51,26 @@ main ul {
     overflow-y: auto;
 }
 
-.sub-offices {
+.side-scroll {
+    position: sticky;
+    top: 0;
+    overflow-x: hidden;
+    overflow-y: auto;
+    height: 100vh;
+}
+
+@media (min-width: 768px) {
+    .side-scroll {
+        height: calc(100vh - 57.05px) !important;
+    }
+}
+
+.btn_div {
+    margin-left: -1rem;
+    margin-right: -1rem;
+}
+
+.open_sub {
     border-left: 0px;
     border-right: 0px;
     border-radius: 0px;

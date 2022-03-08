@@ -14,7 +14,7 @@ class Notification__Office extends Model
      * 
      * @var string
      */
-    protected $table = "chat_room__office";
+    protected $table = "notification__office";
 
     /**
      * タイムスタンプを更新するかどうかの指示

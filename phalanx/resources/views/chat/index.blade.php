@@ -8,15 +8,15 @@
 <div class="scroll-contents" id="center-scroll">
     <div class="container-fluid pt-3 mb-5">
         <h3>通所者一覧</h3>
-        <div class="d-flex flex-column text-center">
-            @foreach ($offices as $office)
-                <div class="d-flex flex-column">
+        <div class="d-flex flex-column">
+            @foreach ($offices as $office_index => $office)
+                <div class="d-flex flex-column @if($office->id == Auth::user()->office_id) order-0 @else order-{{ $office_index+1 }} @endif">
                     <div class="my-2 position-relative">
                         <hr color="black" width="100%">
                         <p class="d-flex align-items-center collapse-open">
                             <input type="checkbox" class="mx-2 {{ $office->en_office_name }}-allCheck">
                             <button type="button" class="btn btn-link offices-open" data-toggle="collapse" data-target="#{{ $office->en_office_name }}Collapse" aria-expanded="@if ($office->id == Auth::user()->office_id)true @else false @endif">
-                                <i class="fas @if ($office->id == Auth::user()->office_id)fa-chevron-up @else fa-chevron-down @endif"></i>{{ $office->office_name }}
+                                {{ $office->office_name }}<i class="fas @if ($office->id == Auth::user()->office_id)fa-chevron-up @else fa-chevron-down @endif"></i>
                             </button>
                         </p>
                     </div>
@@ -28,7 +28,7 @@
                             @if (optional($join_chat_room->user)->user_type_id == 2 && $join_chat_room->user->office_id == $office->id)
                                 <div class="col-6 col-md-4 col-xl-3 my-1 d-flex align-items-center">
                                     <input type="checkbox" class="mr-1 {{ $office->en_office_name }}-checkBox" name="user" value="{{ $join_chat_room->id }}">
-                                    <a class="chat_room_{{ $join_chat_room->id }}" href="{{ route('chat.show', $join_chat_room->id) }}">
+                                    <a class="chat_room_{{ $join_chat_room->id }} chat-room-link" href="{{ route('chat.show', $join_chat_room->id) }}">
                                         <span class="new d-none">●</span>{{ $join_chat_room->room_title }}
                                     </a>
                                 </div>
@@ -37,29 +37,32 @@
                     </div>
                 </div>
             @endforeach
-            <div class="d-flex flex-column">
+            <div class="d-flex flex-column order-12">
                 <div class="my-2 position-relative">
                     <hr color="black" width="100%">
                     <p class="d-flex align-items-center collapse-open">
                         <input type="checkbox" class="mx-2 trial-allCheck">
                         <button type="button" class="btn btn-link offices-open" data-toggle="collapse" data-target="#trialsCollapse" aria-expanded="false">
-                            <i class="fas fa-chevron-down"></i>体験
+                            体験<i class="fas fa-chevron-down"></i>
                         </button>
                     </p>
                 </div>
                 <div class="collapse text-left row" id="trialsCollapse">
                     @foreach (
-                            $join_chat_rooms->where("office_id", Auth::user()->office_id)->whereNotNull("user_id")->sortBy('user.name_katakana')
-                                 as $join_chat_room
+                            $join_chat_rooms->where("office_id", Auth::user()->office_id)->whereNotNull("user_id")->where("user.user_type_id", 3)
+                                ->sort(function($first, $second) {
+                                    if($first->user->office->sort == $second->user->office->sort) {
+                                        return $first->user->name_katakana > $second->user->name_katakana ? 1 : -1;
+                                    }
+                                    return $first->user->office->sort > $second->user->office->sort ? 1 : -1;
+                                }) as $join_chat_room
                         )
-                        @if (optional($join_chat_room->user)->user_type_id == 3)
-                            <div class="col-6 col-md-4 col-xl-3 my-1 d-flex align-items-center">
-                                <input type="checkbox" class="mr-1 trial-checkBox" name="user" value="{{ $join_chat_room->id }}">
-                                <a class="chat_room_{{ $join_chat_room->id }}" href="{{ route('chat.show', $join_chat_room->id) }}">
-                                    <span class="new d-none">●</span>{{ $join_chat_room->room_title }}
-                                </a>
-                            </div>
-                        @endif
+                        <div class="col-6 col-md-4 col-xl-3 my-1 d-flex align-items-center">
+                            <input type="checkbox" class="mr-1 trial-checkBox" name="user" value="{{ $join_chat_room->id }}">
+                            <a class="chat_room_{{ $join_chat_room->id }} chat-room-link" href="{{ route('chat.show', $join_chat_room->id) }}">
+                                <span class="new d-none">●</span>{{ $join_chat_room->room_title }}
+                            </a>
+                        </div>
                     @endforeach
                 </div>
             </div>
@@ -106,13 +109,8 @@
         //.offices-openが押された時の動作
         $(".offices-open").click(function() {
             let fas = $(this).find(".fas");
-            if( fas.hasClass("fa-chevron-down") ) {
-                fas.removeClass("fa-chevron-down");
-                fas.addClass("fa-chevron-up");
-            } else {
-                fas.removeClass("fa-chevron-up");
-                fas.addClass("fa-chevron-down");
-            }
+            fas.toggleClass("fa-chevron-down");
+            fas.toggleClass("fa-chevron-up");
         });
 
         //一斉送信ボタンが押されたとき

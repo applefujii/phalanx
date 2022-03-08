@@ -32,7 +32,7 @@ class UserpageController extends Controller
     {
         //-- 古い通知を消す
         $dt = new \DateTime( "now" );
-        Notification::whereRaw( "end_at <= DATE_SUB( CURDATE(),INTERVAL 1 DAY )" )->update([
+        Notification::whereDate("end_at", "<", $dt->format('Y-m-d'))->update([
             'deleted_at' => $dt->format('Y-m-d H:i:s')
         ]);
         
@@ -40,10 +40,22 @@ class UserpageController extends Controller
         $trial_applications = TrialApplication::whereNull('deleted_at')->where('office_id', Auth::user()->office_id)->where('is_checked', false)->get();
         $new_trial_applications = $trial_applications->isNotEmpty();
 
+        // チャットに未読があるかチェック
+        $con = app()->make("App\Http\Controllers\ChatController");
+        $exist_unread = $con->ExistUnread(new Request());
+
         // 通知の獲得
-        $notifications = Notification::whereNull('deleted_at')->whereHas('notification__user', function($n__u) {
+        $notifications = Notification::whereHas('notification__user', function($n__u) {
             $n__u->where('user_id', '=', Auth::id());
-        })->orderBy('start_at', 'asc')->orderBy('end_at', 'asc')->get();
+        })->orWhere(function($query) {
+            $query->whereHas('notification__office', function($n__o) {
+                    if( Auth::user()->user_type_id == 3 ) {
+                    $n__o->where('office_id', '=', 0);
+                } else {
+                    $n__o->where('office_id', '=', Auth::user()->office_id);
+                }
+            });
+        })->whereNull('deleted_at')->orderBy('start_at', 'asc')->orderBy('end_at', 'asc')->get();
         $unsorted_notifications_groups = $notifications->mapToGroups(function ($notification, $key) {
             $start_at = new Carbon($notification->start_at);
             $end_at = new Carbon($notification->end_at);
@@ -69,6 +81,6 @@ class UserpageController extends Controller
                 return PHP_INT_MAX;
             }
         });
-        return view("user_page", compact('new_trial_applications', 'notifications_groups'));
+        return view("user_page2", compact('new_trial_applications', 'notifications_groups', 'exist_unread'));
     }
 }

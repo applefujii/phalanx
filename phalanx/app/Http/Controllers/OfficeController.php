@@ -12,6 +12,8 @@ use App\Http\Controllers\Controller;
 use App\Models\Office;
 use App\Models\ChatRoom;
 use App\Models\User;
+use App\Models\Score;
+use App\Models\AptitudeQuestion;
 use Illuminate\Validation\Rule;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -64,7 +66,7 @@ class OfficeController extends Controller
 
     /**
      * 新規データ作成の実行部分
-     * 
+     *
      * @param Request $request
      * @return int $id
      */
@@ -76,7 +78,9 @@ class OfficeController extends Controller
             $office = Office::create([
                 "office_name" => $request->input("office_name"),
                 "en_office_name" => $request->input("en_office_name"),
+                "url" => $request->input("url"),
                 "sort" => $request->input("sort"),
+                "priority" => $request->input("priority"),
                 "create_user_id" => Auth::id(),
                 "update_user_id" => Auth::id(),
                 "created_at" => $now,
@@ -100,6 +104,18 @@ class OfficeController extends Controller
                     "target_users" => $user->id
                 ]));
             }
+
+            $aptitude_questions = AptitudeQuestion::whereNull("deleted_at")->get();
+            foreach($aptitude_questions as $aptitude_question) {
+                $score = new Score;
+                $score->score = 0;
+                $score->aptitude_question_id = $aptitude_question->id;
+                $score->office_id = $office->id;
+                $score->update_user_id = Auth::user()->id;
+                $score->created_at = $now;
+                $score->updated_at = $now;
+                $score->save();
+            }
         });
 
         if(isset($office)) return $office->id;
@@ -118,14 +134,6 @@ class OfficeController extends Controller
     }
 
     /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-
-    /**
      * データ編集の受け取り部分
      */
     public function update(OfficeRequest $request, $id)
@@ -137,7 +145,7 @@ class OfficeController extends Controller
 
     /**
      * データ更新の実行部分
-     * 
+     *
      * @param Request $request, int $id
      * @return int $id
      */
@@ -146,12 +154,14 @@ class OfficeController extends Controller
         $office = null;
         DB::transaction(function () use(&$office, $request, $id) {
             $now = Carbon::now()->isoFormat('YYYY-MM-DD HH:mm:ss');
-            $office = Office::whereNull("deleted_at")->where("id", $id)->first();
+            $office = Office::whereNull("deleted_at")->findOrFail($id);
 
             $office->update([
                 "office_name" => $request->input("office_name"),
                 "en_office_name" => $request->input("en_office_name"),
+                "url" => $request->input("url"),
                 "sort" => $request->input("sort"),
+                "priority" => $request->input("priority"),
                 "update_user_id" => Auth::id(),
                 "updated_at" => $now
             ]);
@@ -189,6 +199,14 @@ class OfficeController extends Controller
                 "delete_user_id" => Auth::id(),
                 "deleted_at" => $now
             ]);
+
+            $scores = Score::whereNull("deleted_at")->where("office_id", $id)->get();
+            foreach ($scores as $score) {
+                $score->update_user_id = Auth::user()->id;
+                $score->delete_user_id = Auth::user()->id;
+                $score->deleted_at = $now;
+                $score->save();
+            }
         });
 
         return redirect()->route("office.index");

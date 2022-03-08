@@ -14,3 +14,10 @@
 .btn {
     min-width: 100px;
 }
+
+.explanation {
+    margin: 0.8rem 1rem 0.2rem 1rem;
+    padding: 1.2rem 1.2rem 0.1rem 1.2rem;
+    background-color: #CCCCEE88;
+    border-radius: 0.6rem;
+}

@@ -5,6 +5,13 @@
   height: 40px;
 }
 
+#room_name {
+  width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
 #chat_main {
   position: fixed;
   top: 95px;
@@ -67,6 +74,9 @@
 #to_bottom_button:hover {
   opacity: 1;
 }
+#to_bottom_button svg {
+  transform: rotate(90deg);
+}
 
 #chat_footer {
   background-color: white;
@@ -79,4 +89,10 @@
   resize: none;
   height: 37.05px;
   line-height: 23.04px;
+  -ms-overflow-style: none;
+  scrollbar-width: none; 
 }/*# sourceMappingURL=chat.css.map */
+
+#chat_text::-webkit-scrollbar {
+  display:none;
+}

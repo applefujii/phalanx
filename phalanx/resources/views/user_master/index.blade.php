@@ -1,23 +1,23 @@
 @extends('layouts.app')
 
-@section('title', 'ユーザーマスター　一覧')
+@section('title', 'ユーザーマスタ　一覧')
 @section('css')
     <link href="{{ asset('css/index-table.css') }}" rel="stylesheet">
     <link href="{{ asset('css/user-master/index.css') }}" rel="stylesheet">
 @endsection
 @section('content')
     <div class="container">
-        <h3>ユーザーマスター　一覧</h3>
+        <h3>ユーザーマスタ　一覧</h3>
         <form method="get" action="{{ route('user.index') }}">
             <div class="form-group">
                 <div class="row justify-content-start mx-auto my-2">
                     <label for="user_type" class="text-md-left label">ユーザー種別</label>
                     <select id="user_type" name="user_type" class="form-select">
                         <option value="" @if ($filter_user_type_id === '') selected @endif>条件なし</option>
-                        @foreach ($user_types as $user_type)
-                            <option value="{{ $user_type->id }}" @if ($filter_user_type_id == $user_type->id) selected @endif>{{ $user_type->alias }}
+                        @for ($i = 0; $i < count($user_types) - 1; $i ++)
+                            <option value="{{ $user_types[$i]->id }}" @if ($filter_user_type_id == $user_types[$i]->id) selected @endif>{{ $user_types[$i]->alias }}
                             </option>
-                        @endforeach
+                        @endfor
                     </select>
                     <div class="col2"></div>
                 </div>
@@ -34,20 +34,22 @@
                 </div>
             </div>
         </form>
-        <a href="{{ route('user.create') }}" type="button" class="btn btn-primary">新規作成</a>
+        <div class="mb-2">
+            <a href="{{ route('user.create') }}" type="button" class="btn btn-primary">新規作成</a>
+        </div>
         <table class="table table-striped table-bordered table-sm">
             <thead>
                 <tr class="table-header">
-                    <th>氏名</th>
-                    <th class="table-header-sub">ユーザー種別</th>
-                    <th class="table-header-sub">事業所</th>
-                    <th class="table-header-sub">操作</th>
+                    <th style="width: 50%">氏名</th>
+                    <th class="table-header-sub" style="width: 15%">ユーザー種別</th>
+                    <th class="table-header-sub" style="width: 15%">事業所</th>
+                    <th class="table-header-sub" style="width: 20%">操作</th>
                 </tr>
             </thead>
             <tbody>
                 @foreach ($users as $user)
                     <tr>
-                        <td>{{ $user->name }}</td>
+                        <td class="main-td">{{ $user->name }}</td>
                         <td>{{ $user->user_type->alias }}</td>
                         <td>{{ $user->office->office_name }}</td>
                         <td>

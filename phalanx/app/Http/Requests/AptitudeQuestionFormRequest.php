@@ -1,7 +1,7 @@
 <?php
 /**
  * 適性診断フォームのバリデーション
- * 
+ *
  * @author Fumio Mochizuki
  */
 
@@ -30,7 +30,7 @@ class AptitudeQuestionFormRequest extends FormRequest
     public function rules()
     {
         return [
-            'aptitude_questions.*.answer'    => [
+            'answers.*.answer'    => [
                 'required',
                 Rule::in(config('const.option')),
             ],
@@ -45,7 +45,7 @@ class AptitudeQuestionFormRequest extends FormRequest
     public function messages()
     {
         return [
-            'aptitude_questions.*.answer.required' => 'いずれかを選択してください。',
+            'answers.*.answer.required' => 'いずれかを選択してください。',
         ];
     }
 }

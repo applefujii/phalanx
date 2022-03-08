@@ -10,26 +10,22 @@
 @endsection
 
 @section('table_body')
-@foreach ($aptitude_questions as $aptitude_question)
+@foreach ($aptitude_questions as $q_count => $aptitude_question)
 <tr class="@error("questions.$aptitude_question->id") table-danger @enderror">
     <td>{{ $aptitude_question->question }}</td>
     <td>{{ $aptitude_question->sort }}</td>
-    <td>{{ $aptitude_question->score_apple }}</td>
-    <td>{{ $aptitude_question->score_mint }}</td>
-    <td>{{ $aptitude_question->score_maple }}</td>
+    @foreach ($aptitude_question->scores->sortBy('office.sort') as $score)
+        <td>{{ $score->score }}</td>
+    @endforeach
     <td>
         <div class="table-body-action">
-            <div>
-                <a class="btn btn-sm btn-primary" role="button edit-button"
-                    href="{{ route('aptitude_question_manage.edit', $aptitude_question->id) }}">編集</a>
-            </div>
             <form class="delete-form"
                 action="{{ route('aptitude_question_manage.destroy', $aptitude_question->id) }}"
                 method="post">
                 @method('DELETE')
                 @csrf
                 <button class="btn btn-sm btn-danger" type="submit"
-                    onclick="return confirm('削除しますか\nID: \n質問文: {{ $aptitude_question->question }}\n表示順: {{ $aptitude_question->sort }}\nアップル点数: {{ $aptitude_question->score_apple }}\nミント点数: {{ $aptitude_question->score_mint }}\nメープル点数: {{ $aptitude_question->score_maple }}')">
+                    onclick="return confirm('削除しますか？')">
                 削除</button>
             </form>
         </div>

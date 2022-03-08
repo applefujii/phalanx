@@ -46,8 +46,9 @@ class DatabaseSeeder extends Seeder
         $this->call(UserTypesSeeder::class);
         // $this->call(NotificationsSeeder::class);// 予定通知テーブル
         // $this->call(TestUsersSeeder::class);// ログインテスト用ユーザー
-        // $this->call(ChatRoomsSeeder::class);// チャットルーム
+        $this->call(ChatRoomsSeeder::class);// チャットルーム
         // \App\Models\ChatText::factory(1000)->create();// チャットテキスト
         $this->call(SuperUsersSeeder::class);
+        $this->call(ScoresSeeder::class);// 適性診断の点数
     }
 }

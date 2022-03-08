@@ -1,3 +1,7 @@
+.table {
+    table-layout: fixed;
+}
+
 .label {
     width: 100px;
 }

@@ -55,6 +55,13 @@
     if('{{ old("target_users") }}' != '')
         aCheckList = '{{ old("target_users") }}'.split(',').map(Number);
     var aCheckListBuffer;
+    // チェックされている事業所のID
+    var aOfficeCheckList = @json($aTargetOffices ?? []);
+    if('{{ old("is_all_day") }}' != '')     // oldが存在したら(力技)空に
+        aOfficeCheckList = [];
+    if('{{ old("target_offices") }}' != '')
+        aOfficeCheckList = '{{ old("target_offices") }}'.split(',').map(Number);
+    var aOfficeCheckListBuffer;
     // 事業所全員がチェックされているか
     var aIsAllCheck = [];
     // 表示するグループ 利用者、職員
@@ -74,8 +81,8 @@
     const officeHtml = '\
         <div class="f-office order-[OrderNo]">\n\
             <div class="d-flex justify-content-center" style="position: relative">\n\
-                <hr color="black" width="90%" size: 2; align="center">\n\
-                <p style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); background-color: white; padding: 0 0.6rem;"><a data-toggle="collapse" href="#list-[EnName]" class="collapse-trigger"><i class="fas fa-chevron-down"></i> <b>[Name]</b></a> <input id="[EnName]-all-check" class="all-check" type="checkbox" style="margin: 0 0 0 0.2rem; vertical-align: middle;" data-child-class="[EnName]"></p>\n\
+                <hr color="black" width="100%" size="2" align="center">\n\
+                <p style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); background-color: white; padding: 0 0.6rem;"><input id="[EnName]-all-check" class="all-check" type="checkbox" style="margin: 0 0.2rem 0 0; vertical-align: middle;" data-child-class="[EnName]"> <a data-toggle="collapse" href="#list-[EnName]" class="collapse-trigger"><b>[Name]</b> <i class="fas fa-chevron-down"></i></a></p>\n\
             </div>\n\
             <div id="list-[EnName]" class="collapse people_list">\n\
                 <div class="d-flex flex-row justify-content-between mt-1 mb-3 insert-[EnName]">\n\
@@ -86,6 +93,7 @@
 
     const peopleHtmlNest = '<div class="flex-fill ml-3">';
     const peopleHtml = '<p><label><input type="checkbox" class="[EnName] check-individual" style="vertical-align: middle;" data-people-id="[PeopleId]" data-group="[EnName]"> [PeopleName]</label></p>';
+    const officeChoiceHtml = '<p><label><input type="checkbox" class="office_choice check-individual" style="vertical-align: middle;" data-office-id="[OfficeId]" data-group="office_choice"> [OfficeName]</label></p>';
     const ancompleted = '<p><b>読み込み中</b></p>';
     const noChuse = '<p class="text-danger">未選択</p>';
 
@@ -103,13 +111,18 @@
         $.ajax({
             type: "POST",
             url: "/api/v1.0/get/users.json", // 送り先
-            data: {},   // 渡したいデータをオブジェクトで渡す
+            data: {
+                sort : 'name_katakana'
+            },   // 渡したいデータをオブジェクトで渡す
             dataType : "json",  // データ形式を指定
             scriptCharset: 'utf-8'  // 文字コードを指定
         })
         .done( function(param){     // paramに処理後のデータが入って戻ってくる
-                aPeople = param; // 帰ってきたら実行する処理
-                updateUserList();
+                aPeople = param.map(p => {
+                    if(p.name.length > 10)
+                    p.name = p.name.substr(0, 10) + '…';
+                    return p;
+                }); // 帰ってきたら実行する処理
                 fo_completed_load['people'] = true;
             })
         .fail( function(XMLHttpRequest, textStatus, errorThrown){   // エラーが起きた時はこちらが実行される
@@ -120,7 +133,7 @@
         $.ajax({
             type: "POST",
             url: "/api/v1.0/get/offices.json",
-            data: {},
+            data: {sort : 'sort'},
             dataType : "json",
             scriptCharset: 'utf-8'
         })
@@ -136,6 +149,7 @@
         //-- 読み込み完了していればモーダル描画 定期的にチェック
         var timer = setInterval(() => {
             if(fo_completed_load.ready()) {
+                updateUserList();
                 modalWrite();
                 clearInterval(timer);
             }
@@ -143,6 +157,8 @@
 
         $('#old_target_users').attr('value', aCheckList.join(','));
         $('#target_users').attr('value', aCheckList.join(','));
+        $('#old_target_offices').attr('value', aOfficeCheckList.join(','));
+        $('#target_offices').attr('value', aOfficeCheckList.join(','));
 
     });
 
@@ -151,6 +167,7 @@
     $(document).ready(function(){
         $(document).on('show.bs.modal','#peopleListModal', function ( event ) {
             aCheckListBuffer = aCheckList.concat();
+            aOfficeCheckListBuffer = aOfficeCheckList.concat();
             let button = $(event.relatedTarget) //モーダルを呼び出すときに使われたボタンを取得
             let targetGroup = button.data('target-group');
 
@@ -163,6 +180,11 @@
             else if( targetGroup == "user" ) {
                 targetUserType = 2;
                 $('#peopleListModalLabel').text('利用者一覧');
+            }
+            //事業所ボタンから
+            else if( targetGroup == "office" ) {
+                targetUserType = -1;
+                $('#peopleListModalLabel').text('事業所一覧');
             }
 
             modalWrite();
@@ -199,14 +221,23 @@
         if ( $(this).prop('checked') == true ) {
             $('.'+$(this).data('child-class')).each(function(index, element){
                 $(this).prop('checked', true);
-                if( aCheckListBuffer.includes($(this).data('people-id')) == false )
-                    aCheckListBuffer.push($(this).data('people-id'));
+                if($(this).data('group') == "office_choice") {
+                    if( aOfficeCheckListBuffer.includes($(this).data('office-id')) == false )
+                        aOfficeCheckListBuffer.push($(this).data('office-id'));
+                } else {
+                    if( aCheckListBuffer.includes($(this).data('people-id')) == false )
+                        aCheckListBuffer.push($(this).data('people-id'));
+                }
             });
             aIsAllCheck.push($(this).data('child-class')+'-'+targetUserType);
         } else {
             $('.'+$(this).data('child-class')).each(function(index, element){
                 $(this).prop('checked', false);
-                aCheckListBuffer.splice(aCheckListBuffer.indexOf($(this).data('people-id')), 1);
+                if($(this).data('group') == "office_choice") {
+                    aOfficeCheckListBuffer.splice(aOfficeCheckListBuffer.indexOf($(this).data('office-id')), 1);
+                } else {
+                    aCheckListBuffer.splice(aCheckListBuffer.indexOf($(this).data('people-id')), 1);
+                }
             });
             aIsAllCheck.splice(aCheckListBuffer.indexOf($(this).data('child-class')+'-'+targetUserType), 1);
         }
@@ -216,10 +247,12 @@
     $(document).on('change', 'div.people_list input[type=checkbox]', function(){
         if( $(this).prop('checked') ) {
             //増加
-            aCheckListBuffer.push($(this).data('people-id'));
+            if($(this).data('group') == "office_choice") aOfficeCheckListBuffer.push($(this).data('office-id'));
+            else aCheckListBuffer.push($(this).data('people-id'));
         } else {
             //削減
-            aCheckListBuffer.splice(aCheckListBuffer.indexOf($(this).data('people-id')), 1);
+            if($(this).data('group') == "office_choice") aOfficeCheckListBuffer.splice(aOfficeCheckListBuffer.indexOf($(this).data('office-id')), 1);
+            else aCheckListBuffer.splice(aCheckListBuffer.indexOf($(this).data('people-id')), 1);
         }
     });
 
@@ -242,7 +275,9 @@
     //-- 決定ボタンを押したときの動作
     $('#people-list-modal-ok').on('click', function(){
         aCheckList = aCheckListBuffer
+        aOfficeCheckList = aOfficeCheckListBuffer;
         $('#target_users').attr('value', aCheckList.join(','));
+        $('#target_offices').attr('value', aOfficeCheckList.join(','));
         updateUserList();
         $('#peopleListModal').modal('hide');
         
@@ -252,6 +287,7 @@
 
 
     function modalWrite() {
+        let st;
         let insertOffice = $('.insert-office');
         insertOffice.empty();
 
@@ -261,41 +297,32 @@
             return;
         }
 
-        $.each(aOffice, function(index, element){
-            //-- 各種置換
-            let st = officeHtml.replace(/\[EnName\]/g, element.en_office_name);
-            st = st.replace(/\[Name\]/g, element.office_name);
-            // 自分の事業所を
-            if( element.id == myOffice) {
-                // 表示順を最上に、初期状態を展開に
-                st = st.replace(/\[OrderNo\]/g, "0");
-                st = st.replace(/fa-chevron-down/g, "fa-chevron-up");
-                st = st.replace(/(?<=class="collapse people_list)(?=")/g, " show");
-            }
-            else st = st.replace(/\[OrderNo\]/g, index +1);
-
+        if( targetUserType == -1 ) {
+            st = officeHtml.replace(/\[EnName\]/g, "office_choice");
+            st = st.replace(/\[Name\]/g, "事業所");
+            st = st.replace(/\[OrderNo\]/g, "1");
+            st = st.replace(/fa-chevron-down/g, "fa-chevron-up");
+            st = st.replace(/(?<=class="collapse people_list)(?=")/g, " show");
             insertOffice.append(st);
 
-            let insertPeople = $('.insert-' + element.en_office_name);
+            let insertPeople = $('.insert-office_choice');
             let count = 0, countAll = 0;
             let nest;
             let fAllCheck = true;
             let fNotClose = false;
-            let exc_people = aPeople.filter(e => (e.office_id == element.id  &&  e.user_type_id == targetUserType));
-            oneColumnNumber = Math.floor(exc_people.length/peopleColumn);
-            if( exc_people.length%peopleColumn != 0 ) oneColumnNumber++;
+            oneColumnNumber = Math.floor(aOffice.length/peopleColumn);
+            if( aOffice.length%peopleColumn != 0 ) oneColumnNumber++;
 
             insertPeople.empty();
-            $.each(exc_people, function(index2, element2){
+            $.each(aOffice, function(index, element){
                 let cc = count % oneColumnNumber;
                 if(cc == 0) {
                     nest = $(peopleHtmlNest);
                     fNotClose = true;
                 }
-                let st2 = peopleHtml.replace(/\[EnName\]/g, element.en_office_name);
-                st2 = st2.replace(/\[PeopleId\]/g, element2.id);
-                st2 = st2.replace(/\[PeopleName\]/g, element2.name);
-                if( aCheckList.includes(element2.id) ) {
+                let st2 = officeChoiceHtml.replace(/\[OfficeId\]/g, element.id);
+                st2 = st2.replace(/\[OfficeName\]/g, element.office_name);
+                if( aOfficeCheckList.includes(element.id) ) {
                     st2 = st2.replace(/(?<=<input type="checkbox".*?check-individual[^>]*)(?=>)/g, " checked");
                 } else {
                     fAllCheck = false;
@@ -312,8 +339,64 @@
 
             // 1つ以上項目があって、全てにチェックが付いていたら全チェックをcheckedにする
             if( countAll > 0 )
-                $('#' + element.en_office_name + '-all-check').prop('checked', fAllCheck);
-        });
+                $('#office_choice-all-check').prop('checked', fAllCheck);
+
+        } else {
+
+            $.each(aOffice, function(index, element){
+                //-- 各種置換
+                st = officeHtml.replace(/\[EnName\]/g, element.en_office_name);
+                st = st.replace(/\[Name\]/g, element.office_name);
+                // 自分の事業所を
+                if( element.id == myOffice) {
+                    // 表示順を最上に、初期状態を展開に
+                    st = st.replace(/\[OrderNo\]/g, "0");
+                    st = st.replace(/fa-chevron-down/g, "fa-chevron-up");
+                    st = st.replace(/(?<=class="collapse people_list)(?=")/g, " show");
+                }
+                else st = st.replace(/\[OrderNo\]/g, index +1);
+
+                insertOffice.append(st);
+
+                let insertPeople = $('.insert-' + element.en_office_name);
+                let count = 0, countAll = 0;
+                let nest;
+                let fAllCheck = true;
+                let fNotClose = false;
+                let exc_people = aPeople.filter(e => (e.office_id == element.id  &&  e.user_type_id == targetUserType));
+                oneColumnNumber = Math.floor(exc_people.length/peopleColumn);
+                if( exc_people.length%peopleColumn != 0 ) oneColumnNumber++;
+
+                insertPeople.empty();
+                $.each(exc_people, function(index2, element2){
+                    let cc = count % oneColumnNumber;
+                    if(cc == 0) {
+                        nest = $(peopleHtmlNest);
+                        fNotClose = true;
+                    }
+                    let st2 = peopleHtml.replace(/\[EnName\]/g, element.en_office_name);
+                    st2 = st2.replace(/\[PeopleId\]/g, element2.id);
+                    st2 = st2.replace(/\[PeopleName\]/g, element2.name);
+                    if( aCheckList.includes(element2.id) ) {
+                        st2 = st2.replace(/(?<=<input type="checkbox".*?check-individual[^>]*)(?=>)/g, " checked");
+                    } else {
+                        fAllCheck = false;
+                    }
+                    nest.append(st2);
+
+                    if(fNotClose) {
+                        insertPeople.append(nest);
+                        fNotClose = false;
+                    }
+                    count++;
+                    countAll++;
+                });
+
+                // 1つ以上項目があって、全てにチェックが付いていたら全チェックをcheckedにする
+                if( countAll > 0 )
+                    $('#' + element.en_office_name + '-all-check').prop('checked', fAllCheck);
+            });
+        }
 
         //---- 体験
         if( targetUserType == 1 ) {
@@ -366,6 +449,14 @@
         let aCheckListMinus = aCheckList;
         insert.empty();
         //-- idを昇順ソート
+        aOfficeCheckList.sort(function(a,b){
+            if( a == 0 ) return 1;
+            if( b == 0 ) return -1;
+            if( a < b ) return -1;
+            if( a > b ) return 1;
+            return 0;
+        });
+        //-- idを昇順ソート
         aCheckList.sort(function(a,b){
             if( a < b ) return -1;
             if( a > b ) return 1;
@@ -389,21 +480,28 @@
         //-- 事業所ごとに、全員がいたら表示に +事業所名 -個人名
         Object.keys(oOfficeUserId).forEach(key => {
             if(oOfficeUserId[key].filter(e => !aCheckList.includes(e)).length == 0) {
-                names.push('【'+key+'】');
+                names.push('['+key+']');
                 aCheckListMinus = aCheckListMinus.filter( e => {
                     return !oOfficeUserId[key].includes(e);
                 });
             }
         });
 
-        if(aCheckList.length == 0) {
+        if(aCheckList.length == 0  &&  aOfficeCheckList.length == 0) {
             insert.append(noChuse);
             return;
         }
 
         st = '<span>';
+        $.each(aOfficeCheckList, (index, element) => {
+            if( element == 0 ) {
+                st += '<span style="background-color: #88FFFF;">【'+aOffice[aOffice.length-1].office_name+'】</span>/ ';
+                return;
+            }
+            st += '<span style="background-color: #88FFFF;">【'+aOffice.find(el => el.id==element).office_name+'】</span>/ ';
+        });
         $.each(names, (index, element) => {
-            st += element;
+            st += element+'/ ';
         });
         $.each(aCheckListMinus, (index, element) => {
             if(index >= 20) {

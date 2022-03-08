@@ -1,7 +1,7 @@
 <?php
 /**
  * 適性診断質問テーブルのモデル
- * 
+ *
  * @author Fumio Mochizuki
  */
 
@@ -26,6 +26,14 @@ class AptitudeQuestion extends Model
      *
      * @var bool
      */
-    
+
     public $timestamps = false;
+
+    /**
+     * リレーション
+     * 点数
+     */
+    public function scores() {
+        return $this->hasMany(Score::class)->whereNull('deleted_at');
+    }
 }

@@ -46,6 +46,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Validation\Rule;
 
 use App\Models\Notification;
 use App\Models\Notification__User;
@@ -53,6 +54,7 @@ use App\Models\Office;
 use App\Models\User;
 use App\Models\UserType;
 use App\Models\ChatRoom;
+use App\Models\ChatRoom__User;
 use App\Http\Requests\EditUserRequest;
 use App\Http\Requests\NotificationRequest;
 use Illuminate\Contracts\Container\Container;
@@ -295,9 +297,9 @@ class ApiController extends Controller
      * @param Request $request 登録情報[id,office_name,en_office_name,sort]
      * @return json 実行結果
      */
-    public function ApiStoreOffices( Request $request )
+    /* public function ApiStoreOffices( Request $request )
     {
-        $con = app()->make("App\Http\Controllers\officeController");
+        $con = app()->make("App\Http\Controllers\OfficeController");
         
         if( isset($request->record) ) {
             try {
@@ -323,7 +325,7 @@ class ApiController extends Controller
         }
         
         return json_encode( '{ result : "Failure" }' );
-    }
+    } */
 
     /**
      * 事業所 更新
@@ -334,39 +336,38 @@ class ApiController extends Controller
     {
         $con = app()->make("App\Http\Controllers\OfficeController");
 
+        $rules = [
+            'office_name' => ['required',"max:255",  Rule::unique('offices')->whereNull("deleted_at")->ignore($this->office)],
+            "en_office_name" => ["required", "alpha_dash", "max:255", Rule::unique("offices")->whereNull("deleted_at")->ignore($this->office)],
+            'sort' => ['required', "numeric", "min:0", "max:9999", Rule::unique('offices')->whereNull("deleted_at")->ignore($this->office)],
+        ];
+
         if( isset($request->record) ) {
             try {
-                $user = User::where("id", $request->record["id"])->first();
-                $record_confirm = $request->record;
-                $eud = EditUserRequest::create($uri=route('user.update', $request->record["id"]), $method="PUT", $parameters=$record_confirm);
-                $eud->user = $user;
-                $eud->setContainer(app())->setRedirector(app()->make(Redirector::class));
-                $eud->validateResolved();
-                app()->call( [$con,'update'], ['request' => $eud, 'user' => $user] );
+                $r = new Request($request->record);
+                $validator = Validator::make($r->query(), $rules);
+                if($validator->fails()) throw(new \Exception("バリデーションエラー"));
+                $id = $con->updateDetail($r, $r->id);
             } catch( \Exception $e ) {
-                Log::debug($e);
-                return json_encode( '{ result : "Failure" }' );
+                return json_encode( '{ result : "Failure", errorMsg : ' . $e . ' }' );
             }
-            return json_encode( '{ result : "Success", id : ['. $request->record["id"] .'] }' );
+            return json_encode( '{ result : "Success", id : ['. $id .'] }' );
         }
         else if( isset($request->records) ) {
-            $ids = "";
+            $ids = [];
             try {
                 DB::transaction(function() use(&$ids, $con, $request) {
                     foreach($request->records as $r) {
-                        $user = User::where("id", $r["id"])->first();
-                        $record_confirm = $r;
-                        $eud = EditUserRequest::create($uri=route('user.update', $r["id"]), $method="PUT", $parameters=$record_confirm);
-                        $eud->user = $user;
-                        $eud->setContainer(app())->setRedirector(app()->make(Redirector::class));
-                        $eud->validateResolved();
-                        app()->call( [$con,'update'], ['request' => $eud, 'user' => $user] );
-                        $ids .= $r["id"] . ", ";
+                        $r = new Request($r);
+                        $validator = Validator::make($r->query(), $rules);
+                        if($validator->fails()) throw(new \Exception("バリデーションエラー"));
+                        $id = $con->updateDetail($r, $r->id);
+                        $ids[] = $id;
                     }
+                    $ids = implode(", ", $ids);
                 });
             } catch( \Exception $e ) {
-                Log::debug($e);
-                return json_encode( '{ result : "Failure" }' );
+                return json_encode( '{ result : "Failure", errorMsg : ' . $e . ' }' );
             }
             return json_encode( '{ result : "Success", ids : ['. $ids .'] }' );
         }
@@ -379,7 +380,7 @@ class ApiController extends Controller
      * @param Request $request 登録情報[id]
      * @return json 実行結果
      */
-    public function ApiDeleteOffices( Request $request )
+    /* public function ApiDeleteOffices( Request $request )
     {
         $con = app()->make("App\Http\Controllers\OfficeController");
 
@@ -405,7 +406,7 @@ class ApiController extends Controller
             }
             return json_encode( '{ result : "Success", ids : ['. $ids .'] }' );
         }
-    }
+    } */
 
 
 
@@ -478,9 +479,9 @@ class ApiController extends Controller
 
         $rules = [
             "content" => "required|max:500",
-            "start_at" => "required|date",//date_format:'Y-m-d H:i:s'
-            "end_at" => "required|date|after:start_at",//date_format:'Y-m-d H:i:s'
-            "is_all_day" => "required|boolean"
+            "start_at" => "required|date_format:Y-m-d H:i:s",
+            "end_at" => "required|date_format:Y-m-d H:i:s|after:now|after_or_equal:start_at",
+            "is_all_day" => "required|boolean",
         ];
         
         //-- 1件
@@ -530,9 +531,9 @@ class ApiController extends Controller
 
         $rules = [
             "content" => "required|max:500",
-            "start_at" => "required|date",//date_format:'Y-m-d H:i:s'
-            "end_at" => "required|date|after:start_at",//date_format:'Y-m-d H:i:s'
-            "is_all_day" => "required|boolean"
+            "start_at" => "required|date_format:Y-m-d H:i:s",
+            "end_at" => "required|date_format:Y-m-d H:i:s|after:now|after_or_equal:start_at",
+            "is_all_day" => "required|boolean",
         ];
 
         if( isset($request->record) ) {
@@ -674,11 +675,21 @@ class ApiController extends Controller
     {
         $con = app()->make("App\Http\Controllers\ChatRoomController");
         
+        $rules = [
+            "room_title" => "required|max:100",
+            "distinction_number" => "numeric",
+            "office_id" => "required|numeric",
+            "user_id" => "numeric"
+        ];
+
         if( isset($request->record) ) {
             try {
-                $id = $con->storeDetail( new Request($request->record) );
+                $r = new Request($request->record);
+                $validator = Validator::make($r->query(), $rules);
+                if($validator->fails()) throw( new \Exception("バリデーションエラー") );
+                $id = $con->storeDetail($r);
             } catch(\Exception $e) {
-                return json_encode( '{ result : "Failure" }' );
+                return json_encode( '{ result : "Failure", errorMsg : ' . $e . ' }' );
             }
             return json_encode( '{ result : "Success", id : '.$id.' }' );
         } else if( isset($request->records) ) {
@@ -686,13 +697,16 @@ class ApiController extends Controller
             try {
                 DB::transaction(function() use(&$ids, $con, $request) {
                     foreach($request->records as $r) {
-                        $id = $con->storeDetail( new Request($r) );
+                        $r = new Request($r);
+                        $validator = Validator::make($r->query(), $rules);
+                        if($validator->fails()) throw( new \Exception("バリデーションエラー") );
+                        $id = $con->storeDetail($r);
                         $ids[] = $id;
                     }
                     $ids = implode(", ", $ids);
                 });
             } catch( \Exception $e ) {
-                return json_encode( '{ result : "Failure" }' );
+                return json_encode( '{ result : "Failure", errorMsg : ' . $e . ' }' );
             }
             return json_encode( '{ result : "Success", ids : ['. $ids .'] }' );
         }
@@ -709,11 +723,19 @@ class ApiController extends Controller
     {
         $con = app()->make("App\Http\Controllers\ChatRoomController");
 
+        $rules = [
+            "room_title" => "required|max:100",
+            "office_id" => "required|numeric"
+        ];
+
         if( isset($request->record) ) {
             try {
-                $id = $con->updateDetail( new Request($request->record), $request->record["id"] );
+                $r = new Request($request->record);
+                $validator = Validator::make($r->query(), $rules);
+                if($validator->fails()) throw(new \Exception("バリデーションエラー"));
+                $id = $con->updateDetail($r, $r->id);
             } catch( \Exception $e ) {
-                return json_encode( '{ result : "Failure" }' );
+                return json_encode( '{ result : "Failure", errorMsg : ' . $e . ' }' );
             }
             return json_encode( '{ result : "Success", id : ['. $id .'] }' );
         } else if( isset($request->records) ) {
@@ -721,13 +743,16 @@ class ApiController extends Controller
             try {
                 DB::transaction(function() use(&$ids, $con, $request) {
                     foreach($request->records as $r) {
-                        $id = $con->updateDetail( new Request($r), $r["id"] );
+                        $r = new Request($r);
+                        $validator = Validator::make($r->query(), $rules);
+                        if($validator->fails()) throw(new \Exception("バリデーションエラー"));
+                        $id = $con->updateDetail($r, $r->id);
                         $ids[] = $id;
                     }
                     $ids = implode(", ", $ids);
                 });
             } catch( \Exception $e ) {
-                return json_encode( '{ result : "Failure" }' );
+                return json_encode( '{ result : "Failure", errorMsg : ' . $e . ' }' );
             }
             return json_encode( '{ result : "Success", ids : ['. $ids .'] }' );
         }
@@ -769,6 +794,43 @@ class ApiController extends Controller
 
         return json_encode('{ result : "Failure" }');
     }
+
+
+    ///////////////////////////////// チャット //////////////////////////////////////////
+
+    /**
+     * チャット取得
+     * @param Request $request
+     * @return json 実行結果
+     */
+
+    /**
+     * チャット書き込み
+     * @param Request $request
+     * @return json 実行結果
+     */
+
+    /**
+     * 未読があるか
+     * @param Request $request
+     * @return json 実行結果
+     */
+    public function ApiChatExistUnread(Request $request)
+    {
+        $con = app()->make("App\Http\Controllers\ChatController");
+
+        $existUnread = false;
+        try {
+            $existUnread = $con->ExistUnread($request);
+        } catch(\Exception $e) {
+            return json_encode('{ result : "Failure" }');
+        }
+        $json = '{ result : "Success", Exist_Unread : ';
+        $json .= $existUnread ? "true" : "false";
+        $json .= ' }';
+        return json_encode($json);
+    }
+    
 
 
     ///////////////////////////////// リレーション //////////////////////////////////////////
@@ -852,6 +914,104 @@ class ApiController extends Controller
         $con = app()->make("App\Http\Controllers\NotificationController");
         $con->notification__user_destroy( $request->id );
         return json_encode( '{ result : "Success" }' );
+    }
+
+    //--------------------チャットルーム__ユーザー中間テーブル--------------------
+
+    /**
+     * チャットルーム__ユーザー 取得
+     * @param Request $request 検索条件[id, chat_room_id, user_id, sort]
+     * @return json 実行結果
+     */
+    public function ApiGetChatRoomUser(Request $request)
+    {
+        $filter_chat_room__user_id = $request->input('id', '');
+        if ($filter_chat_room__user_id != ""  &&  !is_array($filter_chat_room__user_id))
+            $filter_chat_room__user_id = compact("filter_chat_room__user_id");
+        $filter_chat_room_id = $request->input("chat_room_id", "");
+        if($filter_chat_room_id != "" && !is_array($filter_chat_room_id))
+            $filter_chat_room_id = compact("filter_chat_room_id");
+        $filter_user_id = $request->input("user_id", "");
+        if($filter_user_id != "" && !is_array($filter_user_id))
+            $filter_user_id = compact("filter_user_id");
+        
+        $sort = "";
+        $t_sort = $request->input('sort', '');
+        if ($t_sort != ""){
+            $sort = [[]];
+            if(!is_array($t_sort)) $t_sort = compact("t_sort");
+            $i = 0;
+            foreach( $t_sort as $s ){
+                $order = "asc";
+                if( preg_match("/^-/i", $s) ) $order = "desc";
+                $sort[$i] = ["order" => $order, "subject" => preg_replace("/^-/i", "", $s)];
+                $i++;
+            }
+        }
+
+        $query = ChatRoom__User::get();
+        if($filter_chat_room__user_id != "")
+            $query->whereIn("id", $filter_chat_room__user_id);
+        if($filter_chat_room_id != "")
+            $query->whereIn("chat_room_id", $filter_chat_room_id);
+        if($filter_user_id != "")
+            $query->whereIn("user_id", $filter_user_id);
+        if($sort != "") {
+            foreach($sort as $s) {
+                $query->orderBy($s["subject"], $s["order"]);
+            }
+        } else {
+            $query->orderBy("id", "asc");
+        }
+
+        $chat_room__user = $query->get();
+
+        return json_encode($chat_room__user);
+    }
+
+    /**
+     * チャットルーム__ユーザー 登録
+     * @param Request $request 登録情報[chat_room_id, user_id]
+     * @return json 実行結果
+     */
+    public function ApiStoreChatRoomUser(Request $request)
+    {
+        $con = app()->make("App\Http\Controllers\ChatRoomController");
+        $con->chat_room__user_store($request);
+        return json_encode('{ result : "Success" }');
+    }
+
+    /**
+     * チャットルーム__ユーザー 更新
+     * @param Request $request 登録情報[id, newest_read_chat_text_id]
+     * @return json 実行結果
+     */
+    public function ApiUpdateChatRoomUser(Request $request)
+    {
+        $con = app()->make("App\Http\Controllers\ChatRoomController");
+        $con->chat_room__user_update($request, $request->input("id"));
+        return json_encode('{ result : "Success" }');
+    }
+
+    /**
+     * チャットルーム__ユーザー 更新
+     * @param Request $request 登録情報[id]
+     * @return json 実行結果
+     */
+    public function ApiDeleteChatRoomUser(Request $request)
+    {
+        $con = app()->make("App\Http\Controllers\ChatRoomController");
+        $con->chat_room__user_destroy($request->input("id"));
+        return json_encode('{ result : "Success" }');
+    }
+
+    
+    //--------------------- ※テスト用 ----------------------
+
+    public function api_test()
+    {
+        //
+        return view('api_test');
     }
 
 

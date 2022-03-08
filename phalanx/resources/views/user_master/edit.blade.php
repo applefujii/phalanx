@@ -1,14 +1,20 @@
 @extends('layouts.app')
-@section('title', 'ユーザーマスター　編集')
+@section('title', 'ユーザーマスタ　編集')
 @section('css')
 <link href="{{ asset('css/user-master/create_and_edit.css') }}" rel="stylesheet">
 @endsection
 @section('content')
 <div class="container">
-    <h3>ユーザーマスター　編集</h3>
+    <h3>ユーザーマスタ　編集</h3>
+    @if ($errors->any())
+        <div class="alert alert-danger w-100">
+            <span>入力に誤りがあります。</span>
+        </div>
+    @endif
     <form method="post" action="{{ route('user.update', $user->id) }}">
         @csrf
         @method('PATCH')
+        <input type="hidden" name="id" value="{{ $user->id ?? '' }}">
         <div class="form-group">
             <div class="row justify-content-start mx-auto my-4">
                 <div class="mx-4">
@@ -68,7 +74,7 @@
                         </span>
                     @enderror
                     <div class="information">
-                        <span>半角英数字または_(アンダースコア)が使用できます</span><br />
+                        <span>半角英数字または_(アンダースコア)が使用できます。</span><br />
                         <span>3字以上 30字以内で入力してください。</span>
                     </div>
                 </div>
@@ -81,7 +87,8 @@
                         </span>
                     @enderror
                     <div class="information">
-                        <span>半角英数字記号が使用できます</span><br />
+                        <span>パスワード変更時のみ入力してください。</span>
+                        <span>半角英数字記号が使用できます。</span><br />
                         <span>8字以上 30字以内で入力してください。</span>
                     </div>
                 </div>
@@ -92,7 +99,7 @@
             </div>
         </div>
 
-        <input type="submit" class="btn btn-primary" value="更新"><a href="{{ route('user.index') }}" class="btn btn-secondary back-button">戻る</a>
+        <input type="submit" class="btn btn-primary" value="更新"><a href="{{ route('user.index') }}" class="btn btn-secondary back-button">キャンセル</a>
     </form>
 </div>
 

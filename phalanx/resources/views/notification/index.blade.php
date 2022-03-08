@@ -1,5 +1,6 @@
 @extends('layouts.app')
 
+@section("title", "予定通知管理　一覧")
 @section('css')
     <link href="{{ asset('css/index-table.css') }}" rel="stylesheet">
     <link href="{{ asset('css/notification/index.css') }}" rel="stylesheet">
@@ -7,34 +8,10 @@
 @section('content')
 
     <div class="container">
-        <h3>予定通知　一覧</h3>
-        <form method="get" action="{{ route('notification.index') }}">
-            <div class="form-group">
-                <div class="row justify-content-start mx-auto my-2">
-                    <label for="user_type" class="text-md-left label">ユーザー種別</label>
-                    <select id="user_type" name="user_type" class="form-select">
-                        <option value="" @if ($filter_user_type_id === '') selected @endif>条件なし</option>
-                        @foreach ($user_types as $user_type)
-                            <option value="{{ $user_type->id }}" @if ($filter_user_type_id == $user_type->id) selected @endif>{{ $user_type->alias }}
-                            </option>
-                        @endforeach
-                    </select>
-                    <div class="col2"></div>
-                </div>
-                <div class="row justify-content-start mx-auto my-2">
-                    <label for="office" class="text-md-left label">事業所</label>
-                    <select id="office" name="office" class="form-select">
-                        <option value="" @if ($filter_office_id === '') selected @endif>条件なし</option>
-                        @foreach ($offices as $office)
-                            <option value="{{ $office->id }}" @if ($filter_office_id == $office->id) selected @endif>{{ $office->office_name }}
-                            </option>
-                        @endforeach
-                    </select>
-                    <input type="submit" class="text-md-right filter-button" value="絞り込み">
-                </div>
-            </div>
-        </form>
-        <a href="{{ route('notification.create') }}" type="button" class="btn btn-primary">新規作成</a>
+        <h3>予定通知管理　一覧</h3>
+        <div class="mb-2">
+            <a href="{{ route('notification.create') }}" type="button" class="btn btn-primary">新規作成</a>
+        </div>
         <table class="table table-striped table-bordered table-sm">
             <thead>
                 <tr class="table-header">
@@ -47,7 +24,7 @@
             </thead>
             <tbody>
                 @foreach ($notifications as $notification)
-                    <tr>
+                    <tr class="@if(isset($notification->deleted_at)) list-tr-done @endif">
                         <td>{{ $notification->created_at }}</td>
                         <td>{{ $notification->start_date_format() }}</td>
                         <td>{{ $notification->end_date_format() }}</td>
@@ -63,7 +40,7 @@
                                     @csrf
                                     @method('DELETE')
                                     <button type="submit" class="btn btn-sm btn-danger delete-button"
-                                        onclick="return confirm('削除しますか\nID: {{ $notification->id }}\n作成日時: {{ $notification->created_at }}\n開始日時: {{ $notification->start_at }}\n終了日時: {{ $notification->end_at }}\n内容: {{ mb_substr($notification->content, 0, 32) }}')">
+                                        onclick="return confirm('削除しますか\nID: {{ $notification->id }}\n作成日時: {{ $notification->created_at }}\n開始日時: {{ $notification->start_at }}\n終了日時: {{ $notification->end_at }}\n内容: \n    {{ preg_replace('/\r\n|\n|\r/', '\n    ', mb_substr($notification->content, 0, 32)) }}')">
                                     削除</button>
                                 </form>
                         </td>
@@ -72,7 +49,7 @@
             </tbody>
         </table>
 
-        {{ $notifications->links('pagination::bootstrap-4') }}
+        {{ $notifications->links('vendor/pagination/pagination_view') }}
 
     </div>
 @endsection

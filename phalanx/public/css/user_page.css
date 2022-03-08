@@ -125,16 +125,16 @@
     position: absolute;
     margin: 0;
     top: 2.5rem;
-    width: 100%;
+    width: calc(100% - 15px);
     height: 30px;
-    background: linear-gradient(#f8fafc 20%, #ffffff00 100%);
+    background: linear-gradient(#f8fafc 80%, #ffffff00 100%);
   }
 
   .sidebar-bottom {
     position: absolute;
     margin: 0;
     top: calc(80vh + 1rem);
-    width: 100%;
+    width: calc(100% - 15px);
     height: 30px;
     background: linear-gradient(rgba(255,255,255,0) 0, #f8fafc 70%);
   }
