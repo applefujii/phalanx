@@ -9,6 +9,7 @@
     <h3 class="page_title">チャットルーム管理　編集</h3>
     <form action="{{ route('chat_room.update', $chatRoom->id) }}" method="post" class="mt-3">
         @csrf
+        @method("PATCH")
         <div class="row">
             <div class="col-sm mt-3 mx-3 px-0 d-flex flex-column">
                 <label for="roomTitle">ルーム名</label>
