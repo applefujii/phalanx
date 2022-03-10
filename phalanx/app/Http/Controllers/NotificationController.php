@@ -290,6 +290,7 @@ class NotificationController extends Controller
                 'deleted_at' => $dt->format('Y-m-d H:i:s')
             ]);
             Notification__User::where("notification_id", $id)->delete();
+            Notification__Office::where("notification_id", $id)->delete();
         });
 
         return redirect()->route("notification.index", $parameters = [], $status = 302, $headers = []);
